@@ -51,7 +51,7 @@ canvas#stars {
   background: transparent;
 }
 
-/* Toggle Switch */
+/* Toggle Switch with Emoji Icons */
 .theme-switch {
   position: fixed;
   top: 1rem;
@@ -80,9 +80,14 @@ canvas#stars {
   transition: 0.4s;
 }
 
+/* The emoji knob */
 .slider::before {
+  content: "🌙";
   position: absolute;
-  content: "";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
   height: 22px;
   width: 22px;
   left: 3px;
@@ -90,12 +95,15 @@ canvas#stars {
   background-color: white;
   border-radius: 50%;
   transition: 0.4s;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 }
 
+/* Light mode background + sun icon */
 input:checked + .slider {
   background-color: #2196F3;
 }
 
 input:checked + .slider::before {
   transform: translateX(24px);
+  content: "☀️";
 }

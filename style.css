@@ -45,3 +45,13 @@ input:checked + .slider {
 input:checked + .slider::before {
   transform: translateX(24px);
 }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1117;
+    --text: #ffffff;
+    --box: #161b22;
+    --shadow: rgba(0, 0, 0, 0.5);
+  }
+}
+

@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Siahverse Portal</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="theme-toggle.js"></script>
 </head>
 <body>
+  <canvas id="stars"></canvas>
+
   <div class="container">
     <h1>🌌 Welcome to the Siahverse</h1>
     <p class="tagline">Tech Flex Portal · Powered by Proxmox · Made by Josiah</p>
@@ -14,7 +17,10 @@
     <div class="links">
       <a href="https://status.siahverse.cc" target="_blank">📊 Uptime Kuma</a>
       <a href="https://proxmox.local:8006" target="_blank">🖥️ Proxmox</a>
+      <a href="https://home.siahverse.cc" target="_blank">🏠 Home Assistant</a>
     </div>
+
+    <button id="toggle-theme">🌓 Toggle Theme</button>
   </div>
 </body>
 </html>

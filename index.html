@@ -8,6 +8,11 @@
   <script defer src="theme-toggle.js"></script>
 </head>
 <body>
+  <label class="theme-switch">
+    <input type="checkbox" id="toggle-theme">
+    <span class="slider"></span>
+  </label>
+
   <canvas id="stars"></canvas>
 
   <div class="container">
@@ -19,60 +24,54 @@
       <a href="https://proxmox.local:8006" target="_blank">🖥️ Proxmox</a>
       <a href="https://home.siahverse.cc" target="_blank">🏠 Home Assistant</a>
     </div>
-
-    <label class="theme-switch">
-      <input type="checkbox" id="toggle-theme">
-      <span class="slider"></span>
-    </label>
-
   </div>
+
   <script>
-const canvas = document.getElementById("stars");
-const ctx = canvas.getContext("2d");
+    const canvas = document.getElementById("stars");
+    const ctx = canvas.getContext("2d");
 
-let w = canvas.width = window.innerWidth;
-let h = canvas.height = window.innerHeight;
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
 
-let stars = Array.from({ length: 150 }, () => ({
-  x: Math.random() * w,
-  y: Math.random() * h,
-  r: Math.random() * 1.5 + 0.5,
-  d: Math.random() * 0.5 + 0.2
-}));
+    let stars = Array.from({ length: 150 }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      r: Math.random() * 1.5 + 0.5,
+      d: Math.random() * 0.5 + 0.2
+    }));
 
-function draw() {
-  ctx.clearRect(0, 0, w, h);
-  for (let s of stars) {
-    ctx.beginPath();
-    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-    ctx.fillStyle = "#58a6ff";
-    ctx.fill();
-  }
-  move();
-}
-
-function move() {
-  for (let s of stars) {
-    s.y -= s.d;
-    if (s.y < 0) {
-      s.y = h;
-      s.x = Math.random() * w;
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      for (let s of stars) {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = "#58a6ff";
+        ctx.fill();
+      }
+      move();
     }
-  }
-}
 
-function animate() {
-  draw();
-  requestAnimationFrame(animate);
-}
+    function move() {
+      for (let s of stars) {
+        s.y -= s.d;
+        if (s.y < 0) {
+          s.y = h;
+          s.x = Math.random() * w;
+        }
+      }
+    }
 
-window.addEventListener('resize', () => {
-  w = canvas.width = window.innerWidth;
-  h = canvas.height = window.innerHeight;
-});
+    function animate() {
+      draw();
+      requestAnimationFrame(animate);
+    }
 
-animate();
-</script>
+    window.addEventListener('resize', () => {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    });
 
+    animate();
+  </script>
 </body>
 </html>

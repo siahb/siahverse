@@ -37,7 +37,6 @@ A sleek, dark-themed tech portal built by Josiah — powered by Proxmox and glow
 
 ## ✅ To-Do
 
-- [ ] Fix `#siahbot` click bug (currently stops canvas animation)
 - [ ] Add favicon variants for different platforms
 - [ ] Improve accessibility (ARIA roles, landmarks)
 - [ ] Add Open Graph preview image (`assets/preview.png`)

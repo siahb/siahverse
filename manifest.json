@@ -1,0 +1,16 @@
+{
+  "name": "Siahverse Portal",
+  "short_name": "Siahverse",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#0d0d0d",
+  "description": "Tech Flex Portal · Powered by Proxmox · Made by Josiah",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

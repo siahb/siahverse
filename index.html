@@ -100,6 +100,22 @@
         setTimeout(() => copied.style.display = "none", 3000);
       });
     }
+
+    // Siahbot click event
+const siahbot = document.getElementById("siahbot");
+if (siahbot) {
+  siahbot.addEventListener("click", () => {
+    const messages = [
+      "👋 Hi! I'm Siahbot, guardian of portals.",
+      "🌌 You’ve entered a hidden node...",
+      "💡 Hint: Try the Konami Code 😉",
+      "🛰️ Searching for lost travelers..."
+    ];
+    const random = messages[Math.floor(Math.random() * messages.length)];
+    alert(random);
+  });
+}
+
   });
 </script>
 </body>

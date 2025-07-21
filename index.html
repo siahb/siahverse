@@ -42,6 +42,7 @@
   </div>
 
   <script>
+  window.addEventListener("DOMContentLoaded", () => {
     const canvas = document.getElementById("stars");
     const ctx = canvas.getContext("2d");
 
@@ -81,16 +82,12 @@
       requestAnimationFrame(animate);
     }
 
+    animate();
+    document.body.classList.add("fade-in");
+
     window.addEventListener('resize', () => {
       w = canvas.width = window.innerWidth;
       h = canvas.height = window.innerHeight;
-    });
-
-    animate();
-    
-    // Smooth fade-in transition
-    window.addEventListener("DOMContentLoaded", () => {
-      document.body.classList.add("fade-in");
     });
 
     function copyIP() {
@@ -100,6 +97,7 @@
         setTimeout(() => copied.style.display = "none", 3000);
       });
     }
-  </script>
+  });
+</script>
 </body>
 </html>

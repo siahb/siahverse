@@ -87,6 +87,11 @@
     });
 
     animate();
+    
+    // Smooth fade-in transition
+    window.addEventListener("DOMContentLoaded", () => {
+      document.body.classList.add("fade-in");
+    });
 
     function copyIP() {
       navigator.clipboard.writeText("mc.siahverse.cc").then(() => {

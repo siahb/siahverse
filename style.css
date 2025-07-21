@@ -174,3 +174,18 @@ body {
 body.fade-in {
   opacity: 1;
 }
+#siahbot {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 2.5rem;
+  cursor: pointer;
+  z-index: 999;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  user-select: none;
+}
+
+#siahbot:hover {
+  transform: scale(1.2) rotate(5deg);
+  filter: drop-shadow(0 0 5px var(--link));
+}

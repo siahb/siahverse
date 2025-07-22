@@ -71,7 +71,7 @@
   const input = document.getElementById("todo-input");
   const list = document.getElementById("todo-list");
 
-  const API = "https://todo.siahverse.cc/todos"; // ✅ Update if needed
+  const API = "https://todo.siahverse.cc/todos";
 
   async function fetchTodos() {
     const res = await fetch(API);
@@ -83,7 +83,11 @@
     list.innerHTML = "";
     todos.forEach((todo, index) => {
       const li = document.createElement("li");
-      li.innerHTML = `${todo} <button onclick="removeTodo(${index})">✖</button>`;
+      const button = document.createElement("button");
+      button.textContent = "✖";
+      button.onclick = () => removeTodo(index);
+      li.textContent = todo;
+      li.appendChild(button);
       list.appendChild(li);
     });
   }
@@ -97,24 +101,24 @@
     fetchTodos();
   }
 
-async function removeTodo(index) {
-  const password = prompt("Enter admin password to delete:");
-  if (!password) return;
+  async function removeTodo(index) {
+    console.log("Deleting index", index);
+    const password = prompt("Enter admin password to delete:");
+    if (!password) return;
 
-  const res = await fetch(`${API}/${index}`, {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ password }),
-  });
+    const res = await fetch(`${API}/${index}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password }),
+    });
 
-  const data = await res.json();
-  if (data.error) {
-    alert(`Error: ${data.error}`);
-  } else {
-    fetchTodos();
+    const data = await res.json();
+    if (data.error) {
+      alert(`Error: ${data.error}`);
+    } else {
+      fetchTodos();
+    }
   }
-}
-
 
   input.addEventListener("keypress", function (e) {
     if (e.key === "Enter" && input.value.trim() !== "") {

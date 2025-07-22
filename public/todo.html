@@ -103,15 +103,17 @@
 <body>
   <canvas id="stars"></canvas>
 
-  <div class="top-controls">
-    <div class="button-group">
-      <button id="toggle-theme">🌙</button>
-      <button id="enter-password">🔐 Enter Password</button>
-      <button id="logout">🚪 Logout</button>
-      <button id="undo-btn">↩️ Undo</button>
+  <div class="container">
+    <div class="top-bar">
+      <div class="button-group">
+        <button id="toggle-theme">🌙</button>
+        <button id="enter-password">🔐 Enter Password</button>
+        <button id="logout">🚪 Logout</button>
+        <button id="undo-btn">↩️ Undo</button>
+      </div>
+      <h1><span>✅</span> Siah To Do</h1>
     </div>
     
-  <h1>✅ Siah To Do</h1>
   <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
   <label><input type="checkbox" id="select-all"> Select All</label>
   <button onclick="deleteSelected()">🗑️ Delete Selected</button>

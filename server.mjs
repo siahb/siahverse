@@ -51,10 +51,10 @@ app.post('/todos', async (req, res) => {
 
 // DELETE todo (admin only)
 app.delete('/todos/:index', async (req, res) => {
-  const { password } = req.body;
-  if (password !== ADMIN_PASSWORD) {
-    return res.status(401).json({ error: 'Invalid admin password' });
-  }
+  const auth = req.headers.authorization;
+if (auth !== `Bearer ${ADMIN_PASSWORD}`) {
+  return res.status(401).json({ error: 'Unauthorized' });
+}
 
   const index = parseInt(req.params.index);
   const todos = await loadTodos();

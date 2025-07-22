@@ -5,6 +5,7 @@
   --shadow: rgba(0, 0, 0, 0.1);
   --link: #0047ab;
   --accent: #111111;
+  --star-color: #222222; /* 🔥 dark stars on light mode */
 }
 
 :root[data-theme="dark"] {
@@ -14,6 +15,7 @@
   --shadow: rgba(0, 0, 0, 0.5);
   --link: #58a6ff;
   --accent: #ccc;
+  --star-color: #58a6ff; /* 💫 glowing stars on dark mode */
 }
 
 html, body {

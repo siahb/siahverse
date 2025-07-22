@@ -4,11 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>404 – Lost in the Siahverse</title>
-  <link rel="stylesheet" href="style.css" />
   <style>
+    :root {
+      --bg: #0d0d0d;
+      --text: #ffffff;
+      --link: #58a6ff;
+    }
+
     body {
-      background: var(--bg);
-      color: var(--text);
+      background: var(--bg, #0d0d0d);
+      color: var(--text, #ffffff);
       margin: 0;
       padding: 2rem;
       display: flex;
@@ -32,20 +37,20 @@
     }
 
     a {
-      color: var(--link);
+      color: var(--link, #58a6ff);
       font-weight: bold;
       margin-top: 2rem;
       display: inline-block;
       text-decoration: none;
-      border: 1px solid var(--link);
+      border: 1px solid var(--link, #58a6ff);
       padding: 10px 20px;
       border-radius: 8px;
       transition: 0.3s;
     }
 
     a:hover {
-      background-color: var(--link);
-      color: var(--bg);
+      background-color: var(--link, #58a6ff);
+      color: var(--bg, #0d0d0d);
     }
 
     .astronaut {
@@ -78,7 +83,6 @@
   <a href="/">🌀 Return to Siahverse Home</a>
 
   <script>
-    // Floating starfield background
     const canvas = document.getElementById("stars");
     const ctx = canvas.getContext("2d");
 

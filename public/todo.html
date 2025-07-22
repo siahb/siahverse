@@ -1,20 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <button id="toggle-theme" style="position:fixed;top:1rem;right:1rem;z-index:999;">🌙</button>
   <meta charset="UTF-8">
   <title>📝 Siahverse TODO</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    :root {
+      --bg-color: #0d0d0d;
+      --text-color: #0ff;
+      --input-bg: #111;
+      --input-border: #0ff;
+      --btn-color: #f66;
+    }
+
+    body.light-mode {
+      --bg-color: #f0f0f0;
+      --text-color: #111;
+      --input-bg: #fff;
+      --input-border: #333;
+      --btn-color: #a00;
+    }
+
     body {
       font-family: sans-serif;
-      background: #0d0d0d;
-      color: #0ff;
+      background: var(--bg-color);
+      color: var(--text-color);
       margin: 0;
       padding: 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
+      transition: background 0.3s, color 0.3s;
     }
 
     h1 {
@@ -26,9 +42,9 @@
       width: 80%;
       max-width: 400px;
       font-size: 1rem;
-      background: #111;
-      color: white;
-      border: 1px solid #0ff;
+      background: var(--input-bg);
+      color: var(--text-color);
+      border: 1px solid var(--input-border);
       border-radius: 5px;
     }
 
@@ -41,8 +57,8 @@
     }
 
     li {
-      background: #111;
-      border: 1px solid #0ff;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
       margin: 0.5rem 0;
       padding: 0.5rem;
       border-radius: 5px;
@@ -53,7 +69,7 @@
     button {
       background: none;
       border: none;
-      color: #f66;
+      color: var(--btn-color);
       font-weight: bold;
       cursor: pointer;
     }
@@ -61,12 +77,37 @@
     button:hover {
       color: red;
     }
+
+    #toggle-theme {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      font-size: 1.2rem;
+      background: none;
+    }
   </style>
 </head>
 <body>
+  <button id="toggle-theme">🌙</button>
   <h1>✅ Siahverse TODO</h1>
   <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
   <ul id="todo-list"></ul>
-<script src="todo.js?v=2" defer></script>
+
+  <script src="todo.js?v=2" defer></script>
+  <script>
+    const themeBtn = document.getElementById('toggle-theme');
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      document.body.classList.add('light-mode');
+      themeBtn.textContent = '☀️';
+    }
+
+    themeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('light-mode');
+      const isLight = document.body.classList.contains('light-mode');
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      themeBtn.textContent = isLight ? '☀️' : '🌙';
+    });
+  </script>
 </body>
 </html>

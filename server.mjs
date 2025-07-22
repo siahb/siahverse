@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 const app = express();
 const PORT = 3002;
 const DB_FILE = './db.json';
-const ADMIN_PASSWORD = 'siahadmin123'; // ⛔ Change in prod
+const ADMIN_PASSWORD = '123123'; // ⛔ Change in prod
 
 app.use(cors());
 app.use(express.json());

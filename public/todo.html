@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>📝 Siahverse TODO</title>
+  <title>📝 Siah To Do</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     :root {
@@ -101,13 +101,19 @@
   </style>
 </head>
 <body>
-  <button id="toggle-theme">🌙</button>
-  <button id="enter-password">🔐 Enter Password</button>
-  <button id="logout">🚪 Logout</button>
-  <button id="undo-btn">↩️ Undo</button>
   <canvas id="stars"></canvas>
 
-  <h1>✅ Siahverse TODO</h1>
+  <div class="top-controls">
+    <div class="button-group">
+      <button id="toggle-theme">🌙</button>
+      <button id="enter-password">🔐 Enter Password</button>
+      <button id="logout">🚪 Logout</button>
+      <button id="undo-btn">↩️ Undo</button>
+    </div>
+    <h1>Siahverse TODO</h1>
+  </div>
+
+  <h1>✅ Siah To Do</h1>
   <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
   <label><input type="checkbox" id="select-all"> Select All</label>
   <button onclick="deleteSelected()">🗑️ Delete Selected</button>

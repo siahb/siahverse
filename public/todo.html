@@ -98,8 +98,6 @@
   }
 
 async function removeTodo(index) {
-  console.log("🔍 Delete clicked for index:", index); // 👈 Add this
-
   const password = prompt("Enter admin password to delete:");
   if (!password) return;
 
@@ -110,6 +108,14 @@ async function removeTodo(index) {
       "Authorization": `Bearer ${password}`,
     },
   });
+
+  const data = await res.json();
+  if (data.error) {
+    alert(`❌ ${data.error}`);
+  } else {
+    fetchTodos();
+  }
+}
 
   const data = await res.json();
   console.log("📬 Response from server:", data); // 👈 Add this too

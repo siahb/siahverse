@@ -15,7 +15,7 @@ app.use(express.json());
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => {
-  res.redirect('/todo.html');
+  res.sendFile(path.join(__dirname, 'public', 'todo.html'));
 });
 
 // Load TODOs

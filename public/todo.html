@@ -96,6 +96,7 @@
 </head>
 <body>
   <button id="toggle-theme">🌙</button>
+  <button id="enter-password" style="position:fixed;top:1rem;left:1rem;z-index:999;">🔐 Enter Password</button>
   <h1>✅ Siahverse TODO</h1>
 
   <div class="controls">
@@ -106,80 +107,99 @@
   <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
   <ul id="todo-list"></ul>
 
-  <script>
-    const API = '/todos';
-    const ADMIN_PASSWORD = prompt("Enter admin password:");
+<script>
+  const API = '/todos';
+  const todoInput = document.getElementById('todo-input');
+  const todoList = document.getElementById('todo-list');
+  const themeBtn = document.getElementById('toggle-theme');
+  const enterPwBtn = document.getElementById('enter-password');
 
-    const themeBtn = document.getElementById('toggle-theme');
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-      document.body.classList.add('light-mode');
-      themeBtn.textContent = '☀️';
+  // Set theme
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'light') {
+    document.body.classList.add('light-mode');
+    themeBtn.textContent = '☀️';
+  }
+
+  themeBtn.addEventListener('click', () => {
+    document.body.classList.toggle('light-mode');
+    const isLight = document.body.classList.contains('light-mode');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    themeBtn.textContent = isLight ? '☀️' : '🌙';
+  });
+
+  // Prompt for password if not saved
+  const getPassword = () => {
+    let pw = localStorage.getItem('adminPassword');
+    if (!pw) {
+      pw = prompt("Enter admin password:");
+      if (pw) localStorage.setItem('adminPassword', pw);
     }
-    themeBtn.addEventListener('click', () => {
-      document.body.classList.toggle('light-mode');
-      const isLight = document.body.classList.contains('light-mode');
-      localStorage.setItem('theme', isLight ? 'light' : 'dark');
-      themeBtn.textContent = isLight ? '☀️' : '🌙';
+    return pw;
+  };
+
+  // Manual re-prompt
+  enterPwBtn.addEventListener('click', () => {
+    const pw = prompt("Enter admin password:");
+    if (pw) {
+      localStorage.setItem('adminPassword', pw);
+      fetchTodos();
+    }
+  });
+
+  const fetchTodos = async () => {
+    const res = await fetch(API);
+    const todos = await res.json();
+    todoList.innerHTML = '';
+    todos.forEach((todo, index) => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <input type="checkbox" class="select-todo" data-index="${index}" />
+        <span>${todo}</span>
+        <button onclick="removeTodo(${index})">❌</button>
+      `;
+      todoList.appendChild(li);
     });
+  };
 
-    const todoInput = document.getElementById('todo-input');
-    const todoList = document.getElementById('todo-list');
+  const removeTodo = async (index) => {
+    const res = await fetch(`${API}/${index}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${getPassword()}`,
+      },
+    });
+    if (res.ok) fetchTodos();
+    else alert("❌ Failed to delete (wrong password?)");
+  };
 
-    const fetchTodos = async () => {
-      const res = await fetch(API);
-      const todos = await res.json();
-      todoList.innerHTML = '';
-      todos.forEach((todo, index) => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-          <input type="checkbox" class="select-todo" data-index="${index}" />
-          <span>${todo}</span>
-          <button onclick="removeTodo(${index})">❌</button>
-        `;
-        todoList.appendChild(li);
+  const deleteSelected = async () => {
+    const checkboxes = document.querySelectorAll('.select-todo:checked');
+    const indices = Array.from(checkboxes).map(cb => parseInt(cb.dataset.index));
+    indices.sort((a, b) => b - a); // Delete in reverse order
+    for (let i of indices) {
+      await removeTodo(i);
+    }
+  };
+
+  document.getElementById('select-all').addEventListener('change', (e) => {
+    document.querySelectorAll('.select-todo').forEach(cb => cb.checked = e.target.checked);
+  });
+
+  todoInput.addEventListener('keydown', async (e) => {
+    if (e.key === 'Enter' && todoInput.value.trim()) {
+      await fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ todo: todoInput.value.trim() })
       });
-    };
+      todoInput.value = '';
+      fetchTodos();
+    }
+  });
 
-    const removeTodo = async (index) => {
-      const res = await fetch(`${API}/${index}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${ADMIN_PASSWORD}`,
-        },
-      });
-      if (res.ok) fetchTodos();
-      else alert("Failed to delete (wrong password?)");
-    };
-
-    const deleteSelected = async () => {
-      const checkboxes = document.querySelectorAll('.select-todo:checked');
-      const indices = Array.from(checkboxes).map(cb => parseInt(cb.dataset.index));
-      indices.sort((a, b) => b - a); // Delete in reverse to avoid reindex issues
-
-      for (let i of indices) {
-        await removeTodo(i);
-      }
-    };
-
-    document.getElementById('select-all').addEventListener('change', (e) => {
-      document.querySelectorAll('.select-todo').forEach(cb => cb.checked = e.target.checked);
-    });
-
-    todoInput.addEventListener('keydown', async (e) => {
-      if (e.key === 'Enter' && todoInput.value.trim()) {
-        await fetch(API, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ todo: todoInput.value.trim() })
-        });
-        todoInput.value = '';
-        fetchTodos();
-      }
-    });
-
-    fetchTodos();
-  </script>
+  fetchTodos();
+</script>
 </body>
 </html>

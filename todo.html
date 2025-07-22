@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>📝 Siahverse TODO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #0d0d0d;
+      color: #0ff;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+    }
+
+    #todo-input {
+      padding: 0.5rem;
+      width: 80%;
+      max-width: 400px;
+      font-size: 1rem;
+      background: #111;
+      color: white;
+      border: 1px solid #0ff;
+      border-radius: 5px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 1rem;
+      width: 80%;
+      max-width: 400px;
+    }
+
+    li {
+      background: #111;
+      border: 1px solid #0ff;
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    button {
+      background: none;
+      border: none;
+      color: #f66;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>✅ Siahverse TODO</h1>
+  <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
+  <ul id="todo-list"></ul>
+
+  <script>
+    const input = document.getElementById("todo-input");
+    const list = document.getElementById("todo-list");
+
+    let todos = JSON.parse(localStorage.getItem("siahverse-todos")) || [];
+
+    function render() {
+      list.innerHTML = "";
+      todos.forEach((todo, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `${todo} <button onclick="remove(${index})">✖</button>`;
+        list.appendChild(li);
+      });
+      localStorage.setItem("siahverse-todos", JSON.stringify(todos));
+    }
+
+    function remove(index) {
+      todos.splice(index, 1);
+      render();
+    }
+
+    input.addEventListener("keypress", function (e) {
+      if (e.key === "Enter" && input.value.trim() !== "") {
+        todos.push(input.value.trim());
+        input.value = "";
+        render();
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>

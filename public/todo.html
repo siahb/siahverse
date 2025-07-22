@@ -97,23 +97,25 @@
     fetchTodos();
   }
 
-  async function removeTodo(index) {
-    const password = prompt("Enter admin password to delete:");
-    if (!password) return;
+async function removeTodo(index) {
+  const password = prompt("Enter admin password:");
+  if (!password) return;
 
-    const res = await fetch(`${API}/${index}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password }),
-    });
+  const res = await fetch(`${API}/${index}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${password}`
+    },
+  });
 
-    const data = await res.json();
-    if (data.error) {
-      alert(`Error: ${data.error}`);
-    } else {
-      fetchTodos();
-    }
+  const data = await res.json();
+  if (data.error) {
+    alert(`Error: ${data.error}`);
+  } else {
+    fetchTodos();
   }
+}
 
   input.addEventListener("keypress", function (e) {
     if (e.key === "Enter" && input.value.trim() !== "") {

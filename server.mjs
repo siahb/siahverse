@@ -4,10 +4,6 @@ import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-app.use(express.static(path.join(__dirname, 'public')));
-
-
 const app = express();
 const PORT = 3002;
 const DB_FILE = './db.json';
@@ -15,6 +11,9 @@ const ADMIN_PASSWORD = 'siahadmin123'; // ⛔ Change in prod
 
 app.use(cors());
 app.use(express.json());
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Load TODOs
 const loadTodos = async () => {

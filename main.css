@@ -106,3 +106,13 @@ button:hover, .copy-btn:hover {
   border-radius: 6px;
   border: 1px solid #444;
 }
+canvas#stars {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: -9999 !important;
+  pointer-events: none;
+  background: transparent !important;
+}

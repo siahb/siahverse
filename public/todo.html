@@ -12,7 +12,6 @@
       --input-border: #0ff;
       --btn-color: #f66;
     }
-
     body.light-mode {
       --bg-color: #f0f0f0;
       --text-color: #111;
@@ -20,7 +19,6 @@
       --input-border: #333;
       --btn-color: #a00;
     }
-
     body {
       font-family: sans-serif;
       background: var(--bg-color);
@@ -32,11 +30,9 @@
       align-items: center;
       transition: background 0.3s, color 0.3s;
     }
-
     h1 {
       margin-bottom: 1rem;
     }
-
     #todo-input {
       padding: 0.5rem;
       width: 80%;
@@ -47,7 +43,6 @@
       border: 1px solid var(--input-border);
       border-radius: 5px;
     }
-
     ul {
       list-style: none;
       padding: 0;
@@ -55,7 +50,6 @@
       width: 80%;
       max-width: 400px;
     }
-
     li {
       background: var(--input-bg);
       border: 1px solid var(--input-border);
@@ -64,9 +58,7 @@
       border-radius: 5px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
     }
-
     button {
       background: none;
       border: none;
@@ -74,132 +66,210 @@
       font-weight: bold;
       cursor: pointer;
     }
-
     button:hover {
       color: red;
     }
-
-    #toggle-theme {
+    #toggle-theme, #enter-password, #logout, #undo-btn {
       position: fixed;
-      top: 1rem;
-      right: 1rem;
+      z-index: 999;
       font-size: 1.2rem;
     }
-
-    .controls {
-      margin-top: 1rem;
-      display: flex;
-      gap: 1rem;
-      align-items: center;
+    #toggle-theme {
+      top: 1rem;
+      right: 1rem;
+    }
+    #enter-password {
+      top: 1rem;
+      left: 1rem;
+    }
+    #logout {
+      top: 4rem;
+      left: 1rem;
+    }
+    #undo-btn {
+      top: 7rem;
+      left: 1rem;
+    }
+    #stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
     }
   </style>
 </head>
 <body>
   <button id="toggle-theme">🌙</button>
-  <button id="enter-password" style="position:fixed;top:1rem;left:1rem;z-index:999;">🔐 Enter Password</button>
+  <button id="enter-password">🔐 Enter Password</button>
+  <button id="logout">🚪 Logout</button>
+  <button id="undo-btn">↩️ Undo</button>
+  <canvas id="stars"></canvas>
+
   <h1>✅ Siahverse TODO</h1>
-
-  <div class="controls">
-    <input type="checkbox" id="select-all"> <label for="select-all">Select All</label>
-    <button onclick="deleteSelected()">🗑 Delete Selected</button>
-  </div>
-
   <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
+  <label><input type="checkbox" id="select-all"> Select All</label>
+  <button onclick="deleteSelected()">🗑️ Delete Selected</button>
   <ul id="todo-list"></ul>
 
-<script>
-  const API = '/todos';
-  const todoInput = document.getElementById('todo-input');
-  const todoList = document.getElementById('todo-list');
-  const themeBtn = document.getElementById('toggle-theme');
-  const enterPwBtn = document.getElementById('enter-password');
+  <script>
+    const API = '/todos';
+    const todoInput = document.getElementById('todo-input');
+    const todoList = document.getElementById('todo-list');
+    const themeBtn = document.getElementById('toggle-theme');
+    const enterPwBtn = document.getElementById('enter-password');
+    const logoutBtn = document.getElementById('logout');
+    const undoBtn = document.getElementById('undo-btn');
 
-  // Set theme
-  const savedTheme = localStorage.getItem('theme');
-  if (savedTheme === 'light') {
-    document.body.classList.add('light-mode');
-    themeBtn.textContent = '☀️';
-  }
+    let deletedTodos = [];
 
-  themeBtn.addEventListener('click', () => {
-    document.body.classList.toggle('light-mode');
-    const isLight = document.body.classList.contains('light-mode');
-    localStorage.setItem('theme', isLight ? 'light' : 'dark');
-    themeBtn.textContent = isLight ? '☀️' : '🌙';
-  });
-
-  // Prompt for password if not saved
-  const getPassword = () => {
-    let pw = localStorage.getItem('adminPassword');
-    if (!pw) {
-      pw = prompt("Enter admin password:");
-      if (pw) localStorage.setItem('adminPassword', pw);
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      document.body.classList.add('light-mode');
+      themeBtn.textContent = '☀️';
     }
-    return pw;
-  };
+    themeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('light-mode');
+      const isLight = document.body.classList.contains('light-mode');
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      themeBtn.textContent = isLight ? '☀️' : '🌙';
+    });
 
-  // Manual re-prompt
-  enterPwBtn.addEventListener('click', () => {
-    const pw = prompt("Enter admin password:");
-    if (pw) {
-      localStorage.setItem('adminPassword', pw);
+    const getPassword = () => {
+      let pw = localStorage.getItem('adminPassword');
+      if (!pw) {
+        pw = prompt("Enter admin password:");
+        if (pw) localStorage.setItem('adminPassword', pw);
+      }
+      return pw;
+    };
+
+    enterPwBtn.addEventListener('click', () => {
+      const pw = prompt("Enter admin password:");
+      if (pw) {
+        localStorage.setItem('adminPassword', pw);
+        fetchTodos();
+      }
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem('adminPassword');
+      alert("Password cleared.");
+    });
+
+    undoBtn.addEventListener('click', async () => {
+      for (let todo of deletedTodos.reverse()) {
+        await fetch(API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ todo })
+        });
+      }
+      deletedTodos = [];
       fetchTodos();
-    }
-  });
-
-  const fetchTodos = async () => {
-    const res = await fetch(API);
-    const todos = await res.json();
-    todoList.innerHTML = '';
-    todos.forEach((todo, index) => {
-      const li = document.createElement('li');
-      li.innerHTML = `
-        <input type="checkbox" class="select-todo" data-index="${index}" />
-        <span>${todo}</span>
-        <button onclick="removeTodo(${index})">❌</button>
-      `;
-      todoList.appendChild(li);
     });
-  };
 
-  const removeTodo = async (index) => {
-    const res = await fetch(`${API}/${index}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${getPassword()}`,
-      },
-    });
-    if (res.ok) fetchTodos();
-    else alert("❌ Failed to delete (wrong password?)");
-  };
-
-  const deleteSelected = async () => {
-    const checkboxes = document.querySelectorAll('.select-todo:checked');
-    const indices = Array.from(checkboxes).map(cb => parseInt(cb.dataset.index));
-    indices.sort((a, b) => b - a); // Delete in reverse order
-    for (let i of indices) {
-      await removeTodo(i);
-    }
-  };
-
-  document.getElementById('select-all').addEventListener('change', (e) => {
-    document.querySelectorAll('.select-todo').forEach(cb => cb.checked = e.target.checked);
-  });
-
-  todoInput.addEventListener('keydown', async (e) => {
-    if (e.key === 'Enter' && todoInput.value.trim()) {
-      await fetch(API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ todo: todoInput.value.trim() })
+    const fetchTodos = async () => {
+      const res = await fetch(API);
+      const todos = await res.json();
+      todoList.innerHTML = '';
+      todos.forEach((todo, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <input type="checkbox" class="select-todo" data-index="${index}" />
+          <span>${todo}</span>
+          <button onclick="removeTodo(${index}, '${todo.replace(/'/g, "\\'")}')">❌</button>
+        `;
+        todoList.appendChild(li);
       });
-      todoInput.value = '';
-      fetchTodos();
-    }
-  });
+    };
 
-  fetchTodos();
-</script>
+    const removeTodo = async (index, text) => {
+      const res = await fetch(`${API}/${index}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${getPassword()}`,
+        },
+      });
+      if (res.ok) {
+        if (text) deletedTodos.push(text);
+        fetchTodos();
+      } else alert("❌ Failed to delete (wrong password?)");
+    };
+
+    const deleteSelected = async () => {
+      const checkboxes = document.querySelectorAll('.select-todo:checked');
+      const indices = Array.from(checkboxes).map(cb => parseInt(cb.dataset.index));
+      indices.sort((a, b) => b - a);
+      for (let i of indices) {
+        const span = todoList.querySelector(`.select-todo[data-index='${i}']`).nextElementSibling;
+        deletedTodos.push(span.textContent);
+        await removeTodo(i);
+      }
+    };
+
+    document.getElementById('select-all').addEventListener('change', (e) => {
+      document.querySelectorAll('.select-todo').forEach(cb => cb.checked = e.target.checked);
+    });
+
+    todoInput.addEventListener('keydown', async (e) => {
+      if (e.key === 'Enter' && todoInput.value.trim()) {
+        await fetch(API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ todo: todoInput.value.trim() })
+        });
+        todoInput.value = '';
+        fetchTodos();
+      }
+    });
+
+    fetchTodos();
+
+    // Star background
+    const stars = document.getElementById("stars");
+    const ctx = stars.getContext("2d");
+    let w, h, particles;
+
+    function initStars() {
+      w = stars.width = window.innerWidth;
+      h = stars.height = window.innerHeight;
+      particles = Array.from({ length: 100 }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 1.2,
+        d: Math.random() * 1
+      }));
+    }
+
+    function drawStars() {
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = "white";
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      moveStars();
+    }
+
+    function moveStars() {
+      particles.forEach(p => {
+        p.y += p.d;
+        if (p.y > h) p.y = 0;
+      });
+    }
+
+    function animateStars() {
+      drawStars();
+      requestAnimationFrame(animateStars);
+    }
+
+    window.addEventListener("resize", initStars);
+    initStars();
+    animateStars();
+  </script>
 </body>
 </html>

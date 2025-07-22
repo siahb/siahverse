@@ -1,0 +1,146 @@
+:root[data-theme="light"] {
+  --bg: #ffffff;
+  --text: #000000;
+  --box: #f5f5f5;
+  --link: #0047ab;
+  --accent: #111111;
+  --star-color: #222222;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0d1117;
+  --text: #ffffff;
+  --box: #161b22;
+  --link: #58a6ff;
+  --accent: #ccc;
+  --star-color: #58a6ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  transition: background 0.3s, color 0.3s;
+}
+
+canvas#stars {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  background: transparent;
+}
+
+.container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: var(--box);
+  border-radius: 12px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  position: relative;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2rem;
+  color: var(--link);
+  margin-bottom: 1.5rem;
+}
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--link);
+  color: var(--bg);
+  cursor: pointer;
+  font-weight: 600;
+  transition: opacity 0.2s ease;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border: 2px solid var(--link);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+.todo-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+ul#todo-list {
+  list-style: none;
+  padding: 0;
+}
+
+ul#todo-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+  border: 1px solid var(--link);
+  color: var(--link);
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+}
+
+ul#todo-list li button {
+  color: #ff6b6b;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+ul#todo-list li button:hover {
+  color: red;
+}
+
+/* Responsive layout */
+@media (max-width: 600px) {
+  .button-group {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .todo-controls {
+    flex-direction: column;
+    align-items: center;
+  }
+}

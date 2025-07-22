@@ -67,36 +67,54 @@
   <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
   <ul id="todo-list"></ul>
 
-  <script>
-    const input = document.getElementById("todo-input");
-    const list = document.getElementById("todo-list");
+<script>
+  const input = document.getElementById("todo-input");
+  const list = document.getElementById("todo-list");
 
-    let todos = JSON.parse(localStorage.getItem("siahverse-todos")) || [];
+  const API = "https://todo.siahverse.cc/todos"; // ✅ Update if needed
+  const ADMIN_PASSWORD = "siahadmin123"; // ⛔ Don't expose in production
 
-    function render() {
-      list.innerHTML = "";
-      todos.forEach((todo, index) => {
-        const li = document.createElement("li");
-        li.innerHTML = `${todo} <button onclick="remove(${index})">✖</button>`;
-        list.appendChild(li);
-      });
-      localStorage.setItem("siahverse-todos", JSON.stringify(todos));
-    }
+  async function fetchTodos() {
+    const res = await fetch(API);
+    const todos = await res.json();
+    render(todos);
+  }
 
-    function remove(index) {
-      todos.splice(index, 1);
-      render();
-    }
-
-    input.addEventListener("keypress", function (e) {
-      if (e.key === "Enter" && input.value.trim() !== "") {
-        todos.push(input.value.trim());
-        input.value = "";
-        render();
-      }
+  function render(todos) {
+    list.innerHTML = "";
+    todos.forEach((todo, index) => {
+      const li = document.createElement("li");
+      li.innerHTML = `${todo} <button onclick="removeTodo(${index})">✖</button>`;
+      list.appendChild(li);
     });
+  }
 
-    render();
-  </script>
+  async function addTodo(text) {
+    await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ todo: text }),
+    });
+    fetchTodos();
+  }
+
+  async function removeTodo(index) {
+    await fetch(`${API}/${index}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: ADMIN_PASSWORD }),
+    });
+    fetchTodos();
+  }
+
+  input.addEventListener("keypress", function (e) {
+    if (e.key === "Enter" && input.value.trim() !== "") {
+      addTodo(input.value.trim());
+      input.value = "";
+    }
+  });
+
+  fetchTodos();
+</script>
 </body>
 </html>

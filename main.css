@@ -5,6 +5,8 @@
   --link: #0047ab;
   --accent: #111111;
   --star-color: #222222;
+  --container-bg: rgba(245, 245, 245, 0.85);
+  --heading: #111111;
 }
 
 :root[data-theme="dark"] {
@@ -14,6 +16,8 @@
   --link: #58a6ff;
   --accent: #ccc;
   --star-color: #58a6ff;
+  --container-bg: rgba(22, 27, 34, 0.644);
+  --heading: #ffffff;
 }
 
 * {
@@ -25,7 +29,7 @@ html, body {
   padding: 0;
   height: 100%;
   color: var(--text);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Roboto', 'Inter', sans-serif;
   transition: background 0.3s, color 0.3s;
 }
 
@@ -42,34 +46,45 @@ canvas#stars {
 
 .container {
   max-width: 600px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background-color: var(--box);
+  margin: 10rem auto;
+  padding: 2.5rem;
+  background-color: var(--container-bg);
   border-radius: 12px;
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.623);
   z-index: 1;
   position: relative;
   text-align: center;
 }
 
 h1 {
-  font-size: 2rem;
-  color: var(--link);
-  margin-bottom: 1rem;
+  font-size: 2.3rem;
+  text-decoration: none;
+  margin-bottom: 2rem;
+  color: var(--heading);
+  font-family: 'Proxima Nova', 'Roboto', 'Inter', sans-serif;
 }
 
 .tagline {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   font-size: 0.95rem;
   color: var(--accent);
 }
 
+.links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: rem;
+}
+
 .links a {
   display: inline-block;
-  margin: 0.25rem 0.5rem;
+  margin: 2.5rem 1.5rem;
   color: var(--link);
-  text-decoration: underline;
+  text-decoration: none;
   font-weight: 500;
+  text-align: center;
+  /* Center the links container */
 }
 
 button, .copy-btn {
@@ -94,6 +109,62 @@ button:hover, .copy-btn:hover {
   top: 1rem;
   right: 1rem;
   z-index: 999;
+  width: 48px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+}
+
+/* Hide the default checkbox */
+.theme-switch input[type="checkbox"] {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.theme-switch .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #ccc;
+  border-radius: 34px;
+  transition: background 0.3s;
+  width: 48px;
+  height: 28px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+}
+
+.theme-switch .slider:before {
+  content: "🌞";
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  border-radius: 50%;
+  transition: transform 0.3s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  line-height: 20px;
+}
+
+/* Checked state (dark mode) */
+.theme-switch input:checked + .slider:before {
+  content: "🌙";
+  transform: translateX(20px);
+}
+
+/* Checked state */
+.theme-switch input:checked + .slider {
+  background: #006dd3;; /* Apple green */
 }
 
 .copy-btn {
@@ -114,4 +185,16 @@ canvas#stars {
   z-index: -9999 !important;
   pointer-events: none;
   background: transparent !important;
+}
+#siahbot {
+  position: fixed;
+  right: 2rem;
+  bottom: 2rem;
+  font-size: 3rem;
+  cursor: pointer;
+  z-index: 1000;
+  transition: transform 0.2s;
+}
+#siahbot:hover {
+  transform: scale(1.15) rotate(-10deg);
 }

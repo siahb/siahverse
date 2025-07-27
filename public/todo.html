@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
   <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -121,7 +121,7 @@
       // --- Admin Login/Logout Logic ---
       const ADMIN_PASSWORD_KEY = 'adminPassword'; // Key for storing password
       const ADMIN_USERNAME_KEY = 'adminUsername'; // Key for storing username (optional)
-
+      
       const getAdminPassword = () => localStorage.getItem(ADMIN_PASSWORD_KEY);
       const getAdminUsername = () => localStorage.getItem(ADMIN_USERNAME_KEY);
 
@@ -272,18 +272,22 @@
         }
       };
 
+      // Remove a todo item (modified to omit auth header)
       const removeTodo = async (index, text) => {
         const res = await fetch(`${API}/${index}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${getAdminPassword()}`, // Use stored password for auth
+            // Commented out Authorization header for local development
+            // "Authorization": `Bearer ${getPassword()}`,
           },
         });
         if (res.ok) {
           if (text) deletedTodos.push(text);
           fetchTodos();
-        } else alert("❌ Failed to delete (wrong password?)");
+        } else {
+          alert("❌ Failed to delete (check your backend or password configuration)");
+        }
       };
 
       const deleteSelected = async (listType) => {

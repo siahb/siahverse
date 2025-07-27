@@ -42,7 +42,7 @@
       <ul id="todo-list"></ul>
     </div>
 
-    <!-- ✅ Done List Container -->
+    <!-- Marked as Done Container -->
     <div id="done-container" class="card-container">
       <h2>Marked as Done ✅</h2>
       <ul id="done-list"></ul>
@@ -75,10 +75,11 @@
   </div>
 
 <script>
+  // API endpoint and element references
   const API = '/todos';
   const todoInput = document.getElementById('todo-input');
   const todoList = document.getElementById('todo-list');
-  const doneList = document.getElementById('done-list'); // ✅
+  const doneList = document.getElementById('done-list');
   const undoBtn = document.getElementById('undo-btn');
   const selectAll = document.getElementById('select-all');
   const themeCheckbox = document.getElementById('toggle-theme-checkbox');
@@ -94,7 +95,7 @@
 
   let deletedTodos = [];
   let todosData = [];
-  let doneData = []; // ✅
+  let doneData = [];
 
   const ADMIN_PASSWORD_KEY = 'adminPassword';
   const getAdminPassword = () => localStorage.getItem(ADMIN_PASSWORD_KEY);
@@ -111,7 +112,7 @@
     localStorage.setItem('theme', isLight ? 'light' : 'dark');
   });
 
-  // Admin password helper and events
+  // Simple admin password helper (server-connected)
   const getPassword = () => {
     let pw = localStorage.getItem('adminPassword');
     if (!pw) {
@@ -121,6 +122,7 @@
     return pw;
   };
 
+  // Admin login via prompt
   enterPwBtn.addEventListener('click', () => {
     const pw = prompt("Enter admin password:");
     if (pw) {
@@ -129,18 +131,21 @@
     }
   });
 
+  // Admin logout via top bar button
   logoutBtn.addEventListener('click', () => {
     localStorage.removeItem('adminPassword');
     alert("Password cleared.");
+    todoInput.disabled = true;
   });
 
-  // Admin Login/Logout Logic
+  // Admin Login Modal logic
   cancelBtn.addEventListener('click', () => adminModal.style.display = 'none');
   closeModalBtn.addEventListener('click', () => adminModal.style.display = 'none');
 
   loginBtn.addEventListener('click', () => {
     const password = passwordInput.value.trim();
-    if (password == 'adminPassword') {
+    // Change "password123" to your desired admin password
+    if (password === 'password123') {
       localStorage.setItem(ADMIN_PASSWORD_KEY, password);
       alert("Login successful!");
       todoInput.disabled = false;
@@ -161,14 +166,16 @@
     todoInput.disabled = true;
   }
 
-  // Fetch and render todos
+  // Fetch and render todos from server
   const fetchTodos = async () => {
     try {
-      const res = await fetch(API);
+      const res = await fetch(API, {
+        // Optionally send the admin password:
+        headers: { "Authorization": `Bearer ${getAdminPassword()}`}
+      });
       const allData = await res.json();
       todosData = allData.todos || [];
       doneData = allData.done || [];
-
       renderTodos();
       renderDone();
     } catch (err) {
@@ -208,7 +215,7 @@
     });
   };
 
-  // Mark as Done
+  // Mark task as done
   window.markAsDone = async (index) => {
     const task = todosData[index].todo || todosData[index];
     doneData.push(task);
@@ -222,7 +229,7 @@
     renderDone();
   };
 
-  // Remove todo
+  // Remove a todo task (requires admin)
   const removeTodo = async (index, text) => {
     if (!getAdminPassword()) {
       alert("Only admin can delete tasks.");
@@ -238,7 +245,7 @@
     renderTodos();
   };
 
-  // Remove from Done
+  // Remove task from Done list (requires admin)
   window.removeDone = async (index, text) => {
     if (!getAdminPassword()) {
       alert("Only admin can delete tasks.");
@@ -254,7 +261,7 @@
     renderDone();
   };
 
-  // Undo
+  // Undo deletion
   undoBtn.addEventListener('click', async () => {
     for (let todoText of deletedTodos.reverse()) {
       todosData.push({ todo: todoText });
@@ -268,11 +275,11 @@
     renderTodos();
   });
 
-  // Add todo on Enter
+  // Add new todo on Enter (requires admin)
   todoInput.addEventListener('keydown', async (e) => {
     if (e.key === 'Enter' && todoInput.value.trim()) {
       if (!getAdminPassword()) {
-        alert("Only admin can add tasks.");
+        alert("Only admin can add tasks. Please log in.");
         return;
       }
       todosData.push({ todo: todoInput.value.trim() });
@@ -290,7 +297,7 @@
   new Sortable(todoList, {
     animation: 150,
     onEnd: async function (evt) {
-      // Reorder todosData based on new order of li elements
+      // Compute new order based on the reordered li elements
       const newOrder = [];
       const items = todoList.querySelectorAll('li');
       items.forEach(item => {
@@ -304,7 +311,7 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ todos: todosData, done: doneData })
       });
-      renderTodos(); // Re-render the list with correct indices
+      renderTodos();
     }
   });
 
@@ -314,6 +321,7 @@
   window.addEventListener("DOMContentLoaded", () => {
     const canvas = document.getElementById("stars");
     const ctx = canvas.getContext("2d");
+
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;

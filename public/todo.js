@@ -1,57 +1,78 @@
+// Elements
 const input = document.getElementById("todo-input");
-const list = document.getElementById("todo-list");
+const todoListElem = document.getElementById("todo-list");
+const doneListElem = document.getElementById("done-list");
 
-const API = "https://todo.siahverse.cc/todos";
+// Retrieve stored todos from localStorage or initialize an empty array
+let todos = JSON.parse(localStorage.getItem("todos")) || [];
 
-async function fetchTodos() {
-  const res = await fetch(API);
-  const todos = await res.json();
-  render(todos);
+// Save todos to localStorage
+function saveTodos() {
+  localStorage.setItem("todos", JSON.stringify(todos));
 }
 
-function render(todos) {
-  list.innerHTML = "";
+// Render both To Do and Marked As Done lists
+function renderTodos() {
+  todoListElem.innerHTML = "";
+  doneListElem.innerHTML = "";
   todos.forEach((todo, index) => {
     const li = document.createElement("li");
-    li.innerHTML = `${todo} <button onclick="removeTodo(${index})">✖</button>`;
-    list.appendChild(li);
+    li.setAttribute("data-index", index);
+    li.innerHTML = `
+      <input type="checkbox" class="toggle-checkbox" ${todo.done ? "checked" : ""}>
+      <span style="text-decoration: ${todo.done ? "line-through" : "none"}">
+        ${todo.text}
+      </span>
+      <button class="delete-btn" data-index="${index}">✖</button>
+    `;
+    // Listen for toggle changes on the checkbox
+    li.querySelector(".toggle-checkbox").addEventListener("change", () => {
+      toggleTodo(index);
+    });
+    if (todo.done) {
+      doneListElem.appendChild(li);
+    } else {
+      todoListElem.appendChild(li);
+    }
   });
 }
 
-async function addTodo(text) {
-  await fetch(API, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ todo: text }),
-  });
-  fetchTodos();
+// Add new todo
+function addTodo(text) {
+  todos.push({ text: text, done: false });
+  saveTodos();
+  renderTodos();
 }
 
-async function removeTodo(index) {
-  const password = prompt("Enter admin password to delete:");
-  if (!password) return;
-
-  const res = await fetch(`${API}/${index}`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${password}`,
-    },
-  });
-
-  const data = await res.json();
-  if (data.error) {
-    alert(`❌ ${data.error}`);
-  } else {
-    fetchTodos();
-  }
+// Delete a todo item
+function deleteTodo(index) {
+  todos.splice(index, 1);
+  saveTodos();
+  renderTodos();
 }
 
-input.addEventListener("keypress", function (e) {
+// Toggle todo's "done" status
+function toggleTodo(index) {
+  todos[index].done = !todos[index].done;
+  saveTodos();
+  renderTodos();
+}
+
+// Event listener for Enter key in the input field
+input.addEventListener("keypress", (e) => {
   if (e.key === "Enter" && input.value.trim() !== "") {
     addTodo(input.value.trim());
     input.value = "";
   }
 });
 
-fetchTodos();
+// Event delegation for delete buttons
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("delete-btn")) {
+    const idx = parseInt(e.target.getAttribute("data-index"));
+    deleteTodo(idx);
+  }
+});
+
+// Initial render
+renderTodos();

@@ -39,15 +39,27 @@ app.get('/todos', async (req, res) => {
   res.json(todos);
 });
 
-// POST new todo
+// POST new todo (expects { text, done })
 app.post('/todos', async (req, res) => {
-  const { todo } = req.body;
-  if (!todo) return res.status(400).json({ error: 'Missing todo' });
+  const { text, done = false } = req.body;
+  if (!text) return res.status(400).json({ error: 'Missing todo text' });
 
   const todos = await loadTodos();
-  todos.push(todo);
+  todos.push({ text, done });
   await saveTodos(todos);
-  res.json({ status: 'added', todo });
+  res.json({ status: 'added', text, done });
+});
+
+// PUT all todos (replace all)
+app.put('/todos', async (req, res) => {
+  const auth = req.headers.authorization;
+  if (auth !== `Bearer ${ADMIN_PASSWORD}`) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  const todos = req.body;
+  if (!Array.isArray(todos)) return res.status(400).json({ error: 'Invalid data' });
+  await saveTodos(todos);
+  res.json({ status: 'updated', todos });
 });
 
 // DELETE todo (admin only)

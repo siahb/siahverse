@@ -198,3 +198,74 @@ canvas#stars {
 #siahbot:hover {
   transform: scale(1.15) rotate(-10deg);
 }
+
+/* Responsive Styles */
+@media (max-width: 900px) {
+  .container {
+    max-width: 90vw;
+    margin: 4rem auto;
+    padding: 1.5rem;
+  }
+  h1 {
+    font-size: 2rem;
+  }
+  .links a {
+    margin: 1.5rem 0.5rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    max-width: 98vw;
+    margin: 2rem auto;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  h1 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+  .tagline {
+    font-size: 0.85rem;
+  }
+  .links {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .links a {
+    margin: 0.5rem 0;
+    font-size: 0.98rem;
+  }
+  .theme-switch {
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 40px;
+    height: 24px;
+  }
+  .theme-switch .slider {
+    width: 40px;
+    height: 24px;
+  }
+  .theme-switch .slider:before {
+    width: 16px;
+    height: 16px;
+    left: 3px;
+    top: 3px;
+    font-size: 1rem;
+    line-height: 16px;
+  }
+  .theme-switch input:checked + .slider:before {
+    transform: translateX(14px);
+  }
+  #siahbot {
+    right: 1rem;
+    bottom: 1rem;
+    font-size: 2.2rem;
+  }
+  button, .copy-btn {
+    font-size: 0.95rem;
+    padding: 0.5rem 1rem;
+    margin-top: 0.7rem;
+  }
+}

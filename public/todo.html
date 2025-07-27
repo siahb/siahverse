@@ -2,268 +2,139 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>📝 Siah To Do</title>
+  <title>📝 Siahverse TODO</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="todo.css">
-  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #0d0d0d;
+      color: #0ff;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+    }
+
+    #todo-input {
+      padding: 0.5rem;
+      width: 80%;
+      max-width: 400px;
+      font-size: 1rem;
+      background: #111;
+      color: white;
+      border: 1px solid #0ff;
+      border-radius: 5px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 1rem;
+      width: 80%;
+      max-width: 400px;
+    }
+
+    li {
+      background: #111;
+      border: 1px solid #0ff;
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    button {
+      background: none;
+      border: none;
+      color: #f66;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      color: red;
+    }
+  </style>
 </head>
 <body>
-  <canvas id="stars"></canvas>
-
-  <!-- Theme Toggle -->
-  <div id="toggle-theme" class="theme-switch">
-    <label class="theme-switch">
-      <input type="checkbox" id="toggle-theme-checkbox">
-      <span class="slider"></span>
-    </label>
-  </div>
-
-  <div class="container">
-    <div class="top-bar">
-      <div class="button-group">
-        <button id="enter-password">🔐 Enter Password</button>
-        <button id="logout">🚪 Logout</button>
-      </div>
-      <h1><span>✅</span> Siah To Do</h1>
-    </div>
-  </div>
-
-  <div class="main-content">
-    <!-- To Do List -->
-    <div id="todo-container" class="card-container">
-      <h2>To Do List</h2>
-      <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
-      <div class="controls">
-        <label><input type="checkbox" id="select-all"> Select All</label>
-        <button onclick="deleteSelected()">🗑️ Delete Selected</button>
-        <button id="undo-btn">↩️ Undo</button>
-      </div>
-      <ul id="todo-list"></ul>
-    </div>
-
-    <!-- Done List -->
-    <div id="done-container" class="card-container">
-      <h2>Marked as Done ✅</h2>
-      <ul id="done-list"></ul>
-    </div>
-  </div>
-
-  <!-- Admin Modal -->
-  <div id="admin-modal" class="modal">
-    <div class="modal-content">
-      <h2>Admin Login</h2>
-      <input type="password" id="password-input" placeholder="Password" />
-      <div class="modal-buttons">
-        <button id="login-btn">Login</button>
-        <button id="cancel-btn">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ✅ Back Button -->
-  <div class="back-button-wrapper">
-    <a href="https://siahverse.cc/" class="back-button">Back</a>
-  </div>
+  <h1>✅ Siahverse TODO</h1>
+  <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
+  <ul id="todo-list"></ul>
 
 <script>
-  const todoInput = document.getElementById('todo-input');
-  const todoList = document.getElementById('todo-list');
-  const doneList = document.getElementById('done-list');
-  const undoBtn = document.getElementById('undo-btn');
-  const selectAll = document.getElementById('select-all');
-  const themeCheckbox = document.getElementById('toggle-theme-checkbox');
+  const input = document.getElementById("todo-input");
+  const list = document.getElementById("todo-list");
 
-  const enterPwBtn = document.getElementById('enter-password');
-  const logoutBtn = document.getElementById('logout');
-  const adminModal = document.getElementById('admin-modal');
-  const loginBtn = document.getElementById('login-btn');
-  const cancelBtn = document.getElementById('cancel-btn');
-  const passwordInput = document.getElementById('password-input');
+  const API = "https://todo.siahverse.cc/"; // ✅ Update if needed
 
-  let todosData = JSON.parse(localStorage.getItem('todos')) || [];
-  let doneData = JSON.parse(localStorage.getItem('done')) || [];
-  let deletedTodos = [];
-
-  const ADMIN_PASSWORD_KEY = 'adminPassword';
-
-  // Theme toggle
-  const savedTheme = localStorage.getItem('theme');
-  if (savedTheme === 'light') {
-    document.body.classList.add('light-mode');
-    themeCheckbox.checked = true;
+  async function fetchTodos() {
+    const res = await fetch(API);
+    const todos = await res.json();
+    render(todos);
   }
-  themeCheckbox.addEventListener('change', () => {
-    document.body.classList.toggle('light-mode');
-    localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
-  });
 
-  // Admin logic
-  enterPwBtn.addEventListener('click', () => adminModal.style.display = 'block');
-  cancelBtn.addEventListener('click', () => adminModal.style.display = 'none');
-
-  loginBtn.addEventListener('click', () => {
-    const pw = passwordInput.value.trim();
-    if (pw) {
-      localStorage.setItem(ADMIN_PASSWORD_KEY, pw);
-      alert("Admin logged in!");
-      todoInput.disabled = false;
-      adminModal.style.display = 'none';
-    } else alert("Password cannot be empty.");
-  });
-
-  logoutBtn.addEventListener('click', () => {
-    localStorage.removeItem(ADMIN_PASSWORD_KEY);
-    alert("Logged out.");
-    todoInput.disabled = true;
-  });
-
-  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) todoInput.disabled = true;
-
-  // Render lists
-  const renderTodos = () => {
-    todoList.innerHTML = '';
-    todosData.forEach((todo, i) => {
-      const li = document.createElement('li');
-      li.setAttribute('data-index', i);
-      li.innerHTML = `
-        <input type="checkbox" class="select-todo" data-index="${i}" />
-        <span>${todo}</span>
-        <div>
-          <button onclick="markAsDone(${i})">✅</button>
-          <button onclick="removeTodo(${i}, '${todo.replace(/'/g, "\\'")}')">❌</button>
-        </div>`;
-      todoList.appendChild(li);
+  function render(todos) {
+    list.innerHTML = "";
+    todos.forEach((todo, index) => {
+      const li = document.createElement("li");
+      li.innerHTML = `${todo} <button onclick="removeTodo(${index})">✖</button>`;
+      list.appendChild(li);
     });
-  };
+  }
 
-  const renderDone = () => {
-    doneList.innerHTML = '';
-    doneData.forEach((task, i) => {
-      const li = document.createElement('li');
-      li.classList.add('done');
-      li.innerHTML = `<span>${task}</span>
-        <button onclick="removeDone(${i}, '${task.replace(/'/g, "\\'")}')">❌</button>`;
-      doneList.appendChild(li);
+  async function addTodo(text) {
+    await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ todo: text }),
     });
-  };
+    fetchTodos();
+  }
 
-  const saveData = () => {
-    localStorage.setItem('todos', JSON.stringify(todosData));
-    localStorage.setItem('done', JSON.stringify(doneData));
-  };
+async function removeTodo(index) {
+  const password = prompt("Enter admin password to delete:");
+  if (!password) return;
 
-  // Actions
-  window.markAsDone = (i) => {
-    doneData.push(todosData[i]);
-    todosData.splice(i, 1);
-    saveData();
-    renderTodos();
-    renderDone();
-  };
-
-  window.removeTodo = (i, text) => {
-    if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
-    deletedTodos.push(text);
-    todosData.splice(i, 1);
-    saveData();
-    renderTodos();
-  };
-
-  window.removeDone = (i, text) => {
-    if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
-    deletedTodos.push(text);
-    doneData.splice(i, 1);
-    saveData();
-    renderDone();
-  };
-
-  undoBtn.addEventListener('click', () => {
-    todosData.push(...deletedTodos);
-    deletedTodos = [];
-    saveData();
-    renderTodos();
+  const res = await fetch(`${API}/${index}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${password}`,
+    },
   });
 
-  todoInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && todoInput.value.trim()) {
-      if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
-      todosData.push(todoInput.value.trim());
-      todoInput.value = '';
-      saveData();
-      renderTodos();
+  const data = await res.json();
+  if (data.error) {
+    alert(`❌ ${data.error}`);
+  } else {
+    fetchTodos();
+  }
+}
+
+  const data = await res.json();
+  console.log("📬 Response from server:", data); // 👈 Add this too
+
+  if (data.error) {
+    alert(`❌ ${data.error}`);
+  } else {
+    fetchTodos();
+  }
+}
+
+  input.addEventListener("keypress", function (e) {
+    if (e.key === "Enter" && input.value.trim() !== "") {
+      addTodo(input.value.trim());
+      input.value = "";
     }
   });
 
-  selectAll.addEventListener('change', (e) => {
-    document.querySelectorAll('.select-todo').forEach(cb => cb.checked = e.target.checked);
-  });
-
-  window.deleteSelected = () => {
-    if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
-    const selected = [...document.querySelectorAll('.select-todo:checked')].map(cb => parseInt(cb.dataset.index));
-    selected.sort((a,b) => b-a);
-    selected.forEach(i => {
-      deletedTodos.push(todosData[i]);
-      todosData.splice(i, 1);
-    });
-    saveData();
-    renderTodos();
-  };
-
-  // Sortable
-  new Sortable(todoList, {
-    animation: 150,
-    onEnd: () => {
-      const reordered = [];
-      document.querySelectorAll('#todo-list li').forEach(li => {
-        const idx = li.getAttribute('data-index');
-        reordered.push(todosData[idx]);
-      });
-      todosData = reordered;
-      saveData();
-      renderTodos();
-    }
-  });
-
-  // Initialize
-  renderTodos();
-  renderDone();
-
-  // Stars animation
-  const canvas = document.getElementById("stars");
-  const ctx = canvas.getContext("2d");
-  let w,h;
-  function resizeCanvas(){
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    w = canvas.width;
-    h = canvas.height;
-  }
-  resizeCanvas();
-  let stars = Array.from({length: 300},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.5+0.5,d:Math.random()*0.5+0.2}));
-  function draw(){
-    ctx.clearRect(0,0,w,h);
-    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--star-color').trim()||"#fff";
-    stars.forEach(s=>{
-      ctx.beginPath();
-      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-      ctx.fill();
-    });
-    move();
-  }
-  function move(){
-    stars.forEach(s=>{
-      s.y -= s.d;
-      if(s.y<0){s.y=h;s.x=Math.random()*w;}
-    });
-  }
-  function animate(){
-    draw();
-    requestAnimationFrame(animate);
-  }
-  animate();
-  window.addEventListener('resize', resizeCanvas);
+  fetchTodos();
 </script>
 </body>
 </html>
-  

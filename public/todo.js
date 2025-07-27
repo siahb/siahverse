@@ -179,3 +179,30 @@ todoInput.addEventListener('keydown', async (e) => {
 
 // And similarly, before deletion or updates, check for an admin:
 // ...
+
+// Example: backend/server.js
+const express = require('express');
+const fs = require('fs');
+const app = express();
+const file = './todos.json';
+
+app.use(express.json());
+
+function loadData() {
+  if (!fs.existsSync(file)) return { todos: [], done: [] };
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+function saveData(data) {
+  fs.writeFileSync(file, JSON.stringify(data, null, 2));
+}
+
+app.get('/todos', (req, res) => {
+  res.json(loadData());
+});
+
+app.put('/todos', (req, res) => {
+  saveData(req.body);
+  res.json({ ok: true });
+});
+
+app.listen(3000, () => console.log('Server running on http://localhost:3000'));

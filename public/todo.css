@@ -1,146 +1,324 @@
-:root[data-theme="light"] {
-  --bg: #ffffff;
-  --text: #000000;
-  --box: #f5f5f5;
-  --link: #0047ab;
-  --accent: #111111;
-  --star-color: #222222;
-}
+:root {
+      --bg-color: #0d0d0d;
+      --text-color: #0ff;
+      --input-bg: #111;
+      --input-border: #0ff;
+      --btn-color: #f66;
+      --card-bg: #1a1a1ae1;
+      --card-border: #0ff;
+      --star-color: #58a6ff; /* Added for star background */
+      --modal-bg: rgba(0, 0, 0, 0.8);
+      --modal-content-bg: #222;
+      --modal-border: #0ff;
+    }
+    body.light-mode {
+      --bg-color: #f0f0f0;
+      --text-color: #111;
+      --input-bg: #fff;
+      --input-border: #333;
+      --btn-color: #a00;
+      --card-bg: #f8f8f8a2;
+      --card-border: #ccc;
+      --star-color: #000000; /* Added for star background */
+      --modal-bg: rgb(0, 0, 0);
+      --modal-content-bg: #fff;
+      --modal-border: #333;
+    }
+    body {
+      font-family: sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: background 0.3s, color 0.3s;
+    }
+    h1 {
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    #todo-input {
+      padding: 0.5rem;
+      width: 80%;
+      max-width: 400px;
+      font-size: 1rem;
+      background: var(--input-bg);
+      color: var(--text-color);
+      border: 1px solid var(--input-border);
+      border-radius: 5px;
+      margin-bottom: 1rem;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 1rem;
+      width: 100%; /* Adjusted for card width */
+    }
+    li {
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: grab; /* Indicate draggable */
+    }
+    li.done span {
+      text-decoration: line-through;
+      color: #888;
+    }
+    button {
+      background: none;
+      border: none;
+      color: var(--btn-color);
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      color: red;
+    }
+    #toggle-theme {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 999;
+      font-size: 1.2rem;
+    }
+    #admin-logo {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      font-size: 2rem; /* Larger icon */
+      cursor: pointer;
+      color: var(--text-color);
+      z-index: 999;
+      transition: color 0.3s;
+    }
+    #admin-logo:hover {
+      color: var(--btn-color);
+    }
+    #stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
 
-:root[data-theme="dark"] {
-  --bg: #0d1117;
-  --text: #ffffff;
-  --box: #161b22;
-  --link: #58a6ff;
-  --accent: #ccc;
-  --star-color: #58a6ff;
-}
+    /* New styles for containers */
+    .main-content {
+      display: flex;
+      flex-wrap: wrap; /* Allow wrapping on smaller screens */
+      gap: 2rem;
+      justify-content: center;
+      width: 100%;
+      max-width: 1200px; /* Max width for the main content area */
+    }
 
-* {
-  box-sizing: border-box;
-}
+    .card-container {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      flex: 1; /* Allow cards to grow and shrink */
+      min-width: 300px; /* Minimum width for cards */
+      max-width: 500px; /* Max width for individual cards */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative; /* For positioning undo button if needed */
+    }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Inter', sans-serif;
-  transition: background 0.3s, color 0.3s;
-}
+    .card-container h2 {
+      margin-top: 0;
+      color: var(--text-color);
+    }
 
-canvas#stars {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1;
-  pointer-events: none;
-  background: transparent;
-}
+    .card-container .controls {
+      display: flex;
+      flex-wrap: wrap; /* Allow controls to wrap if space is limited */
+      justify-content: center; /* Center controls */
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1rem;
+      width: 100%; /* Ensure controls take full width of card */
+    }
 
-.container {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background-color: var(--box);
-  border-radius: 12px;
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-  position: relative;
-}
+    /* Undo button inside controls */
+    .card-container .controls #undo-btn {
+      position: static; /* Override fixed positioning */
+      font-size: 1rem;
+      margin: 0; /* Remove any default margins */
+    }
 
-h1 {
-  text-align: center;
-  font-size: 2rem;
-  color: var(--link);
-  margin-bottom: 1.5rem;
-}
+    /* Modal Styles */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1000; /* Sit on top */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: var(--modal-bg); /* Black w/ opacity */
+      justify-content: center;
+      align-items: center;
+    }
 
-.button-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  justify-content: center;
-  margin-bottom: 1rem;
-}
+    .modal-content {
+      background-color: var(--modal-content-bg);
+      margin: auto;
+      padding: 20px;
+      border: 1px solid var(--modal-border);
+      border-radius: 8px;
+      width: 80%;
+      max-width: 400px;
+      box-shadow: 0 5px 15px rgba(255,255,255,0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
 
-button {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  border: none;
-  border-radius: 6px;
-  background-color: var(--link);
-  color: var(--bg);
-  cursor: pointer;
-  font-weight: 600;
-  transition: opacity 0.2s ease;
-}
+    .modal-content h2 {
+      text-align: center;
+      color: var(--text-color);
+      margin-bottom: 10px;
+    }
 
-button:hover {
-  opacity: 0.9;
-}
+    .modal-content input[type="text"],
+    .modal-content input[type="password"] {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid var(--input-border);
+      border-radius: 4px;
+      background: var(--input-bg);
+      color: var(--text-color);
+    }
 
-input[type="text"] {
-  width: 100%;
-  padding: 0.6rem 1rem;
-  font-size: 1rem;
-  border: 2px solid var(--link);
-  border-radius: 8px;
-  background: transparent;
-  color: var(--text);
-  margin-bottom: 1rem;
-}
+    .modal-buttons {
+      display: flex;
+      justify-content: space-around;
+      gap: 10px;
+    }
 
-.todo-controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
+    .modal-buttons button {
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
 
-ul#todo-list {
-  list-style: none;
-  padding: 0;
-}
+    #login-btn {
+      background-color: #4CAF50; /* Green */
+      color: white;
+    }
+    #login-btn:hover {
+      background-color: #45a049;
+    }
 
-ul#todo-list li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: transparent;
-  border: 1px solid var(--link);
-  color: var(--link);
-  padding: 0.5rem 1rem;
-  margin-bottom: 0.5rem;
-  border-radius: 8px;
-}
+    #cancel-btn, #logout-modal-btn {
+      background-color: #f44336; /* Red */
+      color: white;
+    }
+    #cancel-btn:hover, #logout-modal-btn:hover {
+      background-color: #da190b;
+    }
 
-ul#todo-list li button {
-  color: #ff6b6b;
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-}
+    /* Theme Switch Styles */
+    .theme-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
 
-ul#todo-list li button:hover {
-  color: red;
-}
+    .theme-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
 
-/* Responsive layout */
-@media (max-width: 600px) {
-  .button-group {
-    flex-direction: column;
-    align-items: center;
-  }
+    /* The slider */
+    .theme-switch .slider {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      height: 100%;
+      min-width: 48px;
+      background: #ccc;
+      border-radius: 34px;
+      transition: background 0.3s;
+      box-shadow: 0 1px 4px rgba(255, 255, 255, 0.12);
+      border: 1px solid #eee;
+      overflow: hidden;
+    }
 
-  .todo-controls {
-    flex-direction: column;
-    align-items: center;
-  }
-}
+    .theme-switch .slider:before {
+      content: "🌞";
+      position: absolute;
+      left: 2px;
+      top: 4px;
+      width: 24px;
+      height: 20px;
+      background: #ffffff;
+      border-radius: 50%;
+      transition: transform 0.3s, width 0.3s, height 0.3s;
+      box-shadow: 0 1px 4px rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    /* Checked state (dark mode) */
+    .theme-switch input:checked + .slider:before {
+      content: "🌙";
+      background: transparent;
+      box-shadow: none;
+      color: #58a6ff;
+      transform: translateX(22px);
+    }
+
+    /* Checked state */
+    .theme-switch input:checked + .slider {
+      background: #006dd3; /* Apple green */
+    }
+
+    .back-button-wrapper {
+      text-align: center;
+      margin: 2rem 0;  /* Adjust vertical spacing as needed */
+    }
+
+    .back-button {
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      background-color: #00ffdd;
+      color: #000000;
+      cursor: pointer;
+      transition: background 0.3s, opacity 0.2s, box-shadow 0.3s;
+      margin-top: 0.5rem;
+      word-break: break-word;
+      max-width: 100%;
+      text-decoration: none; /* Remove underline */
+      display: inline-block; /* Make it behave like a button */
+      box-shadow: 0 0 10px rgba(0, 255, 221, 0.7);
+    }
+
+    .back-button:hover {
+      background: #00fff2; /* Adjust hover color as needed */
+      box-shadow: 0 0 20px rgba(0, 255, 242, 1);
+    }

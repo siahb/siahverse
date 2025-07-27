@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 const app = express();
 const PORT = 3002;
 const DB_FILE = './db.json';
-const ADMIN_PASSWORD = '123123'; // ⛔ Change in prod
+const ADMIN_PASSWORD = 'siahadmin123'; // ⛔ Change in prod
 
 app.use(cors());
 app.use(express.json());
@@ -15,7 +15,7 @@ app.use(express.json());
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'todo.html'));
+  res.redirect('/todo.html');
 });
 
 // Load TODOs
@@ -39,27 +39,15 @@ app.get('/todos', async (req, res) => {
   res.json(todos);
 });
 
-// POST new todo (expects { text, done })
+// POST new todo
 app.post('/todos', async (req, res) => {
-  const { text, done = false } = req.body;
-  if (!text) return res.status(400).json({ error: 'Missing todo text' });
+  const { todo } = req.body;
+  if (!todo) return res.status(400).json({ error: 'Missing todo' });
 
   const todos = await loadTodos();
-  todos.push({ text, done });
+  todos.push(todo);
   await saveTodos(todos);
-  res.json({ status: 'added', text, done });
-});
-
-// PUT all todos (replace all)
-app.put('/todos', async (req, res) => {
-  const auth = req.headers.authorization;
-  if (auth !== `Bearer ${ADMIN_PASSWORD}`) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
-  const todos = req.body;
-  if (!Array.isArray(todos)) return res.status(400).json({ error: 'Invalid data' });
-  await saveTodos(todos);
-  res.json({ status: 'updated', todos });
+  res.json({ status: 'added', todo });
 });
 
 // DELETE todo (admin only)

@@ -181,6 +181,7 @@
     todoList.innerHTML = '';
     todosData.forEach((todo, index) => {
       const li = document.createElement('li');
+      li.setAttribute('data-index', index);
       li.innerHTML = `
         <input type="checkbox" class="select-todo" data-index="${index}" />
         <span>${todo.todo || todo}</span>
@@ -282,6 +283,28 @@
       });
       todoInput.value = '';
       renderTodos();
+    }
+  });
+
+  // Make the To‑Do list draggable using SortableJS
+  new Sortable(todoList, {
+    animation: 150,
+    onEnd: async function (evt) {
+      // Reorder todosData based on new order of li elements
+      const newOrder = [];
+      const items = todoList.querySelectorAll('li');
+      items.forEach(item => {
+        const index = item.getAttribute('data-index');
+        newOrder.push(todosData[index]);
+      });
+      todosData = newOrder;
+      // Update backend with new order
+      await fetch(API, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ todos: todosData, done: doneData })
+      });
+      renderTodos(); // Re-render the list with correct indices
     }
   });
 

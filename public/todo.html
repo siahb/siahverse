@@ -1,413 +1,140 @@
 <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>📝 Siah To Do</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="todo.css">
-    <!-- SortableJS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
-  </head>
-  <body>
-    <canvas id="stars"></canvas>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>📝 Siahverse TODO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #0d0d0d;
+      color: #0ff;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-    <!-- Moved theme slider out of container and placed at the upper right -->
-    <div id="toggle-theme" class="theme-switch">
-      <label class="theme-switch">
-        <input type="checkbox" id="toggle-theme-checkbox">
-        <span class="slider"></span>
-      </label>
-    </div>
+    h1 {
+      margin-bottom: 1rem;
+    }
 
-    <div class="container">
-      <div class="top-bar">
-        <div class="button-group">
-          <!-- Removed theme-switch from here -->
-          <div id="admin-logo" title="Admin Login/Logout">⚙️</div>
-        </div>
-        <h1><span>✅</span> Siah To Do</h1>
-      </div>
-    </div>
+    #todo-input {
+      padding: 0.5rem;
+      width: 80%;
+      max-width: 400px;
+      font-size: 1rem;
+      background: #111;
+      color: white;
+      border: 1px solid #0ff;
+      border-radius: 5px;
+    }
 
-    <div class="main-content">
-      <!-- To Do List Container -->
-      <div id="todo-container" class="card-container">
-        <h2>To Do List</h2>
-        <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
-        <div class="controls">
-          <label><input type="checkbox" id="select-all-todo"> Select All</label>
-          <button onclick="deleteSelected('todo')">🗑️ Delete Selected</button>
-          <button id="undo-btn">↩️ Undo</button>
-        </div>
-        <ul id="todo-list"></ul>
-      </div>
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 1rem;
+      width: 80%;
+      max-width: 400px;
+    }
 
-      <!-- Marked As Done List -->
-      <div id="done-container" class="card-container">
-        <h2>Marked As Done</h2>
-        <div class="controls">
-          <label><input type="checkbox" id="select-all-done"> Select All</label>
-          <button onclick="deleteSelected('done')">🗑️ Delete Selected</button>
-        </div>
-        <ul id="done-list"></ul>
-      </div>
-    </div>
+    li {
+      background: #111;
+      border: 1px solid #0ff;
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+    }
 
-    <!-- Admin Login Modal -->
-    <div id="admin-modal" class="modal">
-      <div class="modal-content">
-        <h2 id="modal-title">Admin Login</h2>
-        <div id="login-form">
-          <!-- Removed username input -->
-          <input type="password" id="password-input" placeholder="Password" />
-          <div class="modal-buttons">
-            <button id="login-btn">Login</button>
-            <button id="cancel-btn">Cancel</button>
-          </div>
-        </div>
-        <div id="logout-form" style="display: none;">
-          <p>You are logged in as Admin.</p>
-          <div class="modal-buttons">
-            <button id="logout-modal-btn">Logout</button>
-            <button id="close-modal-btn">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    button {
+      background: none;
+      border: none;
+      color: #f66;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-      <div class="back-button-wrapper">
-      <a href="https://siahverse.cc/" class="back-button">Back</a>
-    </div>
-    
+    button:hover {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>✅ Siahverse TODO</h1>
+  <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
+  <ul id="todo-list"></ul>
 
-    <script>
-      const API = '/todos';
-      const todoInput = document.getElementById('todo-input');
-      const todoList = document.getElementById('todo-list');
-      const doneList = document.getElementById('done-list');
-      const themeToggle = document.getElementById('toggle-theme');
-      const undoBtn = document.getElementById('undo-btn');
-      const selectAllTodo = document.getElementById('select-all-todo');
-      const selectAllDone = document.getElementById('select-all-done');
+<script>
+  const input = document.getElementById("todo-input");
+  const list = document.getElementById("todo-list");
 
-      // Modal elements
-      const adminLogo = document.getElementById('admin-logo');
-      const adminModal = document.getElementById('admin-modal');
-      const modalTitle = document.getElementById('modal-title');
-      const loginForm = document.getElementById('login-form');
-      const logoutForm = document.getElementById('logout-form');
-      const passwordInput = document.getElementById('password-input');
-      const loginBtn = document.getElementById('login-btn');
-      const cancelBtn = document.getElementById('cancel-btn');
-      const logoutModalBtn = document.getElementById('logout-modal-btn');
-      const closeModalBtn = document.getElementById('close-modal-btn');
+  const API = "https://todo.siahverse.cc/"; // ✅ Update if needed
 
-      let deletedTodos = [];
-      let todosData = []; // Stores all todo data (including status)
+  async function fetchTodos() {
+    const res = await fetch(API);
+    const todos = await res.json();
+    render(todos);
+  }
 
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'light') {
-        document.body.classList.add('light-mode');
-        themeToggle.checked = true; // Set the toggle to checked for light mode
-      }
+  function render(todos) {
+    list.innerHTML = "";
+    todos.forEach((todo, index) => {
+      const li = document.createElement("li");
+      li.innerHTML = `${todo} <button onclick="removeTodo(${index})">✖</button>`;
+      list.appendChild(li);
+    });
+  }
 
-      themeToggle.addEventListener('change', () => {
-        document.body.classList.toggle('light-mode');
-        const isLight = document.body.classList.contains('light-mode');
-        localStorage.setItem('theme', isLight ? 'light' : 'dark');
-      });
+  async function addTodo(text) {
+    await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ todo: text }),
+    });
+    fetchTodos();
+  }
 
-      // --- Admin Login/Logout Logic ---
-      // Keys for storing admin password
-      const ADMIN_PASSWORD_KEY = 'adminPassword';
+async function removeTodo(index) {
+  const password = prompt("Enter admin password to delete:");
+  if (!password) return;
 
-      // Helper function: get stored admin password
-      const getAdminPassword = () => localStorage.getItem(ADMIN_PASSWORD_KEY);
+  const res = await fetch(`${API}/${index}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${password}`,
+    },
+  });
 
-      // Show/hide admin modal
-      const showModal = (isLoggedIn) => {
-        adminModal.style.display = 'flex'; // center modal with flex
-        if (isLoggedIn) {
-          modalTitle.textContent = 'Admin Options';
-          document.getElementById('login-form').style.display = 'none';
-          document.getElementById('logout-form').style.display = 'block';
-        } else {
-          modalTitle.textContent = 'Admin Login';
-          document.getElementById('login-form').style.display = 'block';
-          document.getElementById('logout-form').style.display = 'none';
-          passwordInput.value = '';
-        }
-      };
+  const data = await res.json();
+  if (data.error) {
+    alert(`❌ ${data.error}`);
+  } else {
+    fetchTodos();
+  }
+}
 
-      const hideModal = () => { adminModal.style.display = 'none'; };
+  const data = await res.json();
+  console.log("📬 Response from server:", data); // 👈 Add this too
 
-      // Admin Login: Only ask for password (example password: "password123")
-      loginBtn.addEventListener('click', () => {
-        const password = passwordInput.value.trim();
-        if (password === 'password123') { // check only the password
-          localStorage.setItem(ADMIN_PASSWORD_KEY, password);
-          alert("Login successful!");
-          hideModal();
-          // Enable task input and deletion features for admin
-          todoInput.disabled = false;
-        } else {
-          alert("Invalid password.");
-        }
-      });
+  if (data.error) {
+    alert(`❌ ${data.error}`);
+  } else {
+    fetchTodos();
+  }
+}
 
-      // Logout option
-      logoutModalBtn.addEventListener('click', () => {
-        localStorage.removeItem(ADMIN_PASSWORD_KEY);
-        alert("Logged out successfully.");
-        hideModal();
-        // Disable task input and deletion features when not admin
-        todoInput.disabled = true;
-      });
+  input.addEventListener("keypress", function (e) {
+    if (e.key === "Enter" && input.value.trim() !== "") {
+      addTodo(input.value.trim());
+      input.value = "";
+    }
+  });
 
-      // Open modal on clicking admin icon
-      adminLogo.addEventListener('click', () => {
-        showModal(!!getAdminPassword());
-      });
-
-      // Initially, if admin isn’t logged in, disable task input
-      if (!getAdminPassword()) {
-        todoInput.disabled = true;
-      }
-      // --- End Admin Login/Logout Logic ---
-
-
-      undoBtn.addEventListener('click', async () => {
-        for (let todoText of deletedTodos.reverse()) {
-          await fetch(API, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ todo: todoText, done: false })
-          });
-        }
-        deletedTodos = [];
-        fetchTodos();
-      });
-
-      const fetchTodos = async () => {
-        try {
-          const res = await fetch(API);
-          todosData = await res.json();
-
-          todoList.innerHTML = '';
-          doneList.innerHTML = '';
-
-          todosData.forEach((item, index) => {
-            const li = document.createElement('li');
-            li.setAttribute('data-index', index);
-            li.innerHTML = `
-              <input type="checkbox" class="select-todo" data-list="${item.done ? 'done' : 'todo'}" />
-              <span>${item.todo}</span>
-              <button onclick="removeTodo(${index}, '${item.todo.replace(/'/g, "\\'")}')">❌</button>
-            `;
-            if (item.done) {
-              li.classList.add('done');
-              const doneCheckbox = document.createElement('input');
-              doneCheckbox.type = 'checkbox';
-              doneCheckbox.checked = true;
-              doneCheckbox.classList.add('mark-done-checkbox');
-              doneCheckbox.addEventListener('change', () => markAsDone(index, item.todo, false));
-              li.prepend(doneCheckbox);
-              doneList.appendChild(li);
-            } else {
-              const todoCheckbox = document.createElement('input');
-              todoCheckbox.type = 'checkbox';
-              todoCheckbox.classList.add('mark-done-checkbox');
-              todoCheckbox.addEventListener('change', () => markAsDone(index, item.todo, true));
-              li.prepend(todoCheckbox);
-              todoList.appendChild(li);
-            }
-          });
-        } catch (error) {
-          console.error("Error fetching todos:", error);
-          alert("Failed to fetch todos. Make sure your backend is running.");
-        }
-      };
-
-      const markAsDone = async (index, text, isDone) => {
-        const originalTodo = todosData[index];
-        if (!originalTodo) return;
-
-        const liToMove = document.querySelector(`li[data-index="${index}"]`);
-        if (liToMove) {
-          if (isDone) {
-            liToMove.classList.add('done');
-            doneList.appendChild(liToMove);
-            liToMove.querySelector('.mark-done-checkbox').checked = true;
-            liToMove.querySelector('.select-todo').setAttribute('data-list', 'done');
-          } else {
-            liToMove.classList.remove('done');
-            todoList.appendChild(liToMove);
-            liToMove.querySelector('.mark-done-checkbox').checked = false;
-            liToMove.querySelector('.select-todo').setAttribute('data-list', 'todo');
-          }
-        }
-
-        try {
-          const res = await fetch(`${API}/${index}`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${getAdminPassword()}`, // Use stored password for auth
-            },
-            body: JSON.stringify({ todo: text, done: isDone }),
-          });
-
-          if (!res.ok) {
-            alert("❌ Failed to update task status (wrong password or API error?)");
-            fetchTodos();
-          } else {
-            todosData[index].done = isDone;
-          }
-        } catch (error) {
-          console.error("Error updating task status:", error);
-          alert("Error communicating with the server.");
-          fetchTodos();
-        }
-      };
-
-      const removeTodo = async (index, text) => {
-        if (!getAdminPassword()) {
-          alert("Only admin can delete tasks. Please log in.");
-          return;
-        }
-        const res = await fetch(`${API}/${index}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${getAdminPassword()}`, // Use stored password for auth
-          },
-        });
-        if (res.ok) {
-          if (text) deletedTodos.push(text);
-          fetchTodos();
-        } else {
-          alert("❌ Failed to delete (wrong password?)");
-        }
-      };
-
-      const deleteSelected = async (listType) => {
-        if (!getAdminPassword()) {
-          alert("Only admin can delete tasks. Please log in.");
-          return;
-        }
-        const checkboxes = document.querySelectorAll(`.select-todo[data-list="${listType}"]:checked`);
-        const indicesToDelete = Array.from(checkboxes).map(cb => parseInt(cb.closest('li').dataset.index));
-
-        indicesToDelete.sort((a, b) => b - a);
-
-        for (let originalIndex of indicesToDelete) {
-          const todoItem = todosData[originalIndex];
-          if (todoItem) {
-            deletedTodos.push(todoItem.todo);
-            await removeTodo(originalIndex, todoItem.todo);
-          }
-        }
-        fetchTodos();
-      };
-
-      selectAllTodo.addEventListener('change', (e) => {
-        document.querySelectorAll('#todo-list .select-todo').forEach(cb => cb.checked = e.target.checked);
-      });
-
-      selectAllDone.addEventListener('change', (e) => {
-        document.querySelectorAll('#done-list .select-todo').forEach(cb => cb.checked = e.target.checked);
-      });
-
-      todoInput.addEventListener('keydown', async (e) => {
-        if (e.key === 'Enter' && todoInput.value.trim()) {
-          if (!getAdminPassword()) {
-            alert("Only admin can add tasks. Please log in.");
-            return;
-          }
-          await fetch(API, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ todo: todoInput.value.trim(), done: false })
-          });
-          todoInput.value = '';
-          fetchTodos();
-        }
-      });
-
-      new Sortable(todoList, {
-        animation: 150,
-        ghostClass: 'sortable-ghost',
-        onEnd: async function (evt) {
-          console.log(`Moved "${evt.item.querySelector('span').textContent}" from index ${evt.oldIndex} to ${evt.newIndex} within the To Do list.`);
-          alert("Drag and drop reordering is client-side only in this demo. A backend update would be needed for persistence.");
-          fetchTodos();
-        }
-      });
-
-      fetchTodos();
-
-      // Star background (existing code)
-      window.addEventListener("DOMContentLoaded", () => {
-        const canvas = document.getElementById("stars");
-        const ctx = canvas.getContext("2d");
-
-        function resizeCanvas() {
-          canvas.width = window.innerWidth;
-          canvas.height = window.innerHeight;
-          w = canvas.width;
-          h = canvas.height;
-        }
-
-        let w, h;
-        resizeCanvas();
-
-        let stars = Array.from({ length: 500 }, () => ({
-          x: Math.random() * w,
-          y: Math.random() * h,
-          r: Math.random() * 1.5 + 0.5,
-          d: Math.random() * 0.5 + 0.2
-        }));
-
-        function draw() {
-          ctx.clearRect(0, 0, w, h);
-          ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--star-color').trim();
-          for (let s of stars) {
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-            ctx.fill();
-          }
-          move();
-        }
-
-        function move() {
-          for (let s of stars) {
-            s.y -= s.d;
-            if (s.y < 0) {
-              s.y = h;
-              s.x = Math.random() * w;
-            }
-          }
-        }
-
-        function animate() {
-          draw();
-          requestAnimationFrame(animate);
-        }
-
-        animate();
-        document.body.classList.add("fade-in");
-
-        window.addEventListener('resize', () => {
-          resizeCanvas();
-          stars = Array.from({ length: 150 }, () => ({
-            x: Math.random() * w,
-            y: Math.random() * h,
-            r: Math.random() * 1.5 + 0.5,
-            d: Math.random() * 0.5 + 0.2
-          }));
-        });
-      });
-      // --- End star background code ---
-    </script>
-  </body>
-  </html>
+  fetchTodos();
+</script>
+</body>
+</html>

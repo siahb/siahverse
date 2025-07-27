@@ -1,209 +1,281 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="color-scheme" content="light dark">
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="Siahverse Portal – Tech Flex Hub built by Josiah and powered by Proxmox.">
-  <meta name="keywords" content="Siahverse, Proxmox, Tech Portal, Josiah Borja, Home Server, Dashboard">
-  <meta name="author" content="Josiah Borja">
-
-  <!-- Open Graph Meta Tags -->
-  <meta property="og:title" content="Siahverse Portal">
-  <meta property="og:description" content="Tech Flex Hub · Powered by Proxmox · Made by Josiah">
-  <meta property="og:image" content="https://siahverse.cc/assets/preview.png">
-  <meta property="og:url" content="https://siahverse.cc">
-  <meta property="og:type" content="website">
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Siahverse Portal">
-  <meta name="twitter:description" content="Tech Flex Hub · Powered by Proxmox · Made by Josiah">
-  <meta name="twitter:image" content="https://siahverse.cc/assets/preview.png">
-
-  <title>Siahverse Portal</title>
-  <link rel="stylesheet" href="main.css" />
-  <link rel="icon" href="favicon.svg" />
-  <link rel="manifest" href="manifest.json">
-  <script defer src="toggle-theme.js"></script>
-</head>
-
-<body>
-  <!-- 🤖 Siahbot Easter Egg -->
-  <div id="siahbot" title="Need help navigating the Siahverse?">🤖</div>
-
-  <label class="theme-switch">
-    <input type="checkbox" id="toggle-theme">
-    <span class="slider"></span>
-  </label>
-
-  <canvas id="stars"></canvas>
-
-  <div class="container">
-    <h1>🌌 Welcome to the Siahverse</h1>
-    <p class="tagline">Tech Flex Portal · Powered by Proxmox · Made by Josiah</p>
-
-    <div class="todo-link-wrapper" style="margin-top: 2.5rem;">
-  <a href="https://todo.siahverse.cc" style="
-    padding: 0.75rem 1.5rem;
-    background: #0ff;
-    color: #000;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    box-shadow: 0 0 12px #0ff;
-    transition: 0.3s;" onmouseover="this.style.boxShadow='0 0 24px #0ff'" onmouseout="this.style.boxShadow='0 0 12px #0ff'">
-    ✅ Open TODO List
-  </a>
-</div>
-
-    <div class="links">
-      <a href="https://status.siahverse.cc" target="_blank">📊 Uptime Kuma</a>
-      <a href="https://proxmox.siahverse.cc" target="_blank">🖥️ Proxmox</a>
-      <a href="https://home.siahverse.cc" target="_blank">🏠 Home Assistant</a>
-    </div>
-    
-    <!-- 🎮 Minecraft Server Join Section -->
-    <section class="minecraft-section" style="margin-top: 0.5rem; text-align: center;">
-      <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">🧱 Join My Minecraft Bedrock Server</h2>
-      <p style="font-size: 1.2rem;">
-        <span style="opacity: 0.7;">IP:</span> <strong>mc.siahverse.cc</strong><br>
-        <span style="opacity: 0.7;">Port:</span> <strong>19132</strong>
-      </p>
-      <button onclick="copyIP()" style="margin-top: 1rem; padding: 10px 20px; font-size: 1rem; border-radius: 8px; cursor: pointer; background: #1f1f1f; color: #fff; border: 1px solid #444;">
-        📋 Copy IP to Clipboard
-      </button>
-      <p id="copied" style="color: #0f0; font-weight: bold; display: none; margin-top: 0.5rem;">✔ IP copied! Paste it in Minecraft Bedrock.</p>
-    </section>
-  </div>
-
-  <script>
-  window.addEventListener("DOMContentLoaded", () => {
-  const canvas = document.getElementById("stars");
-  const ctx = canvas.getContext("2d");
-
-  function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    w = canvas.width;
-    h = canvas.height;
-  }
-
-  let w, h;
-  resizeCanvas();
-
-  let stars = Array.from({ length: 500 }, () => ({
-    x: Math.random() * w,
-    y: Math.random() * h,
-    r: Math.random() * 1.5 + 0.5,
-    d: Math.random() * 0.5 + 0.2
-  }));
-
-  function draw() {
-    ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--star-color').trim();
-    for (let s of stars) {
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    move();
-  }
-
-  function move() {
-    for (let s of stars) {
-      s.y -= s.d;
-      if (s.y < 0) {
-        s.y = h;
-        s.x = Math.random() * w;
-      }
-    }
-  }
-
-  function animate() {
-    draw();
-    requestAnimationFrame(animate);
-  }
-
-  animate();
-  document.body.classList.add("fade-in");
-
-  window.addEventListener('resize', () => {
-    resizeCanvas();
-    stars = Array.from({ length: 150 }, () => ({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      r: Math.random() * 1.5 + 0.5,
-      d: Math.random() * 0.5 + 0.2
-    }));
-  });
-
-    function copyIP() {
-      navigator.clipboard.writeText("mc.siahverse.cc").then(() => {
-        const copied = document.getElementById("copied");
-        copied.style.display = "block";
-        setTimeout(() => copied.style.display = "none", 3000);
-      });
-    }
-
-    // Siahbot click event
-const siahbot = document.getElementById("siahbot");
-if (siahbot) {
-  siahbot.addEventListener("click", () => {
-    const messages = [
-      "👋 Hi! I'm Siahbot, guardian of portals.",
-      "🌌 You’ve entered a hidden node...",
-      "💡 Hint: Try the Konami Code 😉",
-      "🛰️ Searching for lost travelers..."
-    ];
-    const random = messages[Math.floor(Math.random() * messages.length)];
-    const box = document.createElement('div');
-    box.textContent = random;
-    box.style.position = 'fixed';
-    box.style.bottom = '80px';
-    box.style.right = '20px';
-    box.style.background = '#111';
-    box.style.color = '#0ff';
-    box.style.padding = '12px 16px';
-    box.style.borderRadius = '10px';
-    box.style.boxShadow = '0 0 10px #0ff';
-    box.style.zIndex = '9999';
-    box.style.fontSize = '1rem';
-    box.style.opacity = '0';
-    box.style.transition = 'opacity 0.3s ease-in-out';
-
-    document.body.appendChild(box);
-    setTimeout(() => box.style.opacity = '1', 10);
-    setTimeout(() => {
-      box.style.opacity = '0';
-      setTimeout(() => document.body.removeChild(box), 300);
-    }, 3000);
-
-  });
+:root[data-theme="light"] {
+  --bg: #ffffff;
+  --text: #000000;
+  --box: #f5f5f58e;
+  --link: #0047ab;
+  --accent: #111111;
+  --star-color: #222222;
 }
-    // Konami Code Listener
-const konamiCode = [
-  "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
-  "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight",
-  "b", "a"
-];
 
-let konamiInput = [];
+:root[data-theme="dark"] {
+  --bg: #0d1117;
+  --text: #ffffff;
+  --box: #161b2288;
+  --link: #58a6ff;
+  --accent: #ccc;
+  --star-color: #58a6ff;
+}
 
-window.addEventListener("keydown", (e) => {
-  konamiInput.push(e.key);
-  konamiInput.splice(
-    -konamiCode.length - 1,
-    konamiInput.length - konamiCode.length
-  );
+* {
+  box-sizing: border-box;
+}
 
-  if (konamiCode.every((v, i) => v === konamiInput[i])) {
-    window.location.href = "/secret.html"; // 🔥 You can change this
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  transition: background 0.3s, color 0.3s;
+}
+
+canvas#stars {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  background: fill transparent;
+}
+
+.container {
+  max-width: 600px;
+  margin: 10rem auto;
+  padding: 2.5rem;
+  background-color: var(--box);
+  border-radius: 12px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.966);
+  z-index: 1;
+  position: relative;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.3rem;
+  text-decoration: none;
+  margin-bottom: 2rem;
+  color: var(--heading);
+  font-family: 'Proxima Nova', 'Roboto', 'Inter', sans-serif;
+}
+
+.tagline {
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  color: var(--accent);
+}
+
+.links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem; /* Fixed gap value */
+}
+
+.links a {
+  display: inline-block;
+  margin: 3.0rem 1.5rem;
+  color: var(--link);
+  text-decoration: none;
+  font-weight: 500;
+  text-align: center;
+  /* Center the links container */
+}
+
+button, .copy-btn {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  background-color: var(--link);
+  color: var(--bg);
+  cursor: pointer;
+  transition: background 0.3s, opacity 0.2s;
+  margin-top: 1rem;
+}
+
+button:hover, .copy-btn:hover {
+  opacity: 0.9;
+}
+
+.theme-switch {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 999;
+  width: 48px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+}
+
+/* Hide the default checkbox */
+.theme-switch input[type="checkbox"] {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.theme-switch .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #ccc;
+  border-radius: 34px;
+  transition: background 0.3s;
+  width: 48px;
+  height: 28px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+}
+
+.theme-switch .slider:before {
+  content: "🌞";
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  border-radius: 50%;
+  transition: transform 0.3s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  line-height: 20px;
+}
+
+/* Checked state (dark mode) */
+.theme-switch input:checked + .slider:before {
+  content: "🌙";
+  transform: translateX(20px);
+}
+
+/* Checked state */
+.theme-switch input:checked + .slider {
+  background: #006dd3;; /* Apple green */
+}
+
+.copy-btn {
+  display: inline-block;
+  background-color: #222;
+  color: #fff;
+  font-size: 0.9rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  border: 1px solid #444;
+}
+canvas#stars {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: -9999 !important;
+  pointer-events: none;
+  background: transparent !important;
+}
+#siahbot {
+  position: fixed;
+  right: 2rem;
+  bottom: 2rem;
+  font-size: 3rem;
+  cursor: pointer;
+  z-index: 1000;
+  transition: transform 0.2s;
+}
+#siahbot:hover {
+  transform: scale(1.15) rotate(-10deg);
+}
+
+/* Responsive Styles */
+@media (max-width: 900px) {
+  .container {
+    max-width: 95vw;
+    margin: 3rem auto;
+    padding: 1.2rem;
   }
-});
+  h1 {
+    font-size: 1.7rem;
+  }
+  .links a {
+    margin: 1rem 0.5rem;
+    font-size: 1rem;
+  }
+}
 
-  });
-</script>
-</body>
-</html>
+@media (max-width: 600px) {
+  .container {
+    max-width: 99vw;
+    margin: 1.2rem auto;
+    padding: 0.7rem;
+    border-radius: 7px;
+  }
+  h1 {
+    font-size: 1.1rem;
+    margin-bottom: 0.7rem;
+  }
+  .tagline {
+    font-size: 0.8rem;
+  }
+  .links {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .links a {
+    margin: 0.4rem 0;
+    font-size: 0.95rem;
+    padding: 0.5rem 0.8rem;
+  }
+  .theme-switch {
+    top: 0.3rem;
+    right: 0.3rem;
+    width: 36px;
+    height: 22px;
+  }
+  .theme-switch .slider {
+    width: 36px;
+    height: 22px;
+  }
+  .theme-switch .slider:before {
+    width: 14px;
+    height: 14px;
+    left: 2px;
+    top: 2px;
+    font-size: 0.95rem;
+    line-height: 14px;
+  }
+  .theme-switch input:checked + .slider:before {
+    transform: translateX(12px);
+  }
+  #siahbot {
+    right: 0.7rem;
+    bottom: 0.7rem;
+    font-size: 1.7rem;
+  }
+  button, .copy-btn {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.7rem;
+    margin-top: 0.5rem;
+  }
+}
+
+:root[data-theme="light"] .theme-switch .slider {
+  background: #fff;
+  border: 1px solid #eee;
+}
+
+:root[data-theme="light"] .theme-switch .slider:before {
+  background: #fff;
+  color: #fbc02d; /* Optional: sun color */
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+

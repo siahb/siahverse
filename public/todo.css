@@ -386,3 +386,6 @@ li > div {
 .todo-text {
   flex-grow: 1;
 }
+li.done button {
+  color: #0ff;
+}

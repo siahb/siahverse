@@ -347,21 +347,25 @@ function enableDrag() {
   sortableInstance = new Sortable(todoList, {
     animation: 150,
     onEnd: () => {
-      const newOrder = [];
       const listItems = document.querySelectorAll('#todo-list li');
+
+      // Build new todos list based on new DOM order
+      const newOrder = [];
 
       listItems.forEach(li => {
         const trueIndex = parseInt(li.getAttribute('data-trueindex'));
-        newOrder.push(todosData[trueIndex]);
+        const originalItem = todosData[trueIndex];
+        if (originalItem && !originalItem.done) {
+          newOrder.push(originalItem);
+        }
       });
 
-      // Replace todosData with reordered version
-      todosData = [
-        ...newOrder,
-        ...todosData.filter(todo => todo.done) // preserve done items at the end
-      ];
+      // Reattach the done items (not reordered)
+      const doneItems = todosData.filter(todo => todo.done);
 
-      renderTodos(); // this will reset data-trueindex to match new order
+      todosData = [...newOrder, ...doneItems];
+
+      renderTodos();
       renderDone();
     }
   });

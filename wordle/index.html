@@ -71,7 +71,16 @@
   <div id="board"></div>
   <div id="keyboard"></div>
   <script>
-    const words = ["apple", "house", "plant", "chair", "table", "grape", "lemon", "zebra", "bread", "crown"];
+   let word = \"APPLE\"; // default fallback
+fetch(\"words.txt\")
+  .then(res => res.text())
+  .then(text => {
+    const wordList = text
+      .split(/\\r?\\n/)
+      .map(w => w.trim().toUpperCase())
+      .filter(w => w.length === 5 && /^[A-Z]+$/.test(w));
+    word = wordList[Math.floor(Math.random() * wordList.length)];
+  });
     let word = words[Math.floor(Math.random() * words.length)].toUpperCase();
     const board = document.getElementById("board");
     const keyboard = document.getElementById("keyboard");

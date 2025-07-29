@@ -160,7 +160,7 @@ const renderTodos = () => {
     const li = document.createElement('li');
     li.setAttribute('data-trueindex', i);
     li.innerHTML = `
-      <input type="checkbox" class="select-todo" data-index="${i}" />
+      <input type="checkbox" class="select-todo" data-trueindex="${i}" />
       <span class="todo-text">${todo.text}</span>
       <div>
         <button onclick="markAsDone(this.closest('li').getAttribute('data-trueindex'))">✅</button>
@@ -191,7 +191,7 @@ const renderTodos = () => {
   
   //Editor
   window.editTodo = function(index) {
-  const li = todoList.querySelector(`li[data-index="${index}"]`);
+  const li = todoList.querySelector(`li[data-trueindex="${index}"]`);
   const textSpan = li.querySelector('.todo-text');
   const originalText = textSpan.textContent;
 
@@ -318,7 +318,7 @@ window.unmarkDone = async (index) => {
 
   window.deleteSelected = () => {
     if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
-    const selected = [...document.querySelectorAll('.select-todo:checked')].map(cb => parseInt(cb.dataset.index));
+    const selected = [...document.querySelectorAll('.select-todo:checked')].map(cb => parseInt(cb.dataset.trueindex));
     selected.sort((a,b) => b-a);
     selected.forEach(i => {
       window.removeTodo(i);

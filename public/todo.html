@@ -181,7 +181,7 @@ const renderDone = () => {
     const li = document.createElement('li');
     li.classList.add('done');
     li.setAttribute('data-trueindex', i);
-    li.style.animationDelay = `${Math.random() * 0.5}s`; // 👈 random jiggle offset
+    li.style.animationDelay = `${Math.random() * 0.5}s`; // ✅ pulse offset
 
     li.innerHTML = `
       <span>${todo.text}</span>

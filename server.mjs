@@ -3,22 +3,24 @@ import cors from 'cors';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 const PORT = 3002;
 const DB_FILE = './db.json';
-const ADMIN_PASSWORD = 'siahadmin123'; // ⛔ Change in prod
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 app.use(cors());
 app.use(express.json());
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => {
   res.redirect('/todo.html');
 });
 
-// Load TODOs
 const loadTodos = async () => {
   try {
     const data = await fs.readFile(DB_FILE, 'utf8');
@@ -28,29 +30,39 @@ const loadTodos = async () => {
   }
 };
 
-// Save TODOs
 const saveTodos = async (todos) => {
   await fs.writeFile(DB_FILE, JSON.stringify(todos, null, 2));
 };
 
-// GET all todos
 app.get('/todos', async (req, res) => {
   const todos = await loadTodos();
   res.json(todos);
 });
 
-// POST new todo
 app.post('/todos', async (req, res) => {
-  const { todo } = req.body;
-  if (!todo) return res.status(400).json({ error: 'Missing todo' });
+  const { text } = req.body;
+  if (!text) return res.status(400).json({ error: 'Missing text' });
 
   const todos = await loadTodos();
-  todos.push(todo);
+  todos.push({ text, done: false });
   await saveTodos(todos);
-  res.json({ status: 'added', todo });
+  res.json({ status: 'added' });
 });
 
-// DELETE todo (admin only)
+app.patch('/todos/:index', async (req, res) => {
+  const index = parseInt(req.params.index);
+  const updates = req.body;
+  const todos = await loadTodos();
+
+  if (index < 0 || index >= todos.length) {
+    return res.status(404).json({ error: 'Invalid index' });
+  }
+
+  todos[index] = { ...todos[index], ...updates };
+  await saveTodos(todos);
+  res.json({ status: 'updated', todo: todos[index] });
+});
+
 app.delete('/todos/:index', async (req, res) => {
   const auth = req.headers.authorization;
   if (auth !== `Bearer ${ADMIN_PASSWORD}`) {
@@ -67,6 +79,23 @@ app.delete('/todos/:index', async (req, res) => {
   const removed = todos.splice(index, 1);
   await saveTodos(todos);
   res.json({ status: 'deleted', removed });
+});
+
+// POST /todos/reorder (admin only)
+app.post('/todos/reorder', async (req, res) => {
+  const auth = req.headers.authorization;
+  if (auth !== `Bearer ${process.env.ADMIN_PASSWORD}`) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  const reorderedTodos = req.body;
+
+  if (!Array.isArray(reorderedTodos)) {
+    return res.status(400).json({ error: 'Invalid data' });
+  }
+
+  await saveTodos(reorderedTodos);
+  res.json({ status: 'reordered' });
 });
 
 app.listen(PORT, () => {

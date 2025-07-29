@@ -340,11 +340,11 @@ toggleDragBtn.addEventListener('click', () => {
   dragEnabled = !dragEnabled;
 
   if (dragEnabled) {
-    toggleDragBtn.textContent = '🧲 Drag Mode: ON';
+    toggleDragBtn.textContent = '↕️Reorder: ON';
     document.body.classList.add('dragging-active'); // 👈 add this
     enableDrag();
   } else {
-    toggleDragBtn.textContent = '🧲 Drag Mode: OFF';
+    toggleDragBtn.textContent = '↕️Reorder: OFF';
     document.body.classList.remove('dragging-active'); // 👈 remove
     disableDrag();
   }

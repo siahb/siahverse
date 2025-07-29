@@ -162,6 +162,16 @@
     font-size: 16px; /* Match it with Undo's size */
     }
 
+#delete-btn {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.emoji {
+  font-size: 1.2em;
+  vertical-align: middle;
+}
+
     /* Modal Styles */
     .modal {
       display: none; /* Hidden by default */

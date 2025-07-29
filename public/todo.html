@@ -80,13 +80,13 @@
   const cancelBtn = document.getElementById('cancel-btn');
   const passwordInput = document.getElementById('password-input');
 
-  let todosData = JSON.parse(localStorage.getItem('todos')) || [];
+  let todosData = [];
   let doneData = JSON.parse(localStorage.getItem('done')) || [];
   let deletedTodos = [];
 
   const ADMIN_PASSWORD_KEY = 'adminPassword';
 
-  // Theme toggle
+  // THEME
   const savedTheme = localStorage.getItem('theme');
   if (savedTheme === 'light') {
     document.body.classList.add('light-mode');
@@ -97,10 +97,9 @@
     localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
   });
 
-  // Admin logic
+  // ADMIN
   enterPwBtn.addEventListener('click', () => adminModal.style.display = 'block');
   cancelBtn.addEventListener('click', () => adminModal.style.display = 'none');
-
   loginBtn.addEventListener('click', () => {
     const pw = passwordInput.value.trim();
     if (pw) {
@@ -110,7 +109,6 @@
       adminModal.style.display = 'none';
     } else alert("Password cannot be empty.");
   });
-
   logoutBtn.addEventListener('click', () => {
     localStorage.removeItem(ADMIN_PASSWORD_KEY);
     alert("Logged out.");
@@ -119,7 +117,7 @@
 
   if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) todoInput.disabled = true;
 
-  // Render lists
+  // RENDER
   const renderTodos = () => {
     todoList.innerHTML = '';
     todosData.forEach((todo, i) => {
@@ -130,70 +128,102 @@
         <span>${todo}</span>
         <div>
           <button onclick="markAsDone(${i})">✅</button>
-          <button onclick="removeTodo(${i}, '${todo.replace(/'/g, "\\'")}')">❌</button>
+          <button onclick="removeTodo(${i})">❌</button>
         </div>`;
       todoList.appendChild(li);
     });
   };
-
   const renderDone = () => {
     doneList.innerHTML = '';
     doneData.forEach((task, i) => {
       const li = document.createElement('li');
       li.classList.add('done');
       li.innerHTML = `<span>${task}</span>
-        <button onclick="removeDone(${i}, '${task.replace(/'/g, "\\'")}')">❌</button>`;
+        <button onclick="removeDone(${i})">❌</button>`;
       doneList.appendChild(li);
     });
   };
-
-  const saveData = () => {
-    localStorage.setItem('todos', JSON.stringify(todosData));
+  const saveLocal = () => {
     localStorage.setItem('done', JSON.stringify(doneData));
   };
 
-  // Actions
-  window.markAsDone = (i) => {
-    doneData.push(todosData[i]);
-    todosData.splice(i, 1);
-    saveData();
-    renderTodos();
-    renderDone();
-  };
+  // LOAD FROM SERVER
+  async function loadTodosFromServer() {
+    try {
+      const res = await fetch('/todos');
+      todosData = await res.json();
+      renderTodos();
+    } catch (err) {
+      alert("Failed to load todos from server.");
+    }
+  }
 
-  window.removeTodo = (i, text) => {
-    if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
-    deletedTodos.push(text);
-    todosData.splice(i, 1);
-    saveData();
-    renderTodos();
-  };
-
-  window.removeDone = (i, text) => {
-    if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
-    deletedTodos.push(text);
-    doneData.splice(i, 1);
-    saveData();
-    renderDone();
-  };
-
-  undoBtn.addEventListener('click', () => {
-    todosData.push(...deletedTodos);
-    deletedTodos = [];
-    saveData();
-    renderTodos();
-  });
-
-  todoInput.addEventListener('keydown', (e) => {
+  // ADD
+  todoInput.addEventListener('keydown', async (e) => {
     if (e.key === 'Enter' && todoInput.value.trim()) {
       if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
-      todosData.push(todoInput.value.trim());
-      todoInput.value = '';
-      saveData();
-      renderTodos();
+      try {
+        await fetch('/todos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ todo: todoInput.value.trim() })
+        });
+        todoInput.value = '';
+        loadTodosFromServer();
+      } catch (err) {
+        alert("Failed to add todo.");
+      }
     }
   });
 
+  // DELETE
+  window.removeTodo = async (index) => {
+    if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
+    try {
+      await fetch(`/todos/${index}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY)}`
+        }
+      });
+      loadTodosFromServer();
+    } catch {
+      alert("Failed to delete.");
+    }
+  };
+
+  // MARK DONE
+  window.markAsDone = (i) => {
+    doneData.push(todosData[i]);
+    deletedTodos.push(todosData[i]);
+    window.removeTodo(i);
+    renderDone();
+    saveLocal();
+  };
+
+  // DONE REMOVE
+  window.removeDone = (i) => {
+    if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
+    deletedTodos.push(doneData[i]);
+    doneData.splice(i, 1);
+    renderDone();
+    saveLocal();
+  };
+
+  // UNDO
+  undoBtn.addEventListener('click', () => {
+    deletedTodos.forEach(async (todo) => {
+      await fetch('/todos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ todo })
+      });
+    });
+    deletedTodos = [];
+    loadTodosFromServer();
+  });
+
+  // SELECT
   selectAll.addEventListener('change', (e) => {
     document.querySelectorAll('.select-todo').forEach(cb => cb.checked = e.target.checked);
   });
@@ -203,33 +233,23 @@
     const selected = [...document.querySelectorAll('.select-todo:checked')].map(cb => parseInt(cb.dataset.index));
     selected.sort((a,b) => b-a);
     selected.forEach(i => {
-      deletedTodos.push(todosData[i]);
-      todosData.splice(i, 1);
+      window.removeTodo(i);
     });
-    saveData();
-    renderTodos();
   };
 
-  // Sortable
+  // DRAG SORTING
   new Sortable(todoList, {
     animation: 150,
     onEnd: () => {
-      const reordered = [];
-      document.querySelectorAll('#todo-list li').forEach(li => {
-        const idx = li.getAttribute('data-index');
-        reordered.push(todosData[idx]);
-      });
-      todosData = reordered;
-      saveData();
-      renderTodos();
+      // No server-side reorder implemented (yet)
     }
   });
 
-  // Initialize
-  renderTodos();
+  // INIT
+  loadTodosFromServer();
   renderDone();
 
-  // Stars animation
+  // STARS
   const canvas = document.getElementById("stars");
   const ctx = canvas.getContext("2d");
   let w,h;

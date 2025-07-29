@@ -172,6 +172,18 @@ const renderTodos = () => {
       </div>`;
     todoList.appendChild(li);
   });
+
+  // Reset Select All
+  selectAll.checked = false;
+
+  // Auto-sync Select All if all checkboxes are toggled
+  document.querySelectorAll('.select-todo').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const all = document.querySelectorAll('.select-todo');
+      const checked = document.querySelectorAll('.select-todo:checked');
+      selectAll.checked = all.length > 0 && checked.length === all.length;
+    });
+  });
 };
   
 // Render Done
@@ -306,17 +318,22 @@ window.unmarkDone = async (index) => {
   };
 
   // Undo button
-  undoBtn.addEventListener('click', async () => {
-    for (const text of deletedTodos) {
-      await fetch('/todos', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text })
-      });
-    }
-    deletedTodos = [];
-    loadTodosFromServer();
-  });
+ undoBtn.addEventListener('click', async () => {
+  if (!deletedTodos.length) return;
+
+  const restoring = [...deletedTodos]; // Clone to avoid timing issues
+  deletedTodos = [];
+
+  for (const text of restoring) {
+    await fetch('/todos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text })
+    });
+  }
+
+  loadTodosFromServer();
+});
 
   // Select all checkbox
   selectAll.addEventListener('change', (e) => {

@@ -346,10 +346,9 @@ toggleDragBtn.addEventListener('click', () => {
 function enableDrag() {
   sortableInstance = new Sortable(todoList, {
     animation: 150,
-    onEnd: () => {
+    onEnd: async () => {
       const listItems = document.querySelectorAll('#todo-list li');
 
-      // Build new todos list based on new DOM order
       const newOrder = [];
 
       listItems.forEach(li => {
@@ -359,6 +358,26 @@ function enableDrag() {
           newOrder.push(originalItem);
         }
       });
+
+      const doneItems = todosData.filter(todo => todo.done);
+      todosData = [...newOrder, ...doneItems];
+
+      // 🔁 Save reordered list to server
+      try {
+        await fetch('/todos/reorder', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(todosData)
+        });
+      } catch (err) {
+        alert('⚠️ Failed to save new order to server.');
+      }
+
+      renderTodos();
+      renderDone();
+    }
+  });
+}
 
       // Reattach the done items (not reordered)
       const doneItems = todosData.filter(todo => todo.done);

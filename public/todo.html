@@ -246,14 +246,7 @@
     });
   };
 
-  // Sortable (just visual)
-  new Sortable(todoList, {
-    animation: 150,
-    onEnd: () => {
-      // Reordering not saved to server (yet)
-    }
-  });
-
+//Toggle Drag mode
   let dragEnabled = false;
 let sortableInstance = null;
 

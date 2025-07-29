@@ -449,3 +449,10 @@ body.dragging-active #done-list li {
 #done-list li:hover {
   transform: scale(1.01);
 }
+/* Styling for editable input in dark mode */
+body.dark-mode input.edit-todo,
+body.dark-mode .edit-input {
+  background-color: #2b2b2b;  /* or match your dark panel */
+  color: #ffffff;
+  border: 1px solid #444;
+}

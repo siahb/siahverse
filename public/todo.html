@@ -349,11 +349,11 @@ function enableDrag() {
     onEnd: () => {
       const newOrder = [];
       document.querySelectorAll('#todo-list li').forEach(li => {
-        const index = li.getAttribute('data-index');
-        newOrder.push(todosData[index]);
+        const trueIndex = parseInt(li.getAttribute('data-trueindex'));
+        newOrder.push(todosData[trueIndex]);
       });
       todosData = newOrder;
-      renderTodos();
+      renderTodos(); // this will rebuild with correct trueindex
     }
   });
 }

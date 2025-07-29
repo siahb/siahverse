@@ -340,11 +340,11 @@ toggleDragBtn.addEventListener('click', () => {
   dragEnabled = !dragEnabled;
 
   if (dragEnabled) {
-    toggleDragBtn.textContent = '↕️Reorder: ON';
+    toggleDragBtn.textContent = '↕️ Reordering...';
     document.body.classList.add('dragging-active'); // 👈 add this
     enableDrag();
   } else {
-    toggleDragBtn.textContent = '↕️Reorder: OFF';
+    toggleDragBtn.textContent = '↕️ Reorder';
     document.body.classList.remove('dragging-active'); // 👈 remove
     disableDrag();
   }
@@ -395,7 +395,7 @@ function disableDrag() {
   }
 }
   // Init
-  toggleDragBtn.textContent = '🧲 Drag Mode: OFF';
+  toggleDragBtn.textContent = '↕️Reorder';
   loadTodosFromServer();
 
   // Stars

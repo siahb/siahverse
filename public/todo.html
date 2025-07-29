@@ -81,12 +81,10 @@
   const passwordInput = document.getElementById('password-input');
 
   let todosData = [];
-  let doneData = JSON.parse(localStorage.getItem('done')) || [];
   let deletedTodos = [];
-
   const ADMIN_PASSWORD_KEY = 'adminPassword';
 
-  // THEME
+  // Theme
   const savedTheme = localStorage.getItem('theme');
   if (savedTheme === 'light') {
     document.body.classList.add('light-mode');
@@ -97,7 +95,7 @@
     localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
   });
 
-  // ADMIN
+  // Admin
   enterPwBtn.addEventListener('click', () => adminModal.style.display = 'block');
   cancelBtn.addEventListener('click', () => adminModal.style.display = 'none');
   loginBtn.addEventListener('click', () => {
@@ -114,18 +112,30 @@
     alert("Logged out.");
     todoInput.disabled = true;
   });
-
   if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) todoInput.disabled = true;
 
-  // RENDER
+  // Load Todos from server
+  async function loadTodosFromServer() {
+    try {
+      const res = await fetch('/todos');
+      todosData = await res.json();
+      renderTodos();
+      renderDone();
+    } catch {
+      alert("Failed to load todos.");
+    }
+  }
+
+  // Render
   const renderTodos = () => {
     todoList.innerHTML = '';
     todosData.forEach((todo, i) => {
+      if (todo.done) return;
       const li = document.createElement('li');
       li.setAttribute('data-index', i);
       li.innerHTML = `
         <input type="checkbox" class="select-todo" data-index="${i}" />
-        <span>${todo}</span>
+        <span>${todo.text}</span>
         <div>
           <button onclick="markAsDone(${i})">✅</button>
           <button onclick="removeTodo(${i})">❌</button>
@@ -133,32 +143,20 @@
       todoList.appendChild(li);
     });
   };
+
   const renderDone = () => {
     doneList.innerHTML = '';
-    doneData.forEach((task, i) => {
+    todosData.forEach((todo, i) => {
+      if (!todo.done) return;
       const li = document.createElement('li');
       li.classList.add('done');
-      li.innerHTML = `<span>${task}</span>
-        <button onclick="removeDone(${i})">❌</button>`;
+      li.innerHTML = `<span>${todo.text}</span>
+        <button onclick="removeTodo(${i})">❌</button>`;
       doneList.appendChild(li);
     });
   };
-  const saveLocal = () => {
-    localStorage.setItem('done', JSON.stringify(doneData));
-  };
 
-  // LOAD FROM SERVER
-  async function loadTodosFromServer() {
-    try {
-      const res = await fetch('/todos');
-      todosData = await res.json();
-      renderTodos();
-    } catch (err) {
-      alert("Failed to load todos from server.");
-    }
-  }
-
-  // ADD
+  // Add new todo
   todoInput.addEventListener('keydown', async (e) => {
     if (e.key === 'Enter' && todoInput.value.trim()) {
       if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
@@ -166,64 +164,61 @@
         await fetch('/todos', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ todo: todoInput.value.trim() })
+          body: JSON.stringify({ text: todoInput.value.trim() })
         });
         todoInput.value = '';
-        loadTodosFromServer();
-      } catch (err) {
+        await loadTodosFromServer();
+      } catch {
         alert("Failed to add todo.");
       }
     }
   });
 
-  // DELETE
-  window.removeTodo = async (index) => {
-    if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
+  // Mark as done
+  window.markAsDone = async (i) => {
     try {
-      await fetch(`/todos/${index}`, {
+      await fetch(`/todos/${i}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ done: true })
+      });
+      await loadTodosFromServer();
+    } catch {
+      alert("Failed to mark as done.");
+    }
+  };
+
+  // Remove todo
+  window.removeTodo = async (i) => {
+    if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
+    deletedTodos.push(todosData[i].text);
+    try {
+      await fetch(`/todos/${i}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY)}`
         }
       });
-      loadTodosFromServer();
+      await loadTodosFromServer();
     } catch {
       alert("Failed to delete.");
     }
   };
 
-  // MARK DONE
-  window.markAsDone = (i) => {
-    doneData.push(todosData[i]);
-    deletedTodos.push(todosData[i]);
-    window.removeTodo(i);
-    renderDone();
-    saveLocal();
-  };
-
-  // DONE REMOVE
-  window.removeDone = (i) => {
-    if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
-    deletedTodos.push(doneData[i]);
-    doneData.splice(i, 1);
-    renderDone();
-    saveLocal();
-  };
-
-  // UNDO
-  undoBtn.addEventListener('click', () => {
-    deletedTodos.forEach(async (todo) => {
+  // Undo button
+  undoBtn.addEventListener('click', async () => {
+    for (const text of deletedTodos) {
       await fetch('/todos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ todo })
+        body: JSON.stringify({ text })
       });
-    });
+    }
     deletedTodos = [];
     loadTodosFromServer();
   });
 
-  // SELECT
+  // Select all checkbox
   selectAll.addEventListener('change', (e) => {
     document.querySelectorAll('.select-todo').forEach(cb => cb.checked = e.target.checked);
   });
@@ -237,19 +232,18 @@
     });
   };
 
-  // DRAG SORTING
+  // Sortable (just visual)
   new Sortable(todoList, {
     animation: 150,
     onEnd: () => {
-      // No server-side reorder implemented (yet)
+      // Reordering not saved to server (yet)
     }
   });
 
-  // INIT
+  // Init
   loadTodosFromServer();
-  renderDone();
 
-  // STARS
+  // Stars
   const canvas = document.getElementById("stars");
   const ctx = canvas.getContext("2d");
   let w,h;
@@ -284,6 +278,7 @@
   animate();
   window.addEventListener('resize', resizeCanvas);
 </script>
+  
 </body>
 </html>
   

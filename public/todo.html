@@ -158,14 +158,14 @@ const renderTodos = () => {
     if (todo.done) return;
 
     const li = document.createElement('li');
-    li.setAttribute('data-index', i);
+    li.setAttribute('data-trueindex', i);
     li.innerHTML = `
       <input type="checkbox" class="select-todo" data-index="${i}" />
       <span class="todo-text">${todo.text}</span>
       <div>
-        <button onclick="markAsDone(${i})">✅</button>
-        <button onclick="editTodo(${i})">✏️</button>
-        <button onclick="removeTodo(${i})">❌</button>
+        <button onclick="markAsDone(this.closest('li').getAttribute('data-trueindex'))">✅</button>
+        <button onclick="editTodo(this.closest('li').getAttribute('data-trueindex'))">✏️</button>
+        <button onclick="removeTodo(this.closest('li').getAttribute('data-trueindex'))">❌</button>
       </div>`;
     todoList.appendChild(li);
   });

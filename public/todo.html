@@ -35,7 +35,9 @@
       <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
       <div class="controls">
         <label><input type="checkbox" id="select-all"> Select All</label>
-        <button onclick="deleteSelected()">🗑️ Delete Selected</button>
+        <button id="delete-btn" onclick="deleteSelected()">
+          <span class="emoji">🗑️</span> Delete Selected
+        </button>
         <button id="undo-btn">↩️ Undo</button>
         <button id="toggle-drag">↕️ Reorder</button>
       </div>

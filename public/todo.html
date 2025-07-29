@@ -159,6 +159,7 @@ const renderTodos = () => {
 
     const li = document.createElement('li');
     li.setAttribute('data-trueindex', i);
+    li.style.animationDelay = `${Math.random() * 0.5}s`;
     li.innerHTML = `
       <input type="checkbox" class="select-todo" data-trueindex="${i}" />
       <span class="todo-text">${todo.text}</span>
@@ -172,19 +173,23 @@ const renderTodos = () => {
 };
   
 // Render Done
- const renderDone = () => {
+const renderDone = () => {
   doneList.innerHTML = '';
   todosData.forEach((todo, i) => {
     if (!todo.done) return;
 
     const li = document.createElement('li');
     li.classList.add('done');
+    li.setAttribute('data-trueindex', i);
+    li.style.animationDelay = `${Math.random() * 0.5}s`; // 👈 random jiggle offset
+
     li.innerHTML = `
       <span>${todo.text}</span>
       <div>
         <button onclick="unmarkDone(${i})">↩️</button>
         <button onclick="removeTodo(${i})">❌</button>
       </div>`;
+
     doneList.appendChild(li);
   });
 };

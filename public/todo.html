@@ -140,36 +140,41 @@
     }
   }
 
-// Render
-  const renderTodos = () => {
-    todoList.innerHTML = '';
-    todosData.forEach((todo, i) => {
-      if (todo.done) return;
-      const li = document.createElement('li');
-      li.setAttribute('data-index', i);
-      li.innerHTML = 
-        <input type="checkbox" class="select-todo" data-index="${i}" />
-        <span>${todo.text}</span>
-        <div>
-          <button onclick="markAsDone(${i})">✅</button>
-          <button onclick="removeTodo(${i})">❌</button>
-        </div>;
-      todoList.appendChild(li);
-    });
-  };
+// Render Todos
+const renderTodos = () => {
+  todoList.innerHTML = '';
+  todosData.forEach((todo, i) => {
+    if (todo.done) return;
 
+    const li = document.createElement('li');
+    li.setAttribute('data-index', i);
+    li.innerHTML = `
+      <input type="checkbox" class="select-todo" data-index="${i}" />
+      <span class="todo-text">${todo.text}</span>
+      <div>
+        <button onclick="markAsDone(${i})">✅</button>
+        <button onclick="editTodo(${i})">✏️</button>
+        <button onclick="removeTodo(${i})">❌</button>
+      </div>`;
+    todoList.appendChild(li);
+  });
+};
+  
+// RenDer Done
   const renderDone = () => {
-    doneList.innerHTML = '';
-    todosData.forEach((todo, i) => {
-      if (!todo.done) return;
-      const li = document.createElement('li');
-      li.classList.add('done');
-      li.innerHTML = <span>${todo.text}</span>
-        <button onclick="removeTodo(${i})">❌</button>;
-      doneList.appendChild(li);
-    });
-  };
+  doneList.innerHTML = '';
+  todosData.forEach((todo, i) => {
+    if (!todo.done) return;
 
+    const li = document.createElement('li');
+    li.classList.add('done');
+    li.innerHTML = `
+      <span>${todo.text}</span>
+      <button onclick="removeTodo(${i})">❌</button>`;
+    doneList.appendChild(li);
+  });
+};
+  
   //Editor
   window.editTodo = function(index) {
   const li = todoList.querySelector(`li[data-index="${index}"]`);

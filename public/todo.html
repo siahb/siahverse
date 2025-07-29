@@ -346,7 +346,7 @@ toggleDragBtn.addEventListener('click', () => {
 function enableDrag() {
   sortableInstance = new Sortable(todoList, {
     animation: 150,
-    onEnd: () => {
+    onEnd: async () => {
       const listItems = document.querySelectorAll('#todo-list li');
       const newOrder = [];
 
@@ -360,6 +360,20 @@ function enableDrag() {
 
       const doneItems = todosData.filter(todo => todo.done);
       todosData = [...newOrder, ...doneItems];
+
+      // 🔁 Save reordered list to server
+      try {
+        await fetch('/todos/reorder', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('adminPassword')}`
+          },
+          body: JSON.stringify(todosData)
+        });
+      } catch (err) {
+        alert('⚠️ Failed to save new order to server.');
+      }
 
       renderTodos();
       renderDone();

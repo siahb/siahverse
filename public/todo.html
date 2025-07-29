@@ -227,18 +227,18 @@ async function saveEditedTodo(index, newText) {
   });
 
   // Mark as done
-  window.markAsDone = async (i) => {
-    try {
-      await fetch(`/todos/${i}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ done: true })
-      });
-      await loadTodosFromServer();
-    } catch {
-      alert("Failed to mark as done.");
-    }
-  };
+ window.markAsDone = async (index) => {
+  try {
+    await fetch(`/todos/${index}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ done: true })
+    });
+    await loadTodosFromServer();
+  } catch {
+    alert("Failed to mark as done.");
+  }
+};
 
   // Remove todo
   window.removeTodo = async (i) => {

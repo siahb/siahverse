@@ -141,34 +141,72 @@
   }
 
   // Render
-  const renderTodos = () => {
-    todoList.innerHTML = '';
-    todosData.forEach((todo, i) => {
-      if (todo.done) return;
-      const li = document.createElement('li');
-      li.setAttribute('data-index', i);
-      li.innerHTML = `
-        <input type="checkbox" class="select-todo" data-index="${i}" />
-        <span>${todo.text}</span>
-        <div>
-          <button onclick="markAsDone(${i})">✅</button>
-          <button onclick="removeTodo(${i})">❌</button>
-        </div>`;
-      todoList.appendChild(li);
-    });
-  };
+const renderTodos = () => {
+  todoList.innerHTML = '';
+  todosData.forEach((todo, i) => {
+    if (todo.done) return;
 
-  const renderDone = () => {
-    doneList.innerHTML = '';
-    todosData.forEach((todo, i) => {
-      if (!todo.done) return;
-      const li = document.createElement('li');
-      li.classList.add('done');
-      li.innerHTML = `<span>${todo.text}</span>
-        <button onclick="removeTodo(${i})">❌</button>`;
-      doneList.appendChild(li);
+    const li = document.createElement('li');
+    li.setAttribute('data-index', i);
+
+    li.innerHTML = `
+      <input type="checkbox" class="select-todo" data-index="${i}" />
+      <span class="todo-text">${todo.text}</span>
+      <div>
+        <button onclick="markAsDone(${i})">✅</button>
+        <button onclick="editTodo(${i})">✏️</button>
+        <button onclick="removeTodo(${i})">❌</button>
+      </div>`;
+
+    todoList.appendChild(li);
+  });
+};
+
+  //Editor
+  window.editTodo = function(index) {
+  const li = todoList.querySelector(`li[data-index="${index}"]`);
+  const textSpan = li.querySelector('.todo-text');
+  const originalText = textSpan.textContent;
+
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.value = originalText;
+  input.classList.add('edit-input');
+  input.addEventListener('keydown', async (e) => {
+    if (e.key === 'Enter') {
+      await saveEditedTodo(index, input.value);
+    }
+    if (e.key === 'Escape') {
+      cancelEdit(input, originalText);
+    }
+  });
+
+  textSpan.replaceWith(input);
+  input.focus();
+};
+
+function cancelEdit(input, originalText) {
+  const span = document.createElement('span');
+  span.textContent = originalText;
+  span.classList.add('todo-text');
+  input.replaceWith(span);
+}
+
+async function saveEditedTodo(index, newText) {
+  try {
+    await fetch(`/todos/${index}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ text: newText })
     });
-  };
+    await loadTodosFromServer();
+  } catch {
+    alert("Failed to update todo.");
+  }
+}
+
 
   // Add new todo
   todoInput.addEventListener('keydown', async (e) => {

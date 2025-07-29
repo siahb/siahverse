@@ -389,3 +389,14 @@ li > div {
 li.done button {
   color: #0ff;
 }
+/* Jiggle animation */
+@keyframes jiggle {
+  0% { transform: rotate(-1deg); }
+  50% { transform: rotate(1deg); }
+  100% { transform: rotate(-1deg); }
+}
+
+.dragging-active #todo-list li {
+  animation: jiggle 0.3s infinite ease-in-out;
+  cursor: grab;
+}

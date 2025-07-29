@@ -344,23 +344,21 @@ toggleDragBtn.addEventListener('click', () => {
 });
 
 function enableDrag() {
-  new Sortable(todoList, {
+  sortableInstance = new Sortable(todoList, {
     animation: 150,
     onEnd: () => {
-      const reordered = [];
-      document.querySelectorAll('#todo-list li').forEach(li => {
-        const index = li.getAttribute('data-index');
-        reordered.push(todosData[index]);
+      const listItems = document.querySelectorAll('#todo-list li');
+      const newOrder = [];
+
+      listItems.forEach(li => {
+        const trueIndex = parseInt(li.getAttribute('data-trueindex'));
+        const originalItem = todosData[trueIndex];
+        if (originalItem && !originalItem.done) {
+          newOrder.push(originalItem);
+        }
       });
-      todosData = reordered;
-      renderTodos();
-    }
-  });
-}
 
-      // Reattach the done items (not reordered)
       const doneItems = todosData.filter(todo => todo.done);
-
       todosData = [...newOrder, ...doneItems];
 
       renderTodos();

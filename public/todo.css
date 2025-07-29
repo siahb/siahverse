@@ -391,12 +391,16 @@ li.done button {
 }
 /* Jiggle animation */
 @keyframes jiggle {
-  0% { transform: rotate(-1deg); }
-  50% { transform: rotate(1deg); }
-  100% { transform: rotate(-1deg); }
+@keyframes jiggle {
+  0%   { transform: rotate(-1.5deg); }
+  50%  { transform: rotate(1.5deg); }
+  100% { transform: rotate(-1.5deg); }
 }
 
 body.dragging-active #todo-list li {
-  animation: jiggle 0.3s infinite;
+  animation-name: jiggle;
+  animation-duration: 0.3s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
   cursor: grab;
 }

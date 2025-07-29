@@ -85,6 +85,15 @@
   let deletedTodos = [];
   const ADMIN_PASSWORD_KEY = 'adminPassword';
 
+  // Button visibility
+function updateAdminUI() {
+  const pw = localStorage.getItem(ADMIN_PASSWORD_KEY);
+  const isLoggedIn = !!pw;
+
+  document.getElementById('enter-password').style.display = isLoggedIn ? 'none' : 'inline-block';
+  document.getElementById('logout').style.display = isLoggedIn ? 'inline-block' : 'none';
+}
+
   // Theme
   const savedTheme = localStorage.getItem('theme');
   if (savedTheme === 'light') {
@@ -118,6 +127,7 @@
     alert("✅ Admin logged in!");
     todoInput.disabled = false;
     adminModal.style.display = 'none';
+    updateAdminUI();
   }
 });
 
@@ -125,6 +135,7 @@
     localStorage.removeItem(ADMIN_PASSWORD_KEY);
     alert("Logged out.");
     todoInput.disabled = true;
+    updateAdminUI();
   });
   if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) todoInput.disabled = true;
 
@@ -374,6 +385,8 @@ function disableDrag() {
   }
   animate();
   window.addEventListener('resize', resizeCanvas);
+
+  updateAdminUI();
 </script>
   
 </body>

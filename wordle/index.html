@@ -71,141 +71,153 @@
   <div id="board"></div>
   <div id="keyboard"></div>
   <script>
-   let word = \"APPLE\"; // default fallback
-fetch(\"words.txt\")
-  .then(res => res.text())
-  .then(text => {
-    const wordList = text
-      .split(/\\r?\\n/)
-      .map(w => w.trim().toUpperCase())
-      .filter(w => w.length === 5 && /^[A-Z]+$/.test(w));
-    word = wordList[Math.floor(Math.random() * wordList.length)];
-  });
-    let word = words[Math.floor(Math.random() * words.length)].toUpperCase();
-    const board = document.getElementById("board");
-    const keyboard = document.getElementById("keyboard");
+  let word = "APPLE"; // fallback
 
-    let currentRow = 0;
-    let currentGuess = "";
+  fetch("words.txt")
+    .then(res => {
+      if (!res.ok) throw new Error("Failed to fetch file: " + res.status);
+      return res.text();
+    })
+    .then(text => {
+      const wordList = text
+        .split(/\r?\n/)
+        .map(w => w.trim().toUpperCase())
+        .filter(w => w.length === 5 && /^[A-Z]+$/.test(w));
 
-    const createBoard = () => {
-      for (let i = 0; i < 30; i++) {
-        const tile = document.createElement("div");
-        tile.className = "tile";
-        board.appendChild(tile);
+      word = wordList[Math.floor(Math.random() * wordList.length)];
+      console.log("Word selected:", word);
+
+      // Only start game after word is loaded
+      initStars();
+      drawStars();
+      createBoard();
+      createKeyboard();
+    })
+    .catch(err => {
+      console.error("Word load error:", err);
+      alert("Failed to load word list. Check file path or browser settings.");
+    });
+
+  const board = document.getElementById("board");
+  const keyboard = document.getElementById("keyboard");
+
+  let currentRow = 0;
+  let currentGuess = "";
+
+  const createBoard = () => {
+    for (let i = 0; i < 30; i++) {
+      const tile = document.createElement("div");
+      tile.className = "tile";
+      board.appendChild(tile);
+    }
+  };
+
+  const createKeyboard = () => {
+    const keys = "QWERTYUIOPASDFGHJKLZXCVBNM".split("");
+    keys.forEach((key) => {
+      const btn = document.createElement("button");
+      btn.textContent = key;
+      btn.onclick = () => handleKey(key);
+      keyboard.appendChild(btn);
+    });
+    ["ENTER", "DEL"].forEach((key) => {
+      const btn = document.createElement("button");
+      btn.textContent = key;
+      btn.style.gridColumn = "span 2";
+      btn.onclick = () => handleKey(key);
+      keyboard.appendChild(btn);
+    });
+  };
+
+  const handleKey = (key) => {
+    if (key === "DEL") {
+      currentGuess = currentGuess.slice(0, -1);
+      updateBoard();
+    } else if (key === "ENTER") {
+      if (currentGuess.length === 5) checkGuess();
+    } else if (currentGuess.length < 5) {
+      currentGuess += key;
+      updateBoard();
+    }
+  };
+
+  const updateBoard = () => {
+    const start = currentRow * 5;
+    for (let i = 0; i < 5; i++) {
+      const tile = board.children[start + i];
+      tile.textContent = currentGuess[i] || "";
+    }
+  };
+
+  const checkGuess = () => {
+    const guess = currentGuess;
+    const start = currentRow * 5;
+    const guessArray = guess.split("");
+    const wordArray = word.split("");
+    let used = Array(5).fill(false);
+
+    guessArray.forEach((char, i) => {
+      const tile = board.children[start + i];
+      if (char === wordArray[i]) {
+        tile.classList.add("correct");
+        used[i] = true;
       }
-    };
+    });
 
-    const createKeyboard = () => {
-      const keys = "QWERTYUIOPASDFGHJKLZXCVBNM".split("");
-      keys.forEach((key) => {
-        const btn = document.createElement("button");
-        btn.textContent = key;
-        btn.onclick = () => handleKey(key);
-        keyboard.appendChild(btn);
-      });
-      ["ENTER", "DEL"].forEach((key) => {
-        const btn = document.createElement("button");
-        btn.textContent = key;
-        btn.style.gridColumn = "span 2";
-        btn.onclick = () => handleKey(key);
-        keyboard.appendChild(btn);
-      });
-    };
-
-    const handleKey = (key) => {
-      if (key === "DEL") {
-        currentGuess = currentGuess.slice(0, -1);
-        updateBoard();
-      } else if (key === "ENTER") {
-        if (currentGuess.length === 5) checkGuess();
-      } else if (currentGuess.length < 5) {
-        currentGuess += key;
-        updateBoard();
-      }
-    };
-
-    const updateBoard = () => {
-      const start = currentRow * 5;
-      for (let i = 0; i < 5; i++) {
-        const tile = board.children[start + i];
-        tile.textContent = currentGuess[i] || "";
-      }
-    };
-
-    const checkGuess = () => {
-      const guess = currentGuess;
-      const start = currentRow * 5;
-      const guessArray = guess.split("");
-      const wordArray = word.split("");
-      let used = Array(5).fill(false);
-
-      // First pass: correct letters
-      guessArray.forEach((char, i) => {
-        const tile = board.children[start + i];
-        if (char === wordArray[i]) {
-          tile.classList.add("correct");
-          used[i] = true;
+    guessArray.forEach((char, i) => {
+      const tile = board.children[start + i];
+      if (!tile.classList.contains("correct")) {
+        const index = wordArray.findIndex((c, j) => c === char && !used[j]);
+        if (index !== -1) {
+          tile.classList.add("present");
+          used[index] = true;
+        } else {
+          tile.classList.add("absent");
         }
-      });
-
-      // Second pass: present letters
-      guessArray.forEach((char, i) => {
-        const tile = board.children[start + i];
-        if (!tile.classList.contains("correct")) {
-          const index = wordArray.findIndex((c, j) => c === char && !used[j]);
-          if (index !== -1) {
-            tile.classList.add("present");
-            used[index] = true;
-          } else {
-            tile.classList.add("absent");
-          }
-        }
-      });
-
-      if (guess === word) {
-        setTimeout(() => alert("🎉 You guessed it!"), 100);
-      } else if (++currentRow === 6) {
-        setTimeout(() => alert("❌ Out of tries! Word was: " + word), 100);
       }
+    });
 
-      currentGuess = "";
-    };
+    if (guess === word) {
+      setTimeout(() => alert("🎉 You guessed it!"), 100);
+    } else if (++currentRow === 6) {
+      setTimeout(() => alert("❌ Out of tries! Word was: " + word), 100);
+    }
 
-    const starCanvas = document.getElementById("stars");
-    const ctx = starCanvas.getContext("2d");
-    let stars = [];
-    const initStars = () => {
-      starCanvas.width = window.innerWidth;
-      starCanvas.height = window.innerHeight;
-      stars = Array.from({ length: 100 }, () => ({
-        x: Math.random() * starCanvas.width,
-        y: Math.random() * starCanvas.height,
-        r: Math.random() * 1.5 + 0.5,
-        d: Math.random() * 0.5
-      }));
-    };
-    const drawStars = () => {
-      ctx.clearRect(0, 0, starCanvas.width, starCanvas.height);
-      ctx.fillStyle = "white";
-      stars.forEach(star => {
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
-        ctx.fill();
-        star.y += star.d;
-        if (star.y > starCanvas.height) {
-          star.y = 0;
-          star.x = Math.random() * starCanvas.width;
-        }
-      });
-      requestAnimationFrame(drawStars);
-    };
+    currentGuess = "";
+  };
 
-    window.addEventListener("resize", initStars);
-    initStars();
-    drawStars();
-    createBoard();
-    createKeyboard();
+  const starCanvas = document.getElementById("stars");
+  const ctx = starCanvas.getContext("2d");
+  let stars = [];
+
+  const initStars = () => {
+    starCanvas.width = window.innerWidth;
+    starCanvas.height = window.innerHeight;
+    stars = Array.from({ length: 100 }, () => ({
+      x: Math.random() * starCanvas.width,
+      y: Math.random() * starCanvas.height,
+      r: Math.random() * 1.5 + 0.5,
+      d: Math.random() * 0.5
+    }));
+  };
+
+  const drawStars = () => {
+    ctx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+    ctx.fillStyle = "white";
+    stars.forEach(star => {
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+      ctx.fill();
+      star.y += star.d;
+      if (star.y > starCanvas.height) {
+        star.y = 0;
+        star.x = Math.random() * starCanvas.width;
+      }
+    });
+    requestAnimationFrame(drawStars);
+  };
+
+  window.addEventListener("resize", initStars);
   </script>
 </body>
 </html>

@@ -368,3 +368,21 @@
     width: 90%;
   }
 }
+li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  padding: 8px;
+  margin: 5px 0;
+}
+
+li > div {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.todo-text {
+  flex-grow: 1;
+}

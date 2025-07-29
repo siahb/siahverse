@@ -336,9 +336,11 @@ toggleDragBtn.addEventListener('click', () => {
 
   if (dragEnabled) {
     toggleDragBtn.textContent = '🧲 Drag Mode: ON';
+    document.body.classList.add('dragging-active'); // 👈 add this
     enableDrag();
   } else {
     toggleDragBtn.textContent = '🧲 Drag Mode: OFF';
+    document.body.classList.remove('dragging-active'); // 👈 remove
     disableDrag();
   }
 });

@@ -322,3 +322,12 @@
       background: #00fff2; /* Adjust hover color as needed */
       box-shadow: 0 0 20px rgba(0, 255, 242, 1);
     }
+    
+    .edit-input {
+      background-color: #111;
+      color: #0ff;
+      border: 1px solid #0ff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 1em;
+    }

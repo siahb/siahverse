@@ -171,8 +171,8 @@ const renderTodos = () => {
   });
 };
   
-// RenDer Done
-  const renderDone = () => {
+// Render Done
+ const renderDone = () => {
   doneList.innerHTML = '';
   todosData.forEach((todo, i) => {
     if (!todo.done) return;
@@ -181,7 +181,10 @@ const renderTodos = () => {
     li.classList.add('done');
     li.innerHTML = `
       <span>${todo.text}</span>
-      <button onclick="removeTodo(${i})">❌</button>`;
+      <div>
+        <button onclick="unmarkDone(${i})">↩️</button>
+        <button onclick="removeTodo(${i})">❌</button>
+      </div>`;
     doneList.appendChild(li);
   });
 };
@@ -261,6 +264,20 @@ async function saveEditedTodo(index, newText) {
     await loadTodosFromServer();
   } catch {
     alert("Failed to mark as done.");
+  }
+};
+
+  //Unmark done
+window.unmarkDone = async (index) => {
+  try {
+    await fetch(`/todos/${index}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ done: false })
+    });
+    await loadTodosFromServer();
+  } catch {
+    alert("Failed to move back to To Do.");
   }
 };
 

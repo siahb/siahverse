@@ -37,6 +37,7 @@
         <label><input type="checkbox" id="select-all"> Select All</label>
         <button onclick="deleteSelected()">🗑️ Delete Selected</button>
         <button id="undo-btn">↩️ Undo</button>
+        <button id="toggle-drag">🧲 Toggle Drag Mode</button>
       </div>
       <ul id="todo-list"></ul>
     </div>
@@ -253,6 +254,44 @@
     }
   });
 
+  let dragEnabled = false;
+let sortableInstance = null;
+
+const toggleDragBtn = document.getElementById('toggle-drag');
+
+toggleDragBtn.addEventListener('click', () => {
+  dragEnabled = !dragEnabled;
+
+  if (dragEnabled) {
+    toggleDragBtn.textContent = '🧲 Drag Mode: ON';
+    enableDrag();
+  } else {
+    toggleDragBtn.textContent = '🧲 Drag Mode: OFF';
+    disableDrag();
+  }
+});
+
+function enableDrag() {
+  sortableInstance = new Sortable(todoList, {
+    animation: 150,
+    onEnd: () => {
+      const newOrder = [];
+      document.querySelectorAll('#todo-list li').forEach(li => {
+        const index = li.getAttribute('data-index');
+        newOrder.push(todosData[index]);
+      });
+      todosData = newOrder;
+      renderTodos();
+    }
+  });
+}
+
+function disableDrag() {
+  if (sortableInstance) {
+    sortableInstance.destroy();
+    sortableInstance = null;
+  }
+}
   // Init
   loadTodosFromServer();
 
@@ -294,4 +333,3 @@
   
 </body>
 </html>
-  

@@ -393,15 +393,15 @@ li.done button {
 
 /* Jiggle for active todos */
 @keyframes jiggle {
-  0%   { transform: rotate(-1.5deg); }
-  50%  { transform: rotate(1.5deg); }
-  100% { transform: rotate(-1.5deg); }
+  0%   { transform: rotate(-0.4deg); }
+  50%  { transform: rotate(0.4deg); }
+  100% { transform: rotate(-0.4deg); }
 }
 
 /* Pulse for done todos */
 @keyframes pulse {
   0%   { transform: scale(1); }
-  50%  { transform: scale(1.04); }
+  50%  { transform: scale(1.02); }
   100% { transform: scale(1); }
 }
 
@@ -410,7 +410,7 @@ li.done button {
 /* Active (to-do) list jiggle effect */
 body.dragging-active #todo-list li {
   animation-name: jiggle;
-  animation-duration: 0.3s;
+  animation-duration: 0.5s;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
   cursor: grab;

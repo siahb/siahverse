@@ -396,7 +396,7 @@ li.done button {
   100% { transform: rotate(-1deg); }
 }
 
-.dragging-active #todo-list li {
-  animation: jiggle 0.3s infinite ease-in-out;
+body.dragging-active #todo-list li {
+  animation: jiggle 0.3s infinite;
   cursor: grab;
 }

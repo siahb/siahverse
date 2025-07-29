@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wordle Game</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: #111;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    canvas#stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    #board {
+      display: grid;
+      grid-template-columns: repeat(5, 60px);
+      grid-gap: 10px;
+      margin-bottom: 30px;
+    }
+    .tile {
+      width: 60px;
+      height: 60px;
+      background: #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      border: 2px solid #444;
+    }
+    .correct { background-color: #538d4e; }
+    .present { background-color: #b59f3b; }
+    .absent { background-color: #3a3a3c; }
+    #keyboard {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      grid-gap: 5px;
+      max-width: 600px;
+    }
+    #keyboard button {
+      padding: 10px;
+      font-size: 1rem;
+      background-color: #333;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    #keyboard button:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="stars"></canvas>
+  <h1>Wordle</h1>
+  <div id="board"></div>
+  <div id="keyboard"></div>
+  <script>
+    const words = ["apple", "house", "plant", "chair", "table", "grape", "lemon", "zebra", "bread", "crown"];
+    let word = words[Math.floor(Math.random() * words.length)].toUpperCase();
+    const board = document.getElementById("board");
+    const keyboard = document.getElementById("keyboard");
+
+    let currentRow = 0;
+    let currentGuess = "";
+
+    const createBoard = () => {
+      for (let i = 0; i < 30; i++) {
+        const tile = document.createElement("div");
+        tile.className = "tile";
+        board.appendChild(tile);
+      }
+    };
+
+    const createKeyboard = () => {
+      const keys = "QWERTYUIOPASDFGHJKLZXCVBNM".split("");
+      keys.forEach((key) => {
+        const btn = document.createElement("button");
+        btn.textContent = key;
+        btn.onclick = () => handleKey(key);
+        keyboard.appendChild(btn);
+      });
+      ["ENTER", "DEL"].forEach((key) => {
+        const btn = document.createElement("button");
+        btn.textContent = key;
+        btn.style.gridColumn = "span 2";
+        btn.onclick = () => handleKey(key);
+        keyboard.appendChild(btn);
+      });
+    };
+
+    const handleKey = (key) => {
+      if (key === "DEL") {
+        currentGuess = currentGuess.slice(0, -1);
+        updateBoard();
+      } else if (key === "ENTER") {
+        if (currentGuess.length === 5) checkGuess();
+      } else if (currentGuess.length < 5) {
+        currentGuess += key;
+        updateBoard();
+      }
+    };
+
+    const updateBoard = () => {
+      const start = currentRow * 5;
+      for (let i = 0; i < 5; i++) {
+        const tile = board.children[start + i];
+        tile.textContent = currentGuess[i] || "";
+      }
+    };
+
+    const checkGuess = () => {
+      const guess = currentGuess;
+      const start = currentRow * 5;
+      const guessArray = guess.split("");
+      const wordArray = word.split("");
+      let used = Array(5).fill(false);
+
+      // First pass: correct letters
+      guessArray.forEach((char, i) => {
+        const tile = board.children[start + i];
+        if (char === wordArray[i]) {
+          tile.classList.add("correct");
+          used[i] = true;
+        }
+      });
+
+      // Second pass: present letters
+      guessArray.forEach((char, i) => {
+        const tile = board.children[start + i];
+        if (!tile.classList.contains("correct")) {
+          const index = wordArray.findIndex((c, j) => c === char && !used[j]);
+          if (index !== -1) {
+            tile.classList.add("present");
+            used[index] = true;
+          } else {
+            tile.classList.add("absent");
+          }
+        }
+      });
+
+      if (guess === word) {
+        setTimeout(() => alert("🎉 You guessed it!"), 100);
+      } else if (++currentRow === 6) {
+        setTimeout(() => alert("❌ Out of tries! Word was: " + word), 100);
+      }
+
+      currentGuess = "";
+    };
+
+    const starCanvas = document.getElementById("stars");
+    const ctx = starCanvas.getContext("2d");
+    let stars = [];
+    const initStars = () => {
+      starCanvas.width = window.innerWidth;
+      starCanvas.height = window.innerHeight;
+      stars = Array.from({ length: 100 }, () => ({
+        x: Math.random() * starCanvas.width,
+        y: Math.random() * starCanvas.height,
+        r: Math.random() * 1.5 + 0.5,
+        d: Math.random() * 0.5
+      }));
+    };
+    const drawStars = () => {
+      ctx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+      ctx.fillStyle = "white";
+      stars.forEach(star => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+        ctx.fill();
+        star.y += star.d;
+        if (star.y > starCanvas.height) {
+          star.y = 0;
+          star.x = Math.random() * starCanvas.width;
+        }
+      });
+      requestAnimationFrame(drawStars);
+    };
+
+    window.addEventListener("resize", initStars);
+    initStars();
+    drawStars();
+    createBoard();
+    createKeyboard();
+  </script>
+</body>
+</html>

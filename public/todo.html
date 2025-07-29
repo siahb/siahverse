@@ -344,37 +344,16 @@ toggleDragBtn.addEventListener('click', () => {
 });
 
 function enableDrag() {
-  sortableInstance = new Sortable(todoList, {
+  new Sortable(todoList, {
     animation: 150,
-    onEnd: async () => {
-      const listItems = document.querySelectorAll('#todo-list li');
-
-      const newOrder = [];
-
-      listItems.forEach(li => {
-        const trueIndex = parseInt(li.getAttribute('data-trueindex'));
-        const originalItem = todosData[trueIndex];
-        if (originalItem && !originalItem.done) {
-          newOrder.push(originalItem);
-        }
+    onEnd: () => {
+      const reordered = [];
+      document.querySelectorAll('#todo-list li').forEach(li => {
+        const index = li.getAttribute('data-index');
+        reordered.push(todosData[index]);
       });
-
-      const doneItems = todosData.filter(todo => todo.done);
-      todosData = [...newOrder, ...doneItems];
-
-      // 🔁 Save reordered list to server
-      try {
-        await fetch('/todos/reorder', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(todosData)
-        });
-      } catch (err) {
-        alert('⚠️ Failed to save new order to server.');
-      }
-
+      todosData = reordered;
       renderTodos();
-      renderDone();
     }
   });
 }

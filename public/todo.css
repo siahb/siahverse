@@ -157,6 +157,11 @@
       margin: 0; /* Remove any default margins */
     }
 
+    .toggle-drag {
+    font-weight: bold;
+    font-size: 16px; /* Match it with Undo's size */
+    }
+
     /* Modal Styles */
     .modal {
       display: none; /* Hidden by default */

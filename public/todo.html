@@ -348,12 +348,21 @@ function enableDrag() {
     animation: 150,
     onEnd: () => {
       const newOrder = [];
-      document.querySelectorAll('#todo-list li').forEach(li => {
+      const listItems = document.querySelectorAll('#todo-list li');
+
+      listItems.forEach(li => {
         const trueIndex = parseInt(li.getAttribute('data-trueindex'));
         newOrder.push(todosData[trueIndex]);
       });
-      todosData = newOrder;
-      renderTodos(); // this will rebuild with correct trueindex
+
+      // Replace todosData with reordered version
+      todosData = [
+        ...newOrder,
+        ...todosData.filter(todo => todo.done) // preserve done items at the end
+      ];
+
+      renderTodos(); // this will reset data-trueindex to match new order
+      renderDone();
     }
   });
 }

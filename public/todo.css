@@ -331,3 +331,9 @@
       border-radius: 4px;
       font-size: 1em;
     }
+    #todo-list li span,
+    #done-list li span {
+      text-align: left;
+      display: block;
+      width: 100%;
+    }

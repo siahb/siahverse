@@ -98,15 +98,28 @@
   // Admin
   enterPwBtn.addEventListener('click', () => adminModal.style.display = 'block');
   cancelBtn.addEventListener('click', () => adminModal.style.display = 'none');
-  loginBtn.addEventListener('click', () => {
-    const pw = passwordInput.value.trim();
-    if (pw) {
-      localStorage.setItem(ADMIN_PASSWORD_KEY, pw);
-      alert("Admin logged in!");
-      todoInput.disabled = false;
-      adminModal.style.display = 'none';
-    } else alert("Password cannot be empty.");
+  loginBtn.addEventListener('click', async () => {
+  const pw = passwordInput.value.trim();
+  if (!pw) return alert("Password cannot be empty.");
+
+  // Send a harmless request to test the password
+  const res = await fetch('/todos/0', {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${pw}`
+    }
   });
+
+  if (res.status === 401) {
+    alert("❌ Incorrect password.");
+  } else {
+    localStorage.setItem(ADMIN_PASSWORD_KEY, pw);
+    alert("✅ Admin logged in!");
+    todoInput.disabled = false;
+    adminModal.style.display = 'none';
+  }
+});
+
   logoutBtn.addEventListener('click', () => {
     localStorage.removeItem(ADMIN_PASSWORD_KEY);
     alert("Logged out.");

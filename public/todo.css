@@ -430,3 +430,7 @@ body.dragging-active #done-list li {
 #done-list li {
   transition: transform 0.2s ease;
 }
+#todo-list li:hover,
+#done-list li:hover {
+  transform: scale(1.01);
+}

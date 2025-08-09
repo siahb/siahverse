@@ -145,8 +145,16 @@
   const intervalInput = document.getElementById('interval-input');
   const intervalUnit = document.querySelector('.interval-unit');
   const weeklyWrap = document.getElementById('weekly-wrap');
-
-repeatSelect.addEventListener('change', () => {
+  // toolbar controls
+  const searchInput = document.getElementById('search-input');   // Search…
+  const sortSelect  = document.getElementById('sort-select');    // Sort: …
+  const tagInput    = document.getElementById('tag-input');      // tag1, tag2
+  const prioSelect  = document.getElementById('priority-select');// Priority: …
+  const exportBtn   = document.getElementById('export-btn');     // Export
+  const importFile  = document.getElementById('import-file');    // Import (file input)
+  searchInput?.addEventListener('input', () => { renderTodos(); renderDone(); });
+  sortSelect?.addEventListener('change', () => { renderTodos(); });
+  repeatSelect.addEventListener('change', () => {
   const v = repeatSelect.value;
   intervalWrap.style.display = v ? '' : 'none';
   intervalUnit.textContent = v === 'weekly' ? 'week(s)' : 'day(s)';
@@ -261,6 +269,50 @@ function addDays(iso, n){
   d.setDate(d.getDate()+n);
   return toISO(d);
 }
+function isOverdue(todo){
+  if (!todo.due) return false;
+  return toISO(todo.due) < todayISO() && !todo.done;
+}
+
+function filteredTodos(list){
+  const q = (searchInput?.value || '').toLowerCase().trim();
+  if (!q) return list;
+  return list.filter(t =>
+    (t.text || '').toLowerCase().includes(q) ||
+    (t.tags || []).some(tag => (tag || '').toLowerCase().includes(q))
+  );
+}
+
+function sortTodos(list){
+  const mode = sortSelect?.value || 'default';
+  const copy = [...list];
+  if (mode === 'dueAsc') {
+    copy.sort((a,b)=>(a.due||'9999') < (b.due||'9999') ? -1 : 1);
+  } else if (mode === 'dueDesc') {
+    copy.sort((a,b)=>(a.due||'0000') > (b.due||'0000') ? -1 : 1);
+  } else if (mode === 'alpha') {
+    copy.sort((a,b)=> (a.text||'').localeCompare(b.text||''));
+  } else if (mode === 'created') {
+    copy.sort((a,b)=> (b.createdAt||0) - (a.createdAt||0));
+  }
+  return copy;
+}
+
+function updateProgress(){
+  const total = todosData.length;
+  const done  = todosData.filter(t=>t.done).length;
+  const overdue = todosData.filter(t=>!t.done && t.due && toISO(t.due) < todayISO()).length;
+  const pct = total ? Math.round((done/total)*100) : 0;
+
+  const bar = document.getElementById('progress-bar');
+  const label = document.getElementById('progress-label');
+  if (!bar || !label) return;
+
+  bar.style.width = `${pct}%`;
+  label.textContent = total
+    ? `${done}/${total} tasks • ${pct}% complete${overdue ? ` • ${overdue} overdue` : ''}`
+    : 'No tasks yet';
+}
 
 // Compute the next scheduled date from a given 'from' date
 function computeNextDue(task, fromISO) {
@@ -337,20 +389,29 @@ function weekdayBoxes(selected = []) {
 
 // Render Todos
 const renderTodos = () => {
-  todoList.innerHTML = '';
-  todosData.forEach((todo, i) => {
-    if (todo.done) return;
+todoList.innerHTML = '';
+const base = todosData.filter(t=>!t.done);
+const view = sortTodos(filteredTodos(base));
+
+view.forEach((todo) => {
+  const i = todosData.indexOf(todo); // true index in the data array
+  // ...
 
     const li = document.createElement('li');
     li.setAttribute('data-trueindex', i);
     li.style.animationDelay = `${Math.random() * 0.5}s`;
+  const overduePill = isOverdue(todo) ? `<span class="pill overdue">Overdue</span>` : '';
+const prioPill = todo.priority ? `<span class="pill">P:${todo.priority}</span>` : '';
+const tagPills = (todo.tags||[]).map(t=>`<span class="pill">${t}</span>`).join(' ');
+
    li.innerHTML = `
   <input type="checkbox" class="select-todo" data-trueindex="${i}" />
   <span class="todo-text">${todo.text}</span>
-  <div class="todo-meta">
-    ${todo.due ? `<span class="pill due">Due: ${toISO(todo.due)}</span>` : ''}
-    ${todo.repeat ? `<span class="pill repeat">${repeatLabel(todo)}</span>` : ''}
-  </div>
+ <div class="todo-meta">
+  ${todo.due ? `<span class="pill due">Due: ${toISO(todo.due)}</span>` : ''}
+  ${todo.repeat ? `<span class="pill repeat">${repeatLabel(todo)}</span>` : ''}
+  ${overduePill} ${prioPill} ${tagPills}
+</div>
   <div>
     <button onclick="markAsDone(this.closest('li').getAttribute('data-trueindex'))">✅</button>
     <button onclick="editTodo(this.closest('li').getAttribute('data-trueindex'))">✏️</button>
@@ -358,7 +419,7 @@ const renderTodos = () => {
   </div>`;
     todoList.appendChild(li);
   });
-
+updateProgress();
   // Reset Select All
   selectAll.checked = false;
 
@@ -374,9 +435,10 @@ const renderTodos = () => {
   
 // Render Done
 const renderDone = () => {
-  doneList.innerHTML = '';
-  todosData.forEach((todo, i) => {
-    if (!todo.done) return;
+doneList.innerHTML = '';
+const view = filteredTodos(todosData.filter(t=>t.done));
+view.forEach((todo) => {
+  const i = todosData.indexOf(todo);
 
     const li = document.createElement('li');
     li.classList.add('done');
@@ -392,7 +454,9 @@ const renderDone = () => {
 
     doneList.appendChild(li);
   });
+    updateProgress();
 };
+
   
  // Inline editor for text + due + repeat
 window.editTodo = function(index){
@@ -489,25 +553,68 @@ li.innerHTML = `
   };
 };
 
-// Add new todo (supports repeats)
+// Add new todo (supports repeats, priority, tags)
 todoInput.addEventListener('keydown', async (e) => {
   if (e.key === 'Enter' && todoInput.value.trim()) {
-    if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
+    if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
+      return alert("Admin only");
+    }
 
     const text = todoInput.value.trim();
     const due = dueInput.value ? dueInput.value : null;
 
+    // Build repeat object if selected
     let repeat = null;
     if (repeatSelect.value) {
       repeat = {
-        freq: repeatSelect.value,                 // 'daily' | 'weekly'
-        interval: Math.max(1, parseInt(intervalInput.value || '1',10))
+        freq: repeatSelect.value, // 'daily' | 'weekly'
+        interval: Math.max(1, parseInt(intervalInput.value || '1', 10))
       };
       if (repeatSelect.value === 'weekly') {
-        const days = [...document.querySelectorAll('.byweekday:checked')].map(cb => parseInt(cb.value,10));
-        repeat.byWeekday = days;
+        repeat.byWeekday = [...document.querySelectorAll('.byweekday:checked')]
+          .map(cb => parseInt(cb.value, 10));
       }
     }
+
+    // Priority and tags
+    const priority = prioritySelect.value || null;
+    const tags = tagInput.value
+      ? tagInput.value.split(',').map(t => t.trim()).filter(Boolean)
+      : [];
+
+    // Build the todo object
+    const todo = {
+      text,
+      due,
+      repeat,
+      priority,
+      tags,
+      done: false
+    };
+
+    // Save to server
+    try {
+      await fetch('/todos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(todo)
+      });
+      // Refresh list from server
+      await loadTodosFromServer();
+
+      // Reset inputs
+      todoInput.value = '';
+      dueInput.value = '';
+      repeatSelect.value = '';
+      intervalInput.value = '1';
+      document.querySelectorAll('.byweekday').forEach(cb => cb.checked = false);
+      prioritySelect.value = '';
+      tagInput.value = '';
+    } catch (err) {
+      alert("Failed to add todo");
+    }
+  }
+});
 
     // Pre-compute nextDue if repeating
     const payload = {
@@ -516,6 +623,9 @@ todoInput.addEventListener('keydown', async (e) => {
       due: due || (repeat ? todayISO() : null),
       repeat,
       lastDone: null,
+      tags,
+      priority,
+      createdAt: Date.now(),
     };
     if (repeat) {
       payload.nextDue = computeNextDue(payload, payload.due);
@@ -547,35 +657,30 @@ window.markAsDone = async (index) => {
   if (!task) return;
 
   // If it's a repeating task, advance dates instead of moving to Done
-  if (task.repeat) {
-    const nowISO = todayISO();
-    // set lastDone = today
-    const updates = { lastDone: nowISO };
+if (task.repeat) {
+  const nowISO = todayISO();
+  const updates = { lastDone: nowISO };
+  const startFrom = toISO(task.nextDue || task.due || nowISO);
 
-    // Advance nextDue until in the future/today
-    const startFrom = toISO(task.nextDue || task.due || nowISO);
-    let next = startFrom <= nowISO ? computeNextDue(task, startFrom) : startFrom;
+  // always advance at least one occurrence
+  let next = computeNextDue(task, startFrom);
+  while (next <= nowISO) next = computeNextDue(task, next);
 
-    // If still <= today, loop forward
-    while (next <= nowISO) {
-      // Simulate the updated task for computeNextDue (use the same repeat config)
-      next = computeNextDue({ repeat: task.repeat, nextDue: next, due: next }, next);
-    }
-    updates.nextDue = next;
-    updates.due = next;
+  updates.nextDue = next;
+  updates.due = next;
 
-    try {
-      await fetch(`/todos/${index}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updates)
-      });
-      await loadTodosFromServer();
-    } catch {
-      alert("Failed to advance repeating task.");
-    }
-    return;
+  try {
+    await fetch(`/todos/${index}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates)
+    });
+    await loadTodosFromServer();
+  } catch {
+    alert("Failed to advance repeating task.");
   }
+  return;
+}
 
   // Non-repeating: behave as before
   try {
@@ -757,6 +862,49 @@ function disableDrag() {
   window.addEventListener('resize', resizeCanvas);
 
   updateAdminUI();
+
+  exportBtn?.addEventListener('click', async () => {
+  try {
+    const data = await (await fetch('/todos')).json();
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `todos-${todayISO()}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  } catch {
+    alert('Export failed.');
+  }
+});
+
+importFile?.addEventListener('change', async (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  let arr;
+  try { arr = JSON.parse(await file.text()); } catch { return alert('Invalid JSON'); }
+  if (!Array.isArray(arr)) return alert('JSON must be an array of tasks');
+
+  // minimal normalization
+  arr = arr.map(t => ({ done:false, ...t }));
+
+  try {
+    await fetch('/todos/reorder', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('adminPassword') || ''}`
+      },
+      body: JSON.stringify(arr)
+    });
+    await loadTodosFromServer();
+    alert('Imported ✅');
+  } catch {
+    alert('Import failed (need admin login?).');
+  } finally {
+    e.target.value = '';
+  }
+});
+
 </script>
 </body>
 </html>

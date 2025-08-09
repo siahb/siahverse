@@ -40,13 +40,23 @@ app.get('/todos', async (req, res) => {
 });
 
 app.post('/todos', async (req, res) => {
-  const { text } = req.body;
-  if (!text) return res.status(400).json({ error: 'Missing text' });
+  const { text, ...rest } = req.body;
+  if (!text || typeof text !== 'string' || !text.trim()) {
+    return res.status(400).json({ error: 'Missing text' });
+  }
 
   const todos = await loadTodos();
-  todos.push({ text, done: false });
+
+  // Keep your default `done:false`, but allow any extra fields from the client
+  const newTodo = {
+    text: text.trim(),
+    done: false,
+    ...rest, // e.g., due, repeat, nextDue, lastDone, priority, etc.
+  };
+
+  todos.push(newTodo);
   await saveTodos(todos);
-  res.json({ status: 'added' });
+  res.json({ status: 'added', todo: newTodo });
 });
 
 app.patch('/todos/:index', async (req, res) => {

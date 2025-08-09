@@ -32,6 +32,40 @@
     <!-- To Do List -->
     <div id="todo-container" class="card-container">
       <h2>To Do List</h2>
+      <!-- Search + Sort -->
+<div class="toolbar" style="display:flex;gap:.5rem;flex-wrap:wrap;margin:.5rem 0;">
+  <input id="search-input" type="text" placeholder="Search…" style="padding:.4rem;min-width:220px;">
+  <select id="sort-select" style="padding:.35rem;">
+    <option value="default">Sort: Custom (drag)</option>
+    <option value="dueAsc">Due date ↑</option>
+    <option value="dueDesc">Due date ↓</option>
+    <option value="alpha">A–Z</option>
+    <option value="created">Newest</option>
+  </select>
+
+  <!-- Optional quick tag add on create -->
+  <input id="tag-input" type="text" placeholder="tag1, tag2" style="padding:.4rem;min-width:180px;">
+  <select id="priority-select" style="padding:.35rem;">
+    <option value="">Priority: none</option>
+    <option value="H">High 🔥</option>
+    <option value="M">Medium ⚡</option>
+    <option value="L">Low 🌿</option>
+  </select>
+
+  <!-- Export / Import -->
+  <button id="export-btn">Export</button>
+  <label style="display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;">
+    <input id="import-file" type="file" accept="application/json" style="display:none;">
+    <span class="button-look">Import</span>
+  </label>
+</div>
+
+<!-- Progress bar -->
+<div id="progress-wrap" style="width:100%;height:10px;background:rgba(255,255,255,.08);border:1px solid var(--card-border);border-radius:6px;overflow:hidden;margin:.25rem 0 .5rem;">
+  <div id="progress-bar" style="height:100%;width:0%;background:#00ffc3;transition:width .3s;"></div>
+</div>
+<div id="progress-label" style="font-size:.9rem;opacity:.8;"></div>
+
       <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
       <div class="repeat-row">
   <label>Due:

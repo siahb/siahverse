@@ -374,13 +374,11 @@ window.editTodo = function(index){
   const byWeekday = Array.isArray(rep?.byWeekday) ? rep.byWeekday : [];
 
   li.innerHTML = `
-    <div style="display:flex;flex-direction:column;gap:.5rem;">
-      <input type="text" class="edit-text" value="${text}" />
-
-      <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap;">
-        <label>Due:
-          <input type="date" class="edit-due" value="${due}">
-        </label>
+  <div class="edit-container">
+    <input type="text" class="edit-text" value="${text}" />
+    <label>Due:
+      <input type="date" class="edit-due" value="${due}">
+    </label>
 
         <label>Repeat:
           <select class="edit-repeat">

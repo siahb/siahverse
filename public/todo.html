@@ -33,6 +33,35 @@
     <div id="todo-container" class="card-container">
       <h2>To Do List</h2>
       <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
+      <div class="repeat-row">
+  <label>Due:
+    <input type="date" id="due-input">
+  </label>
+
+  <label>Repeat:
+    <select id="repeat-select">
+      <option value="">None</option>
+      <option value="daily">Daily</option>
+      <option value="weekly">Weekly</option>
+    </select>
+  </label>
+
+  <label id="interval-wrap" style="display:none;">Every
+    <input type="number" id="interval-input" min="1" value="1" style="width:4rem;">
+    <span class="interval-unit">day(s)</span>
+  </label>
+
+  <div id="weekly-wrap" style="display:none; gap:.4rem; align-items:center;">
+    <span>Days:</span>
+    <label><input type="checkbox" value="0" class="byweekday">Su</label>
+    <label><input type="checkbox" value="1" class="byweekday">Mo</label>
+    <label><input type="checkbox" value="2" class="byweekday">Tu</label>
+    <label><input type="checkbox" value="3" class="byweekday">We</label>
+    <label><input type="checkbox" value="4" class="byweekday">Th</label>
+    <label><input type="checkbox" value="5" class="byweekday">Fr</label>
+    <label><input type="checkbox" value="6" class="byweekday">Sa</label>
+  </div>
+</div>
       <div class="controls">
         <label><input type="checkbox" id="select-all"> Select All</label>
         <button id="delete-btn" onclick="deleteSelected()">
@@ -69,13 +98,27 @@
   </div>
 
 <script>
+  
   const todoInput = document.getElementById('todo-input');
   const todoList = document.getElementById('todo-list');
   const doneList = document.getElementById('done-list');
   const undoBtn = document.getElementById('undo-btn');
   const selectAll = document.getElementById('select-all');
   const themeCheckbox = document.getElementById('toggle-theme-checkbox');
+  const dueInput = document.getElementById('due-input');
+  const repeatSelect = document.getElementById('repeat-select');
+  const intervalWrap = document.getElementById('interval-wrap');
+  const intervalInput = document.getElementById('interval-input');
+  const intervalUnit = document.querySelector('.interval-unit');
+  const weeklyWrap = document.getElementById('weekly-wrap');
 
+repeatSelect.addEventListener('change', () => {
+  const v = repeatSelect.value;
+  intervalWrap.style.display = v ? '' : 'none';
+  intervalUnit.textContent = v === 'weekly' ? 'week(s)' : 'day(s)';
+  weeklyWrap.style.display = v === 'weekly' ? 'flex' : 'none';
+});
+  
   const enterPwBtn = document.getElementById('enter-password');
   const logoutBtn = document.getElementById('logout');
   const adminModal = document.getElementById('admin-modal');
@@ -142,16 +185,110 @@ function updateAdminUI() {
   if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) todoInput.disabled = true;
 
   // Load Todos from server
-  async function loadTodosFromServer() {
-    try {
-      const res = await fetch('/todos');
-      todosData = await res.json();
-      renderTodos();
-      renderDone();
-    } catch {
-      alert("Failed to load todos.");
+async function loadTodosFromServer() {
+  try {
+    const res = await fetch('/todos');
+    todosData = await res.json();
+
+    // Normalize any overdue repeating tasks client-side
+    let changed = false;
+    for (let i = 0; i < todosData.length; i++) {
+      const t = todosData[i];
+      if (t && t.repeat) {
+        if (rollForwardIfMissed(t)) {
+          // persist normalization
+          changed = true;
+          await fetch(`/todos/${i}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ due: t.due, nextDue: t.nextDue })
+          });
+        }
+      }
     }
+
+    renderTodos();
+    renderDone();
+  } catch {
+    alert("Failed to load todos.");
   }
+}
+
+  // ==== Repeats Helpers ====
+function todayISO() { return new Date().toISOString().slice(0,10); }
+
+function toISO(d) {
+  if (!d) return null;
+  if (typeof d === 'string') return d.slice(0,10);
+  return new Date(d).toISOString().slice(0,10);
+}
+function addDays(iso, n){
+  const d = new Date(iso || todayISO());
+  d.setDate(d.getDate()+n);
+  return toISO(d);
+}
+
+// Compute the next scheduled date from a given 'from' date
+function computeNextDue(task, fromISO) {
+  const rep = task.repeat;
+  if (!rep) return task.due || null;
+
+  const base = new Date(fromISO || (task.nextDue || task.due || todayISO()));
+  if (rep.freq === 'daily') {
+    const interval = Math.max(1, rep.interval || 1);
+    base.setDate(base.getDate() + interval);
+    return toISO(base);
+  }
+  if (rep.freq === 'weekly') {
+    const interval = Math.max(1, rep.interval || 1);
+    const days = Array.isArray(rep.byWeekday) && rep.byWeekday.length ? [...rep.byWeekday].sort() : [base.getDay()];
+    const todayIdx = base.getDay();
+
+    // find next listed weekday strictly after 'base'
+    for (const wd of days) {
+      const diff = (wd - todayIdx + 7) % 7;
+      if (diff > 0) { base.setDate(base.getDate() + diff); return toISO(base); }
+    }
+    // none left this week → jump to first day in the next interval block
+    const first = days[0];
+    const toNextBlock = (7 * interval) - ((todayIdx - first + 7) % 7);
+    base.setDate(base.getDate() + toNextBlock);
+    return toISO(base);
+  }
+  return task.due || null;
+}
+
+// Bring overdue repeating tasks forward to today-or-future
+function rollForwardIfMissed(task) {
+  if (!task.repeat) return false;
+  const next = toISO(task.nextDue || task.due);
+  if (!next) return false;
+
+  let cur = next;
+  const t = todayISO();
+  let moved = false;
+  while (cur < t) {
+    cur = computeNextDue(task, cur);
+    moved = true;
+  }
+  if (moved) {
+    task.nextDue = cur;
+    task.due = cur;
+  }
+  return moved;
+}
+
+// Pretty pills for UI
+function repeatLabel(task){
+  if (!task.repeat) return '';
+  if (task.repeat.freq === 'daily') return `Repeats daily (every ${task.repeat.interval||1}d)`;
+  if (task.repeat.freq === 'weekly') {
+    const map = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+    const wd = (task.repeat.byWeekday||[]).map(x=>map[x]).join(',');
+    return `Repeats weekly${wd?` (${wd})`:''} (every ${task.repeat.interval||1}w)`;
+  }
+  return '';
+}
 
 // Render Todos
 const renderTodos = () => {
@@ -162,14 +299,18 @@ const renderTodos = () => {
     const li = document.createElement('li');
     li.setAttribute('data-trueindex', i);
     li.style.animationDelay = `${Math.random() * 0.5}s`;
-    li.innerHTML = `
-      <input type="checkbox" class="select-todo" data-trueindex="${i}" />
-      <span class="todo-text">${todo.text}</span>
-      <div>
-        <button onclick="markAsDone(this.closest('li').getAttribute('data-trueindex'))">✅</button>
-        <button onclick="editTodo(this.closest('li').getAttribute('data-trueindex'))">✏️</button>
-        <button onclick="removeTodo(this.closest('li').getAttribute('data-trueindex'))">❌</button>
-      </div>`;
+   li.innerHTML = `
+  <input type="checkbox" class="select-todo" data-trueindex="${i}" />
+  <span class="todo-text">${todo.text}</span>
+  <div class="todo-meta">
+    ${todo.due ? `<span class="pill due">Due: ${toISO(todo.due)}</span>` : ''}
+    ${todo.repeat ? `<span class="pill repeat">${repeatLabel(todo)}</span>` : ''}
+  </div>
+  <div>
+    <button onclick="markAsDone(this.closest('li').getAttribute('data-trueindex'))">✅</button>
+    <button onclick="editTodo(this.closest('li').getAttribute('data-trueindex'))">✏️</button>
+    <button onclick="removeTodo(this.closest('li').getAttribute('data-trueindex'))">❌</button>
+  </div>`;
     todoList.appendChild(li);
   });
 
@@ -254,26 +395,95 @@ async function saveEditedTodo(index, newText) {
 }
 
 
-  // Add new todo
-  todoInput.addEventListener('keydown', async (e) => {
-    if (e.key === 'Enter' && todoInput.value.trim()) {
-      if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
-      try {
-        await fetch('/todos', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: todoInput.value.trim() })
-        });
-        todoInput.value = '';
-        await loadTodosFromServer();
-      } catch {
-        alert("Failed to add todo.");
+// Add new todo (supports repeats)
+todoInput.addEventListener('keydown', async (e) => {
+  if (e.key === 'Enter' && todoInput.value.trim()) {
+    if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
+
+    const text = todoInput.value.trim();
+    const due = dueInput.value ? dueInput.value : null;
+
+    let repeat = null;
+    if (repeatSelect.value) {
+      repeat = {
+        freq: repeatSelect.value,                 // 'daily' | 'weekly'
+        interval: Math.max(1, parseInt(intervalInput.value || '1',10))
+      };
+      if (repeatSelect.value === 'weekly') {
+        const days = [...document.querySelectorAll('.byweekday:checked')].map(cb => parseInt(cb.value,10));
+        repeat.byWeekday = days;
       }
     }
-  });
 
-  // Mark as done
- window.markAsDone = async (index) => {
+    // Pre-compute nextDue if repeating
+    const payload = {
+      text,
+      done: false,
+      due: due || (repeat ? todayISO() : null),
+      repeat,
+      lastDone: null,
+    };
+    if (repeat) {
+      payload.nextDue = computeNextDue(payload, payload.due);
+      payload.due = payload.due || payload.nextDue; // ensure a visible date
+    }
+
+    try {
+      await fetch('/todos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      // clear inputs
+      todoInput.value = '';
+      dueInput.value = '';
+      repeatSelect.value = '';
+      intervalWrap.style.display = 'none';
+      weeklyWrap.style.display = 'none';
+      await loadTodosFromServer();
+    } catch {
+      alert("Failed to add todo.");
+    }
+  }
+});
+
+// Mark as done OR advance repeating task
+window.markAsDone = async (index) => {
+  const task = todosData[index];
+  if (!task) return;
+
+  // If it's a repeating task, advance dates instead of moving to Done
+  if (task.repeat) {
+    const nowISO = todayISO();
+    // set lastDone = today
+    const updates = { lastDone: nowISO };
+
+    // Advance nextDue until in the future/today
+    const startFrom = toISO(task.nextDue || task.due || nowISO);
+    let next = startFrom <= nowISO ? computeNextDue(task, startFrom) : startFrom;
+
+    // If still <= today, loop forward
+    while (next <= nowISO) {
+      // Simulate the updated task for computeNextDue (use the same repeat config)
+      next = computeNextDue({ repeat: task.repeat, nextDue: next, due: next }, next);
+    }
+    updates.nextDue = next;
+    updates.due = next;
+
+    try {
+      await fetch(`/todos/${index}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates)
+      });
+      await loadTodosFromServer();
+    } catch {
+      alert("Failed to advance repeating task.");
+    }
+    return;
+  }
+
+  // Non-repeating: behave as before
   try {
     await fetch(`/todos/${index}`, {
       method: 'PATCH',

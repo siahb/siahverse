@@ -555,99 +555,72 @@ li.innerHTML = `
 
 // Add new todo (supports repeats, priority, tags)
 todoInput.addEventListener('keydown', async (e) => {
-  if (e.key === 'Enter' && todoInput.value.trim()) {
-    if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
-      return alert("Admin only");
-    }
+  if (e.key !== 'Enter' || !todoInput.value.trim()) return;
+  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
 
-    const text = todoInput.value.trim();
-    const due = dueInput.value ? dueInput.value : null;
+  const text = todoInput.value.trim();
+  const due = dueInput.value ? dueInput.value : null;
 
-    // Build repeat object if selected
-    let repeat = null;
-    if (repeatSelect.value) {
-      repeat = {
-        freq: repeatSelect.value, // 'daily' | 'weekly'
-        interval: Math.max(1, parseInt(intervalInput.value || '1', 10))
-      };
-      if (repeatSelect.value === 'weekly') {
-        repeat.byWeekday = [...document.querySelectorAll('.byweekday:checked')]
-          .map(cb => parseInt(cb.value, 10));
-      }
-    }
-
-    // Priority and tags
-    const priority = prioritySelect.value || null;
-    const tags = tagInput.value
-      ? tagInput.value.split(',').map(t => t.trim()).filter(Boolean)
-      : [];
-
-    // Build the todo object
-    const todo = {
-      text,
-      due,
-      repeat,
-      priority,
-      tags,
-      done: false
+  // Build repeat object if selected
+  let repeat = null;
+  if (repeatSelect.value) {
+    repeat = {
+      freq: repeatSelect.value, // 'daily' | 'weekly'
+      interval: Math.max(1, parseInt(intervalInput.value || '1', 10))
     };
-
-    // Save to server
-    try {
-      await fetch('/todos', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(todo)
-      });
-      // Refresh list from server
-      await loadTodosFromServer();
-
-      // Reset inputs
-      todoInput.value = '';
-      dueInput.value = '';
-      repeatSelect.value = '';
-      intervalInput.value = '1';
-      document.querySelectorAll('.byweekday').forEach(cb => cb.checked = false);
-      prioritySelect.value = '';
-      tagInput.value = '';
-    } catch (err) {
-      alert("Failed to add todo");
+    if (repeatSelect.value === 'weekly') {
+      repeat.byWeekday = [...document.querySelectorAll('.byweekday:checked')]
+        .map(cb => parseInt(cb.value, 10));
     }
   }
-});
 
-    // Pre-compute nextDue if repeating
-    const payload = {
-      text,
-      done: false,
-      due: due || (repeat ? todayISO() : null),
-      repeat,
-      lastDone: null,
-      tags,
-      priority,
-      createdAt: Date.now(),
-    };
-    if (repeat) {
-      payload.nextDue = computeNextDue(payload, payload.due);
-      payload.due = payload.due || payload.nextDue; // ensure a visible date
-    }
+  // Priority and tags
+  const priority = prioSelect.value || null;
+  const tags = tagInput.value
+    ? tagInput.value.split(',').map(t => t.trim()).filter(Boolean)
+    : [];
 
-    try {
-      await fetch('/todos', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      // clear inputs
-      todoInput.value = '';
-      dueInput.value = '';
-      repeatSelect.value = '';
-      intervalWrap.style.display = 'none';
-      weeklyWrap.style.display = 'none';
-      await loadTodosFromServer();
-    } catch {
-      alert("Failed to add todo.");
-    }
+  // Build the payload
+  const payload = {
+    text,
+    done: false,
+    due: due || (repeat ? todayISO() : null),
+    repeat,
+    lastDone: null,
+    tags,
+    priority,
+    createdAt: Date.now(),
+  };
+
+  // If repeating, pre-compute nextDue and ensure a visible due
+  if (repeat) {
+    payload.nextDue = computeNextDue(payload, payload.due);
+    payload.due = payload.due || payload.nextDue;
+  }
+
+  try {
+    await fetch('/todos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    // Reset inputs
+    todoInput.value = '';
+    dueInput.value = '';
+    repeatSelect.value = '';
+    intervalInput.value = '1';
+    document.querySelectorAll('.byweekday').forEach(cb => cb.checked = false);
+    // hide repeat UI rows again
+    intervalWrap.style.display = 'none';
+    weeklyWrap.style.display = 'none';
+    // clear priority/tags
+    prioSelect.value = '';
+    tagInput.value = '';
+
+    await loadTodosFromServer();
+  } catch {
+    alert("Failed to add todo.");
   }
 });
 
@@ -802,7 +775,7 @@ function enableDrag() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('adminPassword')}`
+            Authorization: `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY)}`
           },
           body: JSON.stringify(todosData)
         });
@@ -892,7 +865,7 @@ importFile?.addEventListener('change', async (e) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('adminPassword') || ''}`
+        Authorization: `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEYv) || ''}`
       },
       body: JSON.stringify(arr)
     });

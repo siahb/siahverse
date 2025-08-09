@@ -32,9 +32,13 @@
     <!-- To Do List -->
     <div id="todo-container" class="card-container">
       <h2>To Do List</h2>
-      <!-- Search + Sort -->
+<!-- Search + Sort -->
 <div class="toolbar" style="display:flex;gap:.5rem;flex-wrap:wrap;margin:.5rem 0;">
-  <input id="search-input" type="text" placeholder="Search…" style="padding:.4rem;min-width:220px;">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input id="search-input" type="text" placeholder="Search…" />
+  </div>
+
   <select id="sort-select" style="padding:.35rem;">
     <option value="default">Sort: Custom (drag)</option>
     <option value="dueAsc">Due date ↑</option>

@@ -373,37 +373,32 @@ window.editTodo = function(index){
   const interval = rep?.interval || 1;
   const byWeekday = Array.isArray(rep?.byWeekday) ? rep.byWeekday : [];
 
-  li.innerHTML = `
+li.innerHTML = `
   <div class="edit-container">
     <input type="text" class="edit-text" value="${text}" />
     <label>Due:
       <input type="date" class="edit-due" value="${due}">
     </label>
-        <label>Repeat:
-          <select class="edit-repeat">
-            <option value="" ${!freq?'selected':''}>None</option>
-            <option value="daily" ${freq==='daily'?'selected':''}>Daily</option>
-            <option value="weekly" ${freq==='weekly'?'selected':''}>Weekly</option>
-          </select>
-        </label>
-
-        <label class="edit-interval-wrap" style="${freq?'':'display:none;'}">Every
-          <input type="number" class="edit-interval" min="1" value="${interval}" style="width:4rem;">
-          <span class="edit-interval-unit">${freq==='weekly'?'week(s)':'day(s)'}</span>
-        </label>
-
-        <div class="edit-weekly-wrap" style="display:${freq==='weekly'?'flex':'none'};align-items:center;">
-          <span style="margin-right:.25rem;">Days:</span>
-          ${weekdayBoxes(byWeekday)}
-        </div>
-      </div>
-
-      <div style="display:flex;gap:.5rem;">
-        <button class="btn-save">Save</button>
-        <button class="btn-cancel">Cancel</button>
-      </div>
+    <label>Repeat:
+      <select class="edit-repeat">
+        <option value="" ${!freq?'selected':''}>None</option>
+        <option value="daily" ${freq==='daily'?'selected':''}>Daily</option>
+        <option value="weekly" ${freq==='weekly'?'selected':''}>Weekly</option>
+      </select>
+    </label>
+    <label class="edit-interval-wrap" style="${freq?'':'display:none;'}">
+      Every
+      <input type="number" class="edit-interval" min="1" value="${interval}" style="width:4rem;">
+      <span class="edit-interval-unit">${freq==='weekly'?'week(s)':'day(s)'}</span>
+    </label>
+    <div class="edit-weekly-wrap" style="display:${freq==='weekly'?'flex':'none'};align-items:center;">
+      <span style="margin-right:.25rem;">Days:</span>
+      ${weekdayBoxes(byWeekday)}
     </div>
-  `;
+    <button class="btn-save">Save</button>
+    <button class="btn-cancel">Cancel</button>
+  </div>
+`;
 
   // toggles
   const sel = li.querySelector('.edit-repeat');

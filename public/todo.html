@@ -289,6 +289,17 @@ function repeatLabel(task){
   }
   return '';
 }
+  
+  // Build weekday checkboxes for the editor
+function weekdayBoxes(selected = []) {
+  const map = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+  return map.map((lbl,i)=>`
+    <label style="margin-right:.5rem;">
+      <input type="checkbox" class="edit-byweekday" value="${i}" ${selected.includes(i)?'checked':''}>
+      ${lbl}
+    </label>
+  `).join('');
+}
 
 // Render Todos
 const renderTodos = () => {
@@ -349,51 +360,108 @@ const renderDone = () => {
   });
 };
   
-  //Editor
-  window.editTodo = function(index) {
-  const li = todoList.querySelector(`li[data-trueindex="${index}"]`);
-  const textSpan = li.querySelector('.todo-text');
-  const originalText = textSpan.textContent;
+ // Inline editor for text + due + repeat
+window.editTodo = function(index){
+  const li = document.querySelector(`li[data-trueindex="${index}"]`);
+  if (!li) return;
+  const todo = todosData[index] || {};
 
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.value = originalText;
-  input.classList.add('edit-input');
-  input.addEventListener('keydown', async (e) => {
-    if (e.key === 'Enter') {
-      await saveEditedTodo(index, input.value);
-    }
-    if (e.key === 'Escape') {
-      cancelEdit(input, originalText);
-    }
+  const text = todo.text ?? '';
+  const due = (todo.due || '').toString().slice(0,10);
+  const rep = todo.repeat || null;
+  const freq = rep?.freq || '';
+  const interval = rep?.interval || 1;
+  const byWeekday = Array.isArray(rep?.byWeekday) ? rep.byWeekday : [];
+
+  li.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:.5rem;">
+      <input type="text" class="edit-text" value="${text}" />
+
+      <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap;">
+        <label>Due:
+          <input type="date" class="edit-due" value="${due}">
+        </label>
+
+        <label>Repeat:
+          <select class="edit-repeat">
+            <option value="" ${!freq?'selected':''}>None</option>
+            <option value="daily" ${freq==='daily'?'selected':''}>Daily</option>
+            <option value="weekly" ${freq==='weekly'?'selected':''}>Weekly</option>
+          </select>
+        </label>
+
+        <label class="edit-interval-wrap" style="${freq?'':'display:none;'}">Every
+          <input type="number" class="edit-interval" min="1" value="${interval}" style="width:4rem;">
+          <span class="edit-interval-unit">${freq==='weekly'?'week(s)':'day(s)'}</span>
+        </label>
+
+        <div class="edit-weekly-wrap" style="display:${freq==='weekly'?'flex':'none'};align-items:center;">
+          <span style="margin-right:.25rem;">Days:</span>
+          ${weekdayBoxes(byWeekday)}
+        </div>
+      </div>
+
+      <div style="display:flex;gap:.5rem;">
+        <button class="btn-save">Save</button>
+        <button class="btn-cancel">Cancel</button>
+      </div>
+    </div>
+  `;
+
+  // toggles
+  const sel = li.querySelector('.edit-repeat');
+  const intWrap = li.querySelector('.edit-interval-wrap');
+  const intUnit = li.querySelector('.edit-interval-unit');
+  const weeklyWrap = li.querySelector('.edit-weekly-wrap');
+
+  sel.addEventListener('change', () => {
+    const v = sel.value;
+    intWrap.style.display = v ? '' : 'none';
+    intUnit.textContent = v==='weekly' ? 'week(s)' : 'day(s)';
+    weeklyWrap.style.display = v==='weekly' ? 'flex' : 'none';
   });
 
-  textSpan.replaceWith(input);
-  input.focus();
+  // cancel -> re-render
+  li.querySelector('.btn-cancel').onclick = () => { renderTodos(); };
+
+  // save -> PATCH
+  li.querySelector('.btn-save').onclick = async () => {
+    const newText = li.querySelector('.edit-text').value.trim();
+    const newDue = li.querySelector('.edit-due').value || null;
+    const newFreq = sel.value;
+    const newInterval = parseInt(li.querySelector('.edit-interval')?.value || '1',10);
+
+    let repeat = null;
+    if (newFreq) {
+      repeat = { freq: newFreq, interval: Math.max(1,newInterval) };
+      if (newFreq === 'weekly') {
+        repeat.byWeekday = [...li.querySelectorAll('.edit-byweekday:checked')].map(cb => parseInt(cb.value,10));
+      }
+    }
+
+    // Build patch; recompute nextDue when repeating
+    const patch = { text: newText || todo.text, due: newDue };
+    if (repeat) {
+      patch.repeat = repeat;
+      const temp = { ...todo, repeat, due: newDue || (todo.due || todayISO()) };
+      patch.nextDue = computeNextDue(temp, temp.due);
+    } else {
+      patch.repeat = null;
+      patch.nextDue = null;
+    }
+
+    try {
+      await fetch(`/todos/${index}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(patch)
+      });
+      await loadTodosFromServer();
+    } catch {
+      alert('Failed to save changes.');
+    }
+  };
 };
-
-function cancelEdit(input, originalText) {
-  const span = document.createElement('span');
-  span.textContent = originalText;
-  span.classList.add('todo-text');
-  input.replaceWith(span);
-}
-
-async function saveEditedTodo(index, newText) {
-  try {
-    await fetch(`/todos/${index}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ text: newText })
-    });
-    await loadTodosFromServer();
-  } catch {
-    alert("Failed to update todo.");
-  }
-}
-
 
 // Add new todo (supports repeats)
 todoInput.addEventListener('keydown', async (e) => {
@@ -513,7 +581,7 @@ window.unmarkDone = async (index) => {
   // Remove todo
   window.removeTodo = async (i) => {
     if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
-    deletedTodos.push(todosData[i].text);
+    deletedTodos.push(todosData[i]); // save full object
     try {
       await fetch(`/todos/${i}`, {
         method: 'DELETE',
@@ -534,13 +602,13 @@ window.unmarkDone = async (index) => {
   const restoring = [...deletedTodos]; // Clone to avoid timing issues
   deletedTodos = [];
 
-  for (const text of restoring) {
-    await fetch('/todos', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text })
-    });
-  }
+for (const obj of restoring) {
+  await fetch('/todos', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(obj) // send full object
+  });
+}
 
   loadTodosFromServer();
 });
@@ -664,6 +732,5 @@ function disableDrag() {
 
   updateAdminUI();
 </script>
-  
 </body>
 </html>

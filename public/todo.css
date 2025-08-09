@@ -10,6 +10,8 @@
       --modal-bg: rgba(0, 0, 0, 0.8);
       --modal-content-bg: #222;
       --modal-border: #0ff;
+      --border-color: var(--card-border);
+      --accent: var(--card-border);
     }
     body.light-mode {
       --bg-color: #f0f0f0;
@@ -23,6 +25,8 @@
       --modal-bg: rgb(0, 0, 0);
       --modal-content-bg: #fff;
       --modal-border: #333;
+      --border-color: var(--card-border);
+      --accent: var(--card-border);
     }
     body {
       font-family: sans-serif;
@@ -56,17 +60,20 @@
       margin-top: 1rem;
       width: 100%; /* Adjusted for card width */
     }
-    li {
-      background: var(--input-bg);
-      border: 1px solid var(--input-border);
-      margin: 0.5rem 0;
-      padding: 0.5rem;
-      border-radius: 5px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: grab; /* Indicate draggable */
-    }
+li {
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  margin: 0.5rem 0;
+  padding: 0.5rem 0.5rem;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: grab;
+}
+li > div { display: flex; gap: 6px; align-items: center; }
+.todo-text { flex-grow: 1; }
+
     li.done span {
       text-decoration: line-through;
       color: #888;
@@ -368,11 +375,6 @@
   margin: 0 auto;
 }
 
-.main-content {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-}
 @media (max-width: 768px) {
   .main-content {
     flex-direction: column;
@@ -384,13 +386,15 @@
   }
 }
 li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: 1px solid var(--accent);
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  margin: 0.5rem 0;
+  padding: 0.5rem 0.5rem;
   border-radius: 8px;
-  padding: 8px;
-  margin: 5px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: grab;
 }
 
 li > div {
@@ -511,7 +515,7 @@ li .edit-due::-webkit-calendar-picker-indicator {
   filter: invert(1); /* so the date picker icon is visible in dark mode */
 }
 
-/* Edit mode container inside li */
+/* Inline edit container */
 li .edit-container {
   display: flex;
   flex-wrap: wrap;
@@ -519,13 +523,14 @@ li .edit-container {
   gap: 0.5rem;
 }
 
+/* Inputs/selects in edit mode */
 li .edit-text,
 li .edit-due,
 li .edit-repeat,
 li .edit-interval {
-  background: var(--bg-color, #111);
-  color: var(--text-color, #fff);
-  border: 1px solid var(--border-color, #0ff);
+  background: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   padding: 2px 6px;
   font-size: 0.9rem;
@@ -538,31 +543,21 @@ li .edit-weekly-wrap {
   gap: 0.3rem;
 }
 
+/* Buttons */
 li .btn-save,
 li .btn-cancel {
-  background-color: transparent;
-  border: 1px solid var(--border-color, #0ff);
+  background: transparent;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   padding: 2px 6px;
   font-size: 0.85rem;
   cursor: pointer;
   transition: background-color 0.15s ease;
 }
+li .btn-save { color: #0f0; }
+li .btn-save:hover { background-color: rgba(0,255,0,0.15); }
+li .btn-cancel { color: #f55; }
+li .btn-cancel:hover { background-color: rgba(255,0,0,0.15); }
 
-li .btn-save {
-  color: #0f0;
-}
-li .btn-save:hover {
-  background-color: rgba(0, 255, 0, 0.15);
-}
-
-li .btn-cancel {
-  color: #f55;
-}
-li .btn-cancel:hover {
-  background-color: rgba(255, 0, 0, 0.15);
-}
-
-/* Make date picker icon visible in dark mode */
-li .edit-due::-webkit-calendar-picker-indicator
-
+/* Date picker icon visible in dark mode */
+li .edit-due::-webkit-calendar-picker-indicator { filter: invert(1); }

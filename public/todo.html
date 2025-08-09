@@ -458,7 +458,7 @@ view.forEach((todo) => {
 };
 
   
- // Inline editor for text + due + repeat
+// Inline editor for text + due + repeat + tags
 window.editTodo = function(index){
   const li = document.querySelector(`li[data-trueindex="${index}"]`);
   if (!li) return;
@@ -470,33 +470,40 @@ window.editTodo = function(index){
   const freq = rep?.freq || '';
   const interval = rep?.interval || 1;
   const byWeekday = Array.isArray(rep?.byWeekday) ? rep.byWeekday : [];
+  const tagsCSV = (todo.tags || []).join(', ');
 
-li.innerHTML = `
-  <div class="edit-container">
-    <input type="text" class="edit-text" value="${text}" />
-    <label>Due:
-      <input type="date" class="edit-due" value="${due}">
-    </label>
-    <label>Repeat:
-      <select class="edit-repeat">
-        <option value="" ${!freq?'selected':''}>None</option>
-        <option value="daily" ${freq==='daily'?'selected':''}>Daily</option>
-        <option value="weekly" ${freq==='weekly'?'selected':''}>Weekly</option>
-      </select>
-    </label>
-    <label class="edit-interval-wrap" style="${freq?'':'display:none;'}">
-      Every
-      <input type="number" class="edit-interval" min="1" value="${interval}" style="width:4rem;">
-      <span class="edit-interval-unit">${freq==='weekly'?'week(s)':'day(s)'}</span>
-    </label>
-    <div class="edit-weekly-wrap" style="display:${freq==='weekly'?'flex':'none'};align-items:center;">
-      <span style="margin-right:.25rem;">Days:</span>
-      ${weekdayBoxes(byWeekday)}
+  li.innerHTML = `
+    <div class="edit-container">
+      <input type="text" class="edit-text" value="${text}" />
+      <label>Due:
+        <input type="date" class="edit-due" value="${due}">
+      </label>
+      <label>Repeat:
+        <select class="edit-repeat">
+          <option value="" ${!freq?'selected':''}>None</option>
+          <option value="daily" ${freq==='daily'?'selected':''}>Daily</option>
+          <option value="weekly" ${freq==='weekly'?'selected':''}>Weekly</option>
+        </select>
+      </label>
+      <label class="edit-interval-wrap" style="${freq?'':'display:none;'}">
+        Every
+        <input type="number" class="edit-interval" min="1" value="${interval}" style="width:4rem;">
+        <span class="edit-interval-unit">${freq==='weekly'?'week(s)':'day(s)'}</span>
+      </label>
+      <div class="edit-weekly-wrap" style="display:${freq==='weekly'?'flex':'none'};align-items:center;">
+        <span style="margin-right:.25rem;">Days:</span>
+        ${weekdayBoxes(byWeekday)}
+      </div>
+
+      <!-- ✅ New: Tags editor -->
+      <label>Tags:
+        <input type="text" class="edit-tags" placeholder="tag1, tag2" value="${tagsCSV}">
+      </label>
+
+      <button class="btn-save">Save</button>
+      <button class="btn-cancel">Cancel</button>
     </div>
-    <button class="btn-save">Save</button>
-    <button class="btn-cancel">Cancel</button>
-  </div>
-`;
+  `;
 
   // toggles
   const sel = li.querySelector('.edit-repeat');
@@ -521,6 +528,13 @@ li.innerHTML = `
     const newFreq = sel.value;
     const newInterval = parseInt(li.querySelector('.edit-interval')?.value || '1',10);
 
+    // ✅ parse tags
+    const tagsVal = li.querySelector('.edit-tags').value || '';
+    const tags = tagsVal
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean);
+
     let repeat = null;
     if (newFreq) {
       repeat = { freq: newFreq, interval: Math.max(1,newInterval) };
@@ -530,7 +544,7 @@ li.innerHTML = `
     }
 
     // Build patch; recompute nextDue when repeating
-    const patch = { text: newText || todo.text, due: newDue };
+    const patch = { text: newText || todo.text, due: newDue, tags };
     if (repeat) {
       patch.repeat = repeat;
       const temp = { ...todo, repeat, due: newDue || (todo.due || todayISO()) };

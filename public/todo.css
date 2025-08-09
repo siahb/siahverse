@@ -561,3 +561,16 @@ li .btn-cancel:hover { background-color: rgba(255,0,0,0.15); }
 
 /* Date picker icon visible in dark mode */
 li .edit-due::-webkit-calendar-picker-indicator { filter: invert(1); }
+/* Overdue + priority badges */
+.pill { padding:2px 6px; border:1px solid var(--border-color); border-radius:999px; font-size:.75rem; opacity:.9; }
+.pill.overdue { border-color:#ff5a5a; color:#ff5a5a; }
+.pill.priorityH { border-color:#ff7a00; color:#ff7a00; }
+.pill.priorityM { border-color:#ffd000; color:#ffd000; }
+.pill.priorityL { border-color:#77e2a9; color:#77e2a9; }
+
+/* Make export/import look like buttons */
+.button-look, #export-btn {
+  background: transparent; border:1px solid var(--border-color);
+  padding:4px 8px; border-radius:6px; cursor:pointer; font-weight:600;
+}
+.button-look:hover, #export-btn:hover { background: rgba(255,255,255,.08); }

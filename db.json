@@ -122,5 +122,16 @@
   {
     "text": "YNAB",
     "done": false
+  },
+  {
+    "text": "Spotclean Guinea Pig",
+    "done": false,
+    "due": "2025-08-10",
+    "repeat": {
+      "freq": "daily",
+      "interval": 1
+    },
+    "lastDone": "2025-08-09",
+    "nextDue": "2025-08-10"
   }
 ]

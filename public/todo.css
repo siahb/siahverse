@@ -1,541 +1,64 @@
+
 :root {
   --bg-color: #0d0d0d;
-      --text-color: #0ff;
-      --input-bg: #111;
-      --input-border: #0ff;
-      --btn-color: #f66;
-      --card-bg: #1a1a1ae1;
-      --card-border: #0ff;
-      --star-color: #58a6ff; 
-      --modal-bg: rgba(0, 0, 0, 0.8);
-      --modal-content-bg: #222;
-      --modal-border: #0ff;
-      --border-color: var(--card-border);
-      --accent: var(--card-border);;
+  --text-color: #0ff;
+  --input-bg: #111;
+  --input-border: #0ff;
+  --btn-color: #f66;
+  --card-bg: #1a1a1ae1;
+  --card-border: #0ff;
+  --star-color: #58a6ff; 
+  --modal-bg: rgba(0, 0, 0, 0.8);
+  --modal-content-bg: #222;
+  --modal-border: #0ff;
+  --border-color: var(--card-border);
+  --accent: var(--card-border);
 }
+
 body.light-mode {
   --bg-color: #f0f0f0;
-      --text-color: #111;
-      --input-bg: #fff;
-      --input-border: #333;
-      --btn-color: #a00;
-      --card-bg: #f8f8f8a2;
-      --card-border: #ccc;
-      --star-color: #000000; 
-      --modal-bg: rgb(0, 0, 0);
-      --modal-content-bg: #fff;
-      --modal-border: #333;
-body {
-  font-family: sans-serif;
-      background: var(--bg-color);
-      color: var(--text-color);
-      margin: 0;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: background 0.3s, color 0.3s;;
-h1 {
-  margin-bottom: 1rem;
-      text-align: center;;
-ul {
-  list-style: none;
-      padding: 0;
-      margin-top: 1rem;
-      width: 100%;;
-li > div {
-  gap: 6px;
-.todo-text {
-  flex-grow: 1;
-li.done span {
-  text-decoration: line-through;
-      color: #888;;
-button {
-  background: none;
-      border: none;
-      color: var(--btn-color);
-      font-weight: bold;
-      cursor: pointer;;
-button:hover {
-  color: red;;
-#toggle-theme {
-  position: fixed;
-      top: 1rem;
-      right: 1rem;
-      z-index: 999;
-      font-size: 1.2rem;;
-#admin-logo {
-      left: 1rem;
-      font-size: 2rem; 
-      cursor: pointer;
-      transition: color 0.3s;;
-#admin-logo:hover {
-  color: var(--btn-color);;
-#stars {
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;;
-.main-content {
-      flex-wrap: wrap; 
-      gap: 2rem;
-      justify-content: center;
-      max-width: 1200px;;
-.card-container {
-  background: var(--card-bg);
-  border-radius: 8px;
-  border: 1px solid var(--card-border);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  flex: 1;
-  max-width: 500px;
-  min-width: 300px;
-  padding: 1.5rem;
-  position: relative;
-  width: 90%;
-.card-container h2 {
-  margin-top: 0;
-      color: var(--text-color);;
-.card-container .controls {
-      gap: 10px;
-.card-container .controls #undo-btn {
-  position: static; 
-      font-size: 1rem;
-      margin: 0;;
-#toggle-drag {
-    font-size: 16px;;
-#delete-btn {
-.emoji {
-  font-size: 1.2em;
-  vertical-align: middle;;
-.modal {
-  display: none; 
-      z-index: 1000; 
-      overflow: auto; 
-      background-color: var(--modal-bg); 
-      align-items: center;;
-.modal-content {
-  background-color: var(--modal-content-bg);
-      margin: auto;
-      padding: 20px;
-      border: 1px solid var(--modal-border);
-      width: 80%;
-      max-width: 400px;
-      box-shadow: 0 5px 15px rgba(255,255,255,0.3);
-      gap: 15px;;
-.modal-content h2 {
-  text-align: center;
-      margin-bottom: 10px;;
-.modal-content input[type="text"],
-    .modal-content input[type="password"] {
-  width: calc(100% - 20px);
-      padding: 10px;
-      margin-bottom: 10px;
-      border: 1px solid var(--input-border);
-      border-radius: 4px;
-      background: var(--input-bg);
-.modal-buttons {
-      justify-content: space-around;
-      gap: 10px;;
-.modal-buttons button {
-  padding: 10px 20px;
-      border-radius: 5px;
-      transition: background-color 0.3s;;
-#login-btn {
-  background-color: #4CAF50; 
-      color: white;;
-#login-btn:hover {
-  background-color: #45a049;;
-#cancel-btn, #logout-modal-btn {
-  background-color: #f44336; 
-#cancel-btn:hover, #logout-modal-btn:hover {
-  background-color: #da190b;;
-.theme-switch {
-      display: inline-block;
-      width: 50px;
-      height: 24px;;
-.theme-switch input {
-  opacity: 0;
-      width: 0;
-      height: 0;;
-.theme-switch .slider {
-      justify-content: flex-start;
-      min-width: 48px;
-      background: #ccc;
-      border-radius: 34px;
-      transition: background 0.3s;
-      box-shadow: 0 1px 4px rgba(255, 255, 255, 0.12);
-      border: 1px solid #eee;
-      overflow: hidden;;
-.theme-switch .slider:before {
-  content: "🌞";
-      position: absolute;
-      left: 2px;
-      top: 4px;
-      width: 24px;
-      height: 20px;
-      background: #ffffff;
-      border-radius: 50%;
-      transition: transform 0.3s, width 0.3s, height 0.3s;
-      box-shadow: 0 1px 4px rgba(255, 255, 255, 0.1);
-      font-size: 1.1rem;
-      line-height: 1;;
-.theme-switch input:checked + .slider:before {
-  content: "🌙";
-      background: transparent;
-      box-shadow: none;
-      color: #58a6ff;
-      transform: translateX(22px);;
-.theme-switch input:checked + .slider {
-  background: #006dd3;;
-.back-button-wrapper {
-      margin: 2rem 0;;
-.back-button {
-  padding: 0.6rem 1.2rem;
-      font-weight: 600;
-      background-color: #00ffdd;
-      color: #000000;
-      transition: background 0.3s, opacity 0.2s, box-shadow 0.3s;
-      margin-top: 0.5rem;
-      word-break: break-word;
-      max-width: 100%;
-      text-decoration: none; 
-      box-shadow: 0 0 10px rgba(0, 255, 221, 0.7);;
-.back-button:hover {
-  background: #00fff2; 
-      box-shadow: 0 0 20px rgba(0, 255, 242, 1);;
-.edit-input {
-  background-color: #111;
-      color: #0ff;
-      border: 1px solid #0ff;
-      padding: 2px 6px;
-      font-size: 1em;;
-#todo-list li span,
-    #done-list li span {
-  text-align: left;
-      display: block;
-.top-bar {
-      justify-content: space-between;
-.top-bar h1 {
-  margin: 0 auto;
-.container {
-  max-width: 1200px;
-  margin: 0 auto;;
-@media (max-width: 768px) {
-li {
-  border: 1px solid var(--border-color);
-  margin: 0.5rem 0;
-  padding: 0.5rem 0.5rem;
-  cursor: grab;;
-li.done button {
-  color: #0ff;;
-@keyframes jiggle {
-  0%   { transform: rotate(-0.4deg);;
-50% {
-  transform: rotate(0.4deg);
-  transform: scale(1.02);
-100% {
-  transform: rotate(-0.4deg);
-  transform: scale(1);
-@keyframes pulse {
-  0%   { transform: scale(1);;
-body.dragging-active #todo-list li {
-  animation-name: jiggle;
-  animation-duration: 0.5s;
-  animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
-body.dragging-active #done-list li {
-  animation-name: pulse;
-  animation-duration: 0.8s;
-  cursor: default;;
-#todo-list li,
-#done-list li {
-  transition: transform 0.2s ease;;
-#todo-list li:hover,
-#done-list li:hover {
-  transform: scale(1.01);;
-body:not(.light-mode) .todo-text[contenteditable="true"] {
-  background-color: #2b2b2b;
-  color: white;
-  border: 1px solid #555;;
-.editing {
-  outline: 2px solid #4ea1ff;
-  border-radius: 4px;;
-li .edit-text,
-li .edit-due,
-li .edit-repeat,
-li .edit-interval {
-  background: var(--bg-color, #000);
-  border: 1px solid var(--border-color, #0ff);
-  color: var(--text-color, #fff);
-  font-size: 0.9rem;
-  padding: 4px 6px;
-li .edit-interval-wrap,
-li .edit-weekly-wrap {
-  gap: 0.3rem;
-li .btn-save,
-li .btn-cancel {
-  background-color: transparent;
-  font-size: 0.85rem;
-  padding: 4px 8px;
-  transition: background-color 0.15s ease;
-  transition: background-color 0.2s ease;
-li .btn-save {
-  color: #0f0;
-li .btn-save:hover {
-  background-color: rgba(0, 255, 0, 0.15);
-  background-color: rgba(0,255,0,0.15);
-  color: #f55;
-li .btn-cancel:hover {
-  background-color: rgba(255, 0, 0, 0.15);
-  background-color: rgba(255,0,0,0.15);
-li .edit-due::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-li .edit-container {
-  gap: 0.5rem;;
-.pill {
-  padding:2px 6px; border:1px solid var(--border-color); border-radius:999px; font-size:.75rem; opacity:.9;;
-.pill.overdue {
-  border-color:#ff5a5a; color:#ff5a5a;;
-.pill.priorityH {
-  border-color:#ff7a00; color:#ff7a00;;
-.pill.priorityM {
-  border-color:#ffd000; color:#ffd000;;
-.pill.priorityL {
-  border-color:#77e2a9; color:#77e2a9;;
-.button-look:hover, #export-btn:hover {
-  background: rgba(255,255,255,.08);;
-.card-container .toolbar,
-.card-container #todo-input {
-  max-width: 100%;;
-.toolbar {
-  display:flex;
-  gap: 0.5rem;
-  gap:.5rem;
-  width:100%;
-.toolbar.top {
-  align-items:center; flex-wrap:nowrap;;
-@media (max-width:640px) {
-  .toolbar.top { flex-wrap:wrap;;
-#search-input {
-  flex:1 1 220px;
-  padding:.4rem .5rem .4rem 2rem;   
-  background:var(--input-bg);
-  color:var(--text-color);
-  border:1px solid var(--input-border);
-  border-radius:5px;
-  background-repeat:no-repeat;
-  background-position:8px center;
-  background-size:16px;
-  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2300ffff"><path d="M21.53 20.47l-5.27-5.27A7.92 7.92 0 0018 10a8 8 0 10-8 8 7.92 7.92 0 005.2-1.74l5.27 5.27a.75.75 0 101.06-1.06zM4 10a6 6 0 1112 0 6 6 0 01-12 0z"/></svg>');;
-body.light-mode #search-input {
-  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23333"><path d="M21.53 20.47l-5.27-5.27A7.92 7.92 0 0018 10a8 8 0 10-8 8 7.92 7.92 0 005.2-1.74l5.27 5.27a.75.75 0 101.06-1.06zM4 10a6 6 0 1112 0 6 6 0 01-12 0z"/></svg>');;
-#sort-select, #export-btn, .import-label {
-  flex:0 0 auto;;
-.import-label {
-  align-items:center;
-  cursor:pointer;
-  display: inline-flex;
-  display:inline-flex;
-  gap:.4rem;
-  white-space:nowrap;
-.import-label input {
-  display:none;;
-.button-look, #export-btn, #sort-select, #priority-select {
-  background:transparent;
-  padding:.35rem .6rem;
-  color:var(--text-color);;
-.toolbar.below-enter {
-  flex-wrap:wrap; margin:.15rem 0 .6rem;;
-#tag-input {
-  flex:2 1 220px;
-  font-size: 14px;
-  max-width: 160px;
-  padding:.4rem;
-  width: auto;
-#priority-select {
-  flex:1 1 160px;
-  min-width:160px;;
-#progress-wrap {
-  margin:.25rem 0 .65rem !important;;
-.toolbar input[type="text"], .toolbar select {
-  border-radius:5px;;
-#todo-input {
-  max-width:none;
-  padding:.5rem;
-  margin-bottom:.3rem;;
-#export-btn,
-#import-file {
-  padding: .35rem .6rem;
-  line-height: 1.2;
-  height: auto;
-label[for="import-file"] {
-  font-size: .9rem;
-  min-width: 45px;
-label[for="import-file"]:hover,
-#export-btn:hover {
-  background: rgba(255, 255, 255, 0.1);;
-  border: 1px solid #00ffff;
-  color: inherit;
-  margin-right: 8px;
-  padding: 5px 10px;
-label[for="import-file"]:hover {
-  background: rgba(0, 255, 255, 0.1);;
-#export-btn {
-  margin-right: 5px;;
-#todo-container .toolbar.top {
-  gap: 8px;
-  padding-right: 8px;
-  padding: 0 8px;
-.tag-label {
-  margin-right: 4px;
-#done-panel {
-  flex: 0 0 30%; 
-  max-width: 350px;;
-#todo-panel {
-  flex: 1;;
-.todo-container {
-  gap: 1rem;;
-@media (max-width: 900px) {
-  .main-wrapper {
-select {
-  background-color: #000 !important;
-  color: #0ff !important;
-  font-family: inherit;
-  box-shadow: 0 0 5px #0ff;;
-select:focus {
-  outline: none;
-  box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;;
-select option {
-  background-color: #000;
-  border: none;;
-select option:hover {
-  background-color: #033;
-body.dark-mode select {
-  border: 1px solid #0ff !important;
-  box-shadow: 0 0 5px #0ff;
-  box-shadow: 0 0 5px #0ff !important;
-body.dark-mode select:focus {
-body.dark-mode select option {
-body.dark-mode select option:hover {
-body:not(.dark-mode) select {
-  background-color: #fff;
-  background-color: #fff !important;
-  border: 1px solid #ccc;
-  border: 1px solid #ccc !important;
-  box-shadow: none !important;
-  color: #000;
-  color: #000 !important;
-body:not(.dark-mode) select option {
-  color: #000 !important;;
-.toolbar > * {
-  flex: 1 1 auto;
-  min-width: 120px;
-@media (max-width: 700px) {
-    flex: 1 1 100%;
-  align-items: stretch;
-}.toolbar {
-.toolbar select,
-.toolbar button,
-.toolbar input {
-  flex: 0 1 auto;;
-.toolbar .sort-and-buttons {
-  flex-wrap: nowrap;
-.toolbar input[type="text"] {
-  min-width: 150px;;
-.sort-and-buttons {
-.sort-and-buttons select,
-.sort-and-buttons button,
-.sort-and-buttons label {
-  gap: 1rem;
-  align-items: flex-start;
-  flex-wrap: wrap;;
-#todo-container,
-#done-container {
-  flex: 1 1 450px;
-  max-width: 600px;
-@media (max-width: 600px) {
-  .toolbar input[type="text"],
-  .toolbar .btn,
-  .sort-and-buttons .btn {
-  min-width: 100%;
-.toolbar,
-  #tag-input,
-    max-width: 250px;;
-.below-enter {
-    -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-color: var(--card-bg);
-  background-image: url("data:image/svg+xml;
-  background-position: right 6px center;
-  background-repeat: no-repeat;
-  background-size: 12px;
-  border-radius: 6px;
-  charset=US-ASCII,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='12'%20height='12'%20viewBox='0%200%2024%2024'%3E%3Cpath%20fill='white'%20d='M7%2010l5%205%205-5z'/%3E%3C/svg%3E");
-  max-width: 140px;
-    box-sizing: border-box;
-#priority-select,
-    padding: 6px;;
-  font-size: 14px !important;
-  height: 32px !important;
-  padding: 2px 24px 2px 6px !important;
-  line-height: 1.2 !important;
-  display: inline-flex !important;
-  align-items: center !important;;
-/* Force compact size for Tags + Priority on mobile */
-    width: auto !important;       /* Don't auto-fill full width */
-    max-width: 200px;              /* Limit width */
-    display: inline-block;         /* Sit nicely in row or stacked */
-    box-sizing: border-box;        /* Include padding in width calc */
-    font-size: 14px;                /* Slightly smaller for mobile */
-    padding: 6px;
-    flex-wrap: wrap;                /* Allow wrapping if needed */
-.field-wrap {
-.field-wrap input,
-.field-wrap select {
-  width: 160px;       /* nice fixed size */
-  max-width: 100%;    /* shrink on very small screens */
-    width: 140px;     /* slightly smaller for phones */
+  --text-color: #111;
+  --input-bg: #fff;
+  --input-border: #333;
+  --btn-color: #a00;
+  --card-bg: #f8f8f8a2;
+  --card-border: #ccc;
+  --star-color: #000000; 
+  --modal-bg: rgb(0, 0, 0);
+  --modal-content-bg: #fff;
+  --modal-border: #333;
+}
+
+/* Additional styling here: we'll rebuild search and progress styles */
 .search-wrapper {
-  gap: 0.4rem;
-.search-icon {
-  font-size: 1.2rem;
-  padding: 0.4rem;
-  transition: all 0.3s ease;
-  pointer-events: none;
-  transition: width 0.3s ease, opacity 0.3s ease;
-/* When active */
+  position: relative;
+}
+
+#search-input {
+  display: none;
+  transition: width 0.25s ease, opacity 0.25s ease;
+}
+
 #search-input.active {
-  width: 160px;
-  opacity: 1;
-  pointer-events: auto;
-  width: 200px;
-  /* Hide search input by default */
-/* Show it when active */
-/* Progress inline style */
+  display: inline-block;
+}
+
 #progress-inline {
-  width: 150px; /* default width */
+  width: 150px;
   height: 10px;
   background: rgba(255,255,255,0.1);
   overflow: hidden;
   margin-left: 0.5rem;
   transition: width 0.25s ease;
+}
+
 #progress-bar {
   width: 0%;
+  height: 100%;
   background: #00ffc3;
   transition: width 0.3s ease;
-/* Search input animation */
-  transition: width 0.25s ease, opacity 0.25s ease, padding 0.25s ease;
-  width: 200px; /* Adjust as needed */
-/* When search is open, shrink progress bar */
+}
+
 .search-open #progress-inline {
-  width: 100px; /* smaller width */
-  width: 150px;
-  margin-top: 0.4rem;
-/* Hide search by default */
-  margin-left: 0.3rem;
-  padding: 0.3rem;
-  background: rgba(255,255,255,0.08);
-/* Shrink progress bar when search is active */
   width: 100px;
+}

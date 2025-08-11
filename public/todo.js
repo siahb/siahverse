@@ -457,10 +457,10 @@ window.editTodo = function(index){
       <span style="margin-right:.25rem;">Days:</span>
       ${weekdayBoxes(byWeekday)}
     </div>
-
-    // Wire "Today" inside the editor (must be after innerHTML)
-const todayBtn = li.querySelector('.btn-today');
-const editDueInput = li.querySelector('.edit-due');
+    `;
+  
+  const todayBtn = li.querySelector('.btn-today');
+  const editDueInput = li.querySelector('.edit-due');
 todayBtn?.addEventListener('click', (e) => {
   e.preventDefault();
   e.stopPropagation();
@@ -469,7 +469,6 @@ todayBtn?.addEventListener('click', (e) => {
   editDueInput.dispatchEvent(new Event('input', { bubbles: true }));
   editDueInput.dispatchEvent(new Event('change', { bubbles: true }));
 });
-
 
       <!-- ✅ New: Tags editor -->
       <label>Tags:

@@ -55,71 +55,96 @@
   let deletedTodos = [];
   const ADMIN_PASSWORD_KEY = 'adminPassword';
 
- // --- Search Toggle ---
-// --- Search (toggle, outside click, Esc, input filter, hotkeys) ---
-const searchWrap   = document.querySelector('.search-wrapper');
-const searchToggle = document.getElementById('search-toggle');
-const searchInput  = document.getElementById('search-input');
+(function initSearchBar() {
+  function ready(fn){ if (document.readyState !== 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
 
-// Open/close via 🔍
-searchToggle.addEventListener('click', (e) => {
-  e.stopPropagation();
-  const willOpen = !searchWrap.classList.contains('active');
-  searchWrap.classList.toggle('active', willOpen);
-  document.body.classList.toggle('search-open', willOpen);
-  if (willOpen) {
-    searchInput.focus();
-    searchInput.select();
-  } else {
-    searchInput.value = '';
-    renderTodos(); renderDone();
-  }
-});
+  ready(() => {
+    const searchWrap   = document.querySelector('.search-wrapper');
+    const searchToggle = document.getElementById('search-toggle');
+    const searchInput  = document.getElementById('search-input');
 
-// Close when clicking outside
-document.addEventListener('click', (e) => {
-  if (searchWrap.classList.contains('active') && !searchWrap.contains(e.target)) {
-    searchWrap.classList.remove('active');
-    document.body.classList.remove('search-open');
-    searchInput.value = '';
-    renderTodos(); renderDone();
-  }
-});
+    // sanity checks
+    if (!searchWrap || !searchToggle || !searchInput) {
+      console.warn('[search] Missing element(s):', { searchWrap, searchToggle, searchInput });
+      return; // don't wire anything if DOM doesn't match
+    }
 
-// Esc inside the input => clear + blur + hide
-searchInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    e.preventDefault();
-    searchInput.value = '';
-    searchInput.blur();
-    searchWrap.classList.remove('active');
-    document.body.classList.remove('search-open');
-    renderTodos(); renderDone();
-  }
-});
+    // CSS expectation reminder (adjust your CSS if needed)
+    // .search-wrapper.active #search-input { width:220px; opacity:1; }
+    // #search-input { width:0; opacity:0; transition:width .2s, opacity .2s; }
 
-// Filter as you type
-searchInput.addEventListener('input', () => { renderTodos(); renderDone(); });
+    // open/close via 🔍
+    searchToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const willOpen = !searchWrap.classList.contains('active');
+      searchWrap.classList.toggle('active', willOpen);
+      document.body.classList.toggle('search-open', willOpen);
+      if (willOpen) {
+        console.log('[search] opened');
+        searchInput.focus(); searchInput.select();
+      } else {
+        console.log('[search] closed via toggle');
+        searchInput.value = '';
+        renderTodos(); renderDone();
+      }
+    }, { once: false });
 
-// Hotkeys: Ctrl/Cmd+F and "/"
-document.addEventListener('keydown', (e) => {
-  // ignore if typing in another field
-  if (e.target.closest('input, textarea, [contenteditable]')) return;
+    // close when clicking outside
+    document.addEventListener('click', (e) => {
+      if (searchWrap.classList.contains('active') && !searchWrap.contains(e.target)) {
+        console.log('[search] closed via outside click');
+        searchWrap.classList.remove('active');
+        document.body.classList.remove('search-open');
+        searchInput.value = '';
+        renderTodos(); renderDone();
+      }
+    });
 
-  // Ctrl/Cmd+F
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
-    e.preventDefault();
-    if (!searchWrap.classList.contains('active')) searchToggle.click();
-    searchInput.focus(); searchInput.select();
-  }
+    // Esc inside input => clear + blur + hide
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        console.log('[search] ESC pressed (inside input)');
+        searchInput.value = '';
+        searchInput.blur();
+        searchWrap.classList.remove('active');
+        document.body.classList.remove('search-open');
+        renderTodos(); renderDone();
+      }
+    });
 
-  // "/" quick open
-  if (e.key === '/') {
-    e.preventDefault();
-    if (!searchWrap.classList.contains('active')) searchToggle.click();
-    searchInput.focus(); searchInput.select();
-  }
-});
+    // filter as you type
+    searchInput.addEventListener('input', () => {
+      // console.log('[search] filter:', searchInput.value);
+      renderTodos(); renderDone();
+    });
+
+    // Hotkeys: Ctrl/Cmd+F and "/"
+    document.addEventListener('keydown', (e) => {
+      // ignore if typing in another field
+      if (e.target.closest('input, textarea, [contenteditable]')) return;
+
+      // Ctrl/Cmd+F
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
+        e.preventDefault();
+        console.log('[search] hotkey Ctrl/Cmd+F');
+        if (!searchWrap.classList.contains('active')) searchToggle.click();
+        searchInput.focus(); searchInput.select();
+      }
+
+      // "/" quick open
+      if (e.key === '/') {
+        e.preventDefault();
+        console.log('[search] hotkey "/"');
+        if (!searchWrap.classList.contains('active')) searchToggle.click();
+        searchInput.focus(); searchInput.select();
+      }
+    });
+
+    console.log('[search] wired ✅');
+  });
+})();
+
 
   // Button visibility
 function updateAdminUI() {

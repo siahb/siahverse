@@ -1197,3 +1197,19 @@ body:not(.dark-mode) select option {
 .search-open #progress-inline {
   width: 100px; /* smaller width */
 }
+#progress-inline {
+  width: 150px;
+  height: 10px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 0.4rem;
+}
+
+#progress-bar {
+  height: 100%;
+  width: 0%;
+  background: #00ffc3;
+  transition: width 0.3s ease;
+}

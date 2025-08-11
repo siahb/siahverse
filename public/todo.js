@@ -169,6 +169,11 @@ async function loadTodosFromServer() {
   // ==== Repeats Helpers ====
 function todayISO() { return new Date().toISOString().slice(0,10); }
 
+function forceCustomSort() {
+  if (sortSelect && sortSelect.value !== 'default') {
+    sortSelect.value = 'default';
+  }
+}
 function toISO(d) {
   if (!d) return null;
   if (typeof d === 'string') return d.slice(0,10);
@@ -771,6 +776,17 @@ document.getElementById('save-order')?.addEventListener('click', async () => {
 function enableDrag() {
   sortableInstance = new Sortable(todoList, {
     animation: 150,
+
+    onStart() {
+      // switch dropdown as soon as dragging begins
+      forceCustomSort();
+    },
+
+    onUpdate() {
+      // keep it on custom if user continues moving items
+      forceCustomSort();
+    },
+
     onEnd: async () => {
       const listItems = document.querySelectorAll('#todo-list li');
       const newOrder = [];
@@ -778,9 +794,7 @@ function enableDrag() {
       listItems.forEach(li => {
         const trueIndex = parseInt(li.getAttribute('data-trueindex'));
         const originalItem = todosData[trueIndex];
-        if (originalItem && !originalItem.done) {
-          newOrder.push(originalItem);
-        }
+        if (originalItem && !originalItem.done) newOrder.push(originalItem);
       });
 
       const doneItems = todosData.filter(todo => todo.done);
@@ -800,6 +814,8 @@ function enableDrag() {
         alert('⚠️ Failed to save new order to server.');
       }
 
+      // lock sort to custom and re-render
+      forceCustomSort();
       renderTodos();
       renderDone();
     }

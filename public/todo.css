@@ -620,3 +620,51 @@ li .edit-due::-webkit-calendar-picker-indicator { filter: invert(1); }
 .card-container #todo-input {
   max-width: 100%;
 }
+/* Search row + Tags/Priority row styling */
+.toolbar {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.search-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.search-icon {
+  position: absolute;
+  left: 8px;
+  pointer-events: none;
+  opacity: .7;
+}
+.search-wrap input {
+  padding-left: 1.6rem;
+}
+
+#todo-input {
+  width: 100%;
+  max-width: none;
+  padding: 0.5rem;
+  background: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--input-border);
+  border-radius: 5px;
+  margin-bottom: .25rem;
+}
+
+.below-enter {
+  margin: .25rem 0 .75rem; /* spacing before Due/Repeat */
+}
+
+.below-enter input[type="text"],
+.below-enter select {
+  flex: 1;
+  min-width: 140px;
+  background: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--input-border);
+  border-radius: 5px;
+  padding: .4rem;
+}

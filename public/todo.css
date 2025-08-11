@@ -416,14 +416,14 @@ body.light-mode .back-button{
 }
 /* Wiggle animation when reordering */
 .dragging-active #todo-list li {
-  animation: wiggle 0.3s ease-in-out infinite;
+  animation: wiggle 0.4s ease-in-out infinite;
 }
 
 @keyframes wiggle {
   0%, 100% {
-    transform: rotate(-2deg);
+    transform: rotate(-1deg);
   }
   50% {
-    transform: rotate(2deg);
+    transform: rotate(1deg);
   }
 }

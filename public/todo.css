@@ -1298,3 +1298,49 @@ body:not(.dark-mode) select option {
     width: 100% !important;
   }
 }
+/* === FORCE WRAP FIX === */
+.toolbar.top,
+.sort-and-buttons {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.5rem !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+}
+
+.toolbar.top > *,
+.sort-and-buttons > * {
+  flex: 0 1 auto !important;
+}
+
+/* Search input & progress should shrink/grow */
+#search-input {
+  flex: 1 1 200px !important;
+  min-width: 150px !important;
+}
+
+#progress-inline {
+  flex: 1 1 150px !important;
+  min-width: 100px !important;
+}
+
+/* Buttons & selects don't force overflow */
+.sort-and-buttons select,
+.sort-and-buttons button,
+.import-label {
+  flex: 0 1 auto !important;
+  min-width: 80px !important;
+}
+
+/* Mobile stacking */
+@media (max-width: 700px) {
+  .toolbar.top,
+  .sort-and-buttons {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .toolbar.top > *,
+  .sort-and-buttons > * {
+    width: 100% !important;
+  }
+}

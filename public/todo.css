@@ -725,3 +725,9 @@ label[for="import-file"]{
   color: var(--text-color);
   font-weight: 600;
 }
+.tag-label {
+  margin-right: 4px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-color);
+}

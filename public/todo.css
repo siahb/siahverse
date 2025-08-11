@@ -592,7 +592,7 @@ body.light-mode #search-input{
 }
 
 /* ===== Tags + Priority under Enter ===== */
-.toolbar.below-enter{ flex-wrap:wrap; margin:.25rem 0 .8rem; }
+.toolbar.below-enter{ flex-wrap:wrap; margin:.15rem 0 .6rem; }
 #tag-input{
   flex:2 1 220px;
   padding:.4rem;
@@ -628,4 +628,27 @@ body.light-mode #search-input{
   border:1px solid var(--input-border);
   border-radius:5px;
   margin-bottom:.3rem;
+}
+
+/* Make Export and Import identical buttons */
+#export-btn,
+.import-label .button-look {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: .35rem .6rem;
+  line-height: 1.2;
+  border: 1px solid var(--input-border);
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+/* Keep the label wrapper neutral */
+.import-label {
+  display: inline-flex;
+  align-items: center;
+  padding: 0;             /* remove extra height */
+  margin: 0;
 }

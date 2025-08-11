@@ -1086,3 +1086,36 @@ body:not(.dark-mode) select option {
   color: var(--text-color);
   transition: all 0.3s ease;
 }
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  position: relative;
+}
+
+.search-icon {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+#search-input {
+  width: 0;
+  padding: 0.4rem;
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  background: var(--card-bg);
+  color: var(--text-color);
+  opacity: 0;
+  pointer-events: none;
+  transition: width 0.3s ease, opacity 0.3s ease;
+}
+
+/* When active */
+#search-input.active {
+  width: 160px;
+  opacity: 1;
+  pointer-events: auto;
+}

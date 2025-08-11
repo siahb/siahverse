@@ -967,16 +967,16 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+// ESC inside search => clear, blur, and hide the slide-out
 searchInput.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     e.preventDefault();
     searchInput.value = '';
-    // Re-run your search filter to reset the list
-    if (typeof filterTodos === 'function') {
-      filterTodos('');
-    } else if (typeof renderTodos === 'function') {
-      renderTodos();
-    }
-    searchInput.blur(); // Unfocus
+    searchInput.blur();
+    searchWrap.classList.remove('active');
+    document.body.classList.remove('search-open');
+    renderTodos(); 
+    renderDone();
   }
 });
+

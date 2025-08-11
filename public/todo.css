@@ -43,33 +43,14 @@
       margin-bottom: 1rem;
       text-align: center;
     }
-#todo-input {
-  padding: 0.5rem;
-  width: 100%;
-  max-width: none;
-  background: var(--input-bg);
-  color: var(--text-color);
-  border: 1px solid var(--input-border);
-  border-radius: 5px;
-  margin-bottom: .25rem; /* tighter, because tags/priority are right below */
-}
+
     ul {
       list-style: none;
       padding: 0;
       margin-top: 1rem;
       width: 100%; /* Adjusted for card width */
     }
-li {
-  background: var(--input-bg);
-  border: 1px solid var(--border-color);
-  margin: 0.5rem 0;
-  padding: 0.5rem 0.5rem;
-  border-radius: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: grab;
-}
+
 li > div { display: flex; gap: 6px; align-items: center; }
 .todo-text { flex-grow: 1; }
 
@@ -453,7 +434,7 @@ body.dragging-active #done-list li {
   transform: scale(1.01);
 }
 /* Styling for editable input in dark mode */
-body.dark-mode .todo-text[contenteditable="true"] {
+body:not(.light-mode) .todo-text[contenteditable="true"] {
   background-color: #2b2b2b;
   color: white;
   border: 1px solid #555;
@@ -567,52 +548,7 @@ li .edit-due::-webkit-calendar-picker-indicator { filter: invert(1); }
 .pill.priorityM { border-color:#ffd000; color:#ffd000; }
 .pill.priorityL { border-color:#77e2a9; color:#77e2a9; }
 
-/* Make export/import look like buttons */
-.button-look, #export-btn {
-  background: transparent; border:1px solid var(--border-color);
-  padding:4px 8px; border-radius:6px; cursor:pointer; font-weight:600;
-}
 .button-look:hover, #export-btn:hover { background: rgba(255,255,255,.08);
-}
-/* Reusable toolbar row */
-.toolbar {
-  display: flex;
-  gap: .5rem;
-  flex-wrap: wrap;
-  margin: .5rem 0;
-  width: 100%;
-}
-
-/* Search input with icon */
-.search-wrap {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-}
-.search-icon {
-  position: absolute;
-  left: 8px;
-  pointer-events: none;
-  opacity: .7;
-}
-.search-wrap input {
-  padding-left: 1.6rem; /* room for icon */
-}
-
-/* The row we moved under Enter */
-.below-enter {
-  margin: .25rem 0 .5rem;
-  width: 100%;
-}
-
-/* Make toolbar inputs match your theme */
-.toolbar input[type="text"],
-.toolbar select {
-  padding: .4rem;
-  background: var(--input-bg);
-  color: var(--text-color);
-  border: 1px solid var(--input-border);
-  border-radius: 5px;
 }
 
 /* Keep controls full-width within the card */
@@ -620,60 +556,76 @@ li .edit-due::-webkit-calendar-picker-indicator { filter: invert(1); }
 .card-container #todo-input {
   max-width: 100%;
 }
-/* Search row + Tags/Priority row styling */
-.toolbar {
-  display: flex;
-  gap: .5rem;
-  flex-wrap: wrap;
-  width: 100%;
+
+/* ===== Toolbar (single source) ===== */
+.toolbar { display:flex; gap:.5rem; width:100%; }
+.toolbar.top { align-items:center; flex-wrap:nowrap; }
+@media (max-width:640px){ .toolbar.top { flex-wrap:wrap; } }
+
+/* Search grows; crisp SVG icon */
+#search-input{
+  flex:1 1 220px;
+  padding:.4rem .5rem .4rem 2rem;   /* space for icon */
+  background:var(--input-bg);
+  color:var(--text-color);
+  border:1px solid var(--input-border);
+  border-radius:5px;
+  background-repeat:no-repeat;
+  background-position:8px center;
+  background-size:16px;
+  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2300ffff"><path d="M21.53 20.47l-5.27-5.27A7.92 7.92 0 0018 10a8 8 0 10-8 8 7.92 7.92 0 005.2-1.74l5.27 5.27a.75.75 0 101.06-1.06zM4 10a6 6 0 1112 0 6 6 0 01-12 0z"/></svg>');
+}
+body.light-mode #search-input{
+  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23333"><path d="M21.53 20.47l-5.27-5.27A7.92 7.92 0 0018 10a8 8 0 10-8 8 7.92 7.92 0 005.2-1.74l5.27 5.27a.75.75 0 101.06-1.06zM4 10a6 6 0 1112 0 6 6 0 01-12 0z"/></svg>');
 }
 
-.search-wrap {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-}
-.search-icon {
-  position: absolute;
-  left: 8px;
-  pointer-events: none;
-  opacity: .7;
-}
-.search-wrap input {
-  padding-left: 1.6rem;
+#sort-select, #export-btn, .import-label { flex:0 0 auto; }
+.import-label { display:inline-flex; align-items:center; gap:.4rem; cursor:pointer; white-space:nowrap; }
+.import-label input { display:none; }
+
+.button-look, #export-btn, #sort-select, #priority-select{
+  background:transparent;
+  border:1px solid var(--input-border);
+  border-radius:5px;
+  padding:.35rem .6rem;
+  color:var(--text-color);
 }
 
-#todo-input {
-  width: 100%;
-  max-width: none;
-  padding: 0.5rem;
-  background: var(--input-bg);
-  color: var(--text-color);
-  border: 1px solid var(--input-border);
-  border-radius: 5px;
-  margin-bottom: .25rem;
+/* ===== Tags + Priority under Enter ===== */
+.toolbar.below-enter{ flex-wrap:wrap; margin:.25rem 0 .8rem; }
+#tag-input{
+  flex:2 1 220px;
+  padding:.4rem;
+  background:var(--input-bg);
+  color:var(--text-color);
+  border:1px solid var(--input-border);
+  border-radius:5px;
+}
+#priority-select{
+  flex:1 1 160px;
+  min-width:160px;
 }
 
-.below-enter {
-  margin: .25rem 0 .75rem; /* spacing before Due/Repeat */
+/* A touch more air under the progress bar */
+#progress-wrap{ margin:.25rem 0 .65rem !important; }
+
+/* Make toolbar inputs match theme */
+.toolbar input[type="text"], .toolbar select{
+  padding:.4rem;
+  background:var(--input-bg);
+  color:var(--text-color);
+  border:1px solid var(--input-border);
+  border-radius:5px;
 }
 
-.below-enter input[type="text"],
-.below-enter select {
-  flex: 1;
-  min-width: 140px;
-  background: var(--input-bg);
-  color: var(--text-color);
-  border: 1px solid var(--input-border);
-  border-radius: 5px;
-  padding: .4rem;
+/* Enter bar full width */
+#todo-input{
+  width:100%;
+  max-width:none;
+  padding:.5rem;
+  background:var(--input-bg);
+  color:var(--text-color);
+  border:1px solid var(--input-border);
+  border-radius:5px;
+  margin-bottom:.3rem;
 }
-#search-input {
-  background: var(--input-bg) url('data:image/svg+xml;utf8,<svg fill="%230ff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.53 20.47l-5.27-5.27A7.92 7.92 0 0018 10a8 8 0 10-8 8 7.92 7.92 0 005.2-1.74l5.27 5.27a.75.75 0 101.06-1.06zM4 10a6 6 0 1112 0 6 6 0 01-12 0z"/></svg>') no-repeat 8px center;
-  background-size: 16px;
-  padding: .4rem .5rem .4rem 2rem; /* left padding for icon space */
-  color: var(--text-color);
-  border: 1px solid var(--input-border);
-  border-radius: 5px;
-}
-

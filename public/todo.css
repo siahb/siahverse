@@ -676,6 +676,6 @@ label[for="import-file"]:hover,
 }
 #export-btn,
 label[for="import-file"] {
-  min-width: 80px; /* adjust until they look balanced */
+  min-width: 4px; /* adjust until they look balanced */
   text-align: center;
 }

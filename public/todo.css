@@ -1019,3 +1019,22 @@ body:not(.dark-mode) select option {
   align-items: center !important;;
 }
 
+/* Force compact size for Tags + Priority on mobile */
+@media (max-width: 600px) {
+  #tag-input,
+  #priority-select {
+    width: auto !important;       /* Don't auto-fill full width */
+    max-width: 200px;              /* Limit width */
+    display: inline-block;         /* Sit nicely in row or stacked */
+    box-sizing: border-box;        /* Include padding in width calc */
+    font-size: 14px;                /* Slightly smaller for mobile */
+    padding: 6px;
+  }
+
+  .toolbar.below-enter {
+    display: flex;
+    flex-wrap: wrap;                /* Allow wrapping if needed */
+    gap: 6px;
+    align-items: center;
+  }
+}

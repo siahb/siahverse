@@ -189,17 +189,32 @@ function filteredTodos(list){
   );
 }
 
+function priRank(p) {
+  return p === 'H' ? 3 : p === 'M' ? 2 : p === 'L' ? 1 : 0; // None = 0
+}
+
 function sortTodos(list){
   const mode = sortSelect?.value || 'default';
   const copy = [...list];
+
   if (mode === 'dueAsc') {
-    copy.sort((a,b)=>(a.due||'9999') < (b.due||'9999') ? -1 : 1);
+    copy.sort((a,b)=> (a.due||'9999').localeCompare(b.due||'9999'));
   } else if (mode === 'dueDesc') {
-    copy.sort((a,b)=>(a.due||'0000') > (b.due||'0000') ? -1 : 1);
+    copy.sort((a,b)=> (b.due||'0000').localeCompare(a.due||'0000'));
   } else if (mode === 'alpha') {
     copy.sort((a,b)=> (a.text||'').localeCompare(b.text||''));
   } else if (mode === 'created') {
     copy.sort((a,b)=> (b.createdAt||0) - (a.createdAt||0));
+  } else if (mode === 'priority') {
+    // H (3) > M (2) > L (1) > none (0)
+    copy.sort((a,b)=>{
+      const r = priRank(b.priority) - priRank(a.priority);
+      if (r !== 0) return r;
+      // tie-breakers (optional but nice):
+      const d = (a.due||'').localeCompare(b.due||'');
+      if (d !== 0) return d;
+      return (a.text||'').localeCompare(b.text||'');
+    });
   }
   return copy;
 }

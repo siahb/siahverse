@@ -841,3 +841,19 @@ body:not(.dark-mode) select option {
   background-color: #fff !important;
   color: #000 !important;
 }
+/* Force toolbar elements to wrap and take full width on smaller screens */
+@media (max-width: 700px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .toolbar > * {
+    width: 100% !important;
+    margin-bottom: 0.5rem;
+  }
+
+  select, input[type="text"], button {
+    font-size: 1rem;
+  }
+}

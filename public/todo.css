@@ -654,3 +654,28 @@ body.light-mode #search-input{
   padding: 0;             /* remove extra height */
   margin: 0;
 }
+#export-btn,
+label[for="import-file"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: .35rem .6rem;
+  line-height: 1.2;
+  border: 1px solid var(--input-border);
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-color);
+  font-weight: 600;
+  height: auto;
+  cursor: pointer;
+}
+
+label[for="import-file"]:hover,
+#export-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+#export-btn,
+label[for="import-file"] {
+  min-width: 80px; /* adjust until they look balanced */
+  text-align: center;
+}

@@ -1,5 +1,3 @@
-<script>
-  
   const todoInput = document.getElementById('todo-input');
   const todoList = document.getElementById('todo-list');
   const doneList = document.getElementById('done-list');
@@ -784,5 +782,3 @@ importFile?.addEventListener('change', async (e) => {
     e.target.value = '';
   }
 });
-
-</script>

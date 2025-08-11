@@ -19,9 +19,6 @@
   const intervalUnit = document.querySelector('.interval-unit');
   const weeklyWrap = document.getElementById('weekly-wrap');
   // toolbar controls
-  const searchToggle = document.getElementById('search-toggle');
-  const searchInput = document.getElementById('search-input');   // Search…
-  const searchWrap = document.querySelector('.search-wrapper');
   const sortSelect  = document.getElementById('sort-select');    // Sort: …
   // Force default sort on startup
   if (sortSelect) {
@@ -31,7 +28,6 @@
   const prioSelect  = document.getElementById('priority-select');// Priority: …
   const exportBtn   = document.getElementById('export-btn');     // Export
   const importFile  = document.getElementById('import-file');    // Import (file input)
-  searchInput?.addEventListener('input', () => { renderTodos(); renderDone(); });
   sortSelect?.addEventListener('change', () => { renderTodos(); });
   repeatSelect.addEventListener('change', () => {
   const v = repeatSelect.value;
@@ -60,6 +56,12 @@
   const ADMIN_PASSWORD_KEY = 'adminPassword';
 
  // --- Search Toggle ---
+// --- Search (toggle, outside click, Esc, input filter, hotkeys) ---
+const searchWrap   = document.querySelector('.search-wrapper');
+const searchToggle = document.getElementById('search-toggle');
+const searchInput  = document.getElementById('search-input');
+
+// Open/close via 🔍
 searchToggle.addEventListener('click', (e) => {
   e.stopPropagation();
   const willOpen = !searchWrap.classList.contains('active');
@@ -73,12 +75,6 @@ searchToggle.addEventListener('click', (e) => {
     renderTodos(); renderDone();
   }
 });
-
-searchToggle.addEventListener('click', (e) => {
-  console.log('[search] toggle clicked');
-  // ...existing code...
-});
-
 
 // Close when clicking outside
 document.addEventListener('click', (e) => {

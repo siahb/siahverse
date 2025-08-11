@@ -62,11 +62,8 @@
  // --- Search Toggle ---
 searchToggle.addEventListener('click', (e) => {
   e.stopPropagation();
-  searchWrap.classList.toggle('active');
-  document.body.classList.toggle(
-    'search-open',
-    searchWrap.classList.contains('active')
-  );
+  searchWrap.classList.toggle('active'); // ✅ toggle wrapper
+  document.body.classList.toggle('search-open', searchWrap.classList.contains('active'));
   if (searchWrap.classList.contains('active')) {
     searchInput.focus();
   } else {

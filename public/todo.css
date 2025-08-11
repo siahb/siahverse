@@ -1064,3 +1064,25 @@ body:not(.dark-mode) select option {
     width: 140px;     /* slightly smaller for phones */
   }
 }
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.search-icon {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+#search-input {
+  padding: 0.4rem;
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  background: var(--card-bg);
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}

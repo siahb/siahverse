@@ -1228,3 +1228,41 @@ body:not(.dark-mode) select option {
   opacity: 1;
   padding: 0.4rem;
 }
+/* Hide search by default */
+#search-input {
+  width: 0;
+  opacity: 0;
+  padding: 0;
+  margin-left: 0.3rem;
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  transition: width 0.25s ease, opacity 0.25s ease, padding 0.25s ease;
+}
+
+#search-input.active {
+  width: 200px;
+  opacity: 1;
+  padding: 0.3rem;
+}
+
+#progress-inline {
+  width: 150px;
+  height: 10px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-left: 0.5rem;
+}
+
+#progress-bar {
+  height: 100%;
+  width: 0%;
+  background: #00ffc3;
+  transition: width 0.3s ease;
+}
+
+/* Shrink progress bar when search is active */
+.search-open #progress-inline {
+  width: 100px;
+}

@@ -35,13 +35,15 @@
     <div id="todo-container" class="card-container">
       <h2>To Do List</h2>
       
-      <!-- Top toolbar -->
+    <!-- Top toolbar -->
 <div class="toolbar">
+  <!-- Search icon + hidden input -->
   <div class="search-wrapper">
     <button id="search-toggle" class="search-icon">🔍</button>
     <input id="search-input" type="text" placeholder="Search…" />
   </div>
-  
+
+  <!-- Grouped sort/export/import -->
   <div class="sort-and-buttons">
     <select id="sort-select">
       <option value="default">Sort: Custom (drag)</option>
@@ -50,6 +52,7 @@
       <option value="alpha">A–Z</option>
       <option value="created">Newest</option>
     </select>
+
     <button id="export-btn">Export</button>
     <input type="file" id="import-file" style="display: none;">
     <label for="import-file" class="btn">Import</label>

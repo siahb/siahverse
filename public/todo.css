@@ -1056,3 +1056,31 @@ body:not(.dark-mode) select option {
     padding: 6px;
   }
 }
+@media (max-width: 600px) {
+  #priority-select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    width: auto;
+    max-width: 140px;
+    padding: 4px 6px;
+    font-size: 14px;
+    line-height: 1.2;
+    border-radius: 6px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+
+    /* custom arrow */
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='12'%20height='12'%20viewBox='0%200%2024%2024'%3E%3Cpath%20fill='white'%20d='M7%2010l5%205%205-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 6px center;
+    background-size: 12px;
+  }
+
+  #tag-input {
+    width: auto;
+    max-width: 160px;
+    font-size: 14px;
+  }
+}

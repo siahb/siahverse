@@ -886,4 +886,39 @@ body:not(.dark-mode) select option {
     flex-wrap: wrap;
   }
 }
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toolbar input[type="text"] {
+  flex: 1;
+  min-width: 150px;
+}
+
+.sort-and-buttons {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.3rem;
+}
+
+.sort-and-buttons select,
+.sort-and-buttons button,
+.sort-and-buttons label {
+  flex: 0 1 auto;
+}
+
+@media (max-width: 700px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sort-and-buttons {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+}
 

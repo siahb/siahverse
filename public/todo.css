@@ -748,3 +748,31 @@ label[for="import-file"]{
     flex-direction: column;
   }
 }
+select {
+  background-color: #000 !important;
+  color: #0ff !important;
+  border: 1px solid #0ff;
+  border-radius: 5px;
+  padding: 4px 8px;
+  font-size: 14px;
+  font-family: inherit;
+  box-shadow: 0 0 5px #0ff;
+}
+
+select:focus {
+  outline: none;
+  box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+}
+
+/* Dropdown list styling */
+select option {
+  background-color: #000;
+  color: #0ff;
+  border: none;
+}
+
+/* Optional hover effect on dropdown items */
+select option:hover {
+  background-color: #033;
+  color: #0ff;
+}

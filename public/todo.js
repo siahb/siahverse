@@ -27,6 +27,14 @@
   weeklyWrap.style.display = v === 'weekly' ? 'flex' : 'none';
 });
   
+  function updateSelectAllState() {
+    const all = document.querySelectorAll('.select-todo');
+    const checked = document.querySelectorAll('.select-todo:checked');
+    if (selectAll) {
+      selectAll.checked = all.length > 0 && checked.length === all.length;
+    }
+  }
+
   const enterPwBtn = document.getElementById('enter-password');
   const logoutBtn = document.getElementById('logout');
   const adminModal = document.getElementById('admin-modal');
@@ -334,17 +342,10 @@ const renderTodos = () => {
   });
 
   updateProgress();
-  
-  // Reset Select All
-  selectAll.checked = false;
-
-  // Auto-sync Select All if all checkboxes are toggled
+ // Reset and sync Select All
+  updateSelectAllState();
   document.querySelectorAll('.select-todo').forEach(cb => {
-    cb.addEventListener('change', () => {
-      const all = document.querySelectorAll('.select-todo');
-      const checked = document.querySelectorAll('.select-todo:checked');
-      selectAll.checked = all.length > 0 && checked.length === all.length;
-    });
+   cb.addEventListener('change', updateSelectAllState);
   });
 };
   
@@ -647,8 +648,9 @@ for (const obj of restoring) {
 });
 
   // Select all checkbox
-  selectAll.addEventListener('change', (e) => {
+  selectAll?.addEventListener('change', (e) => {
     document.querySelectorAll('.select-todo').forEach(cb => cb.checked = e.target.checked);
+    updateSelectAllState();
   });
 
   window.deleteSelected = () => {

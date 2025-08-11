@@ -19,6 +19,8 @@
   const intervalUnit = document.querySelector('.interval-unit');
   const weeklyWrap = document.getElementById('weekly-wrap');
   // toolbar controls
+  const searchToggle = document.getElementById('search-toggle');
+  const searchInput = document.getElementById('search-input');   // Search…
   const sortSelect  = document.getElementById('sort-select');    // Sort: …
   // Force default sort on startup
   if (sortSelect) {
@@ -28,6 +30,7 @@
   const prioSelect  = document.getElementById('priority-select');// Priority: …
   const exportBtn   = document.getElementById('export-btn');     // Export
   const importFile  = document.getElementById('import-file');    // Import (file input)
+  searchInput?.addEventListener('input', () => { renderTodos(); renderDone(); });
   sortSelect?.addEventListener('change', () => { renderTodos(); });
   repeatSelect.addEventListener('change', () => {
   const v = repeatSelect.value;
@@ -55,83 +58,32 @@
   let deletedTodos = [];
   const ADMIN_PASSWORD_KEY = 'adminPassword';
 
-(function initSearchBar() {
-  function ready(fn){ if (document.readyState !== 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
-
-  ready(() => {
-    const searchWrap   = document.querySelector('.search-wrapper');
-    const searchToggle = document.getElementById('search-toggle');
-    const searchInput  = document.getElementById('search-input');
-
-    if (!searchWrap || !searchToggle || !searchInput) {
-      console.warn('[search] Missing element(s):', { searchWrap, searchToggle, searchInput });
-      return;
+ // --- Search Toggle ---
+searchToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    searchInput.classList.toggle('active');
+    document.body.classList.toggle('search-open', searchInput.classList.contains('active'));
+    if (searchInput.classList.contains('active')) {
+        searchInput.focus();
+    } else {
+        searchInput.value = '';
+        renderTodos();
+        renderDone();
     }
+});
 
-    // Open/close via 🔍
-    searchToggle.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const willOpen = !searchWrap.classList.contains('active');
-      searchWrap.classList.toggle('active', willOpen);
-      document.body.classList.toggle('search-open', willOpen);
-      if (willOpen) {
-        searchInput.focus(); searchInput.select();
-      } else {
-        searchInput.value = '';
-        renderTodos(); renderDone();
-      }
-    });
+const searchWrap = document.querySelector('.search-wrapper');
 
-    // Close when clicking outside
-    document.addEventListener('click', (e) => {
-      if (searchWrap.classList.contains('active') && !searchWrap.contains(e.target)) {
-        searchWrap.classList.remove('active');
-        document.body.classList.remove('search-open');
-        searchInput.value = '';
-        renderTodos(); renderDone();
-      }
-    });
-
-    // Esc inside input => clear + blur + hide
-    searchInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        searchInput.value = '';
-        searchInput.blur();
-        searchWrap.classList.remove('active');
-        document.body.classList.remove('search-open');
-        renderTodos(); renderDone();
-      }
-    });
-
-    // Filter as you type
-    searchInput.addEventListener('input', () => {
-      renderTodos(); renderDone();
-    });
-
-    // 🔥 Hotkeys: Ctrl/Cmd+F and "/"
-    document.addEventListener('keydown', (e) => {
-      // ignore if typing in another field
-      if (e.target.closest('input, textarea, [contenteditable]')) return;
-
-      // Ctrl/Cmd+F
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
-        e.preventDefault();
-        if (!searchWrap.classList.contains('active')) searchToggle.click();
-        searchInput.focus(); searchInput.select();
-      }
-
-      // "/" quick open
-      if (e.key === '/') {
-        e.preventDefault();
-        if (!searchWrap.classList.contains('active')) searchToggle.click();
-        searchInput.focus(); searchInput.select();
-      }
-    });
-
-    console.log('[search] wired ✅');
-  });
-})();
+document.addEventListener('click', (e) => {
+  // Only act if search is actually open AND the click is outside the wrapper
+  if (searchWrap.classList.contains('active') && !searchWrap.contains(e.target)) {
+    searchWrap.classList.remove('active');
+    document.body.classList.remove('search-open');
+    searchInput.value = '';
+    renderTodos();
+    renderDone();
+  }
+});
 
   // Button visibility
 function updateAdminUI() {
@@ -976,5 +928,40 @@ importFile?.addEventListener('change', async (e) => {
     alert('Import failed (need admin login?).');
   } finally {
     e.target.value = '';
+  }
+});
+// Focus app search on Ctrl+F / Cmd+F
+document.addEventListener('keydown', (e) => {
+  const isFind = (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f';
+  if (!isFind) return;
+
+  // don’t open the browser’s find box
+  e.preventDefault();
+
+  const box = document.getElementById('search-input'); // ← your search input ID
+  if (box) {
+    box.focus();
+    box.select(); // highlight current text so typing replaces it
+  }
+});
+
+// Nice extras (optional):
+// Press "/" to focus search (like GitHub)
+document.addEventListener('keydown', (e) => {
+  if (e.key === '/' && !e.target.closest('input, textarea, [contenteditable]')) {
+    e.preventDefault();
+    const box = document.getElementById('search-input');
+    if (box) box.focus();
+  }
+});
+
+// Press Esc to clear and blur search
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && document.activeElement?.id === 'search-input') {
+    const box = document.getElementById('search-input');
+    box.value = '';
+    box.blur();
+    // trigger your filter if needed:
+    // handleSearch(box.value);
   }
 });

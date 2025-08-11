@@ -436,3 +436,5 @@ body.light-mode .back-button{
 #search-input { width:0; opacity:0; transition:width .2s, opacity .2s; }
 .search-wrapper.active #search-input { width:220px; opacity:1; }
 
+#search-input { width:0; opacity:0; transition:width .2s, opacity .2s; }
+.search-wrapper.active #search-input { width:220px; opacity:1; }

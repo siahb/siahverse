@@ -1146,3 +1146,14 @@ body:not(.dark-mode) select option {
   opacity: 1;
   padding: 0.4rem;
 }
+  /* Hide search input by default */
+#search-input {
+  display: none;
+  transition: all 0.3s ease;
+}
+
+/* Show it when active */
+#search-input.active {
+  display: inline-block;
+}
+

@@ -980,3 +980,15 @@ searchInput.addEventListener('keydown', (e) => {
   }
 });
 
+searchToggle.addEventListener('click', (e) => {
+  e.stopPropagation();
+  searchWrap.classList.toggle('active');
+  document.body.classList.toggle('search-open', searchWrap.classList.contains('active'));
+  if (searchWrap.classList.contains('active')) {
+    searchInput.focus();
+  } else {
+    searchInput.value = '';
+    renderTodos(); 
+    renderDone();
+  }
+});

@@ -731,3 +731,20 @@ label[for="import-file"]{
   font-size: 0.9rem;
   color: var(--text-color);
 }
+/* Example tweak */
+#done-panel {
+  flex: 0 0 30%; /* smaller width */
+  max-width: 350px;
+}
+#todo-panel {
+  flex: 1; /* give extra space */
+}
+.todo-container {
+  display: flex;
+  gap: 1rem;
+}
+@media (max-width: 900px) {
+  .todo-container {
+    flex-direction: column;
+  }
+}

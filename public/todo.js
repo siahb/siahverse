@@ -74,6 +74,51 @@ searchToggle.addEventListener('click', (e) => {
   }
 });
 
+// Close when clicking outside
+document.addEventListener('click', (e) => {
+  if (searchWrap.classList.contains('active') && !searchWrap.contains(e.target)) {
+    searchWrap.classList.remove('active');
+    document.body.classList.remove('search-open');
+    searchInput.value = '';
+    renderTodos(); renderDone();
+  }
+});
+
+// Esc inside the input => clear + blur + hide
+searchInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    e.preventDefault();
+    searchInput.value = '';
+    searchInput.blur();
+    searchWrap.classList.remove('active');
+    document.body.classList.remove('search-open');
+    renderTodos(); renderDone();
+  }
+});
+
+// Filter as you type
+searchInput.addEventListener('input', () => { renderTodos(); renderDone(); });
+
+// Hotkeys: Ctrl/Cmd+F and "/"
+document.addEventListener('keydown', (e) => {
+  // ignore if typing in another field
+  if (e.target.closest('input, textarea, [contenteditable]')) return;
+
+  // Ctrl/Cmd+F
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
+    e.preventDefault();
+    if (!searchWrap.classList.contains('active')) searchToggle.click();
+    searchInput.focus(); searchInput.select();
+  }
+
+  // "/" quick open
+  if (e.key === '/') {
+    e.preventDefault();
+    if (!searchWrap.classList.contains('active')) searchToggle.click();
+    searchInput.focus(); searchInput.select();
+  }
+});
+
   // Button visibility
 function updateAdminUI() {
   const pw = localStorage.getItem(ADMIN_PASSWORD_KEY);
@@ -917,64 +962,5 @@ importFile?.addEventListener('change', async (e) => {
     alert('Import failed (need admin login?).');
   } finally {
     e.target.value = '';
-  }
-});
-
-// Focus app search on Ctrl+F / Cmd+F
-document.addEventListener('keydown', (e) => {
-  const isFind = (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f';
-  if (!isFind) return;
-  e.preventDefault();
-
-  const toggleBtn = document.getElementById('search-toggle');
-  toggleBtn?.click(); // open / pop out the search bar
-
-  const box = document.getElementById('search-input');
-  if (box) {
-    setTimeout(() => { // small delay in case of animation
-      box.focus();
-
-// Close when clicking outside
-document.addEventListener('click', (e) => {
-  if (searchWrap.classList.contains('active') && !searchWrap.contains(e.target)) {
-    searchWrap.classList.remove('active');
-    document.body.classList.remove('search-open');
-    searchInput.value = '';
-    renderTodos(); renderDone();
-  }
-});
-
-// Esc inside the input => clear + blur + hide
-searchInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    e.preventDefault();
-    searchInput.value = '';
-    searchInput.blur();
-    searchWrap.classList.remove('active');
-    document.body.classList.remove('search-open');
-    renderTodos(); renderDone();
-  }
-});
-
-// Filter as you type
-searchInput.addEventListener('input', () => { renderTodos(); renderDone(); });
-
-// Hotkeys: Ctrl/Cmd+F and "/"
-document.addEventListener('keydown', (e) => {
-  // Ignore if typing in another input/textarea/contenteditable
-  if (e.target.closest('input, textarea, [contenteditable]')) return;
-
-  // "/" quick open
-  if (e.key === '/') {
-    e.preventDefault();
-    if (!searchWrap.classList.contains('active')) searchToggle.click();
-    searchInput.focus(); searchInput.select();
-  }
-
-  // Ctrl/Cmd+F
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
-    e.preventDefault();
-    if (!searchWrap.classList.contains('active')) searchToggle.click();
-    searchInput.focus(); searchInput.select();
   }
 });

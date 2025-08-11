@@ -1213,3 +1213,18 @@ body:not(.dark-mode) select option {
   background: #00ffc3;
   transition: width 0.3s ease;
 }
+#search-input {
+  width: 0;
+  opacity: 0;
+  padding: 0;
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  transition: width 0.25s ease, opacity 0.25s ease, padding 0.25s ease;
+  overflow: hidden;
+}
+
+#search-input.active {
+  width: 200px;
+  opacity: 1;
+  padding: 0.4rem;
+}

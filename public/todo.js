@@ -60,25 +60,17 @@ searchToggle.addEventListener('click', (e) => {
     }
 });
 
-document.addEventListener('click', (e) => {
-    if (!searchInput.contains(e.target) && !searchToggle.contains(e.target)) {
-        searchInput.classList.remove('active');
-        document.body.classList.remove('search-open');
-        searchInput.value = '';
-        renderTodos();
-        renderDone();
-    }
-});
+const searchWrap = document.querySelector('.search-wrapper');
 
-// Close search when clicking outside
 document.addEventListener('click', (e) => {
-    if (!searchInput.contains(e.target) && !searchToggle.contains(e.target) && searchInput.classList.contains('active')) {
-        searchInput.classList.remove('active');
-        document.body.classList.remove('search-open');
-        searchInput.value = '';
-        renderTodos();
-        renderDone();
-    }
+  // Only act if search is actually open AND the click is outside the wrapper
+  if (searchWrap.classList.contains('active') && !searchWrap.contains(e.target)) {
+    searchWrap.classList.remove('active');
+    document.body.classList.remove('search-open');
+    searchInput.value = '';
+    renderTodos();
+    renderDone();
+  }
 });
 
   // Button visibility
@@ -379,16 +371,23 @@ const renderDone = () => {
     `;
 
     doneList.appendChild(li);
-
-    // keep Select All header in sync when a Done checkbox changes
-    const cb = li.querySelector('.select-todo');
-    cb.addEventListener('change', updateSelectAllState);
+    li.querySelector('.select-todo').addEventListener('change', updateSelectAllState);
   });
 
   updateProgress();
   updateSelectAllState(); // ensure header reflects state right after render
 };
-  
+
+selectAll?.addEventListener('change', (e) => {
+  const boxes = document.querySelectorAll('#todo-list .select-todo, #done-list .select-todo');
+  boxes.forEach(cb => { cb.checked = e.target.checked; });
+  updateSelectAllState();
+});
+
+document.addEventListener('change', (e) => {
+  if (e.target.matches('.select-todo')) updateSelectAllState();
+});
+
 // Inline editor for text + due + repeat + tags
 window.editTodo = function(index){
   const li = document.querySelector(`li[data-trueindex="${index}"]`);
@@ -660,13 +659,6 @@ for (const obj of restoring) {
 }
 
   loadTodosFromServer();
-});
-
-  // Select all checkbox
-  selectAll?.addEventListener('change', (e) => {
-  const boxes = document.querySelectorAll('#todo-list .select-todo, #done-list .select-todo');
-  boxes.forEach(cb => { cb.checked = e.target.checked; });
-  updateSelectAllState();
 });
 
   window.deleteSelected = async () => {

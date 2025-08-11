@@ -37,26 +37,32 @@
 
   <!-- Top toolbar -->
   <div class="toolbar">
-    <!-- Search icon + hidden input -->
-    <div class="search-wrapper">
-      <button id="search-toggle" class="search-icon">🔍</button>
-      <input id="search-input" type="text" placeholder="Search…" />
-    </div>
+  <!-- Search icon + hidden input -->
+  <div class="search-wrapper">
+    <button id="search-toggle" class="search-icon">🔍</button>
+    <input id="search-input" type="text" placeholder="Search…" />
+  </div>
 
-    <!-- Grouped sort/export/import -->
-    <div class="sort-and-buttons">
-      <select id="sort-select">
-        <option value="default">Sort: Custom (drag)</option>
-        <option value="dueAsc">Due date ↑</option>
-        <option value="dueDesc">Due date ↓</option>
-        <option value="alpha">A–Z</option>
-        <option value="created">Newest</option>
-      </select>
-      <button id="export-btn">Export</button>
-      <input type="file" id="import-file" style="display: none;">
-      <label for="import-file" class="btn">Import</label>
+  <!-- Grouped sort/export/import/progress -->
+  <div class="sort-and-buttons">
+    <select id="sort-select">
+      <option value="default">Sort: Custom (drag)</option>
+      <option value="dueAsc">Due date ↑</option>
+      <option value="dueDesc">Due date ↓</option>
+      <option value="alpha">A–Z</option>
+      <option value="created">Newest</option>
+    </select>
+
+    <button id="export-btn">Export</button>
+    <input type="file" id="import-file" style="display: none;">
+    <label for="import-file" class="btn">Import</label>
+
+    <!-- Progress bar inline -->
+    <div id="progress-inline">
+      <div id="progress-bar"></div>
     </div>
   </div>
+</div>
 
       <!-- Progress bar -->
       <div id="progress-wrap" style="width:100%;height:10px;background:rgba(255,255,255,.08);border:1px solid var(--card-border);border-radius:6px;overflow:hidden;margin:.25rem 0 .5rem;">

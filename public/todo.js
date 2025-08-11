@@ -14,6 +14,10 @@
   const searchToggle = document.getElementById('search-toggle');
   const searchInput = document.getElementById('search-input');   // Search…
   const sortSelect  = document.getElementById('sort-select');    // Sort: …
+  // Force default sort on startup
+  if (sortSelect) {
+  sortSelect.value = 'default';
+  }
   const tagInput    = document.getElementById('tag-input');      // Tags
   const prioSelect  = document.getElementById('priority-select');// Priority: …
   const exportBtn   = document.getElementById('export-btn');     // Export

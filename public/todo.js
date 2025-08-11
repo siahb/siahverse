@@ -74,6 +74,12 @@ searchToggle.addEventListener('click', (e) => {
   }
 });
 
+searchToggle.addEventListener('click', (e) => {
+  console.log('[search] toggle clicked');
+  // ...existing code...
+});
+
+
 // Close when clicking outside
 document.addEventListener('click', (e) => {
   if (searchWrap.classList.contains('active') && !searchWrap.contains(e.target)) {

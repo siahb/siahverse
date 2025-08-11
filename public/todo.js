@@ -933,25 +933,36 @@ importFile?.addEventListener('change', async (e) => {
 
 // Focus app search on Ctrl+F / Cmd+F
 document.addEventListener('keydown', (e) => {
-  // Ctrl+F or Cmd+F
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
-    e.preventDefault();
-    searchWrapper.classList.add('visible'); // show the search bar
-    searchBox.focus();
-    searchBox.select();
-  }
+  const isFind = (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f';
+  if (!isFind) return;
 
-  // Press "/" to focus search
+  // don’t open the browser’s find box
+  e.preventDefault();
+
+  const box = document.getElementById('search-input'); // ← your search input ID
+  if (box) {
+    box.focus();
+    box.select(); // highlight current text so typing replaces it
+  }
+});
+
+// Nice extras (optional):
+// Press "/" to focus search (like GitHub)
+document.addEventListener('keydown', (e) => {
   if (e.key === '/' && !e.target.closest('input, textarea, [contenteditable]')) {
     e.preventDefault();
-    searchWrapper.classList.add('visible');
-    searchBox.focus();
+    const box = document.getElementById('search-input');
+    if (box) box.focus();
   }
+});
 
-  // Esc to hide search
+// Press Esc to clear and blur search
+document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && document.activeElement?.id === 'search-input') {
-    searchBox.value = '';
-    searchWrapper.classList.remove('visible'); // hide the search bar
-    searchBox.blur();
+    const box = document.getElementById('search-input');
+    box.value = '';
+    box.blur();
+    // trigger your filter if needed:
+    // handleSearch(box.value);
   }
 });

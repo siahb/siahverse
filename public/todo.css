@@ -437,3 +437,10 @@ body.light-mode .back-button{
   align-items: center;
   gap: .4rem;
 }
+/* Make the background canvas ignore clicks */
+#stars {
+  pointer-events: none;
+  position: fixed;   /* or absolute */
+  inset: 0;
+  z-index: -1;       /* push behind UI */
+}

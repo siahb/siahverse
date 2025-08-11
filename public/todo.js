@@ -457,8 +457,7 @@ window.editTodo = function(index){
       <span style="margin-right:.25rem;">Days:</span>
       ${weekdayBoxes(byWeekday)}
     </div>
-    `;
-  
+    `  
   const todayBtn = li.querySelector('.btn-today');
   const editDueInput = li.querySelector('.edit-due');
 todayBtn?.addEventListener('click', (e) => {

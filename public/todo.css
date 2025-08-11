@@ -1038,3 +1038,29 @@ body:not(.dark-mode) select option {
     align-items: center;
   }
 }
+.toolbar.below-enter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.field-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.field-wrap input,
+.field-wrap select {
+  width: 160px;       /* nice fixed size */
+  max-width: 100%;    /* shrink on very small screens */
+  padding: 6px;
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  .field-wrap input,
+  .field-wrap select {
+    width: 140px;     /* slightly smaller for phones */
+  }
+}

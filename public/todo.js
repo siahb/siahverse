@@ -966,3 +966,18 @@ document.addEventListener('keydown', (e) => {
     }
   }
 });
+const searchInput = document.getElementById('search-input');
+
+searchInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    e.preventDefault();
+    searchInput.value = '';
+    // Re-run your search filter to reset the list
+    if (typeof filterTodos === 'function') {
+      filterTodos('');
+    } else if (typeof renderTodos === 'function') {
+      renderTodos();
+    }
+    searchInput.blur(); // Unfocus
+  }
+});

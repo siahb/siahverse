@@ -444,3 +444,5 @@ body.light-mode .back-button{
   inset: 0;
   z-index: -1;       /* push behind UI */
 }
+.search-wrapper { position: relative; z-index: 10; }
+#search-toggle { position: relative; z-index: 11; }

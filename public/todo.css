@@ -1259,3 +1259,42 @@ body:not(.dark-mode) select option {
     width: 100%;
   }
 }
+/* === Toolbar Wrapping Fix === */
+.toolbar.top,
+.sort-and-buttons {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.5rem !important;
+  align-items: center !important;
+}
+
+/* Make search area and progress flexible */
+#search-input {
+  flex: 1 1 200px !important;
+  min-width: 150px !important;
+}
+
+#progress-inline {
+  flex: 1 1 150px !important;
+  min-width: 120px !important;
+}
+
+/* Buttons and dropdowns shrink if needed */
+.sort-and-buttons select,
+.sort-and-buttons button,
+.import-label {
+  flex: 0 1 auto !important;
+  min-width: 80px !important;
+}
+
+/* Stack on mobile */
+@media (max-width: 700px) {
+  .toolbar.top,
+  .sort-and-buttons {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  #progress-inline {
+    width: 100% !important;
+  }
+}

@@ -28,114 +28,112 @@
     </div>
   </div>
 
-<div class="main-content">
-  <div class="main-wrapper">
-    
-    <!-- To Do List -->
-    <div id="todo-container" class="card-container">
-      <h2>To Do List</h2>
+  <div class="main-content">
+    <div class="main-wrapper">
       
-      <!-- Top toolbar -->
-      <div class="toolbar">
-        <!-- Search icon + hidden input -->
-        <div class="search-wrapper">
-          <button id="search-toggle" class="search-icon">🔍</button>
-          <input id="search-input" type="text" placeholder="Search…" style="display:none;">
-        </div>
+      <!-- To Do List -->
+      <div id="todo-container" class="card-container">
+        <h2>To Do List</h2>
+        
+        <!-- Top toolbar -->
+        <div class="toolbar">
+          <!-- Search icon + hidden input -->
+          <div class="search-wrapper">
+            <button id="search-toggle" class="search-icon">🔍</button>
+            <input id="search-input" type="text" placeholder="Search…" class="hidden-search">
+          </div>
 
-        <!-- Grouped sort/export/import/progress -->
-        <div class="sort-and-buttons">
-          <select id="sort-select">
-            <option value="default">Sort: Custom (drag)</option>
-            <option value="dueAsc">Due date ↑</option>
-            <option value="dueDesc">Due date ↓</option>
-            <option value="alpha">A–Z</option>
-            <option value="created">Newest</option>
-          </select>
+          <!-- Grouped sort/export/import/progress -->
+          <div class="sort-and-buttons">
+            <select id="sort-select">
+              <option value="default">Sort: Custom (drag)</option>
+              <option value="dueAsc">Due date ↑</option>
+              <option value="dueDesc">Due date ↓</option>
+              <option value="alpha">A–Z</option>
+              <option value="created">Newest</option>
+            </select>
 
-          <button id="export-btn">Export</button>
-          <input type="file" id="import-file" style="display: none;">
-          <label for="import-file" class="btn">Import</label>
+            <button id="export-btn">Export</button>
+            <input type="file" id="import-file" style="display: none;">
+            <label for="import-file" class="btn">Import</label>
 
-          <!-- Inline progress bar -->
-          <div id="progress-inline">
-            <div id="progress-bar"></div>
+            <!-- Inline progress bar + label -->
+            <div id="progress-inline">
+              <div id="progress-bar"></div>
+            </div>
+            <span id="progress-label" class="progress-label"></span>
           </div>
         </div>
-      </div>
 
-      <!-- Progress label -->
-      <div id="progress-label" style="font-size:.9rem;opacity:.8;"></div>
+        <!-- Add Task -->
+        <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
 
-      <!-- Add Task -->
-      <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
+        <!-- Tags + Priority below enter -->
+        <div class="toolbar below-enter">
+          <div class="field-wrap">
+            <label for="tag-input" class="tag-label">Tags:</label>
+            <input id="tag-input" type="text" placeholder="chores, projects, etc...">
+          </div>
 
-      <!-- Tags + Priority below enter -->
-      <div class="toolbar below-enter">
-        <div class="field-wrap">
-          <label for="tag-input" class="tag-label">Tags:</label>
-          <input id="tag-input" type="text" placeholder="chores, projects, etc...">
+          <div class="field-wrap">
+            <label for="priority-select" class="priority-label">Priority:</label>
+            <select id="priority-select">
+              <option value="">None</option>
+              <option value="H">High 🔥</option>
+              <option value="M">Medium ⚡</option>
+              <option value="L">Low 🌿</option>
+            </select>
+          </div>
         </div>
 
-        <div class="field-wrap">
-          <label for="priority-select" class="priority-label">Priority:</label>
-          <select id="priority-select">
-            <option value="">None</option>
-            <option value="H">High 🔥</option>
-            <option value="M">Medium ⚡</option>
-            <option value="L">Low 🌿</option>
-          </select>
+        <!-- Due + Repeat -->
+        <div class="repeat-row">
+          <label>Due:
+            <input type="date" id="due-input">
+          </label>
+          <label>Repeat:
+            <select id="repeat-select">
+              <option value="">None</option>
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+            </select>
+          </label>
+          <label id="interval-wrap" style="display:none;">Every
+            <input type="number" id="interval-input" min="1" value="1" style="width:4rem;">
+            <span class="interval-unit">day(s)</span>
+          </label>
+          <div id="weekly-wrap" style="display:none; gap:.4rem; align-items:center;">
+            <span>Days:</span>
+            <label><input type="checkbox" value="0" class="byweekday">Su</label>
+            <label><input type="checkbox" value="1" class="byweekday">Mo</label>
+            <label><input type="checkbox" value="2" class="byweekday">Tu</label>
+            <label><input type="checkbox" value="3" class="byweekday">We</label>
+            <label><input type="checkbox" value="4" class="byweekday">Th</label>
+            <label><input type="checkbox" value="5" class="byweekday">Fr</label>
+            <label><input type="checkbox" value="6" class="byweekday">Sa</label>
+          </div>
         </div>
-      </div>
 
-      <!-- Due + Repeat -->
-      <div class="repeat-row">
-        <label>Due:
-          <input type="date" id="due-input">
-        </label>
-        <label>Repeat:
-          <select id="repeat-select">
-            <option value="">None</option>
-            <option value="daily">Daily</option>
-            <option value="weekly">Weekly</option>
-          </select>
-        </label>
-        <label id="interval-wrap" style="display:none;">Every
-          <input type="number" id="interval-input" min="1" value="1" style="width:4rem;">
-          <span class="interval-unit">day(s)</span>
-        </label>
-        <div id="weekly-wrap" style="display:none; gap:.4rem; align-items:center;">
-          <span>Days:</span>
-          <label><input type="checkbox" value="0" class="byweekday">Su</label>
-          <label><input type="checkbox" value="1" class="byweekday">Mo</label>
-          <label><input type="checkbox" value="2" class="byweekday">Tu</label>
-          <label><input type="checkbox" value="3" class="byweekday">We</label>
-          <label><input type="checkbox" value="4" class="byweekday">Th</label>
-          <label><input type="checkbox" value="5" class="byweekday">Fr</label>
-          <label><input type="checkbox" value="6" class="byweekday">Sa</label>
+        <!-- Controls -->
+        <div class="controls">
+          <label><input type="checkbox" id="select-all"> Select All</label>
+          <button id="delete-btn" onclick="deleteSelected()">🗑️ Delete Selected</button>
+          <button id="undo-btn">↩️ Undo</button>
+          <button id="toggle-drag">↕️ Reorder</button>
         </div>
+
+        <ul id="todo-list"></ul>
+      </div> <!-- closes todo-container -->
+
+      <!-- Done List -->
+      <div id="done-container" class="card-container">
+        <h2>Marked as Done ✅</h2>
+        <ul id="done-list"></ul>
       </div>
 
-      <!-- Controls -->
-      <div class="controls">
-        <label><input type="checkbox" id="select-all"> Select All</label>
-        <button id="delete-btn" onclick="deleteSelected()">🗑️ Delete Selected</button>
-        <button id="undo-btn">↩️ Undo</button>
-        <button id="toggle-drag">↕️ Reorder</button>
-      </div>
-
-      <ul id="todo-list"></ul>
-    </div> <!-- closes todo-container -->
-
-    <!-- Done List -->
-    <div id="done-container" class="card-container">
-      <h2>Marked as Done ✅</h2>
-      <ul id="done-list"></ul>
-    </div>
-
-  </div> <!-- closes main-wrapper -->
-</div> <!-- closes main-content -->
-  
+    </div> <!-- closes main-wrapper -->
+  </div> <!-- closes main-content -->
+    
   <!-- Admin Modal -->
   <div id="admin-modal" class="modal">
     <div class="modal-content">

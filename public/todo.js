@@ -39,16 +39,32 @@
   const ADMIN_PASSWORD_KEY = 'adminPassword';
 
   //search Toggle
-  searchToggle.addEventListener('click', () => {
-    if (searchInput.style.display === 'none') {
-        searchInput.style.display = 'inline-block';
+searchToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    searchInput.classList.toggle('active');
+
+    document.body.classList.toggle('search-open', searchInput.classList.contains('active'));
+
+    if (searchInput.classList.contains('active')) {
         searchInput.focus();
     } else {
-        searchInput.style.display = 'none';
         searchInput.value = '';
-        // Optional: Trigger your "clear search" function here
+        renderTodos();
+        renderDone();
     }
 });
+
+// Close when clicking outside
+document.addEventListener('click', (e) => {
+    if (!searchInput.contains(e.target) && !searchToggle.contains(e.target)) {
+        searchInput.classList.remove('active');
+        document.body.classList.remove('search-open');
+        searchInput.value = '';
+        renderTodos();
+        renderDone();
+    }
+});
+
   // Button visibility
 function updateAdminUI() {
   const pw = localStorage.getItem(ADMIN_PASSWORD_KEY);

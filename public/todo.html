@@ -34,14 +34,11 @@
     <div id="todo-container" class="card-container">
       <h2>To Do List</h2>
       
-<!-- Search + Sort -->
-<div class="toolbar" style="display:flex;gap:.5rem;flex-wrap:wrap;margin:.5rem 0;">
-  <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input id="search-input" type="text" placeholder="Search…" />
-  </div>
+<!-- Top toolbar -->
+<div class="toolbar top">
+  <input id="search-input" type="text" placeholder="Search…" />
 
-  <select id="sort-select" style="padding:.35rem;">
+  <select id="sort-select">
     <option value="default">Sort: Custom (drag)</option>
     <option value="dueAsc">Due date ↑</option>
     <option value="dueDesc">Due date ↓</option>
@@ -49,10 +46,9 @@
     <option value="created">Newest</option>
   </select>
 
-  <!-- Export / Import -->
   <button id="export-btn">Export</button>
-  <label style="display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;">
-    <input id="import-file" type="file" accept="application/json" style="display:none;">
+  <label class="import-label">
+    <input id="import-file" type="file" accept="application/json">
     <span class="button-look">Import</span>
   </label>
 </div>

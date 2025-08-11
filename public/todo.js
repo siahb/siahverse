@@ -62,24 +62,15 @@
  // --- Search Toggle ---
 searchToggle.addEventListener('click', (e) => {
   e.stopPropagation();
-  searchWrap.classList.toggle('active'); // ✅ toggle wrapper
-  document.body.classList.toggle('search-open', searchWrap.classList.contains('active'));
-  if (searchWrap.classList.contains('active')) {
+  const willOpen = !searchWrap.classList.contains('active');
+  searchWrap.classList.toggle('active', willOpen);
+  document.body.classList.toggle('search-open', willOpen);
+  if (willOpen) {
     searchInput.focus();
+    searchInput.select();
   } else {
     searchInput.value = '';
     renderTodos(); renderDone();
-  }
-});
-
-document.addEventListener('click', (e) => {
-  // Only act if search is actually open AND the click is outside the wrapper
-  if (searchWrap.classList.contains('active') && !searchWrap.contains(e.target)) {
-    searchWrap.classList.remove('active');
-    document.body.classList.remove('search-open');
-    searchInput.value = '';
-    renderTodos();
-    renderDone();
   }
 });
 
@@ -942,42 +933,48 @@ document.addEventListener('keydown', (e) => {
   if (box) {
     setTimeout(() => { // small delay in case of animation
       box.focus();
-      box.select();
-    }, 100);
+
+// Close when clicking outside
+document.addEventListener('click', (e) => {
+  if (searchWrap.classList.contains('active') && !searchWrap.contains(e.target)) {
+    searchWrap.classList.remove('active');
+    document.body.classList.remove('search-open');
+    searchInput.value = '';
+    renderTodos(); renderDone();
   }
 });
 
-// Optional: "/" shortcut to pop out search
-document.addEventListener('keydown', (e) => {
-  if (e.key === '/' && !e.target.closest('input, textarea, [contenteditable]')) {
-    e.preventDefault();
-
-    const toggleBtn = document.getElementById('search-toggle');
-    toggleBtn?.click();
-
-    const box = document.getElementById('search-input');
-    if (box) {
-      setTimeout(() => {
-        box.focus();
-        box.select();
-      }, 100);
-    }
-  }
-});
-
-// ESC inside search => clear, blur, and hide the slide-out
+// Esc inside the input => clear + blur + hide
 searchInput.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     e.preventDefault();
     searchInput.value = '';
     searchInput.blur();
-
-    // hide slide-out
     searchWrap.classList.remove('active');
-    // also remove in case you still had old code using input.active
-    searchInput.classList.remove('active');
-
     document.body.classList.remove('search-open');
     renderTodos(); renderDone();
+  }
+});
+
+// Filter as you type
+searchInput.addEventListener('input', () => { renderTodos(); renderDone(); });
+
+// Hotkeys: Ctrl/Cmd+F and "/"
+document.addEventListener('keydown', (e) => {
+  // Ignore if typing in another input/textarea/contenteditable
+  if (e.target.closest('input, textarea, [contenteditable]')) return;
+
+  // "/" quick open
+  if (e.key === '/') {
+    e.preventDefault();
+    if (!searchWrap.classList.contains('active')) searchToggle.click();
+    searchInput.focus(); searchInput.select();
+  }
+
+  // Ctrl/Cmd+F
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
+    e.preventDefault();
+    if (!searchWrap.classList.contains('active')) searchToggle.click();
+    searchInput.focus(); searchInput.select();
   }
 });

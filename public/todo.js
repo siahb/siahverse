@@ -69,10 +69,6 @@
       return; // don't wire anything if DOM doesn't match
     }
 
-    // CSS expectation reminder (adjust your CSS if needed)
-    // .search-wrapper.active #search-input { width:220px; opacity:1; }
-    // #search-input { width:0; opacity:0; transition:width .2s, opacity .2s; }
-
     // open/close via 🔍
     searchToggle.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -144,7 +140,6 @@
     console.log('[search] wired ✅');
   });
 })();
-
 
   // Button visibility
 function updateAdminUI() {

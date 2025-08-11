@@ -1019,3 +1019,17 @@ body:not(.dark-mode) select option {
     min-width: 100%;
   }
 }
+/* For small screens, make inputs/dropdowns not huge */
+@media (max-width: 600px) {
+  #tag-input,
+  #priority-select {
+    width: 100%;
+    max-width: 250px; /* control max size */
+  }
+
+  .below-enter {
+    flex-direction: column; /* stack tags and priority vertically */
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}

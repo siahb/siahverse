@@ -679,3 +679,17 @@ label[for="import-file"] {
   min-width: 45px; /* adjust until they look balanced */
   text-align: center;
 }
+label[for="import-file"] {
+  font-size: 0.9rem;          /* Match Export's text size */
+  padding: 5px 10px;          /* Match Export's padding */
+  border: 1px solid #00ffff;  /* Match button border */
+  background: transparent;    /* Match Export’s background */
+  color: inherit;             /* Match text color */
+  border-radius: 4px;         /* Match button corners */
+  cursor: pointer;
+  display: inline-block;      /* Keeps it inline with Export */
+}
+
+label[for="import-file"]:hover {
+  background: rgba(0, 255, 255, 0.1); /* Match hover style */
+}

@@ -750,6 +750,24 @@ toggleDragBtn.addEventListener('click', () => {
   }
 });
 
+document.getElementById('save-order')?.addEventListener('click', async () => {
+  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
+
+  try {
+    await fetch('/todos/reorder', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY)}`
+      },
+      body: JSON.stringify(todosData)
+    });
+    alert('✅ Order saved!');
+  } catch {
+    alert('⚠️ Failed to save order.');
+  }
+});
+
 function enableDrag() {
   sortableInstance = new Sortable(todoList, {
     animation: 150,

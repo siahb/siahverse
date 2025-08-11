@@ -32,38 +32,35 @@
     <div class="main-wrapper">
       
       <!-- To Do List -->
-      <div id="todo-container" class="card-container">
-        <h2>To Do List</h2>
-        
-        <!-- Top toolbar -->
-        <div class="toolbar">
-          <!-- Search icon + hidden input -->
-          <div class="search-wrapper">
-            <button id="search-toggle" class="search-icon">🔍</button>
-            <input id="search-input" type="text" placeholder="Search…" />
-          </div>
+      <div class="toolbar">
+  <!-- Search icon + hidden input -->
+  <div class="search-wrapper">
+    <button id="search-toggle" class="search-icon">🔍</button>
+    <input id="search-input" type="text" placeholder="Search…">
+  </div>
 
-          <!-- Grouped sort/export/import/progress -->
-          <div class="sort-and-buttons">
-            <select id="sort-select">
-              <option value="default">Sort: Custom (drag)</option>
-              <option value="dueAsc">Due date ↑</option>
-              <option value="dueDesc">Due date ↓</option>
-              <option value="alpha">A–Z</option>
-              <option value="created">Newest</option>
-            </select>
+  <!-- Sort/Export/Import/Progress -->
+  <div class="sort-and-buttons">
+    <select id="sort-select">
+      <option value="default">Sort: Custom (drag)</option>
+      <option value="dueAsc">Due date ↑</option>
+      <option value="dueDesc">Due date ↓</option>
+      <option value="alpha">A–Z</option>
+      <option value="created">Newest</option>
+    </select>
 
-            <button id="export-btn">Export</button>
-            <input type="file" id="import-file" style="display: none;">
-            <label for="import-file" class="btn">Import</label>
+    <button id="export-btn">Export</button>
+    <input type="file" id="import-file" style="display: none;">
+    <label for="import-file" class="btn">Import</label>
 
-            <!-- Progress label -->
-          <div id="progress-label" style="font-size:.9rem;opacity:.8;"></div>
+    <!-- Progress bar inline -->
+    <div id="progress-inline">
+      <div id="progress-bar"></div>
+    </div>
+  </div>
+</div>
 
-            <!-- Progress bar -->
-            <div id="progress-inline">
-            <div id="progress-bar"></div>
-          </div>
+<div id="progress-label" style="font-size:.9rem;opacity:.8;"></div>
 
         <!-- Add Task -->
         <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />

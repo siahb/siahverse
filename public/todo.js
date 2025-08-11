@@ -420,7 +420,7 @@ document.addEventListener('change', (e) => {
   if (e.target.matches('.select-todo')) updateSelectAllState();
 });
 
-// Inline editor for text + due + repeat + tags
+// Inline editor for text + due + repeat + tags + priority
 window.editTodo = function(index){
   const li = document.querySelector(`li[data-trueindex="${index}"]`);
   if (!li) return;
@@ -434,59 +434,64 @@ window.editTodo = function(index){
   const byWeekday = Array.isArray(rep?.byWeekday) ? rep.byWeekday : [];
   const tagsCSV = (todo.tags || []).join(', ');
 
+  // 🔻 build editor UI
   li.innerHTML = `
-  <div class="edit-container">
-    <input type="text" class="edit-text" value="${text}" />
-    <label>Due:
-      <input type="date" class="edit-due" value="${due}">
-      <button type="button" class="mini-btn btn-today">Today</button>
-    </label>
-    <label>Repeat:
-      <select class="edit-repeat">
-        <option value="" ${!freq?'selected':''}>None</option>
-        <option value="daily" ${freq==='daily'?'selected':''}>Daily</option>
-        <option value="weekly" ${freq==='weekly'?'selected':''}>Weekly</option>
-      </select>
-    </label>
-    <label class="edit-interval-wrap" style="${freq?'':'display:none;'}">
-      Every
-      <input type="number" class="edit-interval" min="1" value="${interval}" style="width:4rem;">
-      <span class="edit-interval-unit">${freq==='weekly'?'week(s)':'day(s)'}</span>
-    </label>
-    <div class="edit-weekly-wrap" style="display:${freq==='weekly'?'flex':'none'};align-items:center;">
-      <span style="margin-right:.25rem;">Days:</span>
-      ${weekdayBoxes(byWeekday)}
-    </div>
-    `  
-  const todayBtn = li.querySelector('.btn-today');
-  const editDueInput = li.querySelector('.edit-due');
-todayBtn?.addEventListener('click', (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  const today = new Date().toISOString().slice(0, 10);
-  editDueInput.value = today;
-  editDueInput.dispatchEvent(new Event('input', { bubbles: true }));
-  editDueInput.dispatchEvent(new Event('change', { bubbles: true }));
-});
+    <div class="edit-container">
+      <input type="text" class="edit-text" value="${text}" />
 
-      <!-- ✅ New: Tags editor -->
+      <label>Due:
+        <input type="date" class="edit-due" value="${due}">
+      </label>
+      <button type="button" class="mini-btn btn-today">Today</button>
+
+      <label>Repeat:
+        <select class="edit-repeat">
+          <option value="" ${!freq?'selected':''}>None</option>
+          <option value="daily" ${freq==='daily'?'selected':''}>Daily</option>
+          <option value="weekly" ${freq==='weekly'?'selected':''}>Weekly</option>
+        </select>
+      </label>
+
+      <label class="edit-interval-wrap" style="${freq?'':'display:none;'}">
+        Every
+        <input type="number" class="edit-interval" min="1" value="${interval}" style="width:4rem;">
+        <span class="edit-interval-unit">${freq==='weekly'?'week(s)':'day(s)'}</span>
+      </label>
+
+      <div class="edit-weekly-wrap" style="display:${freq==='weekly'?'flex':'none'};align-items:center;">
+        <span style="margin-right:.25rem;">Days:</span>
+        ${weekdayBoxes(byWeekday)}
+      </div>
+
       <label>Tags:
         <input type="text" class="edit-tags" placeholder="chores, projects, etc..." value="${tagsCSV}">
       </label>
-      
-  <label>Priority:
-  <select class="edit-priority">
-    <option value="" ${!todo.priority ? 'selected' : ''}>None</option>
-    <option value="H" ${todo.priority === 'H' ? 'selected' : ''}>High 🔥</option>
-    <option value="M" ${todo.priority === 'M' ? 'selected' : ''}>Medium ⚡</option>
-    <option value="L" ${todo.priority === 'L' ? 'selected' : ''}>Low 🌿</option>
-  </select>
-</label>
+
+      <label>Priority:
+        <select class="edit-priority">
+          <option value="" ${!todo.priority ? 'selected' : ''}>None</option>
+          <option value="H" ${todo.priority === 'H' ? 'selected' : ''}>High 🔥</option>
+          <option value="M" ${todo.priority === 'M' ? 'selected' : ''}>Medium ⚡</option>
+          <option value="L" ${todo.priority === 'L' ? 'selected' : ''}>Low 🌿</option>
+        </select>
+      </label>
 
       <button class="btn-save">Save</button>
       <button class="btn-cancel">Cancel</button>
     </div>
-  `;
+  `; // ✅ close template string
+
+  // ✅ Wire "Today" (must be AFTER innerHTML)
+  const todayBtn = li.querySelector('.btn-today');
+  const editDue  = li.querySelector('.edit-due');
+  todayBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const today = new Date().toISOString().slice(0,10);
+    editDue.value = today;
+    editDue.dispatchEvent(new Event('input',  { bubbles: true }));
+    editDue.dispatchEvent(new Event('change', { bubbles: true }));
+  });
 
   // toggles
   const sel = li.querySelector('.edit-repeat');
@@ -507,17 +512,13 @@ todayBtn?.addEventListener('click', (e) => {
   // save -> PATCH
   li.querySelector('.btn-save').onclick = async () => {
     const newText = li.querySelector('.edit-text').value.trim();
-    const newDue = li.querySelector('.edit-due').value || null;
+    const newDue = editDue.value || null;
     const newFreq = sel.value;
     const newInterval = parseInt(li.querySelector('.edit-interval')?.value || '1',10);
     const newPriority = li.querySelector('.edit-priority')?.value || '';
 
-    // ✅ parse tags
     const tagsVal = li.querySelector('.edit-tags').value || '';
-    const tags = tagsVal
-      .split(',')
-      .map(s => s.trim())
-      .filter(Boolean);
+    const tags = tagsVal.split(',').map(s => s.trim()).filter(Boolean);
 
     let repeat = null;
     if (newFreq) {
@@ -527,9 +528,7 @@ todayBtn?.addEventListener('click', (e) => {
       }
     }
 
-    // Build patch; recompute nextDue when repeating
-    const patch = { text: newText || todo.text, due: newDue, tags };
-    patch.priority = newPriority || null; //empty string -> null
+    const patch = { text: newText || todo.text, due: newDue, tags, priority: newPriority || null };
     if (repeat) {
       patch.repeat = repeat;
       const temp = { ...todo, repeat, due: newDue || (todo.due || todayISO()) };
@@ -540,11 +539,12 @@ todayBtn?.addEventListener('click', (e) => {
     }
 
     try {
-      await fetch(`/todos/${index}`, {
+      const res = await fetch(`/todos/${index}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(patch)
       });
+      if (!res.ok) return alert(`Failed to save (${res.status}).`);
       await loadTodosFromServer();
     } catch {
       alert('Failed to save changes.');

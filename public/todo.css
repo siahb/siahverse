@@ -700,3 +700,28 @@ label[for="import-file"]:hover {
 label[for="import-file"] {
   margin-right: 8px; /* space from right border */
 }
+/* Easiest: inset both left & right a little */
+#todo-container .toolbar.top {
+  padding: 0 8px;          /* add inner space on both sides */
+  gap: 8px;                /* keep even spacing between items */
+}
+
+/* If you only want the right side inset, use this instead */
+#todo-container .toolbar.top {
+  padding-right: 8px;      /* nudge contents away from right border */
+  gap: 8px;
+}
+
+/* Keep Import’s size consistent with Export */
+#export-btn,
+label[for="import-file"]{
+  font-size: .9rem;
+  padding: .35rem .6rem;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--input-border);
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-color);
+  font-weight: 600;
+}

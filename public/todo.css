@@ -998,3 +998,24 @@ body:not(.dark-mode) select option {
     width: 100%; /* Full width buttons/inputs on small screens */
   }
 }
+/* Make toolbar items wrap on small screens */
+.toolbar,
+.sort-and-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Make inputs & selects take full width on very small screens */
+@media (max-width: 600px) {
+  .toolbar input[type="text"],
+  .toolbar select,
+  .toolbar button,
+  .toolbar .btn,
+  .sort-and-buttons select,
+  .sort-and-buttons button,
+  .sort-and-buttons .btn {
+    flex: 1 1 100%;
+    min-width: 100%;
+  }
+}

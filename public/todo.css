@@ -977,3 +977,24 @@ body:not(.dark-mode) select option {
     max-width: 100%;
   }
 }
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.toolbar > * {
+  flex: 1 1 auto;
+  min-width: 120px; /* Ensures items wrap instead of squish */
+}
+
+@media (max-width: 600px) {
+  .toolbar {
+    flex-direction: column; /* Stack items on top of each other for phones */
+    align-items: stretch;
+  }
+
+  .toolbar > * {
+    width: 100%; /* Full width buttons/inputs on small screens */
+  }
+}

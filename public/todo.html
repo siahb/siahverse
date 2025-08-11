@@ -29,9 +29,11 @@
   </div>
 
   <div class="main-content">
+    
     <!-- To Do List -->
     <div id="todo-container" class="card-container">
       <h2>To Do List</h2>
+      
 <!-- Search + Sort -->
 <div class="toolbar" style="display:flex;gap:.5rem;flex-wrap:wrap;margin:.5rem 0;">
   <div class="search-wrap">
@@ -61,12 +63,12 @@
 </div>
 <div id="progress-label" style="font-size:.9rem;opacity:.8;"></div>
 
-      <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
-      
-      <!-- Tags + Priority (moved below Enter bar) -->
-<div class="toolbar below-enter" style="display:flex;gap:.5rem;flex-wrap:wrap;margin:.25rem 0 .5rem;">
-  <input id="tag-input" type="text" placeholder="chores, projects, etc..." style="padding:.4rem;min-width:180px;">
-  <select id="priority-select" style="padding:.35rem;">
+<input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
+
+<!-- Tags + Priority below enter -->
+<div class="toolbar below-enter">
+  <input id="tag-input" type="text" placeholder="tag1, tag2">
+  <select id="priority-select">
     <option value="">Priority: none</option>
     <option value="H">High 🔥</option>
     <option value="M">Medium ⚡</option>

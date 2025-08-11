@@ -163,6 +163,7 @@
   const intervalUnit = document.querySelector('.interval-unit');
   const weeklyWrap = document.getElementById('weekly-wrap');
   // toolbar controls
+  const searchToggle = document.getElemetById('search-toggle);
   const searchInput = document.getElementById('search-input');   // Search…
   const sortSelect  = document.getElementById('sort-select');    // Sort: …
   const tagInput    = document.getElementById('tag-input');      // Tags
@@ -189,6 +190,17 @@
   let deletedTodos = [];
   const ADMIN_PASSWORD_KEY = 'adminPassword';
 
+  //search Toggle
+  searchToggle.addEventListener('click', () => {
+    if (searchInput.style.display === 'none') {
+        searchInput.style.display = 'inline-block';
+        searchInput.focus();
+    } else {
+        searchInput.style.display = 'none';
+        searchInput.value = '';
+        // Optional: Trigger your "clear search" function here
+    }
+});
   // Button visibility
 function updateAdminUI() {
   const pw = localStorage.getItem(ADMIN_PASSWORD_KEY);

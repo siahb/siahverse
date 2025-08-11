@@ -508,10 +508,10 @@ window.editTodo = function(index){
   };
 };
 
-// Add new todo (supports repeats, priority, tags)
-todoInput.addEventListener('keydown', async (e) => {
-  if (e.key !== 'Enter' || !todoInput.value.trim()) return;
+// === Add New Todo (reusable) ===
+async function addNewTodo() {
   if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
+  if (!todoInput.value.trim()) return;
 
   const text = todoInput.value.trim();
   const due = dueInput.value ? dueInput.value : null;
@@ -535,7 +535,6 @@ todoInput.addEventListener('keydown', async (e) => {
     ? tagInput.value.split(',').map(t => t.trim()).filter(Boolean)
     : [];
 
-  // Build the payload
   const payload = {
     text,
     done: false,
@@ -547,7 +546,6 @@ todoInput.addEventListener('keydown', async (e) => {
     createdAt: Date.now(),
   };
 
-  // If repeating, pre-compute nextDue and ensure a visible due
   if (repeat) {
     payload.nextDue = computeNextDue(payload, payload.due);
     payload.due = payload.due || payload.nextDue;
@@ -566,10 +564,8 @@ todoInput.addEventListener('keydown', async (e) => {
     repeatSelect.value = '';
     intervalInput.value = '1';
     document.querySelectorAll('.byweekday').forEach(cb => cb.checked = false);
-    // hide repeat UI rows again
     intervalWrap.style.display = 'none';
     weeklyWrap.style.display = 'none';
-    // clear priority/tags
     prioSelect.value = '';
     tagInput.value = '';
 
@@ -577,7 +573,32 @@ todoInput.addEventListener('keydown', async (e) => {
   } catch {
     alert("Failed to add todo.");
   }
+}
+
+// === Step 2: Enter on main text field ===
+todoInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    addNewTodo();
+  }
 });
+
+// === Step 3: Bind Enter to other inputs (not search) ===
+function bindEnterToAdd(el) {
+  if (!el) return;
+  el.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (document.activeElement === searchInput) return; // don't add while searching
+      addNewTodo();
+    }
+  });
+}
+bindEnterToAdd(tagInput);
+bindEnterToAdd(dueInput);
+bindEnterToAdd(prioSelect);
+bindEnterToAdd(repeatSelect);
+bindEnterToAdd(intervalInput);
 
 // Mark as done OR advance repeating task
 window.markAsDone = async (index) => {

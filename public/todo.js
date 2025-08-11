@@ -21,6 +21,7 @@
   // toolbar controls
   const searchToggle = document.getElementById('search-toggle');
   const searchInput = document.getElementById('search-input');   // Search…
+  const searchWrap = document.querySelector('.search-wrapper');
   const sortSelect  = document.getElementById('sort-select');    // Sort: …
   // Force default sort on startup
   if (sortSelect) {
@@ -60,19 +61,19 @@
 
  // --- Search Toggle ---
 searchToggle.addEventListener('click', (e) => {
-    e.stopPropagation();
-    searchInput.classList.toggle('active');
-    document.body.classList.toggle('search-open', searchInput.classList.contains('active'));
-    if (searchInput.classList.contains('active')) {
-        searchInput.focus();
-    } else {
-        searchInput.value = '';
-        renderTodos();
-        renderDone();
-    }
+  e.stopPropagation();
+  searchWrap.classList.toggle('active');
+  document.body.classList.toggle(
+    'search-open',
+    searchWrap.classList.contains('active')
+  );
+  if (searchWrap.classList.contains('active')) {
+    searchInput.focus();
+  } else {
+    searchInput.value = '';
+    renderTodos(); renderDone();
+  }
 });
-
-const searchWrap = document.querySelector('.search-wrapper');
 
 document.addEventListener('click', (e) => {
   // Only act if search is actually open AND the click is outside the wrapper
@@ -973,22 +974,13 @@ searchInput.addEventListener('keydown', (e) => {
     e.preventDefault();
     searchInput.value = '';
     searchInput.blur();
-    searchWrap.classList.remove('active');
-    document.body.classList.remove('search-open');
-    renderTodos(); 
-    renderDone();
-  }
-});
 
-searchToggle.addEventListener('click', (e) => {
-  e.stopPropagation();
-  searchWrap.classList.toggle('active');
-  document.body.classList.toggle('search-open', searchWrap.classList.contains('active'));
-  if (searchWrap.classList.contains('active')) {
-    searchInput.focus();
-  } else {
-    searchInput.value = '';
-    renderTodos(); 
-    renderDone();
+    // hide slide-out
+    searchWrap.classList.remove('active');
+    // also remove in case you still had old code using input.active
+    searchInput.classList.remove('active');
+
+    document.body.classList.remove('search-open');
+    renderTodos(); renderDone();
   }
 });

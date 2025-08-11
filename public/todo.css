@@ -432,9 +432,3 @@ body.light-mode .back-button{
   border:1px solid var(--border,#2c2c2c); background:transparent; color:inherit;
   cursor:pointer; font-size:.85rem;
 }
-.mini-btn:hover { filter:brightness(1.15); }
-#search-input { width:0; opacity:0; transition:width .2s, opacity .2s; }
-.search-wrapper.active #search-input { width:220px; opacity:1; }
-
-#search-input { width:0; opacity:0; transition:width .2s, opacity .2s; }
-.search-wrapper.active #search-input { width:220px; opacity:1; }

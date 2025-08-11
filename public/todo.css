@@ -427,3 +427,9 @@ body.light-mode .back-button{
     transform: rotate(1deg);
   }
 }
+.mini-btn {
+  margin-left:.4rem; padding:.2rem .5rem; border-radius:.5rem;
+  border:1px solid var(--border,#2c2c2c); background:transparent; color:inherit;
+  cursor:pointer; font-size:.85rem;
+}
+.mini-btn:hover { filter:brightness(1.15); }

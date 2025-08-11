@@ -39,14 +39,23 @@
   const ADMIN_PASSWORD_KEY = 'adminPassword';
 
  // --- Search Toggle ---
-searchToggle?.addEventListener('click', (e) => {
+searchToggle.addEventListener('click', (e) => {
     e.stopPropagation();
-    const active = searchInput.classList.toggle('active');
-    document.body.classList.toggle('search-open', active);
-
-    if (active) {
+    searchInput.classList.toggle('active');
+    document.body.classList.toggle('search-open', searchInput.classList.contains('active'));
+    if (searchInput.classList.contains('active')) {
         searchInput.focus();
     } else {
+        searchInput.value = '';
+        renderTodos();
+        renderDone();
+    }
+});
+
+document.addEventListener('click', (e) => {
+    if (!searchInput.contains(e.target) && !searchToggle.contains(e.target)) {
+        searchInput.classList.remove('active');
+        document.body.classList.remove('search-open');
         searchInput.value = '';
         renderTodos();
         renderDone();

@@ -428,13 +428,6 @@ window.editTodo = function(index){
 
   const text = todo.text ?? '';
   const due = (todo.due || '').toString().slice(0,10);
-  const todayBtn = li.querySelector('.btn-today');
-  const editDueInput = li.querySelector('.edit-due');
-  todayBtn?.addEventListener('click', () => {
-  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-  editDueInput.value = today;
-  editDueInput.dispatchEvent(new Event('change')); // trigger any listeners
-});
   const rep = todo.repeat || null;
   const freq = rep?.freq || '';
   const interval = rep?.interval || 1;
@@ -464,6 +457,19 @@ window.editTodo = function(index){
       <span style="margin-right:.25rem;">Days:</span>
       ${weekdayBoxes(byWeekday)}
     </div>
+
+    // Wire "Today" inside the editor (must be after innerHTML)
+const todayBtn = li.querySelector('.btn-today');
+const editDueInput = li.querySelector('.edit-due');
+todayBtn?.addEventListener('click', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  const today = new Date().toISOString().slice(0, 10);
+  editDueInput.value = today;
+  editDueInput.dispatchEvent(new Event('input', { bubbles: true }));
+  editDueInput.dispatchEvent(new Event('change', { bubbles: true }));
+});
+
 
       <!-- ✅ New: Tags editor -->
       <label>Tags:

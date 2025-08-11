@@ -693,3 +693,10 @@ label[for="import-file"] {
 label[for="import-file"]:hover {
   background: rgba(0, 255, 255, 0.1); /* Match hover style */
 }
+#export-btn {
+  margin-right: 5px; /* space between Export and Import */
+}
+
+label[for="import-file"] {
+  margin-right: 8px; /* space from right border */
+}

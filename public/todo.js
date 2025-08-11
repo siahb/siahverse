@@ -362,6 +362,7 @@ view.forEach((todo) => {
     li.style.animationDelay = `${Math.random() * 0.5}s`; // ✅ pulse offset
 
     li.innerHTML = `
+      <input type="checkbox" class="select-todo" data-trueindex="${i}" />
       <span>${todo.text}</span>
       <div>
         <button onclick="unmarkDone(${i})">↩️</button>
@@ -369,8 +370,11 @@ view.forEach((todo) => {
       </div>`;
 
     doneList.appendChild(li);
+      const cb = li.querySelector('.select-todo');
+      cb.addEventListener('change', updateSelectAllState);
   });
     updateProgress();
+    updateSelectAllState();
 };
 
   
@@ -649,18 +653,28 @@ for (const obj of restoring) {
 
   // Select all checkbox
   selectAll?.addEventListener('change', (e) => {
-    document.querySelectorAll('.select-todo').forEach(cb => cb.checked = e.target.checked);
-    updateSelectAllState();
-  });
+  const boxes = document.querySelectorAll('#todo-list .select-todo, #done-list .select-todo');
+  boxes.forEach(cb => { cb.checked = e.target.checked; });
+  updateSelectAllState();
+});
 
-  window.deleteSelected = () => {
-    if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
-    const selected = [...document.querySelectorAll('.select-todo:checked')].map(cb => parseInt(cb.dataset.trueindex));
-    selected.sort((a,b) => b-a);
-    selected.forEach(i => {
-      window.removeTodo(i);
-    });
-  };
+  window.deleteSelected = async () => {
+  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
+
+  const selected = [...document.querySelectorAll('.select-todo:checked')]
+    .map(cb => parseInt(cb.dataset.trueindex, 10))
+    .sort((a,b) => b - a);
+
+  for (const i of selected) {
+    await window.removeTodo(i); // removeTodo already reloads after each delete
+  }
+};
+
+    //Delegate checkbox changes
+    document.addEventListener('change', (e) => {
+  if (e.target.matches('.select-todo')) updateSelectAllState();
+});
+
 
   //Toggle Drag mode
 let dragEnabled = false;

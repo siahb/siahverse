@@ -966,7 +966,6 @@ document.addEventListener('keydown', (e) => {
     }
   }
 });
-const searchInput = document.getElementById('search-input');
 
 searchInput.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {

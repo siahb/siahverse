@@ -1197,3 +1197,65 @@ body:not(.dark-mode) select option {
 .search-open #progress-inline {
   width: 100px; /* smaller width */
 }
+/* Make toolbar responsive */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping */
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.sort-and-buttons {
+  display: flex;
+  flex-wrap: wrap; /* Allow buttons to wrap under sort dropdown */
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Make search area adapt */
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto; /* Flexible width */
+  min-width: 150px;
+}
+
+/* Make select and buttons shrink if needed */
+.sort-and-buttons select,
+.sort-and-buttons button,
+.import-label {
+  flex: 0 1 auto;
+  min-width: 80px;
+}
+
+/* Progress bar responsive behavior */
+#progress-inline {
+  flex: 1 1 150px;
+  height: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+#progress-bar {
+  width: 0%;
+  height: 100%;
+  background: #00ffc3;
+  transition: width 0.3s ease;
+}
+
+/* Stack on smaller screens */
+@media (max-width: 700px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .sort-and-buttons {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+  #progress-inline {
+    width: 100%;
+  }
+}

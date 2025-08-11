@@ -414,3 +414,16 @@ body.light-mode .back-button{
   border-color: #77e2a9;
   color: #77e2a9;
 }
+/* Wiggle animation when reordering */
+.dragging-active #todo-list li {
+  animation: wiggle 0.3s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+  0%, 100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+}

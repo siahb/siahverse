@@ -424,8 +424,13 @@ window.editTodo = function(index){
         <span style="margin-right:.25rem;">Days:</span>
         ${weekdayBoxes(byWeekday)}
       </div>
+
+      <!-- ✅ New: Tags editor -->
+      <label>Tags:
+        <input type="text" class="edit-tags" placeholder="chores, projects, etc..." value="${tagsCSV}">
+      </label>
       
-      <label>Priority:
+  <label>Priority:
   <select class="edit-priority">
     <option value="" ${!todo.priority ? 'selected' : ''}>None</option>
     <option value="H" ${todo.priority === 'H' ? 'selected' : ''}>High 🔥</option>
@@ -433,11 +438,6 @@ window.editTodo = function(index){
     <option value="L" ${todo.priority === 'L' ? 'selected' : ''}>Low 🌿</option>
   </select>
 </label>
-
-      <!-- ✅ New: Tags editor -->
-      <label>Tags:
-        <input type="text" class="edit-tags" placeholder="chores, projects, etc..." value="${tagsCSV}">
-      </label>
 
       <button class="btn-save">Save</button>
       <button class="btn-cancel">Cancel</button>

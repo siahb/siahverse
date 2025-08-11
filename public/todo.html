@@ -40,7 +40,7 @@
           <!-- Search icon + hidden input -->
           <div class="search-wrapper">
             <button id="search-toggle" class="search-icon">🔍</button>
-            <input id="search-input" type="text" placeholder="Search…" class="hidden-search">
+            <input id="search-input" type="text" placeholder="Search…" />
           </div>
 
           <!-- Grouped sort/export/import/progress -->
@@ -57,13 +57,13 @@
             <input type="file" id="import-file" style="display: none;">
             <label for="import-file" class="btn">Import</label>
 
-            <!-- Inline progress bar + label -->
+            <!-- Progress label -->
+          <div id="progress-label" style="font-size:.9rem;opacity:.8;"></div>
+
+            <!-- Progress bar -->
             <div id="progress-inline">
-              <div id="progress-bar"></div>
-            </div>
-            <span id="progress-label" class="progress-label"></span>
+            <div id="progress-bar"></div>
           </div>
-        </div>
 
         <!-- Add Task -->
         <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />

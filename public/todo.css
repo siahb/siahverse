@@ -632,7 +632,7 @@ body.light-mode #search-input{
 
 /* Make Export and Import identical buttons */
 #export-btn,
-#import-btn {
+#import-file {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -644,6 +644,7 @@ body.light-mode #search-input{
   color: var(--text-color);
   font-weight: 600;
   height: auto;
+  cursor: pointer;
 }
 
 /* Keep the label wrapper neutral */

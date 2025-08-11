@@ -5,6 +5,14 @@
   const selectAll = document.getElementById('select-all');
   const themeCheckbox = document.getElementById('toggle-theme-checkbox');
   const dueInput = document.getElementById('due-input');
+  const dueTodayBtn = document.getElementById('due-today');
+  if (dueTodayBtn) {
+  dueTodayBtn.addEventListener('click', () => {
+    const today = new Date().toISOString().slice(0,10);
+    dueInput.value = today;
+    dueInput.dispatchEvent(new Event('change')); // if you react to changes elsewhere
+  });
+}
   const repeatSelect = document.getElementById('repeat-select');
   const intervalWrap = document.getElementById('interval-wrap');
   const intervalInput = document.getElementById('interval-input');
@@ -420,6 +428,13 @@ window.editTodo = function(index){
 
   const text = todo.text ?? '';
   const due = (todo.due || '').toString().slice(0,10);
+  const todayBtn = li.querySelector('.btn-today');
+  const editDueInput = li.querySelector('.edit-due');
+  todayBtn?.addEventListener('click', () => {
+  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  editDueInput.value = today;
+  editDueInput.dispatchEvent(new Event('change')); // trigger any listeners
+});
   const rep = todo.repeat || null;
   const freq = rep?.freq || '';
   const interval = rep?.interval || 1;
@@ -427,27 +442,28 @@ window.editTodo = function(index){
   const tagsCSV = (todo.tags || []).join(', ');
 
   li.innerHTML = `
-    <div class="edit-container">
-      <input type="text" class="edit-text" value="${text}" />
-      <label>Due:
-        <input type="date" class="edit-due" value="${due}">
-      </label>
-      <label>Repeat:
-        <select class="edit-repeat">
-          <option value="" ${!freq?'selected':''}>None</option>
-          <option value="daily" ${freq==='daily'?'selected':''}>Daily</option>
-          <option value="weekly" ${freq==='weekly'?'selected':''}>Weekly</option>
-        </select>
-      </label>
-      <label class="edit-interval-wrap" style="${freq?'':'display:none;'}">
-        Every
-        <input type="number" class="edit-interval" min="1" value="${interval}" style="width:4rem;">
-        <span class="edit-interval-unit">${freq==='weekly'?'week(s)':'day(s)'}</span>
-      </label>
-      <div class="edit-weekly-wrap" style="display:${freq==='weekly'?'flex':'none'};align-items:center;">
-        <span style="margin-right:.25rem;">Days:</span>
-        ${weekdayBoxes(byWeekday)}
-      </div>
+  <div class="edit-container">
+    <input type="text" class="edit-text" value="${text}" />
+    <label>Due:
+      <input type="date" class="edit-due" value="${due}">
+      <button type="button" class="mini-btn btn-today">Today</button>
+    </label>
+    <label>Repeat:
+      <select class="edit-repeat">
+        <option value="" ${!freq?'selected':''}>None</option>
+        <option value="daily" ${freq==='daily'?'selected':''}>Daily</option>
+        <option value="weekly" ${freq==='weekly'?'selected':''}>Weekly</option>
+      </select>
+    </label>
+    <label class="edit-interval-wrap" style="${freq?'':'display:none;'}">
+      Every
+      <input type="number" class="edit-interval" min="1" value="${interval}" style="width:4rem;">
+      <span class="edit-interval-unit">${freq==='weekly'?'week(s)':'day(s)'}</span>
+    </label>
+    <div class="edit-weekly-wrap" style="display:${freq==='weekly'?'flex':'none'};align-items:center;">
+      <span style="margin-right:.25rem;">Days:</span>
+      ${weekdayBoxes(byWeekday)}
+    </div>
 
       <!-- ✅ New: Tags editor -->
       <label>Tags:

@@ -1033,3 +1033,26 @@ body:not(.dark-mode) select option {
     gap: 0.5rem;
   }
 }
+@media (max-width: 600px) {
+  .below-enter {
+    display: flex;
+    flex-direction: column; /* stack */
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  #tag-input,
+  #priority-select {
+    display: inline-block;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 250px;
+  }
+
+  /* Optional: shrink the font and padding on small screens */
+  #priority-select,
+  #tag-input {
+    font-size: 14px;
+    padding: 6px;
+  }
+}

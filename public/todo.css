@@ -922,3 +922,58 @@ body:not(.dark-mode) select option {
   }
 }
 
+/* Layout for todo + done containers */
+.main-wrapper {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap; /* allows wrapping on smaller screens */
+}
+
+#todo-container,
+#done-container {
+  flex: 1 1 450px; /* grow and shrink, min width 450px */
+  max-width: 600px; /* prevents them from getting too wide */
+}
+@media (max-width: 900px) {
+  .main-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #todo-container,
+  #done-container {
+    max-width: 100%;
+  }
+}
+/* Layout for todo + done containers */
+.main-wrapper {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: stretch; /* make both columns the same height */
+  flex-wrap: wrap; /* allows wrapping on smaller screens */
+}
+
+/* Cards inside the wrapper */
+#todo-container,
+#done-container {
+  flex: 1 1 450px; /* grow and shrink, min width 450px */
+  max-width: 600px; /* prevent them from being too wide */
+  display: flex;
+  flex-direction: column; /* so child content stacks normally */
+}
+
+/* Stack vertically on smaller screens */
+@media (max-width: 900px) {
+  .main-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #todo-container,
+  #done-container {
+    max-width: 100%;
+  }
+}

@@ -32,64 +32,61 @@
   <div class="main-wrapper">
     
     <!-- To Do List -->
-   <div id="todo-container" class="card-container">
-  <h2>To Do List</h2>
+    <div id="todo-container" class="card-container">
+      <h2>To Do List</h2>
+      
+      <!-- Top toolbar -->
+      <div class="toolbar">
+        <!-- Search icon + hidden input -->
+        <div class="search-wrapper">
+          <button id="search-toggle" class="search-icon">🔍</button>
+          <input id="search-input" type="text" placeholder="Search…" style="display:none;">
+        </div>
 
-  <!-- Top toolbar -->
-  <div class="toolbar">
-  <!-- Search icon + hidden input -->
-  <div class="search-wrapper">
-    <button id="search-toggle" class="search-icon">🔍</button>
-    <input id="search-input" type="text" placeholder="Search…" />
-  </div>
+        <!-- Grouped sort/export/import/progress -->
+        <div class="sort-and-buttons">
+          <select id="sort-select">
+            <option value="default">Sort: Custom (drag)</option>
+            <option value="dueAsc">Due date ↑</option>
+            <option value="dueDesc">Due date ↓</option>
+            <option value="alpha">A–Z</option>
+            <option value="created">Newest</option>
+          </select>
 
-  <!-- Grouped sort/export/import/progress -->
-  <div class="sort-and-buttons">
-    <select id="sort-select">
-      <option value="default">Sort: Custom (drag)</option>
-      <option value="dueAsc">Due date ↑</option>
-      <option value="dueDesc">Due date ↓</option>
-      <option value="alpha">A–Z</option>
-      <option value="created">Newest</option>
-    </select>
+          <button id="export-btn">Export</button>
+          <input type="file" id="import-file" style="display: none;">
+          <label for="import-file" class="btn">Import</label>
 
-    <button id="export-btn">Export</button>
-    <input type="file" id="import-file" style="display: none;">
-    <label for="import-file" class="btn">Import</label>
-
-    <!-- Progress bar inline -->
-    <div id="progress-inline">
-      <div id="progress-bar"></div>
-    </div>
-  </div>
-</div>
-
-      <!-- Progress bar -->
-      <div id="progress-wrap" style="width:100%;height:10px;background:rgba(255,255,255,.08);border:1px solid var(--card-border);border-radius:6px;overflow:hidden;margin:.25rem 0 .5rem;">
-        <div id="progress-bar" style="height:100%;width:0%;background:#00ffc3;transition:width .3s;"></div>
+          <!-- Inline progress bar -->
+          <div id="progress-inline">
+            <div id="progress-bar"></div>
+          </div>
+        </div>
       </div>
+
+      <!-- Progress label -->
       <div id="progress-label" style="font-size:.9rem;opacity:.8;"></div>
 
       <!-- Add Task -->
       <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
 
       <!-- Tags + Priority below enter -->
-<div class="toolbar below-enter">
-  <div class="field-wrap">
-    <label for="tag-input" class="tag-label">Tags:</label>
-    <input id="tag-input" type="text" placeholder="chores, projects, etc...">
-  </div>
+      <div class="toolbar below-enter">
+        <div class="field-wrap">
+          <label for="tag-input" class="tag-label">Tags:</label>
+          <input id="tag-input" type="text" placeholder="chores, projects, etc...">
+        </div>
 
-  <div class="field-wrap">
-    <label for="priority-select" class="priority-label">Priority:</label>
-    <select id="priority-select">
-      <option value="">None</option>
-      <option value="H">High 🔥</option>
-      <option value="M">Medium ⚡</option>
-      <option value="L">Low 🌿</option>
-    </select>
-  </div>
-</div>
+        <div class="field-wrap">
+          <label for="priority-select" class="priority-label">Priority:</label>
+          <select id="priority-select">
+            <option value="">None</option>
+            <option value="H">High 🔥</option>
+            <option value="M">Medium ⚡</option>
+            <option value="L">Low 🌿</option>
+          </select>
+        </div>
+      </div>
 
       <!-- Due + Repeat -->
       <div class="repeat-row">

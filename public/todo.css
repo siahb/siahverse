@@ -1388,3 +1388,37 @@ body:not(.dark-mode) select option {
     width: 100% !important;
   }
 }
+.toolbar.top {
+  display: flex;
+  flex-wrap: wrap; /* allows wrapping */
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.toolbar.top .search-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+#search-input {
+  display: none; /* hidden by default */
+}
+
+#search-input.active {
+  display: block; /* show when toggled */
+}
+
+#progress-inline {
+  flex: 1 1 150px;
+  height: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+#progress-bar {
+  height: 100%;
+  width: 0%;
+  background: #00ffc3;
+  transition: width 0.3s ease;
+}

@@ -437,22 +437,3 @@ body.light-mode .back-button{
   align-items: center;
   gap: .4rem;
 }
-
-/* hidden by default */
-#search-input {
-  width: 0;
-  opacity: 0;
-  pointer-events: none;
-  border: 1px solid var(--border, #ccc);
-  border-radius: 8px;
-  padding: .4rem .6rem;           /* padding is fine even when width=0 */
-  transition: width .2s ease, opacity .15s ease;
-  background: var(--bg, #fff);
-}
-
-/* visible state */
-#search-input.active {
-  width: 220px;                   /* adjust as you like */
-  opacity: 1;
-  pointer-events: auto;
-}

@@ -72,6 +72,48 @@ searchToggle.addEventListener('click', (e) => {
     }
 });
 
+function showSearch() {
+  searchInput.classList.add('active');
+  searchInput.focus();
+  searchInput.select();
+}
+
+function hideSearch() {
+  searchInput.value = '';
+  searchInput.classList.remove('active');
+  searchInput.blur();
+}
+
+// Toggle via the 🔍 button
+searchToggle?.addEventListener('click', (e) => {
+  e.preventDefault();
+  if (searchInput.classList.contains('active')) {
+    hideSearch();
+  } else {
+    showSearch();
+  }
+});
+
+// Keyboard: Ctrl/Cmd + F to show; Esc to hide
+document.addEventListener('keydown', (e) => {
+  const isFind = (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f';
+  if (isFind) {
+    e.preventDefault();   // stop browser find
+    showSearch();
+    return;
+  }
+
+  if (e.key === 'Escape' && searchInput.classList.contains('active')) {
+    hideSearch();
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === '/' && !e.target.closest('input, textarea, [contenteditable]')) {
+    e.preventDefault();
+    showSearch();
+  }
+});
 const searchWrap = document.querySelector('.search-wrapper');
 
 document.addEventListener('click', (e) => {

@@ -115,8 +115,6 @@
       renderTodos(); renderDone();
     });
 
-    // Hotkeys: Ctrl/Cmd+F and "/"
-    document.addEventListener('keydown', (e) => {
       // ignore if typing in another field
       if (e.target.closest('input, textarea, [contenteditable]')) return;
 

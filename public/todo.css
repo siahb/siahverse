@@ -1422,3 +1422,95 @@ body:not(.dark-mode) select option {
   background: #00ffc3;
   transition: width 0.3s ease;
 }
+/* === TOOLBAR WRAP FIX === */
+.toolbar.top {
+  display: flex;
+  flex-wrap: wrap;       /* Allow wrapping */
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.toolbar.top > * {
+  flex: 0 1 auto;        /* Prevent forcing full width unless mobile */
+}
+
+/* Search bar section */
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;        /* Let it expand/shrink */
+  min-width: 150px;
+  gap: 0.3rem;
+}
+
+.search-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--text-color);
+}
+
+/* Hide search input by default */
+#search-input {
+  flex: 1 1 200px;
+  min-width: 150px;
+  padding: 0.4rem;
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  background: var(--card-bg);
+  color: var(--text-color);
+  display: none;
+  transition: width 0.3s ease, opacity 0.3s ease;
+}
+
+/* Show when active */
+#search-input.active {
+  display: block;
+}
+
+/* Progress bar */
+#progress-inline {
+  flex: 1 1 150px;
+  min-width: 100px;
+  height: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+#progress-bar {
+  height: 100%;
+  width: 0%;
+  background: #00ffc3;
+  transition: width 0.3s ease;
+}
+
+/* Sort + Buttons group */
+.sort-and-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  align-items: center;
+}
+
+.sort-and-buttons select,
+.sort-and-buttons button,
+.import-label {
+  flex: 0 1 auto;
+  min-width: 80px;
+}
+
+/* Mobile layout */
+@media (max-width: 700px) {
+  .toolbar.top,
+  .sort-and-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .toolbar.top > *,
+  .sort-and-buttons > * {
+    width: 100%;
+  }
+}

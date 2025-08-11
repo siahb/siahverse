@@ -82,6 +82,14 @@ function hideSearch() {
   searchInput.value = '';
   searchInput.classList.remove('active');
   searchInput.blur();
+
+  // 🔹 Trigger your filtering function so results reset
+  if (typeof handleSearch === 'function') {
+    handleSearch('');
+  } else {
+    // If you don't have handleSearch, simulate an input event
+    searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+  }
 }
 
 // Toggle via the 🔍 button

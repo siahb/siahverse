@@ -351,32 +351,43 @@ const renderTodos = () => {
   
 // Render Done
 const renderDone = () => {
-doneList.innerHTML = '';
-const view = filteredTodos(todosData.filter(t=>t.done));
-view.forEach((todo) => {
-  const i = todosData.indexOf(todo);
+  doneList.innerHTML = '';
+
+  // keep search filter behavior
+  const view = filteredTodos(todosData.filter(t => t.done));
+
+  view.forEach((todo) => {
+    const i = todosData.indexOf(todo);
 
     const li = document.createElement('li');
     li.classList.add('done');
     li.setAttribute('data-trueindex', i);
-    li.style.animationDelay = `${Math.random() * 0.5}s`; // ✅ pulse offset
+    li.style.animationDelay = `${Math.random() * 0.5}s`;
 
     li.innerHTML = `
       <input type="checkbox" class="select-todo" data-trueindex="${i}" />
-      <span>${todo.text}</span>
+      <span class="todo-text">${todo.text}</span>
+      <div class="todo-meta">
+        ${todo.due ? `<span class="pill pill-due">Due: ${toISO(todo.due)}</span>` : ''}
+        ${todo.repeat ? `<span class="pill pill-repeat">${repeatLabel(todo)}</span>` : ''}
+        ${(todo.tags || []).map(t => `<span class="pill pill-tag">${t}</span>`).join(' ')}
+      </div>
       <div>
         <button onclick="unmarkDone(${i})">↩️</button>
         <button onclick="removeTodo(${i})">❌</button>
-      </div>`;
+      </div>
+    `;
 
     doneList.appendChild(li);
-      const cb = li.querySelector('.select-todo');
-      cb.addEventListener('change', updateSelectAllState);
-  });
-    updateProgress();
-    updateSelectAllState();
-};
 
+    // keep Select All header in sync when a Done checkbox changes
+    const cb = li.querySelector('.select-todo');
+    cb.addEventListener('change', updateSelectAllState);
+  });
+
+  updateProgress();
+  updateSelectAllState(); // ensure header reflects state right after render
+};
   
 // Inline editor for text + due + repeat + tags
 window.editTodo = function(index){

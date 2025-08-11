@@ -424,6 +424,15 @@ window.editTodo = function(index){
         <span style="margin-right:.25rem;">Days:</span>
         ${weekdayBoxes(byWeekday)}
       </div>
+      
+      <label>Priority:
+  <select class="edit-priority">
+    <option value="" ${!todo.priority ? 'selected' : ''}>None</option>
+    <option value="H" ${todo.priority === 'H' ? 'selected' : ''}>High 🔥</option>
+    <option value="M" ${todo.priority === 'M' ? 'selected' : ''}>Medium ⚡</option>
+    <option value="L" ${todo.priority === 'L' ? 'selected' : ''}>Low 🌿</option>
+  </select>
+</label>
 
       <!-- ✅ New: Tags editor -->
       <label>Tags:
@@ -457,6 +466,7 @@ window.editTodo = function(index){
     const newDue = li.querySelector('.edit-due').value || null;
     const newFreq = sel.value;
     const newInterval = parseInt(li.querySelector('.edit-interval')?.value || '1',10);
+    const newPriority = li.querySelector('.edit-priority')?.value || '';
 
     // ✅ parse tags
     const tagsVal = li.querySelector('.edit-tags').value || '';
@@ -475,6 +485,7 @@ window.editTodo = function(index){
 
     // Build patch; recompute nextDue when repeating
     const patch = { text: newText || todo.text, due: newDue, tags };
+    patch.priority = newPriority || null; //empty string -> null
     if (repeat) {
       patch.repeat = repeat;
       const temp = { ...todo, repeat, due: newDue || (todo.due || todayISO()) };

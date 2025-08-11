@@ -28,105 +28,98 @@
     </div>
   </div>
 
-  <div class="main-content">
-
-    <div class="main-wrapper">
+<div class="main-content">
+  <div class="main-wrapper">
     
     <!-- To Do List -->
     <div id="todo-container" class="card-container">
       <h2>To Do List</h2>
-    </div>
       
-<!-- Top toolbar -->
-<div class="toolbar">
-  <!-- Search bar -->
-  <input id="search-input" type="text" placeholder="Search…" />
+      <!-- Top toolbar -->
+      <div class="toolbar">
+        <input id="search-input" type="text" placeholder="Search…" />
+        <div class="sort-and-buttons">
+          <select id="sort-select">
+            <option value="default">Sort: Custom (drag)</option>
+            <option value="dueAsc">Due date ↑</option>
+            <option value="dueDesc">Due date ↓</option>
+            <option value="alpha">A–Z</option>
+            <option value="created">Newest</option>
+          </select>
+          <button id="export-btn">Export</button>
+          <input type="file" id="import-file" style="display: none;">
+          <label for="import-file" class="btn">Import</label>
+        </div>
+      </div>
 
-  <!-- Grouped sort/export/import -->
-  <div class="sort-and-buttons">
-    <select id="sort-select">
-      <option value="default">Sort: Custom (drag)</option>
-      <option value="dueAsc">Due date ↑</option>
-      <option value="dueDesc">Due date ↓</option>
-      <option value="alpha">A–Z</option>
-      <option value="created">Newest</option>
-    </select>
+      <!-- Progress bar -->
+      <div id="progress-wrap" style="width:100%;height:10px;background:rgba(255,255,255,.08);border:1px solid var(--card-border);border-radius:6px;overflow:hidden;margin:.25rem 0 .5rem;">
+        <div id="progress-bar" style="height:100%;width:0%;background:#00ffc3;transition:width .3s;"></div>
+      </div>
+      <div id="progress-label" style="font-size:.9rem;opacity:.8;"></div>
 
-    <button id="export-btn">Export</button>
+      <!-- Add Task -->
+      <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
 
-    <!-- File input + label as button -->
-    <input type="file" id="import-file" style="display: none;">
-    <label for="import-file" class="btn">Import</label>
-  </div>
+      <!-- Tags + Priority -->
+      <div class="toolbar below-enter">
+        <label for="edit-tags" class="tag-label">Tags:</label>
+        <input id="tag-input" type="text" placeholder="chores, projects, etc...">
+        <select id="priority-select">
+          <option value="">Priority: none</option>
+          <option value="H">High 🔥</option>
+          <option value="M">Medium ⚡</option>
+          <option value="L">Low 🌿</option>
+        </select>
+      </div>
 
-<!-- Progress bar -->
-<div id="progress-wrap" style="width:100%;height:10px;background:rgba(255,255,255,.08);border:1px solid var(--card-border);border-radius:6px;overflow:hidden;margin:.25rem 0 .5rem;">
-  <div id="progress-bar" style="height:100%;width:0%;background:#00ffc3;transition:width .3s;"></div>
-</div>
-<div id="progress-label" style="font-size:.9rem;opacity:.8;"></div>
-
-<input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
-
-<!-- Tags + Priority below enter -->
-<div class="toolbar below-enter">
-  <label for="edit-tags" class="tag-label">Tags:</label>
-  <input id="tag-input" type="text" placeholder="chores, projects, etc...">
-    
-  <select id="priority-select">
-    <option value="">Priority: none</option>
-    <option value="H">High 🔥</option>
-    <option value="M">Medium ⚡</option>
-    <option value="L">Low 🌿</option>
-  </select>
-</div>
-      
+      <!-- Due + Repeat -->
       <div class="repeat-row">
-  <label>Due:
-    <input type="date" id="due-input">
-  </label>
+        <label>Due:
+          <input type="date" id="due-input">
+        </label>
+        <label>Repeat:
+          <select id="repeat-select">
+            <option value="">None</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+          </select>
+        </label>
+        <label id="interval-wrap" style="display:none;">Every
+          <input type="number" id="interval-input" min="1" value="1" style="width:4rem;">
+          <span class="interval-unit">day(s)</span>
+        </label>
+        <div id="weekly-wrap" style="display:none; gap:.4rem; align-items:center;">
+          <span>Days:</span>
+          <label><input type="checkbox" value="0" class="byweekday">Su</label>
+          <label><input type="checkbox" value="1" class="byweekday">Mo</label>
+          <label><input type="checkbox" value="2" class="byweekday">Tu</label>
+          <label><input type="checkbox" value="3" class="byweekday">We</label>
+          <label><input type="checkbox" value="4" class="byweekday">Th</label>
+          <label><input type="checkbox" value="5" class="byweekday">Fr</label>
+          <label><input type="checkbox" value="6" class="byweekday">Sa</label>
+        </div>
+      </div>
 
-  <label>Repeat:
-    <select id="repeat-select">
-      <option value="">None</option>
-      <option value="daily">Daily</option>
-      <option value="weekly">Weekly</option>
-    </select>
-  </label>
-
-  <label id="interval-wrap" style="display:none;">Every
-    <input type="number" id="interval-input" min="1" value="1" style="width:4rem;">
-    <span class="interval-unit">day(s)</span>
-  </label>
-
-  <div id="weekly-wrap" style="display:none; gap:.4rem; align-items:center;">
-    <span>Days:</span>
-    <label><input type="checkbox" value="0" class="byweekday">Su</label>
-    <label><input type="checkbox" value="1" class="byweekday">Mo</label>
-    <label><input type="checkbox" value="2" class="byweekday">Tu</label>
-    <label><input type="checkbox" value="3" class="byweekday">We</label>
-    <label><input type="checkbox" value="4" class="byweekday">Th</label>
-    <label><input type="checkbox" value="5" class="byweekday">Fr</label>
-    <label><input type="checkbox" value="6" class="byweekday">Sa</label>
-  </div>
-</div>
+      <!-- Controls -->
       <div class="controls">
         <label><input type="checkbox" id="select-all"> Select All</label>
-        <button id="delete-btn" onclick="deleteSelected()">
-          <span class="emoji">🗑️</span> Delete Selected
-        </button>
+        <button id="delete-btn" onclick="deleteSelected()">🗑️ Delete Selected</button>
         <button id="undo-btn">↩️ Undo</button>
         <button id="toggle-drag">↕️ Reorder</button>
       </div>
+
       <ul id="todo-list"></ul>
-    </div>
+    </div> <!-- closes todo-container -->
 
     <!-- Done List -->
     <div id="done-container" class="card-container">
       <h2>Marked as Done ✅</h2>
       <ul id="done-list"></ul>
     </div>
-  </div>
-  </div>
+
+  </div> <!-- closes main-wrapper -->
+</div> <!-- closes main-content -->
   
   <!-- Admin Modal -->
   <div id="admin-modal" class="modal">

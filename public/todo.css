@@ -346,3 +346,39 @@ button:hover {
   display: inline-block;     /* ensure click area */
   pointer-events: auto;
 }
+/* Back to Portal button */
+.back-button-wrapper{
+  text-align:center;
+  margin: 1.5rem 0 3rem;
+  position: relative;
+  z-index: 2;            /* keep it clickable above the card */
+}
+
+.back-button{
+  display:inline-block;
+  padding:.6rem 1.2rem;
+  font-size:1rem;
+  font-weight:600;
+  border-radius:8px;
+  background:#00ffdd;
+  color:#000 !important; /* beat link color */
+  text-decoration:none;
+  box-shadow:0 0 10px rgba(0,255,221,.7);
+  transition: background .25s, box-shadow .25s, transform .08s;
+  border:1px solid rgba(0,255,221,.6);
+}
+
+.back-button:hover{
+  background:#00fff2;
+  box-shadow:0 0 20px rgba(0,255,242,1);
+}
+
+.back-button:active{
+  transform: translateY(1px);
+}
+
+/* optional: nicer contrast in light mode */
+body.light-mode .back-button{
+  color:#000 !important;
+  box-shadow:0 0 8px rgba(0,0,0,.08);
+}

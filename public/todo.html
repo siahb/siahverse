@@ -61,17 +61,23 @@
       <!-- Add Task -->
       <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
 
-      <!-- Tags + Priority -->
-      <div class="toolbar below-enter">
-        <label for="edit-tags" class="tag-label">Tags:</label>
-        <input id="tag-input" type="text" placeholder="chores, projects, etc...">
-        <select id="priority-select">
-          <option value="">Priority: none</option>
-          <option value="H">High 🔥</option>
-          <option value="M">Medium ⚡</option>
-          <option value="L">Low 🌿</option>
-        </select>
-      </div>
+      <!-- Tags + Priority below enter -->
+<div class="toolbar below-enter">
+  <div class="field-wrap">
+    <label for="tag-input" class="tag-label">Tags:</label>
+    <input id="tag-input" type="text" placeholder="chores, projects, etc...">
+  </div>
+
+  <div class="field-wrap">
+    <label for="priority-select" class="priority-label">Priority:</label>
+    <select id="priority-select">
+      <option value="">None</option>
+      <option value="H">High 🔥</option>
+      <option value="M">Medium ⚡</option>
+      <option value="L">Low 🌿</option>
+    </select>
+  </div>
+</div>
 
       <!-- Due + Repeat -->
       <div class="repeat-row">

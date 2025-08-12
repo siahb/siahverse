@@ -58,32 +58,32 @@
   let deletedTodos = [];
   const ADMIN_PASSWORD_KEY = 'adminPassword';
 
+// Clean search functions - no searchWrap dependency
 function showSearch() {
   searchInput.classList.add('active');
-  searchWrap?.classList.add('active');
   document.body.classList.add('search-open');
   searchInput.focus();
   searchInput.select();
 }
 
 function hideSearch() {
-  searchInput.value = '';
+  searchInput.value = ''; // Clear the input
   searchInput.classList.remove('active');
-  searchWrap?.classList.remove('active');
   document.body.classList.remove('search-open');
   searchInput.blur();
-  // Re-run filters
+  // Re-run filters to show all todos again
   searchInput.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
-// 🔍 button toggles
+// Search toggle button - shows/hides and clears input
 searchToggle?.addEventListener('click', (e) => {
   e.preventDefault();
+  e.stopPropagation();
   const open = searchInput.classList.contains('active');
   open ? hideSearch() : showSearch();
 });
 
-// Ctrl/Cmd + F opens
+// Ctrl/Cmd + F opens search
 document.addEventListener('keydown', (e) => {
   const isFind = (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f';
   if (!isFind) return;
@@ -91,14 +91,14 @@ document.addEventListener('keydown', (e) => {
   showSearch();
 });
 
-// Esc hides
+// Escape hides search and clears input
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && searchInput.classList.contains('active')) {
     hideSearch();
   }
 });
 
-// "/" opens (unless typing in an input)
+// "/" opens search (unless typing in an input)
 document.addEventListener('keydown', (e) => {
   if (e.key === '/' && !e.target.closest('input, textarea, [contenteditable]')) {
     e.preventDefault();

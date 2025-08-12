@@ -519,3 +519,10 @@ body.light-mode .back-button{
 #done-list.collapsed {
   display: none;
 }
+
+#search-input {
+  display: none;
+}
+#search-input.active {
+  display: inline-block;
+}

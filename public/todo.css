@@ -547,17 +547,3 @@ body.light-mode .back-button{
 #done-list.collapsed {
   display: none;
 }
-#progress-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-#progress-inline {
-  flex: 1; /* makes the bar stretch */
-}
-
-#progress-label {
-  margin-left: 10px;
-  white-space: nowrap;
-}

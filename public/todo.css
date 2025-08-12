@@ -496,3 +496,26 @@ body.light-mode .back-button{
     padding-top: 0;
   }
 }
+/* Make the Done title look clickable */
+.card-container h2 {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Rotate arrow icon when expanded */
+.card-container h2::after {
+  content: "▼";
+  font-size: 0.8rem;
+  transition: transform 0.2s ease;
+}
+.card-container h2.collapsed::after {
+  transform: rotate(-90deg);
+}
+
+/* Hide the done list when collapsed */
+#done-list.collapsed {
+  display: none;
+}

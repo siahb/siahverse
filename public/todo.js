@@ -58,20 +58,6 @@
   let deletedTodos = [];
   const ADMIN_PASSWORD_KEY = 'adminPassword';
 
- // --- Search Toggle ---
-searchToggle.addEventListener('click', (e) => {
-    e.stopPropagation();
-    searchInput.classList.toggle('active');
-    document.body.classList.toggle('search-open', searchInput.classList.contains('active'));
-    if (searchInput.classList.contains('active')) {
-        searchInput.focus();
-    } else {
-        searchInput.value = '';
-        renderTodos();
-        renderDone();
-    }
-});
-
 function showSearch() {
   searchInput.classList.add('active');
   searchWrap?.classList.add('active');

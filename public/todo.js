@@ -815,6 +815,11 @@ document.getElementById('save-order')?.addEventListener('click', async () => {
       body: JSON.stringify(todosData)
     });
     alert('✅ Order saved!');
+    
+        // 👇 Force Sort to "Custom (drag)"
+    sortSelect.value = 'default';
+    sortSelect.dispatchEvent(new Event('change'));
+    
   } catch {
     alert('⚠️ Failed to save order.');
   }

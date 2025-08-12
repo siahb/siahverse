@@ -400,20 +400,6 @@ body.light-mode .back-button{
   color: #ff5a5a;
 }
 
-.pill.priorityH {
-  border-color: #ff7a00;
-  color: #ff7a00;
-}
-
-.pill.priorityM {
-  border-color: #ffd000;
-  color: #ffd000;
-}
-
-.pill.priorityL {
-  border-color: #77e2a9;
-  color: #77e2a9;
-}
 /* Wiggle animation when reordering */
 .dragging-active #todo-list li {
   animation: wiggle 0.4s ease-in-out infinite;
@@ -518,11 +504,4 @@ body.light-mode .back-button{
 /* Collapsed state hides the list */
 #done-list.collapsed {
   display: none;
-}
-
-#search-input {
-  display: none;
-}
-#search-input.active {
-  display: inline-block;
 }

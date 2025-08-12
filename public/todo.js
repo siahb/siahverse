@@ -97,20 +97,22 @@ searchToggle?.addEventListener('click', (e) => {
   open ? hideSearch() : showSearch();
 });
 
-// Keyboard: Ctrl/Cmd + F to show; Esc to hide
+// Ctrl/Cmd + F opens
 document.addEventListener('keydown', (e) => {
   const isFind = (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f';
-  if (isFind) {
-    e.preventDefault();   // stop browser find
-    showSearch();
-    return;
-  }
+  if (!isFind) return;
+  e.preventDefault();
+  showSearch();
+});
 
+// Esc hides
+document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && searchInput.classList.contains('active')) {
     hideSearch();
   }
 });
 
+// "/" opens (unless typing in an input)
 document.addEventListener('keydown', (e) => {
   if (e.key === '/' && !e.target.closest('input, textarea, [contenteditable]')) {
     e.preventDefault();

@@ -547,3 +547,17 @@ body.light-mode .back-button{
 #done-list.collapsed {
   display: none;
 }
+.sort-and-buttons {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  gap: .25rem;
+}
+
+.spacer { flex: 1; }            /* sends progress to right */
+#progress-inline { min-width: 220px; }  /* tweak as you like */

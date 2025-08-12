@@ -461,3 +461,38 @@ body.light-mode .back-button{
     flex: 1; /* equal width columns */
   }
 }
+/* Default: single column (unchanged) */
+.card-container {
+  display: block;
+}
+
+/* Wide screens: split into two columns */
+@media (min-width: 1100px) {
+  .card-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;  /* left wider for active tasks */
+    gap: 20px;
+    align-items: start;
+  }
+
+  /* Place Active list in left column */
+  #todo-list { grid-column: 1; }
+
+  /* Place the Done title + list in right column */
+  .card-container h2 { grid-column: 2; margin-top: 0; }
+  #done-list { grid-column: 2; }
+
+  /* The horizontal rule isn’t needed in two-column mode */
+  .card-container .divider { display: none; }
+
+  /* Make the Done column compact */
+  #done-list {
+    font-size: 0.85rem;
+    opacity: 0.85;
+    max-height: 60vh;       /* scroll within the right column */
+    overflow-y: auto;
+    border-top: 0;          /* no top border when in its own column */
+    margin-top: 0;
+    padding-top: 0;
+  }
+}

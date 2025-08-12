@@ -21,6 +21,7 @@
   // toolbar controls
   const searchToggle = document.getElementById('search-toggle');
   const searchInput = document.getElementById('search-input');   // Search…
+  const searchWrap = document.querySelector('.search-wrapper');
   const sortSelect  = document.getElementById('sort-select');    // Sort: …
   // Force default sort on startup
   if (sortSelect) {
@@ -105,7 +106,6 @@ document.addEventListener('keydown', (e) => {
     showSearch();
   }
 });
-const searchWrap = document.querySelector('.search-wrapper');
 
 document.addEventListener('click', (e) => {
   // Only act if search is actually open AND the click is outside the wrapper

@@ -34,34 +34,30 @@
       <!-- To Do List -->
       <div id="todo-wrapper" class="card-container">
       <div class="toolbar top">
-  <!-- Search icon + hidden input -->
+        
+        <!-- Top bar: Search • Sort • Progress -->
+<div class="sort-and-buttons">
   <div class="search-wrapper">
-  <button id="search-toggle" type="button" class="search-icon" aria-label="Open search">🔍</button>
-  <input id="search-input" type="text" placeholder="Search…">
+    <button id="search-toggle" type="button" class="search-icon" aria-label="Open search">🔍</button>
+    <input id="search-input" type="text" placeholder="Search…">
+  </div>
+
+  <select id="sort-select">
+    <option value="default">Sort: Custom (drag)</option>
+    <option value="priority">Priority (H→L)</option>
+    <option value="dueAsc">Due date ↑</option>
+    <option value="dueDesc">Due date ↓</option>
+    <option value="alpha">A–Z</option>
+    <option value="created">Newest</option>
+  </select>
+
+  <div class="spacer"></div> <!-- pushes progress to the far right -->
+
+  <div id="progress-inline">
+    <div id="progress-bar"></div>
+  </div>
+  <div id="progress-label" style="font-size:.9rem;opacity:.8;"></div>
 </div>
-
-  <!-- Sort/Export/Import/Progress -->
-  <div class="sort-and-buttons">
-    <select id="sort-select">
-      <option value="default">Sort: Custom (drag)</option>
-      <option value="priority">Priority (H→L)</option>
-      <option value="dueAsc">Due date ↑</option>
-      <option value="dueDesc">Due date ↓</option>
-      <option value="alpha">A–Z</option>
-      <option value="created">Newest</option>
-    </select>
-
-    <!--WILL DISABLE FOR NOW-->
-    <!--<button id="export-btn">Export</button>
-    <input type="file" id="import-file" style="display: none;">
-    <label for="import-file" class="btn">Import</label>-->
-    
-      <!-- Progress bar inline -->
-    <div id="progress-inline">
-      <div id="progress-bar"></div>
-    </div>
-
-<div id="progress-label" style="font-size:.9rem;opacity:.8;"></div>
         <!-- Add Task -->
         <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
 

@@ -106,17 +106,6 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-document.addEventListener('click', (e) => {
-  // Only act if search is actually open AND the click is outside the wrapper
-  if (searchWrap.classList.contains('active') && !searchWrap.contains(e.target)) {
-    searchWrap.classList.remove('active');
-    document.body.classList.remove('search-open');
-    searchInput.value = '';
-    renderTodos();
-    renderDone();
-  }
-});
-
   // Button visibility
 function updateAdminUI() {
   const pw = localStorage.getItem(ADMIN_PASSWORD_KEY);

@@ -74,6 +74,8 @@ searchToggle.addEventListener('click', (e) => {
 
 function showSearch() {
   searchInput.classList.add('active');
+  searchWrap?.classList.add('active');
+  document.body.classList.add('search-open');
   searchInput.focus();
   searchInput.select();
 }
@@ -81,25 +83,18 @@ function showSearch() {
 function hideSearch() {
   searchInput.value = '';
   searchInput.classList.remove('active');
+  searchWrap?.classList.remove('active');
+  document.body.classList.remove('search-open');
   searchInput.blur();
-
-  // 🔹 Trigger your filtering function so results reset
-  if (typeof handleSearch === 'function') {
-    handleSearch('');
-  } else {
-    // If you don't have handleSearch, simulate an input event
-    searchInput.dispatchEvent(new Event('input', { bubbles: true }));
-  }
+  // Re-run filters
+  searchInput.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
-// Toggle via the 🔍 button
+// 🔍 button toggles
 searchToggle?.addEventListener('click', (e) => {
   e.preventDefault();
-  if (searchInput.classList.contains('active')) {
-    hideSearch();
-  } else {
-    showSearch();
-  }
+  const open = searchInput.classList.contains('active');
+  open ? hideSearch() : showSearch();
 });
 
 // Keyboard: Ctrl/Cmd + F to show; Esc to hide

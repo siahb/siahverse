@@ -452,36 +452,78 @@ body.light-mode .back-button{
   display: block;
 }
 
-/* Wide screens: split into two columns */
-@media (min-width: 1100px) {
+/* Default: Mobile - single column */
+.card-container {
+  display: block;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Tablet: Still single column but wider */
+@media (min-width: 768px) {
   .card-container {
-    display: grid;
-    grid-template-columns: 2fr 1fr;  /* left wider for active tasks */
-    gap: 20px;
-    align-items: start;
-  }
-
-  /* Place Active list in left column */
-  #todo-list { grid-column: 1; }
-
-  /* Place the Done title + list in right column */
-  .card-container h2 { grid-column: 2; margin-top: 0; }
-  #done-list { grid-column: 2; }
-
-  /* The horizontal rule isn’t needed in two-column mode */
-  .card-container .divider { display: none; }
-
-  /* Make the Done column compact */
-  #done-list {
-    font-size: 0.85rem;
-    opacity: 0.85;
-    max-height: 60vh;       /* scroll within the right column */
-    overflow-y: auto;
-    border-top: 0;          /* no top border when in its own column */
-    margin-top: 0;
-    padding-top: 0;
+    max-width: 600px;
   }
 }
+
+/* Large tablet/small desktop: Start considering two columns */
+@media (min-width: 1024px) {
+  .card-container {
+    max-width: 800px;
+  }
+}
+
+/* Desktop: Two column layout */
+@media (min-width: 1200px) {
+  .card-container {
+    display: grid;
+    grid-template-columns: 1.4fr 1.1fr;  /* Better ratio */
+    gap: 40px;
+    align-items: start;
+    max-width: 1400px;                    /* Much wider max */
+    width: 90%;                           /* Use more screen space */
+    margin: 0 auto;
+  }
+
+  /* Main column */
+  .toolbar,
+  #progress-label, 
+  #todo-input,
+  .toolbar.below-enter,
+  .repeat-row,
+  .controls,
+  #todo-list {
+    grid-column: 1;
+  }
+
+  /* Done column */
+  .card-container h2,
+  #done-list {
+    grid-column: 2;
+  }
+  
+  .divider { 
+    display: none; 
+  }
+
+  /* Optimize done section */
+  #done-list {
+    max-height: 75vh;
+    overflow-y: auto;
+    font-size: 0.9rem;
+  }
+}
+
+/* Very wide screens: Even more space */
+@media (min-width: 1600px) {
+  .card-container {
+    grid-template-columns: 1.6fr 1fr;    /* More space for main tasks */
+    gap: 50px;
+    max-width: 1600px;
+  }
+}
+
 /* Clickable header */
 .card-container h2 {
   cursor: pointer;

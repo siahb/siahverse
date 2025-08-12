@@ -444,3 +444,20 @@ body.light-mode .back-button{
   inset: 0;
   z-index: -1;       /* push behind UI */
 }
+.todo-wrapper {
+  display: flex;
+  flex-direction: column; /* mobile default: stacked */
+  gap: 20px;
+}
+
+/* go side-by-side on big screens */
+@media (min-width: 1100px) {
+  .todo-wrapper {
+    flex-direction: row;
+    align-items: flex-start; /* keep top aligned */
+  }
+  
+  .todo-main, .todo-done {
+    flex: 1; /* equal width columns */
+  }
+}

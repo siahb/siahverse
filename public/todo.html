@@ -51,16 +51,16 @@
       <option value="created">Newest</option>
     </select>
 
+<div id="top-bar" style="display: flex; align-items: center; justify-content: space-between;">
+  <div>
     <button id="export-btn">Export</button>
     <input type="file" id="import-file" style="display: none;">
     <label for="import-file" class="btn">Import</label>
-
-  <div id="progress-container" style="display: flex; align-items: center; justify-content: space-between;">
-  <div id="progress-inline">
-    <div id="progress-bar"></div>
   </div>
-  <div id="progress-label" style="font-size:.9rem;opacity:.8;">13/41 tasks - 32% complete - 5 overdue</div>
+
+  <div id="progress-label" style="font-size:.9rem;opacity:.8; white-space: nowrap;"></div>
 </div>
+
 
         <!-- Add Task -->
         <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />

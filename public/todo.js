@@ -1016,3 +1016,14 @@ document.addEventListener('keydown', (e) => {
     // handleSearch(box.value);
   }
 });
+document.addEventListener("DOMContentLoaded", () => {
+  const doneHeader = document.querySelector(".card-container h2");
+  const doneList = document.getElementById("done-list");
+
+  if (doneHeader && doneList) {
+    doneHeader.addEventListener("click", () => {
+      doneHeader.classList.toggle("collapsed");
+      doneList.classList.toggle("collapsed");
+    });
+  }
+});

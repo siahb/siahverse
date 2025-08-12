@@ -496,7 +496,7 @@ body.light-mode .back-button{
     padding-top: 0;
   }
 }
-/* Make the Done title look clickable */
+/* Clickable header */
 .card-container h2 {
   cursor: pointer;
   user-select: none;
@@ -505,7 +505,7 @@ body.light-mode .back-button{
   gap: 0.4rem;
 }
 
-/* Rotate arrow icon when expanded */
+/* Arrow icon rotation */
 .card-container h2::after {
   content: "▼";
   font-size: 0.8rem;
@@ -515,7 +515,7 @@ body.light-mode .back-button{
   transform: rotate(-90deg);
 }
 
-/* Hide the done list when collapsed */
+/* Collapsed state hides the list */
 #done-list.collapsed {
   display: none;
 }

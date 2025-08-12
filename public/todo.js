@@ -805,23 +805,43 @@ toggleDragBtn.addEventListener('click', () => {
 document.getElementById('save-order')?.addEventListener('click', async () => {
   if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
 
+  // Rebuild todosData from the current DOM order (not relying on previous state)
+  const listItems = document.querySelectorAll('#todo-list li');
+  const snapshot = [...todosData]; // snapshot BEFORE we mutate
+  const newOrder = [];
+
+  listItems.forEach(li => {
+    const trueIndex = parseInt(li.getAttribute('data-trueindex'), 10);
+    const item = snapshot[trueIndex];
+    if (item && !item.done) newOrder.push(item);
+  });
+
+  // Keep done items at the end (unchanged)
+  const doneItems = snapshot.filter(t => t.done);
+  todosData = [...newOrder, ...doneItems];
+
   try {
-    await fetch('/todos/reorder', {
+    const res = await fetch('/todos/reorder', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY)}`
       },
-      body: JSON.stringify(todosData)
+      body: JSON.stringify(todosData) // 👈 if your API wants IDs only, see note below
     });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    // UI feedback + lock sort to Custom
     alert('✅ Order saved!');
-    
-        // 👇 Force Sort to "Custom (drag)"
     sortSelect.value = 'default';
     sortSelect.dispatchEvent(new Event('change'));
-    
-  } catch {
+
+    // Reload to confirm server-side order is now authoritative
+    await loadTodosFromServer();
+  } catch (err) {
     alert('⚠️ Failed to save order.');
+    console.error(err);
   }
 });
 

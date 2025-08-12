@@ -444,23 +444,3 @@ body.light-mode .back-button{
   inset: 0;
   z-index: -1;       /* push behind UI */
 }
-.search-wrapper { position: relative; z-index: 10; }
-#search-toggle { position: relative; z-index: 11; }
-/* the wrapper that contains all your todo items */
-#todo-list, #done-list {
-  display: grid;
-  grid-template-columns: 1fr;   /* default: single column */
-  gap: 12px;                    /* spacing between items */
-}
-
-/* when the browser is wide enough, go 2-up */
-@media (min-width: 1100px) {
-  #todo-list, #done-list {
-    grid-template-columns: 1fr 1fr;  /* two columns */
-  }
-}
-
-/* make each card fill its grid cell */
-.todo-item {
-  width: 100%;
-}

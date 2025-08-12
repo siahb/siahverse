@@ -345,3 +345,9 @@ button:hover, .copy-btn:hover {
 }
 .btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
 .btn:active { transform: translateY(1px); }
+.cta-stack {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+}

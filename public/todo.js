@@ -53,6 +53,22 @@
   const loginBtn = document.getElementById('login-btn');
   const cancelBtn = document.getElementById('cancel-btn');
   const passwordInput = document.getElementById('password-input');
+// DOMContentloaded listener
+document.addEventListener("DOMContentLoaded", () => {
+  const doneHeader = document.querySelector(".card-container h2");
+  const doneList = document.getElementById("done-list");
+
+  if (doneHeader && doneList) {
+    // Start collapsed
+    doneHeader.classList.add("collapsed");
+    doneList.classList.add("collapsed");
+
+    doneHeader.addEventListener("click", () => {
+      doneHeader.classList.toggle("collapsed");
+      doneList.classList.toggle("collapsed");
+    });
+  }
+});
 
   let todosData = [];
   let deletedTodos = [];
@@ -389,9 +405,6 @@ const renderTodos = () => {
   updateProgress();
  // Reset and sync Select All
   updateSelectAllState();
-  document.querySelectorAll('.select-todo').forEach(cb => {
-   cb.addEventListener('change', updateSelectAllState);
-  });
 };
   
 // Render Done
@@ -424,7 +437,6 @@ const renderDone = () => {
     `;
 
     doneList.appendChild(li);
-    li.querySelector('.select-todo').addEventListener('change', updateSelectAllState);
   });
 
   updateProgress();
@@ -770,12 +782,6 @@ for (const obj of restoring) {
   }
 };
 
-    //Delegate checkbox changes
-    document.addEventListener('change', (e) => {
-  if (e.target.matches('.select-todo')) updateSelectAllState();
-});
-
-
   //Toggle Drag mode
 let dragEnabled = false;
 let sortableInstance = null;
@@ -949,21 +955,5 @@ importFile?.addEventListener('change', async (e) => {
     alert('Import failed (need admin login?).');
   } finally {
     e.target.value = '';
-  }
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  const doneHeader = document.querySelector(".card-container h2");
-  const doneList = document.getElementById("done-list");
-
-  if (doneHeader && doneList) {
-    // Start collapsed
-    doneHeader.classList.add("collapsed");
-    doneList.classList.add("collapsed");
-
-    doneHeader.addEventListener("click", () => {
-      doneHeader.classList.toggle("collapsed");
-      doneList.classList.toggle("collapsed");
-    });
   }
 });

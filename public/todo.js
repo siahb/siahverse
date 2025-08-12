@@ -1021,9 +1021,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const doneList = document.getElementById("done-list");
 
   if (doneHeader && doneList) {
+    // Start collapsed
+    doneHeader.classList.add("collapsed");
+    doneList.classList.add("collapsed");
+
     doneHeader.addEventListener("click", () => {
       doneHeader.classList.toggle("collapsed");
       doneList.classList.toggle("collapsed");
     });
   }
 });
+

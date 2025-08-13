@@ -214,6 +214,7 @@ async function loadTodosFromServer() {
 
     renderTodos();
     renderDone();
+    updateSaveOrderVisibility();
   } catch {
     alert("Failed to load todos.");
   }

@@ -1069,3 +1069,10 @@ importFile?.addEventListener('change', async (e) => {
     e.target.value = '';
   }
 });
+// Temporary test
+console.log('Help button:', document.getElementById('help-btn'));
+console.log('Help modal:', document.getElementById('help-modal'));
+
+document.getElementById('help-btn')?.addEventListener('click', () => {
+  console.log('Help button clicked!');
+});

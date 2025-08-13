@@ -34,7 +34,7 @@
   searchInput?.addEventListener('input', () => { 
   renderTodos(); 
   renderDone(); 
-  updateSaveOrderVisibility();
+  updateButtonVisibility();
 });
 
   sortSelect?.addEventListener('change', () => { renderTodos(); });
@@ -86,7 +86,7 @@ function showSearch() {
   document.body.classList.add('search-open');
   searchInput.focus();
   searchInput.select();
-  updateSaveOrderVisibility();
+  updateButtonVisibility();
 }
 
 function hideSearch() {
@@ -94,7 +94,7 @@ function hideSearch() {
   searchInput.classList.remove('active');
   document.body.classList.remove('search-open');
   searchInput.blur();
-  updateSaveOrderVisibility();
+  updateButtonVisibility();
   // Re-run filters to show all todos again
   searchInput.dispatchEvent(new Event('input', { bubbles: true }));
 }
@@ -214,7 +214,7 @@ async function loadTodosFromServer() {
 
     renderTodos();
     renderDone();
-    updateSaveOrderVisibility();
+    updateButtonVisibility();
   } catch {
     alert("Failed to load todos.");
   }
@@ -791,11 +791,20 @@ for (const obj of restoring) {
   }
 };
 
-//Toggle save mode visibility
-function updateSaveOrderVisibility() {
-  if (!saveOrderBtn) return;
+//Toggle button visibility during search
+function updateButtonVisibility() {
   const q = (searchInput?.value || '').trim();
-  saveOrderBtn.style.display = q ? 'none' : 'inline-block';
+  
+  // Hide Save Order button when searching
+  if (saveOrderBtn) {
+    saveOrderBtn.style.display = q ? 'none' : 'inline-block';
+  }
+  
+  // Hide Reorder button when searching
+  const toggleDragBtn = document.getElementById('toggle-drag');
+  if (toggleDragBtn) {
+    toggleDragBtn.style.display = q ? 'none' : 'inline-block';
+  }
 }
   //Toggle Drag mode
 let dragEnabled = false;

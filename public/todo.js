@@ -289,6 +289,37 @@ function updateProgress(){
     : 'No tasks yet';
 }
 
+function isFiltered() {
+  return !!(searchInput && searchInput.value.trim());
+}
+
+function reorderVisibleWithinOriginal(snapshot, listItems) {
+  // snapshot = full todosData BEFORE mutation
+  const originalActive = snapshot.filter(t => !t.done);
+  const doneItems = snapshot.filter(t => t.done);
+
+  // visible items (as objects), in the order shown in the DOM
+  const visible = [];
+  listItems.forEach(li => {
+    const trueIndex = parseInt(li.getAttribute('data-trueindex'), 10);
+    const item = snapshot[trueIndex];
+    if (item && !item.done) visible.push(item);
+  });
+
+  // which positions in originalActive were occupied by the visible subset?
+  const visibleSet = new Set(visible);
+  const positions = [];
+  originalActive.forEach((item, idx) => {
+    if (visibleSet.has(item)) positions.push(idx);
+  });
+
+  // place visible items back into those positions in their new DOM order
+  const resultActive = originalActive.slice();
+  positions.forEach((pos, i) => { resultActive[pos] = visible[i]; });
+
+  return [...resultActive, ...doneItems];
+}
+
 // Compute the next scheduled date from a given 'from' date
 function computeNextDue(task, fromISO) {
   const rep = task.repeat;
@@ -805,16 +836,33 @@ toggleDragBtn.addEventListener('click', () => {
 document.getElementById('save-order')?.addEventListener('click', async () => {
   if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
 
-  // Rebuild todosData from the current DOM order (not relying on previous state)
   const listItems = document.querySelectorAll('#todo-list li');
   const snapshot = [...todosData]; // snapshot BEFORE we mutate
-  const newOrder = [];
 
-  listItems.forEach(li => {
-    const trueIndex = parseInt(li.getAttribute('data-trueindex'), 10);
-    const item = snapshot[trueIndex];
-    if (item && !item.done) newOrder.push(item);
-  });
+  // ✅ Use helper to only reorder visible tasks in their correct places
+  todosData = reorderVisibleWithinOriginal(snapshot, listItems);
+
+  try {
+    const res = await fetch('/todos/reorder', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY)}`
+      },
+      body: JSON.stringify(todosData)
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    alert('✅ Order saved!');
+    sortSelect.value = 'default';
+    sortSelect.dispatchEvent(new Event('change'));
+    await loadTodosFromServer();
+  } catch (err) {
+    alert('⚠️ Failed to save order.');
+    console.error(err);
+  }
+});
 
   // Keep done items at the end (unchanged)
   const doneItems = snapshot.filter(t => t.done);

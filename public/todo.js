@@ -18,7 +18,7 @@
   const intervalInput = document.getElementById('interval-input');
   const intervalUnit = document.querySelector('.interval-unit');
   const weeklyWrap = document.getElementById('weekly-wrap');
-  const saveOrderbtn = document.getElementById('save-order');
+  const saveOrderBtn = document.getElementById('save-order');
   // toolbar controls
   const searchToggle = document.getElementById('search-toggle');
   const searchInput = document.getElementById('search-input');   // Search…

@@ -407,10 +407,10 @@ body.light-mode .back-button{
 
 @keyframes wiggle {
   0%, 100% {
-    transform: rotate(-1deg);
+    transform: rotate(-0.5deg);
   }
   50% {
-    transform: rotate(1deg);
+    transform: rotate(0.5deg);
   }
 }
 .mini-btn {

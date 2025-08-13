@@ -560,7 +560,9 @@ body.light-mode .back-button{
 }
 
 .spacer { flex: 1; }            /* sends progress to right */
-#progress-inline { min-width: 220px; }  /* tweak as you like */
+#progress-inline { min-width: 220px;  /* tweak as you like */
+}
+
 /* High priority - Red/Orange */
 .pill.priority-high {
   border-color: #ff4444;

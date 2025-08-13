@@ -561,3 +561,42 @@ body.light-mode .back-button{
 
 .spacer { flex: 1; }            /* sends progress to right */
 #progress-inline { min-width: 220px; }  /* tweak as you like */
+/* High priority - Red/Orange */
+.pill.priority-high {
+  border-color: #ff4444;
+  color: #ff4444;
+  background: rgba(255, 68, 68, 0.1);
+}
+
+/* Medium priority - Yellow/Amber */
+.pill.priority-medium {
+  border-color: #ffaa00;
+  color: #ffaa00;
+  background: rgba(255, 170, 0, 0.1);
+}
+
+/* Low priority - Green */
+.pill.priority-low {
+  border-color: #44dd44;
+  color: #44dd44;
+  background: rgba(68, 221, 68, 0.1);
+}
+
+/* Light mode adjustments */
+body.light-mode .pill.priority-high {
+  border-color: #cc0000;
+  color: #cc0000;
+  background: rgba(204, 0, 0, 0.1);
+}
+
+body.light-mode .pill.priority-medium {
+  border-color: #cc8800;
+  color: #cc8800;
+  background: rgba(204, 136, 0, 0.1);
+}
+
+body.light-mode .pill.priority-low {
+  border-color: #008800;
+  color: #008800;
+  background: rgba(0, 136, 0, 0.1);
+}

@@ -602,3 +602,78 @@ body.light-mode .pill.priority-low {
   color: #008800;
   background: rgba(0, 136, 0, 0.1);
 }
+/* Fix task text alignment */
+li {
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: grab;
+  text-align: left; /* Force left alignment */
+}
+
+/* Ensure task content is properly structured */
+li .todo-text {
+  flex: 1;
+  text-align: left;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+/* Task meta information */
+li .todo-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-left: 0.5rem;
+  align-items: center;
+}
+
+/* Button container on the right */
+li > div:last-child {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Checkbox styling */
+li input[type="checkbox"] {
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* Better responsive layout for mobile */
+@media (max-width: 768px) {
+  li {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  
+  li .todo-text {
+    margin-left: 0;
+    margin-right: 0;
+    order: 1;
+  }
+  
+  li input[type="checkbox"] {
+    margin-right: 0;
+    order: 0;
+    align-self: flex-start;
+  }
+  
+  li .todo-meta {
+    margin-left: 0;
+    order: 2;
+  }
+  
+  li > div:last-child {
+    order: 3;
+    justify-content: center;
+  }
+}

@@ -385,13 +385,21 @@ const renderTodos = () => {
 
     const overduePill = isOverdue(todo) ? `<span class="pill overdue">Overdue</span>` : '';
 
-    // Map priority to !, !!, !!!
-    let prioSymbol = '';
-    if (todo.priority === 'L') prioSymbol = '!';
-    else if (todo.priority === 'M') prioSymbol = '!!';
-    else if (todo.priority === 'H') prioSymbol = '!!!';
+    // Map priority to !, !!, !!! with colors
+let prioSymbol = '';
+let prioClass = '';
+if (todo.priority === 'L') {
+  prioSymbol = '!';
+  prioClass = 'priority-low';
+} else if (todo.priority === 'M') {
+  prioSymbol = '!!';
+  prioClass = 'priority-medium';
+} else if (todo.priority === 'H') {
+  prioSymbol = '!!!';
+  prioClass = 'priority-high';
+}
 
-    const prioPill = todo.priority ? `<span class="pill">${prioSymbol}</span>` : '';
+const prioPill = todo.priority ? `<span class="pill ${prioClass}">${prioSymbol}</span>` : '';
     const tagPills = (todo.tags || []).map(t => `<span class="pill">${t}</span>`).join(' ');
 
     li.innerHTML = `

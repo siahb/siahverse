@@ -1,58 +1,68 @@
   const todoInput = document.getElementById('todo-input');
-  const todoList = document.getElementById('todo-list');
-  const doneList = document.getElementById('done-list');
-  const undoBtn = document.getElementById('undo-btn');
-  const selectAll = document.getElementById('select-all');
-  const themeCheckbox = document.getElementById('toggle-theme-checkbox');
-  const dueInput = document.getElementById('due-input');
-  const dueTodayBtn = document.getElementById('due-today');
-  if (dueTodayBtn) {
+const todoList = document.getElementById('todo-list');
+const doneList = document.getElementById('done-list');
+const undoBtn = document.getElementById('undo-btn');
+const selectAll = document.getElementById('select-all');
+const themeCheckbox = document.getElementById('toggle-theme-checkbox');
+const dueInput = document.getElementById('due-input');
+const dueTodayBtn = document.getElementById('due-today');
+
+if (dueTodayBtn) {
   dueTodayBtn.addEventListener('click', () => {
     const today = new Date().toISOString().slice(0,10);
     dueInput.value = today;
     dueInput.dispatchEvent(new Event('change')); // if you react to changes elsewhere
   });
 }
-  const repeatSelect = document.getElementById('repeat-select');
-  const intervalWrap = document.getElementById('interval-wrap');
-  const intervalInput = document.getElementById('interval-input');
-  const intervalUnit = document.querySelector('.interval-unit');
-  const weeklyWrap = document.getElementById('weekly-wrap');
-  // toolbar controls
-  const searchToggle = document.getElementById('search-toggle');
-  const searchInput = document.getElementById('search-input');   // Search…
-  const sortSelect  = document.getElementById('sort-select');    // Sort: …
-  // Force default sort on startup
-  if (sortSelect) {
-  sortSelect.value = 'default';
-  }
-  const tagInput    = document.getElementById('tag-input');      // Tags
-  const prioSelect  = document.getElementById('priority-select');// Priority: …
-  const exportBtn   = document.getElementById('export-btn');     // Export
-  const importFile  = document.getElementById('import-file');    // Import (file input)
-  searchInput?.addEventListener('input', () => { renderTodos(); renderDone(); });
-  sortSelect?.addEventListener('change', () => { renderTodos(); });
-  repeatSelect.addEventListener('change', () => {
-  const v = repeatSelect.value;
-  intervalWrap.style.display = v ? '' : 'none';
-  intervalUnit.textContent = v === 'weekly' ? 'week(s)' : 'day(s)';
-  weeklyWrap.style.display = v === 'weekly' ? 'flex' : 'none';
-});
-  
-  function updateSelectAllState() {
-    const all = document.querySelectorAll('.select-todo');
-    const checked = document.querySelectorAll('.select-todo:checked');
-    if (selectAll) {
-      selectAll.checked = all.length > 0 && checked.length === all.length;
-    }
-  }
 
-  const enterPwBtn = document.getElementById('enter-password');
-  const logoutBtn = document.getElementById('logout');
-  const adminModal = document.getElementById('admin-modal');
-  const loginBtn = document.getElementById('login-btn');
-  const cancelBtn = document.getElementById('cancel-btn');
-  const passwordInput = document.getElementById('password-input');
+const repeatSelect = document.getElementById('repeat-select');
+const intervalWrap = document.getElementById('interval-wrap');
+const intervalInput = document.getElementById('interval-input');
+const intervalUnit = document.querySelector('.interval-unit');
+const weeklyWrap = document.getElementById('weekly-wrap');
+
+// toolbar controls
+const searchToggle = document.getElementById('search-toggle');
+const searchInput = document.getElementById('search-input');   // Search…
+const sortSelect  = document.getElementById('sort-select');    // Sort: …
+
+// Force default sort on startup
+if (sortSelect) {
+  sortSelect.value = 'default';
+}
+
+const tagInput    = document.getElementById('tag-input');      // Tags
+const prioSelect  = document.getElementById('priority-select');// Priority: …
+const exportBtn   = document.getElementById('export-btn');     // Export
+const importFile  = document.getElementById('import-file');    // Import (file input)
+
+searchInput?.addEventListener('input', () => { renderTodos(); renderDone(); });
+sortSelect?.addEventListener('change', () => { renderTodos(); });
+
+if (repeatSelect) {
+  repeatSelect.addEventListener('change', () => {
+    const v = repeatSelect.value;
+    intervalWrap.style.display = v ? '' : 'none';
+    intervalUnit.textContent = v === 'weekly' ? 'week(s)' : 'day(s)';
+    weeklyWrap.style.display = v === 'weekly' ? 'flex' : 'none';
+  });
+}
+
+function updateSelectAllState() {
+  const all = document.querySelectorAll('.select-todo');
+  const checked = document.querySelectorAll('.select-todo:checked');
+  if (selectAll) {
+    selectAll.checked = all.length > 0 && checked.length === all.length;
+  }
+}
+
+const enterPwBtn = document.getElementById('enter-password');
+const logoutBtn = document.getElementById('logout');
+const adminModal = document.getElementById('admin-modal');
+const loginBtn = document.getElementById('login-btn');
+const cancelBtn = document.getElementById('cancel-btn');
+const passwordInput = document.getElementById('password-input');
+
 // DOMContentloaded listener
 document.addEventListener("DOMContentLoaded", () => {
   const doneHeader = document.querySelector(".card-container h2");
@@ -70,32 +80,36 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-  let todosData = [];
-  let deletedTodos = [];
-  const ADMIN_PASSWORD_KEY = 'adminPassword';
+let todosData = [];
+let deletedTodos = [];
+const ADMIN_PASSWORD_KEY = 'adminPassword';
 
 // Clean search functions - no searchWrap dependency
 function showSearch() {
-  searchInput.classList.add('active');
-  document.body.classList.add('search-open');
-  searchInput.focus();
-  searchInput.select();
+  if (searchInput) {
+    searchInput.classList.add('active');
+    document.body.classList.add('search-open');
+    searchInput.focus();
+    searchInput.select();
+  }
 }
 
 function hideSearch() {
-  searchInput.value = ''; // Clear the input
-  searchInput.classList.remove('active');
-  document.body.classList.remove('search-open');
-  searchInput.blur();
-  // Re-run filters to show all todos again
-  searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+  if (searchInput) {
+    searchInput.value = ''; // Clear the input
+    searchInput.classList.remove('active');
+    document.body.classList.remove('search-open');
+    searchInput.blur();
+    // Re-run filters to show all todos again
+    searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+  }
 }
 
 // Search toggle button - shows/hides and clears input
 searchToggle?.addEventListener('click', (e) => {
   e.preventDefault();
   e.stopPropagation();
-  const open = searchInput.classList.contains('active');
+  const open = searchInput?.classList.contains('active');
   open ? hideSearch() : showSearch();
 });
 
@@ -109,7 +123,7 @@ document.addEventListener('keydown', (e) => {
 
 // Escape hides search and clears input
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && searchInput.classList.contains('active')) {
+  if (e.key === 'Escape' && searchInput?.classList.contains('active')) {
     hideSearch();
   }
 });
@@ -122,18 +136,22 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-  // Button visibility
+// Button visibility
 function updateAdminUI() {
   const pw = localStorage.getItem(ADMIN_PASSWORD_KEY);
   const isLoggedIn = !!pw;
 
-  document.getElementById('enter-password').style.display = isLoggedIn ? 'none' : 'inline-block';
-  document.getElementById('logout').style.display = isLoggedIn ? 'inline-block' : 'none';
+  const enterPasswordBtn = document.getElementById('enter-password');
+  const logoutBtn = document.getElementById('logout');
+  
+  if (enterPasswordBtn) enterPasswordBtn.style.display = isLoggedIn ? 'none' : 'inline-block';
+  if (logoutBtn) logoutBtn.style.display = isLoggedIn ? 'inline-block' : 'none';
 }
 
-  // Theme
-  const savedTheme = localStorage.getItem('theme') || 'dark';
+// Theme
+const savedTheme = localStorage.getItem('theme') || 'dark';
 
+if (themeCheckbox) {
   if (savedTheme === 'light') {
     document.body.classList.add('light-mode'); // light variables
     themeCheckbox.checked = false;             // unchecked = light
@@ -146,42 +164,61 @@ function updateAdminUI() {
     document.body.classList.toggle('light-mode', !darkOn);
     localStorage.setItem('theme', darkOn ? 'dark' : 'light');
   });
+}
 
-  // Admin
+// Admin
+if (enterPwBtn && adminModal) {
   enterPwBtn.addEventListener('click', () => adminModal.style.display = 'block');
-  cancelBtn.addEventListener('click', () => adminModal.style.display = 'none');
-  loginBtn.addEventListener('click', async () => {
-  const pw = passwordInput.value.trim();
-  if (!pw) return alert("Password cannot be empty.");
+}
 
-  // Send a harmless request to test the password
-  const res = await fetch('/todos/0', {
-    method: 'DELETE',
-    headers: {
-      Authorization: `Bearer ${pw}`
+if (cancelBtn && adminModal) {
+  cancelBtn.addEventListener('click', () => adminModal.style.display = 'none');
+}
+
+if (loginBtn && passwordInput && adminModal) {
+  loginBtn.addEventListener('click', async () => {
+    const pw = passwordInput.value.trim();
+    if (!pw) return alert("Password cannot be empty.");
+
+    try {
+      // Send a harmless request to test the password
+      const res = await fetch('/todos/0', {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${pw}`
+        }
+      });
+
+      if (res.status === 401) {
+        alert("❌ Incorrect password.");
+      } else {
+        localStorage.setItem(ADMIN_PASSWORD_KEY, pw);
+        alert("✅ Admin logged in!");
+        if (todoInput) todoInput.disabled = false;
+        adminModal.style.display = 'none';
+        updateAdminUI();
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert("❌ Login failed.");
     }
   });
+}
 
-  if (res.status === 401) {
-    alert("❌ Incorrect password.");
-  } else {
-    localStorage.setItem(ADMIN_PASSWORD_KEY, pw);
-    alert("✅ Admin logged in!");
-    todoInput.disabled = false;
-    adminModal.style.display = 'none';
-    updateAdminUI();
-  }
-});
-
+if (logoutBtn) {
   logoutBtn.addEventListener('click', () => {
     localStorage.removeItem(ADMIN_PASSWORD_KEY);
     alert("Logged out.");
-    todoInput.disabled = true;
+    if (todoInput) todoInput.disabled = true;
     updateAdminUI();
   });
-  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) todoInput.disabled = true;
+}
 
-  // Load Todos from server
+if (!localStorage.getItem(ADMIN_PASSWORD_KEY) && todoInput) {
+  todoInput.disabled = true;
+}
+
+// Load Todos from server
 async function loadTodosFromServer() {
   try {
     const res = await fetch('/todos');
@@ -195,23 +232,28 @@ async function loadTodosFromServer() {
         if (rollForwardIfMissed(t)) {
           // persist normalization
           changed = true;
-          await fetch(`/todos/${i}`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ due: t.due, nextDue: t.nextDue })
-          });
+          try {
+            await fetch(`/todos/${i}`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ due: t.due, nextDue: t.nextDue })
+            });
+          } catch (error) {
+            console.error(`Failed to update todo ${i}:`, error);
+          }
         }
       }
     }
 
     renderTodos();
     renderDone();
-  } catch {
+  } catch (error) {
+    console.error('Failed to load todos:', error);
     alert("Failed to load todos.");
   }
 }
 
-  // ==== Repeats Helpers ====
+// ==== Repeats Helpers ====
 function todayISO() { return new Date().toISOString().slice(0,10); }
 
 function forceCustomSort() {
@@ -219,16 +261,19 @@ function forceCustomSort() {
     sortSelect.value = 'default';
   }
 }
+
 function toISO(d) {
   if (!d) return null;
   if (typeof d === 'string') return d.slice(0,10);
   return new Date(d).toISOString().slice(0,10);
 }
+
 function addDays(iso, n){
   const d = new Date(iso || todayISO());
   d.setDate(d.getDate()+n);
   return toISO(d);
 }
+
 function isOverdue(todo){
   if (!todo.due) return false;
   return toISO(todo.due) < todayISO() && !todo.done;
@@ -287,37 +332,6 @@ function updateProgress(){
   label.textContent = total
     ? `${done}/${total} tasks • ${pct}% complete${overdue ? ` • ${overdue} overdue` : ''}`
     : 'No tasks yet';
-}
-
-function isFiltered() {
-  return !!(searchInput && searchInput.value.trim());
-}
-
-function reorderVisibleWithinOriginal(snapshot, listItems) {
-  // snapshot = full todosData BEFORE mutation
-  const originalActive = snapshot.filter(t => !t.done);
-  const doneItems = snapshot.filter(t => t.done);
-
-  // visible items (as objects), in the order shown in the DOM
-  const visible = [];
-  listItems.forEach(li => {
-    const trueIndex = parseInt(li.getAttribute('data-trueindex'), 10);
-    const item = snapshot[trueIndex];
-    if (item && !item.done) visible.push(item);
-  });
-
-  // which positions in originalActive were occupied by the visible subset?
-  const visibleSet = new Set(visible);
-  const positions = [];
-  originalActive.forEach((item, idx) => {
-    if (visibleSet.has(item)) positions.push(idx);
-  });
-
-  // place visible items back into those positions in their new DOM order
-  const resultActive = originalActive.slice();
-  positions.forEach((pos, i) => { resultActive[pos] = visible[i]; });
-
-  return [...resultActive, ...doneItems];
 }
 
 // Compute the next scheduled date from a given 'from' date
@@ -381,8 +395,8 @@ function repeatLabel(task){
   }
   return '';
 }
-  
-  // Build weekday checkboxes for the editor
+
+// Build weekday checkboxes for the editor
 function weekdayBoxes(selected = []) {
   const map = ['Su','Mo','Tu','We','Th','Fr','Sa'];
   return map.map((lbl,i)=>`
@@ -395,6 +409,8 @@ function weekdayBoxes(selected = []) {
 
 // Render Todos
 const renderTodos = () => {
+  if (!todoList) return;
+  
   todoList.innerHTML = '';
   const base = todosData.filter(t => !t.done);
   const view = sortTodos(filteredTodos(base));
@@ -418,7 +434,7 @@ const renderTodos = () => {
 
     li.innerHTML = `
       <input type="checkbox" class="select-todo" data-trueindex="${i}" />
-      <span class="todo-text">${todo.text}</span>
+      <span class="todo-text">${todo.text || ''}</span>
       <div class="todo-meta">
         ${todo.due ? `<span class="pill due">Due: ${toISO(todo.due)}</span>` : ''}
         ${todo.repeat ? `<span class="pill repeat">${repeatLabel(todo)}</span>` : ''}
@@ -434,12 +450,14 @@ const renderTodos = () => {
   });
 
   updateProgress();
- // Reset and sync Select All
+  // Reset and sync Select All
   updateSelectAllState();
 };
-  
+
 // Render Done
 const renderDone = () => {
+  if (!doneList) return;
+  
   doneList.innerHTML = '';
 
   // keep search filter behavior
@@ -455,7 +473,7 @@ const renderDone = () => {
 
     li.innerHTML = `
       <input type="checkbox" class="select-todo" data-trueindex="${i}" />
-      <span class="todo-text">${todo.text}</span>
+      <span class="todo-text">${todo.text || ''}</span>
       <div class="todo-meta">
         ${todo.due ? `<span class="pill pill-due">Due: ${toISO(todo.due)}</span>` : ''}
         ${todo.repeat ? `<span class="pill pill-repeat">${repeatLabel(todo)}</span>` : ''}
@@ -498,7 +516,7 @@ window.editTodo = function(index){
   const byWeekday = Array.isArray(rep?.byWeekday) ? rep.byWeekday : [];
   const tagsCSV = (todo.tags || []).join(', ');
 
-  // 🔻 build editor UI
+  // build editor UI
   li.innerHTML = `
     <div class="edit-container">
       <input type="text" class="edit-text" value="${text}" />
@@ -543,18 +561,20 @@ window.editTodo = function(index){
       <button class="btn-save">Save</button>
       <button class="btn-cancel">Cancel</button>
     </div>
-  `; // ✅ close template string
+  `;
 
-  // ✅ Wire "Today" (must be AFTER innerHTML)
+  // Wire "Today" (must be AFTER innerHTML)
   const todayBtn = li.querySelector('.btn-today');
   const editDue  = li.querySelector('.edit-due');
   todayBtn?.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
     const today = new Date().toISOString().slice(0,10);
-    editDue.value = today;
-    editDue.dispatchEvent(new Event('input',  { bubbles: true }));
-    editDue.dispatchEvent(new Event('change', { bubbles: true }));
+    if (editDue) {
+      editDue.value = today;
+      editDue.dispatchEvent(new Event('input',  { bubbles: true }));
+      editDue.dispatchEvent(new Event('change', { bubbles: true }));
+    }
   });
 
   // toggles
@@ -563,73 +583,80 @@ window.editTodo = function(index){
   const intUnit = li.querySelector('.edit-interval-unit');
   const weeklyWrap = li.querySelector('.edit-weekly-wrap');
 
-  sel.addEventListener('change', () => {
-    const v = sel.value;
-    intWrap.style.display = v ? '' : 'none';
-    intUnit.textContent = v==='weekly' ? 'week(s)' : 'day(s)';
-    weeklyWrap.style.display = v==='weekly' ? 'flex' : 'none';
-  });
+  if (sel) {
+    sel.addEventListener('change', () => {
+      const v = sel.value;
+      if (intWrap) intWrap.style.display = v ? '' : 'none';
+      if (intUnit) intUnit.textContent = v==='weekly' ? 'week(s)' : 'day(s)';
+      if (weeklyWrap) weeklyWrap.style.display = v==='weekly' ? 'flex' : 'none';
+    });
+  }
 
   // cancel -> re-render
-  li.querySelector('.btn-cancel').onclick = () => { renderTodos(); };
+  const cancelBtn = li.querySelector('.btn-cancel');
+  if (cancelBtn) cancelBtn.onclick = () => { renderTodos(); };
 
   // save -> PATCH
-  li.querySelector('.btn-save').onclick = async () => {
-    const newText = li.querySelector('.edit-text').value.trim();
-    const newDue = editDue.value || null;
-    const newFreq = sel.value;
-    const newInterval = parseInt(li.querySelector('.edit-interval')?.value || '1',10);
-    const newPriority = li.querySelector('.edit-priority')?.value || '';
+  const saveBtn = li.querySelector('.btn-save');
+  if (saveBtn) {
+    saveBtn.onclick = async () => {
+      const newText = li.querySelector('.edit-text')?.value.trim() || '';
+      const newDue = editDue?.value || null;
+      const newFreq = sel?.value || '';
+      const newInterval = parseInt(li.querySelector('.edit-interval')?.value || '1',10);
+      const newPriority = li.querySelector('.edit-priority')?.value || '';
 
-    const tagsVal = li.querySelector('.edit-tags').value || '';
-    const tags = tagsVal.split(',').map(s => s.trim()).filter(Boolean);
+      const tagsVal = li.querySelector('.edit-tags')?.value || '';
+      const tags = tagsVal.split(',').map(s => s.trim()).filter(Boolean);
 
-    let repeat = null;
-    if (newFreq) {
-      repeat = { freq: newFreq, interval: Math.max(1,newInterval) };
-      if (newFreq === 'weekly') {
-        repeat.byWeekday = [...li.querySelectorAll('.edit-byweekday:checked')].map(cb => parseInt(cb.value,10));
+      let repeat = null;
+      if (newFreq) {
+        repeat = { freq: newFreq, interval: Math.max(1,newInterval) };
+        if (newFreq === 'weekly') {
+          repeat.byWeekday = [...li.querySelectorAll('.edit-byweekday:checked')].map(cb => parseInt(cb.value,10));
+        }
       }
-    }
 
-    const patch = { text: newText || todo.text, due: newDue, tags, priority: newPriority || null };
-    if (repeat) {
-      patch.repeat = repeat;
-      const temp = { ...todo, repeat, due: newDue || (todo.due || todayISO()) };
-      patch.nextDue = computeNextDue(temp, temp.due);
-    } else {
-      patch.repeat = null;
-      patch.nextDue = null;
-    }
+      const patch = { text: newText || todo.text, due: newDue, tags, priority: newPriority || null };
+      if (repeat) {
+        patch.repeat = repeat;
+        const temp = { ...todo, repeat, due: newDue || (todo.due || todayISO()) };
+        patch.nextDue = computeNextDue(temp, temp.due);
+      } else {
+        patch.repeat = null;
+        patch.nextDue = null;
+      }
 
-    try {
-      const res = await fetch(`/todos/${index}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(patch)
-      });
-      if (!res.ok) return alert(`Failed to save (${res.status}).`);
-      await loadTodosFromServer();
-    } catch {
-      alert('Failed to save changes.');
-    }
-  };
+      try {
+        const res = await fetch(`/todos/${index}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(patch)
+        });
+        if (!res.ok) return alert(`Failed to save (${res.status}).`);
+        await loadTodosFromServer();
+      } catch (error) {
+        console.error('Failed to save changes:', error);
+        alert('Failed to save changes.');
+      }
+    };
+  }
 };
 
 // === Add New Todo (reusable) ===
 async function addNewTodo() {
   if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
-  if (!todoInput.value.trim()) return;
+  if (!todoInput || !todoInput.value.trim()) return;
 
   const text = todoInput.value.trim();
-  const due = dueInput.value ? dueInput.value : null;
+  const due = dueInput?.value ? dueInput.value : null;
 
   // Build repeat object if selected
   let repeat = null;
-  if (repeatSelect.value) {
+  if (repeatSelect?.value) {
     repeat = {
       freq: repeatSelect.value, // 'daily' | 'weekly'
-      interval: Math.max(1, parseInt(intervalInput.value || '1', 10))
+      interval: Math.max(1, parseInt(intervalInput?.value || '1', 10))
     };
     if (repeatSelect.value === 'weekly') {
       repeat.byWeekday = [...document.querySelectorAll('.byweekday:checked')]
@@ -638,8 +665,8 @@ async function addNewTodo() {
   }
 
   // Priority and tags
-  const priority = prioSelect.value || null;
-  const tags = tagInput.value
+  const priority = prioSelect?.value || null;
+  const tags = tagInput?.value
     ? tagInput.value.split(',').map(t => t.trim()).filter(Boolean)
     : [];
 
@@ -668,28 +695,31 @@ async function addNewTodo() {
 
     // Reset inputs
     todoInput.value = '';
-    dueInput.value = '';
-    repeatSelect.value = '';
-    intervalInput.value = '1';
+    if (dueInput) dueInput.value = '';
+    if (repeatSelect) repeatSelect.value = '';
+    if (intervalInput) intervalInput.value = '1';
     document.querySelectorAll('.byweekday').forEach(cb => cb.checked = false);
-    intervalWrap.style.display = 'none';
-    weeklyWrap.style.display = 'none';
-    prioSelect.value = '';
-    tagInput.value = '';
+    if (intervalWrap) intervalWrap.style.display = 'none';
+    if (weeklyWrap) weeklyWrap.style.display = 'none';
+    if (prioSelect) prioSelect.value = '';
+    if (tagInput) tagInput.value = '';
 
     await loadTodosFromServer();
-  } catch {
+  } catch (error) {
+    console.error("Failed to add todo:", error);
     alert("Failed to add todo.");
   }
 }
 
 // === Step 2: Enter on main text field ===
-todoInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    addNewTodo();
-  }
-});
+if (todoInput) {
+  todoInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addNewTodo();
+    }
+  });
+}
 
 // === Step 3: Bind Enter to other inputs (not search) ===
 function bindEnterToAdd(el) {
@@ -714,6 +744,7 @@ window.markAsDone = async (index) => {
   if (!task) return;
 
   // If it's a repeating task, advance dates instead of moving to Done
+  if (task.repeat
 if (task.repeat) {
   const nowISO = todayISO();
   const updates = { lastDone: nowISO };

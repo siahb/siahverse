@@ -246,6 +246,29 @@ function isOverdue(todo){
 function filteredTodos(list){
   const q = (searchInput?.value || '').toLowerCase().trim();
   if (!q) return list;
+  
+  // Special search terms
+  if (q === 'untagged' || q === 'no-tags' || q === 'notags') {
+    return list.filter(t => !t.tags || t.tags.length === 0);
+  }
+  
+  if (q === 'high' || q === 'priority-high' || q === 'p:high') {
+    return list.filter(t => t.priority === 'H');
+  }
+  
+  if (q === 'medium' || q === 'priority-medium' || q === 'p:medium') {
+    return list.filter(t => t.priority === 'M');
+  }
+  
+  if (q === 'low' || q === 'priority-low' || q === 'p:low') {
+    return list.filter(t => t.priority === 'L');
+  }
+  
+  if (q === 'no-priority' || q === 'p:none') {
+    return list.filter(t => !t.priority);
+  }
+  
+  // Regular text/tag search
   return list.filter(t =>
     (t.text || '').toLowerCase().includes(q) ||
     (t.tags || []).some(tag => (tag || '').toLowerCase().includes(q))

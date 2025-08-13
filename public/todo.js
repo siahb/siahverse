@@ -18,6 +18,7 @@
   const intervalInput = document.getElementById('interval-input');
   const intervalUnit = document.querySelector('.interval-unit');
   const weeklyWrap = document.getElementById('weekly-wrap');
+  const saveOrderbtn = document.getElementById('save-order');
   // toolbar controls
   const searchToggle = document.getElementById('search-toggle');
   const searchInput = document.getElementById('search-input');   // Search…
@@ -30,7 +31,12 @@
   const prioSelect  = document.getElementById('priority-select');// Priority: …
   const exportBtn   = document.getElementById('export-btn');     // Export
   const importFile  = document.getElementById('import-file');    // Import (file input)
-  searchInput?.addEventListener('input', () => { renderTodos(); renderDone(); });
+  searchInput?.addEventListener('input', () => { 
+  renderTodos(); 
+  renderDone(); 
+  updateSaveOrderVisibility();
+});
+
   sortSelect?.addEventListener('change', () => { renderTodos(); });
   repeatSelect.addEventListener('change', () => {
   const v = repeatSelect.value;
@@ -80,6 +86,7 @@ function showSearch() {
   document.body.classList.add('search-open');
   searchInput.focus();
   searchInput.select();
+  updateSaveOrderVisibility();
 }
 
 function hideSearch() {
@@ -87,6 +94,7 @@ function hideSearch() {
   searchInput.classList.remove('active');
   document.body.classList.remove('search-open');
   searchInput.blur();
+  updateSaveOrderVisibility();
   // Re-run filters to show all todos again
   searchInput.dispatchEvent(new Event('input', { bubbles: true }));
 }
@@ -782,6 +790,12 @@ for (const obj of restoring) {
   }
 };
 
+//Toggle save mode visibility
+function updateSaveOrderVisibility() {
+  if (!saveOrderBtn) return;
+  const q = (searchInput?.value || '').trim();
+  saveOrderBtn.style.display = q ? 'none' : 'inline-block';
+}
   //Toggle Drag mode
 let dragEnabled = false;
 let sortableInstance = null;

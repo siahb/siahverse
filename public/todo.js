@@ -19,6 +19,10 @@
   const intervalUnit = document.querySelector('.interval-unit');
   const weeklyWrap = document.getElementById('weekly-wrap');
   const saveOrderBtn = document.getElementById('save-order');
+  // Get modal elements
+  const helpBtn = document.getElementById('help-btn');
+  const helpModal = document.getElementById('help-modal');
+  const closeHelp = document.querySelector('.close-help');
   // toolbar controls
   const searchToggle = document.getElementById('search-toggle');
   const searchInput = document.getElementById('search-input');   // Search…
@@ -98,6 +102,34 @@ function hideSearch() {
   // Re-run filters to show all todos again
   searchInput.dispatchEvent(new Event('input', { bubbles: true }));
 }
+
+// Open help modal
+helpBtn?.addEventListener('click', () => {
+  helpModal.style.display = 'flex';
+  document.body.style.overflow = 'hidden'; // Prevent background scrolling
+});
+
+// Close help modal
+closeHelp?.addEventListener('click', () => {
+  helpModal.style.display = 'none';
+  document.body.style.overflow = 'auto'; // Restore scrolling
+});
+
+// Close modal when clicking outside of it
+helpModal?.addEventListener('click', (e) => {
+  if (e.target === helpModal) {
+    helpModal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
+});
+
+// Close modal with Escape key (but only if search isn't open)
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && helpModal.style.display === 'flex' && !searchInput.classList.contains('active')) {
+    helpModal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
+});
 
 // Search toggle button - shows/hides and clears input
 searchToggle?.addEventListener('click', (e) => {

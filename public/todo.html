@@ -25,6 +25,7 @@
         <button id="logout">🚪 Logout</button>
       </div>
       <h1><span>✅</span> Siah To Do</h1>
+      <button id="help-btn">❓ Help</button>
     </div>
   </div>
 
@@ -145,5 +146,121 @@
   </div>
 
 <script src="todo.js"></script>
+    <!-- Add this modal HTML before your closing </body> tag -->
+<div id="help-modal" class="modal">
+  <div class="modal-content help-modal-content">
+    <div class="modal-header">
+      <h2>📝 How to Use Siah To Do</h2>
+      <span class="close-help">&times;</span>
+    </div>
+    
+    <div class="modal-body">
+      <h3>🚀 Getting Started</h3>
+      <ol>
+        <li><strong>Login:</strong> Click "🔐 Enter Password" and enter your admin password</li>
+        <li><strong>Add Tasks:</strong> Type in the main input field and press <span class="kbd">Enter</span></li>
+        <li><strong>Set Properties:</strong> Add tags, priority, due dates, and repeating schedules before pressing Enter</li>
+      </ol>
+
+      <h3>⌨️ Keyboard Shortcuts</h3>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h4>Search</h4>
+          <ul>
+            <li><span class="kbd">Ctrl</span> + <span class="kbd">F</span> - Open search</li>
+            <li><span class="kbd">/</span> - Quick search</li>
+            <li><span class="kbd">Esc</span> - Close search</li>
+          </ul>
+        </div>
+        <div class="feature-card">
+          <h4>Adding Tasks</h4>
+          <ul>
+            <li><span class="kbd">Enter</span> - Add task (from any input)</li>
+            <li><span class="kbd">Tab</span> - Navigate between fields</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>🔍 Special Search Terms</h3>
+      <p>Use these special searches to quickly filter your tasks:</p>
+      <ul>
+        <li><code>untagged</code> or <code>no-tags</code> - Find tasks without tags</li>
+        <li><code>high</code> or <code>p:high</code> - Show high priority tasks <span class="pill-demo pill-high">!!!</span></li>
+        <li><code>medium</code> or <code>p:medium</code> - Show medium priority tasks <span class="pill-demo pill-medium">!!</span></li>
+        <li><code>low</code> or <code>p:low</code> - Show low priority tasks <span class="pill-demo pill-low">!</span></li>
+        <li><code>no-priority</code> or <code>p:none</code> - Show tasks without priority</li>
+      </ul>
+
+      <h3>📋 Task Management</h3>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h4>Task Actions</h4>
+          <ul>
+            <li><strong>✅</strong> - Mark as done (or advance repeating tasks)</li>
+            <li><strong>✏️</strong> - Edit task inline</li>
+            <li><strong>❌</strong> - Delete task</li>
+            <li><strong>↩️</strong> - Undo (restore deleted tasks)</li>
+          </ul>
+        </div>
+        <div class="feature-card">
+          <h4>Bulk Actions</h4>
+          <ul>
+            <li>Select multiple tasks with checkboxes</li>
+            <li>Use "🗑️ Delete Selected" for bulk deletion</li>
+            <li>Select All checkbox in header</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>📅 Scheduling & Repeating</h3>
+      <h4>Due Dates</h4>
+      <ul>
+        <li>Set due dates with the date picker</li>
+        <li>Click "Today" button for quick date setting</li>
+        <li>Overdue tasks show <span class="pill-demo pill-overdue">Overdue</span> pills</li>
+      </ul>
+
+      <h4>Repeating Tasks</h4>
+      <ul>
+        <li><strong>Daily:</strong> Repeats every X days</li>
+        <li><strong>Weekly:</strong> Choose specific days of the week</li>
+        <li>When you complete a repeating task, it automatically advances to the next occurrence</li>
+      </ul>
+
+      <h3>🏷️ Tags & Priority</h3>
+      <h4>Tags</h4>
+      <ul>
+        <li>Add multiple tags separated by commas: <code>work, urgent, meeting</code></li>
+        <li>Search by tag name to filter tasks</li>
+        <li>Use <code>untagged</code> search to find tasks that need tags</li>
+      </ul>
+
+      <h4>Priority Levels</h4>
+      <ul>
+        <li><span class="pill-demo pill-high">!!! High</span> - Critical/urgent tasks (red)</li>
+        <li><span class="pill-demo pill-medium">!! Medium</span> - Important tasks (orange)</li>
+        <li><span class="pill-demo pill-low">! Low</span> - Nice to have tasks (green)</li>
+      </ul>
+
+      <h3>📊 Sorting & Organization</h3>
+      <ul>
+        <li><strong>Custom (drag):</strong> Drag and drop to reorder (click "↕️ Reorder" first)</li>
+        <li><strong>Priority:</strong> High to low priority</li>
+        <li><strong>Due date:</strong> Ascending or descending</li>
+        <li><strong>A-Z:</strong> Alphabetical by task name</li>
+        <li><strong>Newest:</strong> Most recently created first</li>
+      </ul>
+
+      <h3>💡 Pro Tips</h3>
+      <ul>
+        <li>Use the <code>untagged</code> search to find and organize tasks without tags</li>
+        <li>Priority search terms help you focus: try <code>high</code> to see urgent tasks</li>
+        <li>The progress bar shows completion percentage and overdue task count</li>
+        <li>Done tasks are collapsible - click the "Marked as Done ✅" header</li>
+        <li>Drag reordering only works when sorted by "Custom (drag)"</li>
+      </ul>
+    </div>
+  </div>
+</div>
 </body>
 </html>

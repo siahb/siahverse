@@ -63,7 +63,7 @@ This site is optimized for static hosting platforms like **Netlify**, **Vercel**
 
 ## 🙌 Author
 
-Made with ❤️ by **Josiah Borja**  
+Made with ❤️ by Siah
 Check out the live portal: [https://siahverse.cc](https://siahverse.cc)
 
 ---

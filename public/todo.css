@@ -836,3 +836,96 @@ body.light-mode .modal-body code {
     grid-template-columns: 1fr;
   }
 }
+/* ===== Inline edit form tidy ===== */
+.edit-container{
+  display:flex;
+  flex-wrap: wrap;
+  gap:.5rem;
+  align-items:center;
+  padding:.6rem;
+  border:1px solid var(--card-border);
+  border-radius:8px;
+  background: rgba(255,255,255,.03);
+}
+
+/* Big text field goes wide */
+.edit-container .edit-text{
+  flex: 1 1 420px;           /* wide on desktop */
+  min-width: 220px;
+  max-width: 100%;
+  padding:.45rem .6rem;
+  border:1px solid var(--input-border);
+  border-radius:6px;
+  background: var(--input-bg);
+  color: var(--text-color);
+  box-sizing: border-box;
+}
+
+/* Compact “chip-like” field groups */
+.edit-container label,
+.edit-container .edit-weekly-wrap,
+.edit-container .edit-interval-wrap{
+  display:flex;
+  align-items:center;
+  gap:.4rem;
+  padding:.35rem .5rem;
+  border:1px solid var(--input-border);
+  border-radius:6px;
+  background: var(--input-bg);
+}
+
+.edit-container input[type="date"],
+.edit-container input[type="number"],
+.edit-container input[type="text"].edit-tags,
+.edit-container select{
+  background: var(--input-bg);
+  color: var(--text-color);
+  border:1px solid var(--input-border);
+  border-radius:5px;
+  padding:.3rem .45rem;
+  box-sizing: border-box;
+}
+
+/* Keep fields from blowing past the container */
+.edit-container input,
+.edit-container select{
+  max-width: 100%;
+}
+
+/* Tiny Today button */
+.edit-container .btn-today{
+  padding:.3rem .5rem;
+  border:1px solid var(--input-border);
+  border-radius:6px;
+  background:transparent;
+  color: var(--text-color);
+  cursor:pointer;
+}
+
+/* Save / Cancel to the right visually */
+.edit-container .btn-save{
+  margin-left:auto;          /* pushes Save (and then Cancel) to row end */
+  border:1px solid var(--input-border);
+  border-radius:6px;
+  padding:.35rem .6rem;
+  color:#0f0;
+}
+.edit-container .btn-save:hover{ background:rgba(0,255,0,.12); }
+
+.edit-container .btn-cancel{
+  border:1px solid var(--input-border);
+  border-radius:6px;
+  padding:.35rem .6rem;
+  color:#f55;
+}
+.edit-container .btn-cancel:hover{ background:rgba(255,0,0,.12); }
+
+/* Make it stack nicely on phones */
+@media (max-width: 700px){
+  .edit-container .edit-text{ flex:1 1 100%; }
+  .edit-container label,
+  .edit-container .edit-weekly-wrap,
+  .edit-container .edit-interval-wrap{
+    flex: 1 1 100%;
+  }
+}

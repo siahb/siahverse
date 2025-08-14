@@ -8,7 +8,7 @@
   const dueTodayBtn = document.getElementById('due-today');
   if (dueTodayBtn) {
   dueTodayBtn.addEventListener('click', () => {
-    const today = new Date().toISOString().slice(0,10);
+    const today = localISODate();
     dueInput.value = today;
     dueInput.dispatchEvent(new Event('change')); // if you react to changes elsewhere
   });
@@ -40,6 +40,12 @@
   renderDone(); 
   updateButtonVisibility();
 });
+// Time Helper
+function localISODate() {
+  return new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+    .toISOString()
+    .slice(0, 10);
+}
 
   sortSelect?.addEventListener('change', () => { renderTodos(); });
   repeatSelect.addEventListener('change', () => {
@@ -253,7 +259,7 @@ async function loadTodosFromServer() {
 }
 
   // ==== Repeats Helpers ====
-function todayISO() { return new Date().toISOString().slice(0,10); }
+function todayISO() { return localISODate(); }
 
 function forceCustomSort() {
   if (sortSelect && sortSelect.value !== 'default') {
@@ -592,7 +598,7 @@ window.editTodo = function(index){
   todayBtn?.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
-    const today = new Date().toISOString().slice(0,10);
+    const today = localISODate();
     editDue.value = today;
     editDue.dispatchEvent(new Event('input',  { bubbles: true }));
     editDue.dispatchEvent(new Event('change', { bubbles: true }));

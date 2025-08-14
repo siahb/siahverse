@@ -929,3 +929,44 @@ body.light-mode .modal-body code {
     flex: 1 1 100%;
   }
 }
+/* Let tall groups align from the top instead of the middle */
+.edit-container {
+  align-items: flex-start; /* override center */
+}
+
+/* Each chip/group gets a sane minimum so it wraps instead of stretching */
+.edit-container > * {
+  flex: 0 1 auto;
+  min-width: 140px;
+}
+
+/* Weekday row: allow wrapping neatly */
+.edit-container .edit-weekly-wrap {
+  flex-wrap: wrap;
+  gap: .35rem .5rem;
+}
+.edit-container .edit-weekly-wrap label {
+  /* keep the little day boxes compact */
+  padding: 0;
+  border: 0;
+}
+
+/* Keep the date group compact too */
+.edit-container input[type="date"] {
+  min-width: 140px;
+}
+
+/* Make Save/Cancel always end up on the last row, right side */
+.edit-container .btn-save,
+.edit-container .btn-cancel {
+  order: 99;           /* push to the end row */
+}
+.edit-container .btn-save { 
+  margin-left: auto;   /* stick to the right edge of that row */
+}
+
+/* Mobile polish */
+@media (max-width: 700px){
+  .edit-container > * { min-width: 100%; }  /* stack cleanly */
+  .edit-container .btn-save { margin-left: 0; } /* full-width row */
+}

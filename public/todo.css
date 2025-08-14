@@ -970,3 +970,15 @@ body.light-mode .modal-body code {
   .edit-container > * { min-width: 100%; }  /* stack cleanly */
   .edit-container .btn-save { margin-left: 0; } /* full-width row */
 }
+.edit-container {
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: .5rem;
+  max-width: 100%;       /* don't overflow parent */
+}.edit-container > * {
+  flex: 0 1 auto;
+  min-width: 140px;      /* keeps things from shrinking too much */
+}
+.edit-container .edit-text {
+  flex: 1 1 420px;       /* main text takes more space */
+}

@@ -1,7 +1,7 @@
 
 # 🌌 Siahverse Portal
 
-A sleek, dark-themed tech portal built by Josiah — powered by Proxmox and glowing with cosmic vibes.
+A sleek, dark-themed tech portal built by Siah — powered by Proxmox and glowing with cosmic vibes.
 
 ## 🔗 Live Site
 

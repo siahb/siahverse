@@ -111,11 +111,19 @@
 
         <!-- Controls -->
         <div class="controls">
-          <button id="delete-btn" onclick="deleteSelected()">🗑️ Delete Selected</button>
-          <button id="undo-btn">↩️ Undo</button>
-          <button id="toggle-drag">↕️ Reorder</button>
-          <button id="save-order" type="button">💾 Save Order</button>
-        </div>
+  <!-- Add the Select Mode button -->
+  <button id="select-mode-btn" title="Toggle selection mode">☐ Select</button>
+  
+  <!-- Add Select All checkbox (will be hidden by default) -->
+  <input type="checkbox" id="select-all" title="Select/deselect all todos">
+  <label for="select-all" style="margin-right: 1rem;">Select All</label>
+  
+  <!-- Your existing buttons -->
+  <button id="delete-btn" onclick="deleteSelected()">🗑️ Delete Selected</button>
+  <button id="undo-btn">↩️ Undo</button>
+  <button id="toggle-drag">↕️ Reorder</button>
+  <button id="save-order" type="button">💾 Save Order</button>
+</div>
 
         <ul id="todo-list"></ul>
         

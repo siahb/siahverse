@@ -982,3 +982,71 @@ body.light-mode .modal-body code {
 .edit-container .edit-text {
   flex: 1 1 420px;       /* main text takes more space */
 }
+/* Hide checkboxes and delete button by default */
+.select-todo,
+#select-all,
+#delete-btn {
+  display: none;
+}
+
+/* Show checkboxes and delete button when in select mode */
+.select-mode-active .select-todo,
+.select-mode-active #select-all,
+.select-mode-active #delete-btn {
+  display: inline-block;
+}
+
+/* Style the select mode button */
+#select-mode-btn {
+  background: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  font-weight: bold;
+}
+
+#select-mode-btn:hover {
+  background: var(--btn-color);
+  color: white;
+  transform: translateY(-1px);
+}
+
+/* Optional: Add visual feedback when in select mode */
+.select-mode-active {
+  --selection-highlight: rgba(0, 255, 255, 0.05);
+}
+
+.select-mode-active li {
+  background: var(--selection-highlight);
+  border-left: 3px solid transparent;
+  transition: border-left-color 0.2s ease;
+}
+
+.select-mode-active li:hover {
+  border-left-color: var(--accent);
+}
+
+/* Make sure checkboxes are properly spaced when shown */
+.select-mode-active .select-todo {
+  margin-right: 0.5rem;
+  margin-left: 0;
+}
+
+/* Style for the select all area */
+.select-mode-active #select-all {
+  margin-right: 0.5rem;
+}
+
+/* Light mode adjustments */
+body.light-mode.select-mode-active {
+  --selection-highlight: rgba(0, 0, 0, 0.03);
+}
+
+body.light-mode #select-mode-btn:hover {
+  background: var(--btn-color);
+  color: white;
+}

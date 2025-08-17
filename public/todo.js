@@ -179,8 +179,29 @@ function updateSelectModeVisibility() {
   }
 }
 
-// Add event listener for the select mode button
-selectModeBtn?.addEventListener('click', toggleSelectMode);
+// Also update your updateButtonVisibility function to include select mode elements:
+function updateButtonVisibility() {
+  const q = (searchInput?.value || '').trim();
+  
+  // Hide Save Order button when searching
+  if (saveOrderBtn) {
+    saveOrderBtn.style.display = q ? 'none' : 'inline-block';
+  }
+  
+  // Hide Reorder button when searching
+  const toggleDragBtn = document.getElementById('toggle-drag');
+  if (toggleDragBtn) {
+    toggleDragBtn.style.display = q ? 'none' : 'inline-block';
+  }
+
+  // Hide Select Mode button when searching
+  if (selectModeBtn) {
+    selectModeBtn.style.display = q ? 'none' : 'inline-block';
+  }
+  
+  // Update select mode visibility (this ensures proper state)
+  updateSelectModeVisibility();
+}
 
 // Search toggle button - shows/hides and clears input
 searchToggle?.addEventListener('click', (e) => {

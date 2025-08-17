@@ -1127,3 +1127,17 @@ label[for="select-all"] {
 label[for="select-all"].show {
   display: inline-block;
 }
+/* Make tasks clickable and add visual feedback */
+.select-mode-active li {
+  cursor: pointer; /* Show it's clickable */
+}
+
+.select-mode-active li:hover {
+  background: rgba(0, 255, 255, 0.1); /* Brighter on hover */
+}
+
+/* Visual feedback for selected tasks */
+.select-mode-active li.selected {
+  border-left-color: var(--accent);
+  background: rgba(0, 255, 255, 0.15);
+}

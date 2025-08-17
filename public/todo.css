@@ -1112,3 +1112,18 @@ body.light-mode #select-mode-btn:hover {
 body.light-mode.select-mode-active {
   --selection-highlight: rgba(0, 0, 0, 0.03);
 }
+/* Hide everything by default - including the Select All label */
+.select-todo,
+#select-all,
+#delete-btn,
+label[for="select-all"] {
+  display: none;
+}
+
+/* Show when in select mode */
+.select-todo.show,
+#select-all.show,
+#delete-btn.show,
+label[for="select-all"].show {
+  display: inline-block;
+}

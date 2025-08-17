@@ -4,6 +4,9 @@
   const undoBtn = document.getElementById('undo-btn');
   const selectAll = document.getElementById('select-all');
   const themeCheckbox = document.getElementById('toggle-theme-checkbox');
+  const selectModeBtn = document.getElementById('select-mode-btn');
+  const deleteSelectedBtn = document.getElementById('delete-btn'); // Your existing delete button
+let selectMode = false;
   const dueInput = document.getElementById('due-input');
   const dueTodayBtn = document.getElementById('due-today');
   if (dueTodayBtn) {
@@ -136,6 +139,48 @@ document.addEventListener('keydown', (e) => {
     document.body.style.overflow = 'auto';
   }
 });
+
+// Add the Select Mode toggle function
+function toggleSelectMode() {
+  selectMode = !selectMode;
+  
+  if (selectMode) {
+    selectModeBtn.textContent = '☑️ Exit Select';
+    document.body.classList.add('select-mode-active');
+  } else {
+    selectModeBtn.textContent = '☐ Select';
+    document.body.classList.remove('select-mode-active');
+    
+    // Clear all selections when exiting select mode
+    const allCheckboxes = document.querySelectorAll('.select-todo');
+    allCheckboxes.forEach(cb => cb.checked = false);
+    if (selectAll) selectAll.checked = false;
+  }
+  
+  updateSelectModeVisibility();
+}
+
+// Function to show/hide select-related elements
+function updateSelectModeVisibility() {
+  // Show/hide individual task checkboxes
+  const allCheckboxes = document.querySelectorAll('.select-todo');
+  allCheckboxes.forEach(cb => {
+    cb.style.display = selectMode ? 'inline-block' : 'none';
+  });
+  
+  // Show/hide select all checkbox
+  if (selectAll) {
+    selectAll.style.display = selectMode ? 'inline-block' : 'none';
+  }
+  
+  // Show/hide delete selected button
+  if (deleteSelectedBtn) {
+    deleteSelectedBtn.style.display = selectMode ? 'inline-block' : 'none';
+  }
+}
+
+// Add event listener for the select mode button
+selectModeBtn?.addEventListener('click', toggleSelectMode);
 
 // Search toggle button - shows/hides and clears input
 searchToggle?.addEventListener('click', (e) => {
@@ -483,6 +528,7 @@ const prioPill = todo.priority ? `<span class="pill ${prioClass}">${prioSymbol}<
   updateProgress();
  // Reset and sync Select All
   updateSelectAllState();
+  updateSelectModeVisibility();
 };
   
 // Render Done
@@ -518,7 +564,8 @@ const renderDone = () => {
   });
 
   updateProgress();
-  updateSelectAllState(); // ensure header reflects state right after render
+  updateSelectAllState();
+  updateSelectModeVisibility();// ensure header reflects state right after render
 };
 
 selectAll?.addEventListener('change', (e) => {
@@ -874,6 +921,13 @@ function updateButtonVisibility() {
   if (toggleDragBtn) {
     toggleDragBtn.style.display = q ? 'none' : 'inline-block';
   }
+
+  // Hide Select Mode button when searching
+  if (selectModeBtn) {
+    selectModeBtn.style.display = q ? 'none' : 'inline-block';
+  }
+   // Update select mode visibility
+  updateSelectModeVisibility();
 }
   //Toggle Drag mode
 let dragEnabled = false;
@@ -1074,11 +1128,4 @@ importFile?.addEventListener('change', async (e) => {
   } finally {
     e.target.value = '';
   }
-});
-// Temporary test
-console.log('Help button:', document.getElementById('help-btn'));
-console.log('Help modal:', document.getElementById('help-modal'));
-
-document.getElementById('help-btn')?.addEventListener('click', () => {
-  console.log('Help button clicked!');
 });

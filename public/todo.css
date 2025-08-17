@@ -1063,3 +1063,52 @@ body.light-mode #select-mode-btn:hover {
 .select-mode-active #delete-btn {
   display: inline-block;
 
+
+/* Hide checkboxes and delete button by default - ALWAYS HIDDEN */
+.select-todo,
+#select-all,
+#delete-btn {
+  display: none !important;
+}
+
+/* Remove the .select-mode-active rules since we're controlling via JavaScript */
+/* Comment out or delete these CSS rules:
+
+.select-mode-active .select-todo,
+.select-mode-active #select-all,
+.select-mode-active #delete-btn {
+  display: inline-block;
+}
+
+*/
+
+/* Keep the visual feedback styles */
+.select-mode-active {
+  --selection-highlight: rgba(0, 255, 255, 0.05);
+}
+
+.select-mode-active li {
+  background: var(--selection-highlight);
+  border-left: 3px solid transparent;
+  transition: border-left-color 0.2s ease;
+}
+
+.select-mode-active li:hover {
+  border-left-color: var(--accent);
+}
+
+/* Make sure checkboxes are properly spaced when shown */
+.select-mode-active .select-todo {
+  margin-right: 0.5rem;
+  margin-left: 0;
+}
+
+/* Style for the select all area */
+.select-mode-active #select-all {
+  margin-right: 0.5rem;
+}
+
+/* Light mode adjustments */
+body.light-mode.select-mode-active {
+  --selection-highlight: rgba(0, 0, 0, 0.03);
+}

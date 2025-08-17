@@ -1050,3 +1050,16 @@ body.light-mode #select-mode-btn:hover {
   background: var(--btn-color);
   color: white;
 }
+/* Hide checkboxes and delete button by default */
+.select-todo,
+#select-all,
+#delete-btn {
+  display: none;
+}
+
+/* Show checkboxes and delete button when in select mode */
+.select-mode-active .select-todo,
+.select-mode-active #select-all,
+.select-mode-active #delete-btn {
+  display: inline-block;
+

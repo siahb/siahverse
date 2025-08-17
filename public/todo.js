@@ -184,6 +184,18 @@ function updateSelectModeVisibility() {
   if (deleteSelectedBtn) {
     deleteSelectedBtn.style.display = selectMode ? 'inline-block' : 'none';
   }
+  
+  // Update cursor style for task items
+  const allTaskItems = document.querySelectorAll('li[data-trueindex]');
+  allTaskItems.forEach(item => {
+    if (selectMode) {
+      item.style.cursor = 'pointer';
+      item.style.userSelect = 'none'; // Prevent text selection
+    } else {
+      item.style.cursor = '';
+      item.style.userSelect = '';
+    }
+  });
 }
 
 // Also update your updateButtonVisibility function to include select mode elements:
@@ -224,6 +236,42 @@ document.addEventListener('keydown', (e) => {
   if (!isFind) return;
   e.preventDefault();
   showSearch();
+});
+
+// Add this event listener to handle clicks on task items
+document.addEventListener('click', (e) => {
+  // Only handle clicks when in select mode
+  if (!selectMode) return;
+  
+  // Find the closest li element (task item)
+  const taskItem = e.target.closest('li[data-trueindex]');
+  if (!taskItem) return;
+  
+  // Don't interfere with button clicks or checkbox clicks
+  if (e.target.matches('button, input[type="checkbox"], .btn-save, .btn-cancel, .edit-text, .edit-due, .edit-tags, .edit-priority, .edit-repeat, .edit-interval, select, input')) {
+    return;
+  }
+  
+  // Don't interfere with editing mode
+  if (taskItem.querySelector('.edit-container')) {
+    return;
+  }
+  
+  // Find the checkbox for this task
+  const checkbox = taskItem.querySelector('.select-todo');
+  if (checkbox) {
+    // Toggle the checkbox
+    checkbox.checked = !checkbox.checked;
+    
+    // Trigger the change event to update select all state
+    checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+    
+    // Add visual feedback
+    taskItem.style.transform = 'scale(0.98)';
+    setTimeout(() => {
+      taskItem.style.transform = '';
+    }, 150);
+  }
 });
 
 // Escape hides search and clears input

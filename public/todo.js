@@ -6,6 +6,7 @@
   const themeCheckbox = document.getElementById('toggle-theme-checkbox');
   const selectModeBtn = document.getElementById('select-mode-btn');
   const deleteSelectedBtn = document.getElementById('delete-btn'); // Your existing delete button
+  selectModeBtn?.addEventListener('click', toggleSelectMode);
 let selectMode = false;
   const dueInput = document.getElementById('due-input');
   const dueTodayBtn = document.getElementById('due-today');
@@ -171,6 +172,12 @@ function updateSelectModeVisibility() {
   // Show/hide select all checkbox
   if (selectAll) {
     selectAll.style.display = selectMode ? 'inline-block' : 'none';
+  }
+  
+  // Show/hide select all label
+  const selectAllLabel = document.querySelector('label[for="select-all"]');
+  if (selectAllLabel) {
+    selectAllLabel.style.display = selectMode ? 'inline-block' : 'none';
   }
   
   // Show/hide delete selected button

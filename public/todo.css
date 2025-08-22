@@ -1182,3 +1182,31 @@ body.light-mode:not(.admin-logged-in) .card-container::before {
   border-color: rgba(255, 165, 0, 0.4);
   color: #cc6600;
 }
+/* Purple highlighting for tasks due today */
+.pill.due-today {
+  border-color: #9d4edd;
+  color: #9d4edd;
+  background: rgba(157, 78, 221, 0.15);
+  font-weight: bold;
+  box-shadow: 0 0 8px rgba(157, 78, 221, 0.3);
+}
+
+/* Make the entire task item glow purple when due today */
+li[data-due-today="true"] {
+  border-left: 3px solid #9d4edd;
+  background: rgba(157, 78, 221, 0.05);
+  box-shadow: 0 0 12px rgba(157, 78, 221, 0.2);
+}
+
+/* Light mode adjustments for due today */
+body.light-mode .pill.due-today {
+  border-color: #7209b7;
+  color: #7209b7;
+  background: rgba(114, 9, 183, 0.1);
+}
+
+body.light-mode li[data-due-today="true"] {
+  border-left-color: #7209b7;
+  background: rgba(114, 9, 183, 0.03);
+  box-shadow: 0 0 8px rgba(114, 9, 183, 0.15);
+}

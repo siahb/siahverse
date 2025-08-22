@@ -1195,3 +1195,27 @@ li[data-due-today="true"] .pill.due {
   color: #7e22ce;
   background: rgba(147, 51, 234, 0.16);
 }
+   
+/* === Force purple for Due / Due Today pills === */
+:root{
+  --due-pill: #a855f7;
+  --due-pill-bg: rgba(168, 85, 247, 0.12);
+}
+body.light-mode{
+  --due-pill: #7c3aed;
+  --due-pill-bg: rgba(124, 58, 237, 0.12);
+}
+
+/* bump specificity so it beats earlier .pill styles */
+.card-container .todo-meta .pill.due {
+  border-color: var(--due-pill);
+  color: var(--due-pill);
+  background: var(--due-pill-bg);
+}
+
+/* Make “Due Today!” pop a bit more (optional) */
+.card-container li[data-due-today="true"] .todo-meta .pill.due {
+  border-color: #9333ea;
+  color: #7e22ce;
+  background: rgba(147, 51, 234, 0.16);
+}

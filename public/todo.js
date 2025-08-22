@@ -44,6 +44,16 @@ let selectMode = false;
   renderDone(); 
   updateButtonVisibility();
 });
+
+// Admin check helper
+function requireAdmin(operation = "perform this action") {
+  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
+    alert(`❌ Admin login required to ${operation}`);
+    return false;
+  }
+  return true;
+}
+
 // Time Helper
 function localISODate() {
   return new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
@@ -289,13 +299,23 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-  // Button visibility
+  Hide action buttons for non-admin users in the UI
 function updateAdminUI() {
   const pw = localStorage.getItem(ADMIN_PASSWORD_KEY);
   const isLoggedIn = !!pw;
 
+  // Existing code
   document.getElementById('enter-password').style.display = isLoggedIn ? 'none' : 'inline-block';
   document.getElementById('logout').style.display = isLoggedIn ? 'inline-block' : 'none';
+  
+  // New: Hide action buttons from non-admin users
+  const actionButtons = document.querySelectorAll('.controls button:not(#help-btn)');
+  actionButtons.forEach(btn => {
+    btn.style.display = isLoggedIn ? 'inline-block' : 'none';
+  });
+  
+  // Hide the task action buttons (✅, ✏️, ❌) by adding CSS class
+  document.body.classList.toggle('admin-logged-in', isLoggedIn);
 }
 
   // Theme
@@ -655,7 +675,9 @@ document.addEventListener('change', (e) => {
 });
 
 // Inline editor for text + due + repeat + tags + priority
-window.editTodo = function(index){
+window.editTodo = function(index) {
+  if (!requireAdmin("edit tasks")) return;
+  
   const li = document.querySelector(`li[data-trueindex="${index}"]`);
   if (!li) return;
   const todo = todosData[index] || {};
@@ -878,42 +900,50 @@ bindEnterToAdd(prioSelect);
 bindEnterToAdd(repeatSelect);
 bindEnterToAdd(intervalInput);
 
-// Mark as done OR advance repeating task
+// Fix markAsDone function - add admin check
 window.markAsDone = async (index) => {
+  if (!requireAdmin("mark tasks as done")) return;
+  
   const task = todosData[index];
   if (!task) return;
 
   // If it's a repeating task, advance dates instead of moving to Done
-if (task.repeat) {
-  const nowISO = todayISO();
-  const updates = { lastDone: nowISO };
-  const startFrom = toISO(task.nextDue || task.due || nowISO);
+  if (task.repeat) {
+    const nowISO = todayISO();
+    const updates = { lastDone: nowISO };
+    const startFrom = toISO(task.nextDue || task.due || nowISO);
 
-  // always advance at least one occurrence
-  let next = computeNextDue(task, startFrom);
-  while (next <= nowISO) next = computeNextDue(task, next);
+    // always advance at least one occurrence
+    let next = computeNextDue(task, startFrom);
+    while (next <= nowISO) next = computeNextDue(task, next);
 
-  updates.nextDue = next;
-  updates.due = next;
+    updates.nextDue = next;
+    updates.due = next;
 
-  try {
-    await fetch(`/todos/${index}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updates)
-    });
-    await loadTodosFromServer();
-  } catch {
-    alert("Failed to advance repeating task.");
+    try {
+      await fetch(`/todos/${index}`, {
+        method: 'PATCH',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY)}`
+        },
+        body: JSON.stringify(updates)
+      });
+      await loadTodosFromServer();
+    } catch {
+      alert("Failed to advance repeating task.");
+    }
+    return;
   }
-  return;
-}
 
   // Non-repeating: behave as before
   try {
     await fetch(`/todos/${index}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY)}`
+      },
       body: JSON.stringify({ done: true })
     });
     await loadTodosFromServer();
@@ -922,12 +952,17 @@ if (task.repeat) {
   }
 };
 
-  //Unmark done
+// Fix unmarkDone function - add admin check
 window.unmarkDone = async (index) => {
+  if (!requireAdmin("unmark tasks as done")) return;
+  
   try {
     await fetch(`/todos/${index}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY)}`
+      },
       body: JSON.stringify({ done: false })
     });
     await loadTodosFromServer();
@@ -953,20 +988,25 @@ window.unmarkDone = async (index) => {
     }
   };
 
-  // Undo button
- undoBtn.addEventListener('click', async () => {
+  // Fix undo button - add admin check
+undoBtn.addEventListener('click', async () => {
+  if (!requireAdmin("undo deletions")) return;
+  
   if (!deletedTodos.length) return;
 
   const restoring = [...deletedTodos]; // Clone to avoid timing issues
   deletedTodos = [];
 
-for (const obj of restoring) {
-  await fetch('/todos', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(obj) // send full object
-  });
-}
+  for (const obj of restoring) {
+    await fetch('/todos', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY)}`
+      },
+      body: JSON.stringify(obj) // send full object
+    });
+  }
 
   loadTodosFromServer();
 });
@@ -1011,16 +1051,19 @@ let sortableInstance = null;
 
 const toggleDragBtn = document.getElementById('toggle-drag');
 
+// Also update the toggle drag button to check admin status
 toggleDragBtn.addEventListener('click', () => {
+  if (!dragEnabled && !requireAdmin("enable reordering")) return;
+  
   dragEnabled = !dragEnabled;
 
   if (dragEnabled) {
     toggleDragBtn.textContent = '↕️ Reordering...';
-    document.body.classList.add('dragging-active'); // 👈 add this
+    document.body.classList.add('dragging-active');
     enableDrag();
   } else {
     toggleDragBtn.textContent = '↕️ Reorder';
-    document.body.classList.remove('dragging-active'); // 👈 remove
+    document.body.classList.remove('dragging-active');
     disableDrag();
   }
 });
@@ -1068,7 +1111,10 @@ document.getElementById('save-order')?.addEventListener('click', async () => {
   }
 });
 
+// Fix enableDrag function - add admin check and auth header
 function enableDrag() {
+  if (!requireAdmin("reorder tasks")) return;
+  
   sortableInstance = new Sortable(todoList, {
     animation: 150,
 

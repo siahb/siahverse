@@ -1176,21 +1176,22 @@ body:not(.admin-logged-in) .card-container::before {
   color: #ffdd00;
 }
 
-/* ADD THIS AT THE VERY BOTTOM OF YOUR CSS FILE */
-.pill.due,
-li .pill.due,
-.todo-meta .pill.due {
-  border-color: #9d4edd !important;
-  color: #9d4edd !important;
-  background: rgba(157, 78, 221, 0.15) !important;
-  opacity: 1 !important;
+/* Purple due pills (works for both "Due: ..." and "Due Today!") */
+.pill.due {
+  border-color: #a855f7;          /* purple */
+  color: #a855f7;
+  background: rgba(168, 85, 247, 0.12);
 }
 
-body.light-mode .pill.due,
-body.light-mode li .pill.due,
-body.light-mode .todo-meta .pill.due {
-  border-color: #7209b7 !important;
-  color: #7209b7 !important;
-  background: rgba(114, 9, 183, 0.12) !important;
-  opacity: 1 !important;
+/* Light mode contrast */
+body.light-mode .pill.due {
+  border-color: #7c3aed;          /* slightly deeper purple */
+  color: #6d28d9;
+  background: rgba(124, 58, 237, 0.12);
+}
+/* Make Due Today pop a touch more */
+li[data-due-today="true"] .pill.due {
+  border-color: #9333ea;
+  color: #7e22ce;
+  background: rgba(147, 51, 234, 0.16);
 }

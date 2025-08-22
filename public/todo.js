@@ -54,6 +54,29 @@ function requireAdmin(operation = "perform this action") {
   return true;
 }
 
+// Update search state helper
+function updateSearchState() {
+  const isLoggedIn = !!localStorage.getItem(ADMIN_PASSWORD_KEY);
+  
+  // Disable/enable search input
+  if (searchInput) {
+    searchInput.disabled = !isLoggedIn;
+    searchInput.placeholder = isLoggedIn ? "Search…" : "Login required to search";
+  }
+  
+  // Disable/enable search toggle button
+  if (searchToggle) {
+    searchToggle.disabled = !isLoggedIn;
+    searchToggle.style.opacity = isLoggedIn ? '1' : '0.5';
+    searchToggle.style.cursor = isLoggedIn ? 'pointer' : 'not-allowed';
+  }
+  
+  // If logged out and search is open, close it
+  if (!isLoggedIn && searchInput && searchInput.classList.contains('active')) {
+    hideSearch();
+  }
+}
+
 // Time Helper
 function localISODate() {
   return new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
@@ -106,6 +129,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Clean search functions - no searchWrap dependency
 function showSearch() {
+  // Check if user is logged in before allowing search
+  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
+    alert("❌ Admin login required to search tasks");
+    return;
+  }
+  
   searchInput.classList.add('active');
   document.body.classList.add('search-open');
   searchInput.focus();
@@ -236,6 +265,13 @@ function updateButtonVisibility() {
 searchToggle?.addEventListener('click', (e) => {
   e.preventDefault();
   e.stopPropagation();
+  
+  // Check if user is logged in
+  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
+    alert("❌ Admin login required to search tasks");
+    return;
+  }
+  
   const open = searchInput.classList.contains('active');
   open ? hideSearch() : showSearch();
 });
@@ -245,6 +281,13 @@ document.addEventListener('keydown', (e) => {
   const isFind = (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f';
   if (!isFind) return;
   e.preventDefault();
+  
+  // Check if user is logged in
+  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
+    alert("❌ Admin login required to search tasks");
+    return;
+  }
+  
   showSearch();
 });
 
@@ -295,6 +338,13 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('keydown', (e) => {
   if (e.key === '/' && !e.target.closest('input, textarea, [contenteditable]')) {
     e.preventDefault();
+    
+    // Check if user is logged in
+    if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
+      alert("❌ Admin login required to search tasks");
+      return;
+    }
+    
     showSearch();
   }
 });
@@ -316,6 +366,9 @@ function updateAdminUI() {
   
   // Hide the task action buttons (✅, ✏️, ❌) by adding CSS class
   document.body.classList.toggle('admin-logged-in', isLoggedIn);
+  
+  // NEW: Update search state
+  updateSearchState();
 }
 
   // Theme
@@ -366,7 +419,10 @@ function updateAdminUI() {
     todoInput.disabled = true;
     updateAdminUI();
   });
-  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) todoInput.disabled = true;
+ if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
+  todoInput.disabled = true;
+  updateSearchState(); // Add this line
+}
 
   // Load Todos from server
 async function loadTodosFromServer() {

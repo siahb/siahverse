@@ -687,8 +687,8 @@ const renderTodos = () => {
     
     // NEW: Create due today pill
     const duePill = isDueToday(todo) 
-  ? `<span class="pill due">Due Today!</span>`
-  : (todo.due ? `<span class="pill due">Due: ${toISO(todo.due)}</span>` : '');
+  ? `<span class="pill due" style="border:1px solid #a855f7; color:#a855f7; background:rgba(168,85,247,.12);">Due Today!</span>`
+  : (todo.due ? `<span class="pill due" style="border:1px solid #a855f7; color:#a855f7; background:rgba(168,85,247,.12);">Due: ${toISO(todo.due)}</span>` : '');
 
     // Map priority to !, !!, !!! with colors
     let prioSymbol = '';

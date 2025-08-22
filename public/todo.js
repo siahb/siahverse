@@ -810,7 +810,7 @@ window.editTodo = function(index) {
 
 // === Add New Todo (reusable) ===
 async function addNewTodo() {
-  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
+  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("❌ Admin login required to add tasks");
   if (!todoInput.value.trim()) return;
 
   const text = todoInput.value.trim();
@@ -973,7 +973,7 @@ window.unmarkDone = async (index) => {
 
   // Remove todo
   window.removeTodo = async (i) => {
-    if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
+    if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("❌ Admin login required to delete tasks");
     deletedTodos.push(todosData[i]); // save full object
     try {
       await fetch(`/todos/${i}`, {
@@ -1012,7 +1012,7 @@ undoBtn.addEventListener('click', async () => {
 });
 
   window.deleteSelected = async () => {
-  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
+  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("❌ Admin login required to delete tasks");
 
   const selected = [...document.querySelectorAll('.select-todo:checked')]
     .map(cb => parseInt(cb.dataset.trueindex, 10))
@@ -1069,7 +1069,7 @@ toggleDragBtn.addEventListener('click', () => {
 });
 
 document.getElementById('save-order')?.addEventListener('click', async () => {
-  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("Admin only");
+  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("❌ Admin login required to modify tasks order");
 
   // Rebuild todosData from the current DOM order (not relying on previous state)
   const listItems = document.querySelectorAll('#todo-list li');

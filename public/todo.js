@@ -1053,7 +1053,7 @@ const toggleDragBtn = document.getElementById('toggle-drag');
 
 // Also update the toggle drag button to check admin status
 toggleDragBtn.addEventListener('click', () => {
-  if (!dragEnabled && !requireAdmin("enable reordering")) return;
+  if (!dragEnabled && !requireAdmin("reorder tasks")) return;
   
   dragEnabled = !dragEnabled;
 

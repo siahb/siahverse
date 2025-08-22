@@ -685,10 +685,12 @@ const renderTodos = () => {
 
     const overduePill = isOverdue(todo) ? `<span class="pill overdue">Overdue</span>` : '';
     
-    // NEW: Create due today pill
-    const duePill = isDueToday(todo) 
+// NEW: Create due today vs regular due pill
+const duePill = isDueToday(todo) 
   ? `<span class="pill due" style="border:1px solid #a855f7; color:#a855f7; background:rgba(168,85,247,.12);">Due Today!</span>`
-  : (todo.due ? `<span class="pill due" style="border:1px solid #a855f7; color:#a855f7; background:rgba(168,85,247,.12);">Due: ${toISO(todo.due)}</span>` : '');
+  : (todo.due 
+      ? `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${toISO(todo.due)}</span>` 
+      : '');
 
     // Map priority to !, !!, !!! with colors
     let prioSymbol = '';
@@ -749,7 +751,11 @@ const renderDone = () => {
       <input type="checkbox" class="select-todo" data-trueindex="${i}" />
       <span class="todo-text">${todo.text}</span>
       <div class="todo-meta">
-        ${todo.due ? `<span class="pill due">Due: ${toISO(todo.due)}</span>` : ''}
+        ${todo.due 
+  ? (isDueToday(todo)
+      ? `<span class="pill due" style="border:1px solid #a855f7; color:#a855f7; background:rgba(168,85,247,.12);">Due Today!</span>`
+      : `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${toISO(todo.due)}</span>`)
+  : ''}
         ${todo.repeat ? `<span class="pill pill-repeat">${repeatLabel(todo)}</span>` : ''}
         ${(todo.tags || []).map(t => `<span class="pill pill-tag">${t}</span>`).join(' ')}
       </div>

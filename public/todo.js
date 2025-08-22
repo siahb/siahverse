@@ -686,7 +686,7 @@ const renderTodos = () => {
     const overduePill = isOverdue(todo) ? `<span class="pill overdue">Overdue</span>` : '';
     
     // NEW: Create due today pill
-    const dueTodayPill = isDueToday(todo) ? `<span class="pill due-today">Due Today!</span>` : '';
+    const dueTodayPill = isDueToday(todo) ? `<span class="pill due">Due Today!</span>` : '';
 
     // Map priority to !, !!, !!! with colors
     let prioSymbol = '';

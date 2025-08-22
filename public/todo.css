@@ -1177,13 +1177,13 @@ body:not(.admin-logged-in) .card-container::before {
 }
 
 .pill.due {
-  border-color: #9d4edd;
-  color: #9d4edd;
-  background: rgba(157, 78, 221, 0.15);
+  border-color: #9d4edd !important;
+  color: #9d4edd !important;
+  background: rgba(157, 78, 221, 0.15) !important;
 }
 
 body.light-mode .pill.due {
-  border-color: #7209b7;
-  color: #7209b7;
-  background: rgba(114, 9, 183, 0.12);
+  border-color: #7209b7 !important;
+  color: #7209b7 !important;
+  background: rgba(114, 9, 183, 0.12) !important;
 }

@@ -686,7 +686,9 @@ const renderTodos = () => {
     const overduePill = isOverdue(todo) ? `<span class="pill overdue">Overdue</span>` : '';
     
     // NEW: Create due today pill
-    const dueTodayPill = isDueToday(todo) ? `<span class="pill due">Due Today!</span>` : '';
+    const duePill = isDueToday(todo) 
+  ? `<span class="pill due">Due Today!</span>`
+  : (todo.due ? `<span class="pill due">Due: ${toISO(todo.due)}</span>` : '');
 
     // Map priority to !, !!, !!! with colors
     let prioSymbol = '';
@@ -704,11 +706,6 @@ const renderTodos = () => {
 
     const prioPill = todo.priority ? `<span class="pill ${prioClass}">${prioSymbol}</span>` : '';
     const tagPills = (todo.tags || []).map(t => `<span class="pill">${t}</span>`).join(' ');
-
-    // NEW: Show "Due Today!" instead of regular due date pill when due today
-    const duePill = isDueToday(todo) 
-      ? dueTodayPill 
-      : (todo.due ? `<span class="pill due">Due: ${toISO(todo.due)}</span>` : '');
 
     li.innerHTML = `
       <input type="checkbox" class="select-todo" data-trueindex="${i}" />

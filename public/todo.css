@@ -1176,53 +1176,14 @@ body:not(.admin-logged-in) .card-container::before {
   color: #ffdd00;
 }
 
-/* Light mode version of the view-only message */
-body.light-mode:not(.admin-logged-in) .card-container::before {
-  background: rgba(255, 165, 0, 0.1);
-  border-color: rgba(255, 165, 0, 0.4);
-  color: #cc6600;
-}
-/* Purple highlighting for tasks due today - HIGH SPECIFICITY */
-.pill.due-today,
-li .pill.due-today,
-.todo-meta .pill.due-today {
+.pill.due-today {
   border-color: #9d4edd !important;
   color: #9d4edd !important;
   background: rgba(157, 78, 221, 0.15) !important;
-  font-weight: bold !important;
-  box-shadow: 0 0 8px rgba(157, 78, 221, 0.3) !important;
-  opacity: 1 !important;
 }
 
-/* Make the entire task item glow purple when due today - HIGH SPECIFICITY */
-li[data-due-today="true"],
-ul li[data-due-today="true"],
-#todo-list li[data-due-today="true"] {
-  border-left: 3px solid #9d4edd !important;
-  background: rgba(157, 78, 221, 0.08) !important;
-  box-shadow: 0 0 12px rgba(157, 78, 221, 0.25) !important;
-}
-
-/* Light mode adjustments for due today - HIGH SPECIFICITY */
-body.light-mode .pill.due-today,
-body.light-mode li .pill.due-today,
-body.light-mode .todo-meta .pill.due-today {
+body.light-mode .pill.due-today {
   border-color: #7209b7 !important;
   color: #7209b7 !important;
   background: rgba(114, 9, 183, 0.12) !important;
-}
-
-body.light-mode li[data-due-today="true"],
-body.light-mode ul li[data-due-today="true"],
-body.light-mode #todo-list li[data-due-today="true"] {
-  border-left-color: #7209b7 !important;
-  background: rgba(114, 9, 183, 0.05) !important;
-  box-shadow: 0 0 8px rgba(114, 9, 183, 0.2) !important;
-}
-
-/* Override any generic pill styling that might be interfering */
-.pill.due-today {
-  /* Reset any inherited styles that might conflict */
-  border: 1px solid #9d4edd !important;
-  text-decoration: none !important;
 }

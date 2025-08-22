@@ -1180,10 +1180,12 @@ body:not(.admin-logged-in) .card-container::before {
   border-color: #9d4edd !important;
   color: #9d4edd !important;
   background: rgba(157, 78, 221, 0.15) !important;
+  opacity: 1 !important; /* ← ADD THIS LINE */
 }
 
 body.light-mode .pill.due {
   border-color: #7209b7 !important;
   color: #7209b7 !important;
   background: rgba(114, 9, 183, 0.12) !important;
+  opacity: 1 !important; /* ← ADD THIS LINE */
 }

@@ -54,9 +54,34 @@ function requireAdmin(operation = "perform this action") {
   return true;
 }
 
-// Update search state helper
-function updateSearchState() {
+function updateInputStates() { // Renamed from updateSearchState
   const isLoggedIn = !!localStorage.getItem(ADMIN_PASSWORD_KEY);
+
+  // Disable/enable related input fields
+const relatedInputs = [tagInput, dueInput, prioSelect, repeatSelect, intervalInput];
+relatedInputs.forEach(input => {
+  if (input) {
+    input.disabled = !isLoggedIn;
+    input.style.opacity = isLoggedIn ? '1' : '0.5';
+  }
+});
+
+// Disable/enable checkboxes
+const weekdayCheckboxes = document.querySelectorAll('.byweekday');
+weekdayCheckboxes.forEach(cb => {
+  cb.disabled = !isLoggedIn;
+  cb.style.opacity = isLoggedIn ? '1' : '0.5';
+});
+
+// Disable/enable buttons
+const relatedButtons = [dueTodayBtn];
+relatedButtons.forEach(btn => {
+  if (btn) {
+    btn.disabled = !isLoggedIn;
+    btn.style.opacity = isLoggedIn ? '1' : '0.5';
+    btn.style.cursor = isLoggedIn ? 'pointer' : 'not-allowed';
+  }
+});
   
   // Disable/enable search input
   if (searchInput) {
@@ -69,6 +94,14 @@ function updateSearchState() {
     searchToggle.disabled = !isLoggedIn;
     searchToggle.style.opacity = isLoggedIn ? '1' : '0.5';
     searchToggle.style.cursor = isLoggedIn ? 'pointer' : 'not-allowed';
+  }
+  
+  // Disable/enable task input
+  if (todoInput) {
+    todoInput.disabled = !isLoggedIn;
+    todoInput.placeholder = isLoggedIn ? "Type a task and hit Enter..." : "Login required to add tasks";
+    todoInput.style.opacity = isLoggedIn ? '1' : '0.5';
+    todoInput.style.cursor = isLoggedIn ? 'text' : 'not-allowed';
   }
   
   // If logged out and search is open, close it
@@ -368,7 +401,7 @@ function updateAdminUI() {
   document.body.classList.toggle('admin-logged-in', isLoggedIn);
   
   // NEW: Update search state
-  updateSearchState();
+  updateInputStates();
 }
 
   // Theme
@@ -407,7 +440,6 @@ function updateAdminUI() {
   } else {
     localStorage.setItem(ADMIN_PASSWORD_KEY, pw);
     alert("✅ Admin logged in!");
-    todoInput.disabled = false;
     adminModal.style.display = 'none';
     updateAdminUI();
   }
@@ -416,12 +448,10 @@ function updateAdminUI() {
   logoutBtn.addEventListener('click', () => {
     localStorage.removeItem(ADMIN_PASSWORD_KEY);
     alert("Logged out.");
-    todoInput.disabled = true;
     updateAdminUI();
   });
  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
-  todoInput.disabled = true;
-  updateSearchState(); // Add this line
+  updateInputStates(); // This now handles both task input and search
 }
 
   // Load Todos from server
@@ -866,8 +896,16 @@ window.editTodo = function(index) {
 
 // === Add New Todo (reusable) ===
 async function addNewTodo() {
-  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("❌ Admin login required to add tasks");
-  if (!todoInput.value.trim()) return;
+  // Better admin check with early return
+  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
+    alert("❌ Admin login required to add tasks");
+    return;
+  }
+  
+  // Check if input is disabled or empty
+  if (todoInput.disabled || !todoInput.value.trim()) {
+    return;
+  }
 
   const text = todoInput.value.trim();
   const due = dueInput.value ? dueInput.value : null;
@@ -935,6 +973,13 @@ async function addNewTodo() {
 todoInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') {
     e.preventDefault();
+    
+    // Check if user is logged in
+    if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
+      alert("❌ Admin login required to add tasks");
+      return;
+    }
+    
     addNewTodo();
   }
 });
@@ -945,7 +990,16 @@ function bindEnterToAdd(el) {
   el.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      if (document.activeElement === searchInput) return; // don't add while searching
+      
+      // Don't add while searching
+      if (document.activeElement === searchInput) return;
+      
+      // Check if user is logged in
+      if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
+        alert("❌ Admin login required to add tasks");
+        return;
+      }
+      
       addNewTodo();
     }
   });

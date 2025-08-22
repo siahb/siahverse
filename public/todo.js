@@ -117,6 +117,16 @@ function localISODate() {
     .slice(0, 10);
 }
 
+// Return the primary tag key for sorting
+function tagKey(t) {
+  const tags = (t.tags || [])
+    .map(s => (s || '').toLowerCase().trim())
+    .filter(Boolean)
+    .sort();            // alphabetical
+  // Put no-tag items at the end by returning a high sentinel
+  return tags[0] || '\uffff';
+}
+
 // Due Today Helper
 function isDueToday(todo) {
   if (!todo.due) return false;
@@ -563,16 +573,31 @@ function sortTodos(list){
   } else if (mode === 'created') {
     copy.sort((a,b)=> (b.createdAt||0) - (a.createdAt||0));
   } else if (mode === 'priority') {
-    // H (3) > M (2) > L (1) > none (0)
     copy.sort((a,b)=>{
       const r = priRank(b.priority) - priRank(a.priority);
       if (r !== 0) return r;
-      // tie-breakers (optional but nice):
       const d = (a.due||'').localeCompare(b.due||'');
       if (d !== 0) return d;
       return (a.text||'').localeCompare(b.text||'');
     });
+  } else if (mode === 'tagsAZ') {
+    // First tag A→Z; items without tags last
+    copy.sort((a,b)=>{
+      const ka = tagKey(a), kb = tagKey(b);
+      const t = ka.localeCompare(kb);
+      if (t !== 0) return t;
+      return (a.text||'').localeCompare(b.text||''); // tie-breaker
+    });
+  } else if (mode === 'tagsZA') {
+    // First tag Z→A; items without tags last
+    copy.sort((a,b)=>{
+      const ka = tagKey(a), kb = tagKey(b);
+      const t = kb.localeCompare(ka);
+      if (t !== 0) return t;
+      return (a.text||'').localeCompare(b.text||'');
+    });
   }
+
   return copy;
 }
 

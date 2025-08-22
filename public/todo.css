@@ -1226,3 +1226,28 @@ body.light-mode #todo-list li[data-due-today="true"] {
   border: 1px solid #9d4edd !important;
   text-decoration: none !important;
 }
+/* NUCLEAR OPTION - Force purple due today pills */
+span.pill.due-today,
+.pill.due-today,
+li span.pill.due-today,
+#todo-list li span.pill.due-today,
+.todo-meta span.pill.due-today {
+  border-color: #9d4edd !important;
+  color: #9d4edd !important;
+  background-color: rgba(157, 78, 221, 0.15) !important;
+  background: rgba(157, 78, 221, 0.15) !important;
+  font-weight: bold !important;
+  opacity: 1 !important;
+}
+
+/* Light mode - force purple */
+body.light-mode span.pill.due-today,
+body.light-mode .pill.due-today,
+body.light-mode li span.pill.due-today,
+body.light-mode #todo-list li span.pill.due-today,
+body.light-mode .todo-meta span.pill.due-today {
+  border-color: #7209b7 !important;
+  color: #7209b7 !important;
+  background-color: rgba(114, 9, 183, 0.12) !important;
+  background: rgba(114, 9, 183, 0.12) !important;
+}

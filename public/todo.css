@@ -1175,16 +1175,3 @@ body:not(.admin-logged-in) .card-container::before {
   font-size: 0.9rem;
   color: #ffdd00;
 }
-/* Regular due date pills (not today) */
-li:not([data-due-today="true"]) .pill.due {
-  border: 1px solid #3b82f6 !important;   /* blue border */
-  color: #3b82f6 !important;              /* blue text */
-  background: rgba(59,130,246,.12) !important;
-}
-
-/* Due Today pills (special purple) */
-li[data-due-today="true"] .pill.due {
-  border: 1px solid #a855f7 !important;   /* purple border */
-  color: #a855f7 !important;              /* purple text */
-  background: rgba(168,85,247,.18) !important;
-}

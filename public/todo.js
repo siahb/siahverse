@@ -752,7 +752,7 @@ const renderDone = () => {
       <input type="checkbox" class="select-todo" data-trueindex="${i}" />
       <span class="todo-text">${todo.text}</span>
       <div class="todo-meta">
-        ${todo.due ? `<span class="pill pill-due">Due: ${toISO(todo.due)}</span>` : ''}
+        ${todo.due ? `<span class="pill due">Due: ${toISO(todo.due)}</span>` : ''}
         ${todo.repeat ? `<span class="pill pill-repeat">${repeatLabel(todo)}</span>` : ''}
         ${(todo.tags || []).map(t => `<span class="pill pill-tag">${t}</span>`).join(' ')}
       </div>

@@ -299,7 +299,7 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-  Hide action buttons for non-admin users in the UI
+  // Hide action buttons for non-admin users in the UI
 function updateAdminUI() {
   const pw = localStorage.getItem(ADMIN_PASSWORD_KEY);
   const isLoggedIn = !!pw;

@@ -1176,14 +1176,21 @@ body:not(.admin-logged-in) .card-container::before {
   color: #ffdd00;
 }
 
-.pill.due {
-  border-color: #9d4edd;
-  color: #9d4edd;
-  background: rgba(157, 78, 221, 0.15);
+/* ADD THIS AT THE VERY BOTTOM OF YOUR CSS FILE */
+.pill.due,
+li .pill.due,
+.todo-meta .pill.due {
+  border-color: #9d4edd !important;
+  color: #9d4edd !important;
+  background: rgba(157, 78, 221, 0.15) !important;
+  opacity: 1 !important;
 }
 
-body.light-mode .pill.due {
-  border-color: #7209b7;
-  color: #7209b7;
-  background: rgba(114, 9, 183, 0.12);
+body.light-mode .pill.due,
+body.light-mode li .pill.due,
+body.light-mode .todo-meta .pill.due {
+  border-color: #7209b7 !important;
+  color: #7209b7 !important;
+  background: rgba(114, 9, 183, 0.12) !important;
+  opacity: 1 !important;
 }

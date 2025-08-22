@@ -1141,3 +1141,44 @@ label[for="select-all"].show {
   border-left-color: var(--accent);
   background: rgba(0, 255, 255, 0.15);
 }
+/* ==============================
+   ADMIN SECURITY - Hide buttons for non-admin users
+============================== */
+
+/* Hide task action buttons (✅, ✏️, ❌) when not logged in as admin */
+body:not(.admin-logged-in) .todo-text + div button,
+body:not(.admin-logged-in) li > div:last-child button {
+  display: none !important;
+}
+
+/* Hide the entire controls section when not admin */
+body:not(.admin-logged-in) .controls {
+  display: none !important;
+}
+
+/* Optional: Add visual indicator that tasks are view-only for guests */
+body:not(.admin-logged-in) li {
+  cursor: default;
+  opacity: 0.9;
+}
+
+/* Optional: Show a subtle "view only" message for guests */
+body:not(.admin-logged-in) .card-container::before {
+  content: "📖 View Only Mode - Login as admin to edit tasks";
+  display: block;
+  text-align: center;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  background: rgba(255, 255, 0, 0.1);
+  border: 1px solid rgba(255, 255, 0, 0.3);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #ffdd00;
+}
+
+/* Light mode version of the view-only message */
+body.light-mode:not(.admin-logged-in) .card-container::before {
+  background: rgba(255, 165, 0, 0.1);
+  border-color: rgba(255, 165, 0, 0.4);
+  color: #cc6600;
+}

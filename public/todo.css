@@ -1219,3 +1219,26 @@ body.light-mode{
   color: #7e22ce;
   background: rgba(147, 51, 234, 0.16);
 }
+
+/* === Purple Due Pills === */
+
+/* All due pills (both "Due:" and "Due Today!") */
+li .todo-meta .pill.due {
+  border-color: #a855f7 !important;   /* purple border */
+  color: #a855f7 !important;          /* purple text */
+  background: rgba(168, 85, 247, 0.12) !important; /* soft purple bg */
+}
+
+/* Light mode adjustment */
+body.light-mode li .todo-meta .pill.due {
+  border-color: #7c3aed !important;
+  color: #6d28d9 !important;
+  background: rgba(124, 58, 237, 0.12) !important;
+}
+
+/* Extra highlight for "Due Today!" */
+li[data-due-today="true"] .todo-meta .pill.due {
+  border-color: #9333ea !important;
+  color: #7e22ce !important;
+  background: rgba(147, 51, 234, 0.18) !important;
+}

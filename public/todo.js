@@ -117,6 +117,12 @@ function localISODate() {
     .slice(0, 10);
 }
 
+// Due Today Helper
+function isDueToday(todo) {
+  if (!todo.due) return false;
+  return toISO(todo.due) === todayISO();
+}
+
   sortSelect?.addEventListener('change', () => { renderTodos(); });
   repeatSelect.addEventListener('change', () => {
   const v = repeatSelect.value;
@@ -669,32 +675,46 @@ const renderTodos = () => {
     const i = todosData.indexOf(todo); // true index in the data array
     const li = document.createElement('li');
     li.setAttribute('data-trueindex', i);
+    
+    // NEW: Add due-today data attribute
+    if (isDueToday(todo)) {
+      li.setAttribute('data-due-today', 'true');
+    }
+    
     li.style.animationDelay = `${Math.random() * 0.5}s`;
 
     const overduePill = isOverdue(todo) ? `<span class="pill overdue">Overdue</span>` : '';
+    
+    // NEW: Create due today pill
+    const dueTodayPill = isDueToday(todo) ? `<span class="pill due-today">Due Today!</span>` : '';
 
     // Map priority to !, !!, !!! with colors
-let prioSymbol = '';
-let prioClass = '';
-if (todo.priority === 'L') {
-  prioSymbol = '!';
-  prioClass = 'priority-low';
-} else if (todo.priority === 'M') {
-  prioSymbol = '!!';
-  prioClass = 'priority-medium';
-} else if (todo.priority === 'H') {
-  prioSymbol = '!!!';
-  prioClass = 'priority-high';
-}
+    let prioSymbol = '';
+    let prioClass = '';
+    if (todo.priority === 'L') {
+      prioSymbol = '!';
+      prioClass = 'priority-low';
+    } else if (todo.priority === 'M') {
+      prioSymbol = '!!';
+      prioClass = 'priority-medium';
+    } else if (todo.priority === 'H') {
+      prioSymbol = '!!!';
+      prioClass = 'priority-high';
+    }
 
-const prioPill = todo.priority ? `<span class="pill ${prioClass}">${prioSymbol}</span>` : '';
+    const prioPill = todo.priority ? `<span class="pill ${prioClass}">${prioSymbol}</span>` : '';
     const tagPills = (todo.tags || []).map(t => `<span class="pill">${t}</span>`).join(' ');
+
+    // NEW: Show "Due Today!" instead of regular due date pill when due today
+    const duePill = isDueToday(todo) 
+      ? dueTodayPill 
+      : (todo.due ? `<span class="pill due">Due: ${toISO(todo.due)}</span>` : '');
 
     li.innerHTML = `
       <input type="checkbox" class="select-todo" data-trueindex="${i}" />
       <span class="todo-text">${todo.text}</span>
       <div class="todo-meta">
-        ${todo.due ? `<span class="pill due">Due: ${toISO(todo.due)}</span>` : ''}
+        ${duePill}
         ${todo.repeat ? `<span class="pill repeat">${repeatLabel(todo)}</span>` : ''}
         ${overduePill} ${prioPill} ${tagPills}
       </div>
@@ -708,7 +728,7 @@ const prioPill = todo.priority ? `<span class="pill ${prioClass}">${prioSymbol}<
   });
 
   updateProgress();
- // Reset and sync Select All
+  // Reset and sync Select All
   updateSelectAllState();
   updateSelectModeVisibility();
 };

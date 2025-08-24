@@ -1515,14 +1515,21 @@ async function confirmDelete() {
         }
       });
       
-      // Accept both successful deletion (200/204) and "already gone" (404)
+      // Check for actual errors (not 404 which means already deleted)
       if (!response.ok && response.status !== 404) {
-        throw new Error(`HTTP ${response.status}`);
+        if (response.status === 401 || response.status === 403) {
+          alert("❌ Authentication error. Please login again.");
+          return; // Don't close modal, let user retry
+        } else {
+          alert(`❌ Failed to delete task (HTTP ${response.status}). Please try again.`);
+          return; // Don't close modal, let user retry
+        }
       }
       
     } else if (pendingDeletion.type === 'bulk') {
       // Delete multiple tasks (in reverse order to maintain indices)
       const indices = [...pendingDeletion.indices].sort((a, b) => b - a);
+      let failedCount = 0;
       
       for (const index of indices) {
         deletedTodos.push(todosData[index]); // for undo
@@ -1534,26 +1541,39 @@ async function confirmDelete() {
           }
         });
         
-        // Accept both successful deletion (200/204) and "already gone" (404)
+        // Check for actual errors (not 404 which means already deleted)
         if (!response.ok && response.status !== 404) {
-          throw new Error(`HTTP ${response.status}`);
+          failedCount++;
+          console.warn(`Failed to delete task ${index}: HTTP ${response.status}`);
+        }
+      }
+      
+      // Show error only if some deletions actually failed
+      if (failedCount > 0) {
+        if (failedCount === indices.length) {
+          alert(`❌ Failed to delete ${failedCount} task${failedCount > 1 ? 's' : ''}. Please check your authentication and try again.`);
+          return; // Don't close modal, let user retry
+        } else {
+          alert(`⚠️ ${failedCount} out of ${indices.length} tasks failed to delete. The rest were deleted successfully.`);
+          // Continue to close modal and refresh since some succeeded
         }
       }
     }
     
-    // Close modal and refresh
+    // Close modal and refresh (only reached if successful or partial success)
     cancelDelete();
     await loadTodosFromServer();
     
     // Exit select mode if we were in bulk delete
-    if (pendingDeletion.type === 'bulk' && selectMode) {
+    if (pendingDeletion && pendingDeletion.type === 'bulk' && selectMode) {
       toggleSelectMode();
     }
     
   } catch (error) {
-    console.error('Delete failed:', error);
-    alert("Failed to delete. Please try again.");
-    // Don't close the modal on error so user can retry
+    // This catches network errors, not HTTP status errors
+    console.error('Network error during deletion:', error);
+    alert("❌ Network error. Please check your connection and try again.");
+    // Don't close the modal on network error so user can retry
   }
 }
 

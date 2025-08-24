@@ -112,6 +112,24 @@ relatedButtons.forEach(btn => {
   }
 }
 
+//Emoji helper
+function getTagEmoji(tagName) {
+  if (!tagName) return '';
+  
+  const tag = tagName.toLowerCase().trim();
+  
+  const tagEmojis = {
+    'projects': '📋',
+    'errands': '🏃',
+    'health': '⚕️',
+    'chores': '🧹',
+    'school': '🎓',
+    'work': '💼',
+    'car': '🚗'
+  };
+  
+  return tagEmojis[tag] || '';
+}
 // Time Helper
 function localISODate() {
   return new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
@@ -682,18 +700,40 @@ function rollForwardIfMissed(task) {
 }
 
 // Pretty pills for UI
-function repeatLabel(task){
+function repeatLabel(task) {
   if (!task.repeat) return '';
-  if (task.repeat.freq === 'daily') return `Repeats daily (every ${task.repeat.interval||1}d)`;
-  if (task.repeat.freq === 'weekly') {
-    const map = ['Su','Mo','Tu','We','Th','Fr','Sa'];
-    const wd = (task.repeat.byWeekday||[]).map(x=>map[x]).join(',');
-    return `Repeats weekly${wd?` (${wd})`:''} (every ${task.repeat.interval||1}w)`;
+  
+  if (task.repeat.freq === 'daily') {
+    const interval = task.repeat.interval || 1;
+    if (interval === 1) return '🔄 Daily';
+    return `🔄 ${interval}d`;
   }
+  
+  if (task.repeat.freq === 'weekly') {
+    const interval = task.repeat.interval || 1;
+    const byWeekday = task.repeat.byWeekday || [];
+    
+    // Show specific days if selected
+    if (byWeekday.length > 0) {
+      const dayMap = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+      const days = byWeekday.map(d => dayMap[d]).join('');
+      
+      if (interval === 1) {
+        return `📅 ${days}`;
+      } else {
+        return `📅 ${days} (${interval}w)`;
+      }
+    }
+    
+    // Generic weekly
+    if (interval === 1) return '📅 Weekly';
+    return `📅 ${interval}w`;
+  }
+  
   return '';
 }
-  
-  // Build weekday checkboxes for the editor
+
+// Also update the inline editor weekday display for consistency
 function weekdayBoxes(selected = []) {
   const map = ['Su','Mo','Tu','We','Th','Fr','Sa'];
   return map.map((lbl,i)=>`
@@ -751,7 +791,10 @@ function weekdayBoxes(selected = []) {
     }
 
     const prioPill = todo.priority ? `<span class="pill ${prioClass}">${prioSymbol}</span>` : '';
-    const tagPills = (todo.tags || []).map(t => `<span class="pill">${t}</span>`).join(' ');
+    const tagPills = (todo.tags || []).map(t => {
+  const emoji = getTagEmoji(t);
+  return `<span class="pill">${emoji || t}</span>`;
+}).join(' ');
 
     li.innerHTML = `
       <input type="checkbox" class="select-todo" data-trueindex="${i}" />
@@ -803,7 +846,10 @@ const renderDone = () => {
                   ? `<span class="pill due" style="border:1px solid #3b82f6; color:#3b82f6; background:rgba(59,130,246,.15);">Due Tomorrow</span>`
                   : `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${toISO(todo.due)}</span>`))
           : ''}
-        ${(todo.tags || []).map(t => `<span class="pill pill-tag">${t}</span>`).join(' ')}
+        ${(todo.tags || []).map(t => {
+  const emoji = getTagEmoji(t);
+  return `<span class="pill pill-tag">${emoji || t}</span>`;
+}).join(' ')}
       </div>
       <div>
         <button onclick="unmarkDone(${i})">↩️</button>

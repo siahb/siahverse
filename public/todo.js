@@ -1561,11 +1561,12 @@ async function confirmDelete() {
     }
     
     // Close modal and refresh (only reached if successful or partial success)
+    const wasSelectMode = selectMode;
     cancelDelete();
     await loadTodosFromServer();
     
-    // Exit select mode if we were in bulk delete
-    if (pendingDeletion && pendingDeletion.type === 'bulk' && selectMode) {
+    // Exit select mode after ANY deletion (single or bulk)
+    if (wasSelectMode) {
       toggleSelectMode();
     }
     

@@ -286,6 +286,12 @@ function updateSelectModeVisibility() {
       item.style.userSelect = '';
     }
   });
+
+  // Hide/show delete buttons (❌) on individual tasks
+  const deleteButtons = document.querySelectorAll('li[data-trueindex] button[onclick*="removeTodo"]');
+  deleteButtons.forEach(btn => {
+    btn.style.display = selectMode ? 'none' : 'inline-block';
+  });
 }
 
 // Also update your updateButtonVisibility function to include select mode elements:

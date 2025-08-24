@@ -21,7 +21,7 @@ const __dirname = path.dirname(__filename);
 // Serve static files from /public
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => {
-  res.redirect('/todo.html');
+  res.redirect('/index.html');
 });
 
 // Load todos from db.json

@@ -1351,9 +1351,6 @@ function disableDrag() {
   updateAdminUI();
 
   // === DELETE CONFIRMATION SYSTEM ===
-// Global variable to track what we're about to delete
-let pendingDeletion = null;
-
 // Get or create the delete confirmation modal
 function getDeleteModal() {
   let modal = document.getElementById('delete-modal');

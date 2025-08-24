@@ -704,8 +704,8 @@ function weekdayBoxes(selected = []) {
   `).join('');
 }
 
-// Render Todos
-const renderTodos = () => {
+// Updated renderTodos function - reordered pills (repeat first, then due)
+  const renderTodos = () => {
   todoList.innerHTML = '';
   const base = todosData.filter(t => !t.done);
   const view = sortTodos(filteredTodos(base));
@@ -715,7 +715,7 @@ const renderTodos = () => {
     const li = document.createElement('li');
     li.setAttribute('data-trueindex', i);
     
-    // NEW: Add due-today data attribute
+    // Add due-today data attribute
     if (isDueToday(todo)) {
       li.setAttribute('data-due-today', 'true');
     }
@@ -724,14 +724,17 @@ const renderTodos = () => {
 
     const overduePill = isOverdue(todo) ? `<span class="pill overdue">Overdue</span>` : '';
     
-// NEW: Create due today vs regular due pill
-const duePill = isDueToday(todo) 
-  ? `<span class="pill due" style="border:1px solid #a855f7; color:#a855f7; background:rgba(168,85,247,.12);">Due Today!</span>`
-  : (isDueTomorrow(todo)
-      ? `<span class="pill due" style="border:1px solid #3b82f6; color:#3b82f6; background:rgba(59,130,246,.15);">Due Tomorrow</span>`
-      : (todo.due 
-          ? `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${toISO(todo.due)}</span>` 
-          : ''));
+    // Create repeat pill
+    const repeatPill = todo.repeat ? `<span class="pill repeat">${repeatLabel(todo)}</span>` : '';
+    
+    // Create due pills (today, tomorrow, or regular)
+    const duePill = isDueToday(todo) 
+      ? `<span class="pill due" style="border:1px solid #a855f7; color:#a855f7; background:rgba(168,85,247,.12);">Due Today!</span>`
+      : (isDueTomorrow(todo)
+          ? `<span class="pill due" style="border:1px solid #14b8a6; color:#14b8a6; background:rgba(20,184,166,.15);">Due Tomorrow</span>`
+          : (todo.due 
+              ? `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${toISO(todo.due)}</span>` 
+              : ''));
 
     // Map priority to !, !!, !!! with colors
     let prioSymbol = '';
@@ -754,8 +757,8 @@ const duePill = isDueToday(todo)
       <input type="checkbox" class="select-todo" data-trueindex="${i}" />
       <span class="todo-text">${todo.text}</span>
       <div class="todo-meta">
+        ${repeatPill}
         ${duePill}
-        ${todo.repeat ? `<span class="pill repeat">${repeatLabel(todo)}</span>` : ''}
         ${overduePill} ${prioPill} ${tagPills}
       </div>
       <div>
@@ -772,8 +775,8 @@ const duePill = isDueToday(todo)
   updateSelectAllState();
   updateSelectModeVisibility();
 };
-  
-// Render Done
+
+// Updated renderDone function - reordered pills (repeat first, then due)
 const renderDone = () => {
   doneList.innerHTML = '';
 
@@ -792,14 +795,14 @@ const renderDone = () => {
       <input type="checkbox" class="select-todo" data-trueindex="${i}" />
       <span class="todo-text">${todo.text}</span>
       <div class="todo-meta">
-        ${todo.due 
-  ? (isDueToday(todo)
-      ? `<span class="pill due" style="border:1px solid #a855f7; color:#a855f7; background:rgba(168,85,247,.12);">Due Today!</span>`
-      : (isDueTomorrow(todo)
-          ? `<span class="pill due" style="border:1px solid #3b82f6; color:#3b82f6; background:rgba(59,130,246,.15);">Due Tomorrow</span>`
-          : `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${toISO(todo.due)}</span>`))
-  : ''}
         ${todo.repeat ? `<span class="pill pill-repeat">${repeatLabel(todo)}</span>` : ''}
+        ${todo.due 
+          ? (isDueToday(todo)
+              ? `<span class="pill due" style="border:1px solid #a855f7; color:#a855f7; background:rgba(168,85,247,.12);">Due Today!</span>`
+              : (isDueTomorrow(todo)
+                  ? `<span class="pill due" style="border:1px solid #14b8a6; color:#14b8a6; background:rgba(20,184,166,.15);">Due Tomorrow</span>`
+                  : `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${toISO(todo.due)}</span>`))
+          : ''}
         ${(todo.tags || []).map(t => `<span class="pill pill-tag">${t}</span>`).join(' ')}
       </div>
       <div>
@@ -813,7 +816,7 @@ const renderDone = () => {
 
   updateProgress();
   updateSelectAllState();
-  updateSelectModeVisibility();// ensure header reflects state right after render
+  updateSelectModeVisibility();
 };
 
 selectAll?.addEventListener('change', (e) => {

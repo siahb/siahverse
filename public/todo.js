@@ -287,9 +287,9 @@ function updateSelectModeVisibility() {
     }
   });
 
-  // Hide/show delete buttons (❌) on individual tasks
-  const deleteButtons = document.querySelectorAll('li[data-trueindex] button[onclick*="removeTodo"]');
-  deleteButtons.forEach(btn => {
+   // Hide/show ALL action buttons (✅, ✏️, ❌) on individual tasks
+  const allActionButtons = document.querySelectorAll('li[data-trueindex] > div:last-child button');
+  allActionButtons.forEach(btn => {
     btn.style.display = selectMode ? 'none' : 'inline-block';
   });
 }

@@ -1073,21 +1073,82 @@ window.markAsDone = async (index) => {
   const task = todosData[index];
   if (!task) return;
 
+  // Fixed markAsDone function with safeguards
+window.markAsDone = async (index) => {
+  if (!requireAdmin("mark tasks as done")) return;
+  
+  const task = todosData[index];
+  if (!task) return;
+
   // If it's a repeating task, advance dates instead of moving to Done
   if (task.repeat) {
     const nowISO = todayISO();
     const updates = { lastDone: nowISO };
-    const startFrom = toISO(task.nextDue || task.due || nowISO);
+    
+    // Use the current due date as the starting point, or today if no due date
+    const currentDue = toISO(task.nextDue || task.due || nowISO);
+    
+    // Compute the next occurrence from the current due date
+    let nextDue = computeNextDue(task, currentDue);
+    
+    // Safety check: if nextDue is null or invalid, fallback
+    if (!nextDue) {
+      console.error("computeNextDue returned invalid result, using fallback");
+      // Fallback: add interval to current due date
+      if (task.repeat.freq === 'daily') {
+        const interval = Math.max(1, task.repeat.interval || 1);
+        nextDue = addDays(currentDue, interval);
+      } else if (task.repeat.freq === 'weekly') {
+        const interval = Math.max(1, task.repeat.interval || 1);
+        nextDue = addDays(currentDue, interval * 7);
+      } else {
+        nextDue = addDays(currentDue, 1); // ultimate fallback
+      }
+    }
+    
+    // Safety check: prevent infinite loops by limiting iterations
+    let iterations = 0;
+    const maxIterations = 100; // Safety limit
+    
+    // If the next due date is still in the past (timezone issues), advance it
+    while (nextDue <= nowISO && iterations < maxIterations) {
+      iterations++;
+      const previousNext = nextDue;
+      nextDue = computeNextDue(task, nextDue);
+      
+      // If computeNextDue isn't advancing the date, force advancement
+      if (nextDue <= previousNext) {
+        console.warn("computeNextDue not advancing properly, forcing advancement");
+        if (task.repeat.freq === 'daily') {
+          const interval = Math.max(1, task.repeat.interval || 1);
+          nextDue = addDays(previousNext, interval);
+        } else if (task.repeat.freq === 'weekly') {
+          const interval = Math.max(1, task.repeat.interval || 1);
+          nextDue = addDays(previousNext, interval * 7);
+        } else {
+          nextDue = addDays(previousNext, 1);
+        }
+      }
+    }
+    
+    // Final safety check
+    if (iterations >= maxIterations) {
+      console.error("Hit maximum iterations in markAsDone, using emergency fallback");
+      nextDue = addDays(nowISO, 1); // Emergency fallback: tomorrow
+    }
+    
+    // Ensure the next due date is at least tomorrow
+    if (nextDue <= nowISO) {
+      nextDue = addDays(nowISO, 1);
+    }
 
-    // always advance at least one occurrence
-    let next = computeNextDue(task, startFrom);
-    while (next <= nowISO) next = computeNextDue(task, next);
+    updates.nextDue = nextDue;
+    updates.due = nextDue;
 
-    updates.nextDue = next;
-    updates.due = next;
+    console.log(`Marking repeating task as done. Current due: ${currentDue}, Next due: ${nextDue}, Today: ${nowISO}`);
 
     try {
-      await fetch(`/todos/${index}`, {
+      const response = await fetch(`/todos/${index}`, {
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',
@@ -1095,16 +1156,22 @@ window.markAsDone = async (index) => {
         },
         body: JSON.stringify(updates)
       });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
       await loadTodosFromServer();
-    } catch {
-      alert("Failed to advance repeating task.");
+    } catch (error) {
+      console.error("Failed to advance repeating task:", error);
+      alert("Failed to advance repeating task. Please try again.");
     }
     return;
   }
 
   // Non-repeating: behave as before
   try {
-    await fetch(`/todos/${index}`, {
+    const response = await fetch(`/todos/${index}`, {
       method: 'PATCH',
       headers: { 
         'Content-Type': 'application/json',
@@ -1112,9 +1179,15 @@ window.markAsDone = async (index) => {
       },
       body: JSON.stringify({ done: true })
     });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    
     await loadTodosFromServer();
-  } catch {
-    alert("Failed to mark as done.");
+  } catch (error) {
+    console.error("Failed to mark task as done:", error);
+    alert("Failed to mark as done. Please try again.");
   }
 };
 

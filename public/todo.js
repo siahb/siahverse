@@ -126,7 +126,7 @@ function getTagEmoji(tagName) {
     'school': '🎓',
     'work': '💼',
     'car': '🚗',
-    'website: '🌐'
+    'website': '🌐'
   };
   
   return tagEmojis[tag] || '';

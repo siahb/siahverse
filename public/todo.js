@@ -142,7 +142,13 @@ function isDueToday(todo) {
   intervalUnit.textContent = v === 'weekly' ? 'week(s)' : 'day(s)';
   weeklyWrap.style.display = v === 'weekly' ? 'flex' : 'none';
 });
-  
+
+function isDueTomorrow(todo) {
+  if (!todo.due) return false;
+  const tomorrow = addDays(todayISO(), 1);
+  return toISO(todo.due) === tomorrow;
+}
+
   function updateSelectAllState() {
     const all = document.querySelectorAll('.select-todo');
     const checked = document.querySelectorAll('.select-todo:checked');
@@ -721,9 +727,11 @@ const renderTodos = () => {
 // NEW: Create due today vs regular due pill
 const duePill = isDueToday(todo) 
   ? `<span class="pill due" style="border:1px solid #a855f7; color:#a855f7; background:rgba(168,85,247,.12);">Due Today!</span>`
-  : (todo.due 
-      ? `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${toISO(todo.due)}</span>` 
-      : '');
+  : (isDueTomorrow(todo)
+      ? `<span class="pill due" style="border:1px solid #06b6d4; color:#06b6d4; background:rgba(6,182,212,.12);">Due Tomorrow</span>`
+      : (todo.due 
+          ? `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${toISO(todo.due)}</span>` 
+          : ''));
 
     // Map priority to !, !!, !!! with colors
     let prioSymbol = '';
@@ -787,7 +795,9 @@ const renderDone = () => {
         ${todo.due 
   ? (isDueToday(todo)
       ? `<span class="pill due" style="border:1px solid #a855f7; color:#a855f7; background:rgba(168,85,247,.12);">Due Today!</span>`
-      : `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${toISO(todo.due)}</span>`)
+      : (isDueTomorrow(todo)
+          ? `<span class="pill due" style="border:1px solid #06b6d4; color:#06b6d4; background:rgba(6,182,212,.12);">Due Tomorrow</span>`
+          : `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${toISO(todo.due)}</span>`))
   : ''}
         ${todo.repeat ? `<span class="pill pill-repeat">${repeatLabel(todo)}</span>` : ''}
         ${(todo.tags || []).map(t => `<span class="pill pill-tag">${t}</span>`).join(' ')}

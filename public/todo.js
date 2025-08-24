@@ -56,7 +56,7 @@ function requireAdmin(operation = "perform this action") {
   return true;
 }
 
-function updateInputStates() { // Renamed from updateSearchState
+function updateInputStates() {
   const isLoggedIn = !!localStorage.getItem(ADMIN_PASSWORD_KEY);
 
   // Disable/enable related input fields
@@ -84,7 +84,12 @@ relatedButtons.forEach(btn => {
     btn.style.cursor = isLoggedIn ? 'pointer' : 'not-allowed';
   }
 });
-  
+  // Disable/enable Select Mode button
+  if (selectModeBtn) {
+  selectModeBtn.disabled = !isLoggedIn;
+  selectModeBtn.style.opacity = isLoggedIn ? '1' : '0.5';
+  selectModeBtn.style.cursor = isLoggedIn ? 'pointer' : 'not-allowed';
+}
   // Disable/enable search input
   if (searchInput) {
     searchInput.disabled = !isLoggedIn;
@@ -258,6 +263,11 @@ document.addEventListener('keydown', (e) => {
 
 // Add the Select Mode toggle function
 function toggleSelectMode() {
+   if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
+    alert("❌ Admin login required to select tasks");
+    return;
+  }
+  
   selectMode = !selectMode;
   
   if (selectMode) {

@@ -728,7 +728,7 @@ const renderTodos = () => {
 const duePill = isDueToday(todo) 
   ? `<span class="pill due" style="border:1px solid #a855f7; color:#a855f7; background:rgba(168,85,247,.12);">Due Today!</span>`
   : (isDueTomorrow(todo)
-      ? `<span class="pill due" style="border:1px solid #06b6d4; color:#06b6d4; background:rgba(6,182,212,.12);">Due Tomorrow</span>`
+      ? `<span class="pill due" style="border:1px solid #3b82f6; color:#3b82f6; background:rgba(59,130,246,.15);">Due Tomorrow</span>`
       : (todo.due 
           ? `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${toISO(todo.due)}</span>` 
           : ''));
@@ -796,7 +796,7 @@ const renderDone = () => {
   ? (isDueToday(todo)
       ? `<span class="pill due" style="border:1px solid #a855f7; color:#a855f7; background:rgba(168,85,247,.12);">Due Today!</span>`
       : (isDueTomorrow(todo)
-          ? `<span class="pill due" style="border:1px solid #06b6d4; color:#06b6d4; background:rgba(6,182,212,.12);">Due Tomorrow</span>`
+          ? `<span class="pill due" style="border:1px solid #3b82f6; color:#3b82f6; background:rgba(59,130,246,.15);">Due Tomorrow</span>`
           : `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${toISO(todo.due)}</span>`))
   : ''}
         ${todo.repeat ? `<span class="pill pill-repeat">${repeatLabel(todo)}</span>` : ''}

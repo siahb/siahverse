@@ -1508,12 +1508,17 @@ async function confirmDelete() {
       const index = pendingDeletion.index;
       deletedTodos.push(todosData[index]); // for undo
       
-      await fetch(`/todos/${index}`, {
+      const response = await fetch(`/todos/${index}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY)}`
         }
       });
+      
+      // Accept both successful deletion (200/204) and "already gone" (404)
+      if (!response.ok && response.status !== 404) {
+        throw new Error(`HTTP ${response.status}`);
+      }
       
     } else if (pendingDeletion.type === 'bulk') {
       // Delete multiple tasks (in reverse order to maintain indices)
@@ -1522,12 +1527,17 @@ async function confirmDelete() {
       for (const index of indices) {
         deletedTodos.push(todosData[index]); // for undo
         
-        await fetch(`/todos/${index}`, {
+        const response = await fetch(`/todos/${index}`, {
           method: 'DELETE',
           headers: {
             Authorization: `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY)}`
           }
         });
+        
+        // Accept both successful deletion (200/204) and "already gone" (404)
+        if (!response.ok && response.status !== 404) {
+          throw new Error(`HTTP ${response.status}`);
+        }
       }
     }
     
@@ -1543,6 +1553,7 @@ async function confirmDelete() {
   } catch (error) {
     console.error('Delete failed:', error);
     alert("Failed to delete. Please try again.");
+    // Don't close the modal on error so user can retry
   }
 }
 

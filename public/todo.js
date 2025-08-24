@@ -716,7 +716,7 @@ function repeatLabel(task) {
     
     // Show specific days if selected
     if (byWeekday.length > 0) {
-      const dayMap = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+      const dayMap = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
       const days = byWeekday.map(d => dayMap[d]).join(',');
       
       if (interval === 1) {

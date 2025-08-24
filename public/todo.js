@@ -1,3 +1,5 @@
+  // Global variable to track what we're about to delete
+  let pendingDeletion = null;
   const todoInput = document.getElementById('todo-input');
   const todoList = document.getElementById('todo-list');
   const doneList = document.getElementById('done-list');
@@ -1130,21 +1132,9 @@ window.unmarkDone = async (index) => {
 };
 
   // Remove todo
-  window.removeTodo = async (i) => {
-    if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("❌ Admin login required to delete tasks");
-    deletedTodos.push(todosData[i]); // save full object
-    try {
-      await fetch(`/todos/${i}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY)}`
-        }
-      });
-      await loadTodosFromServer();
-    } catch {
-      alert("Failed to delete.");
-    }
-  };
+  window.removeTodo = function(index) {
+  showDeleteConfirmation(index);
+};
 
   // Fix undo button - add admin check
 undoBtn.addEventListener('click', async () => {
@@ -1169,16 +1159,8 @@ undoBtn.addEventListener('click', async () => {
   loadTodosFromServer();
 });
 
-  window.deleteSelected = async () => {
-  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("❌ Admin login required to delete tasks");
-
-  const selected = [...document.querySelectorAll('.select-todo:checked')]
-    .map(cb => parseInt(cb.dataset.trueindex, 10))
-    .sort((a,b) => b - a);
-
-  for (const i of selected) {
-    await window.removeTodo(i); // removeTodo already reloads after each delete
-  }
+ window.deleteSelected = function() {
+  showBulkDeleteConfirmation();
 };
 
 //Toggle button visibility during search
@@ -1367,6 +1349,218 @@ function disableDrag() {
   window.addEventListener('resize', resizeCanvas);
 
   updateAdminUI();
+
+  // === DELETE CONFIRMATION SYSTEM ===
+// Global variable to track what we're about to delete
+let pendingDeletion = null;
+
+// Get or create the delete confirmation modal
+function getDeleteModal() {
+  let modal = document.getElementById('delete-modal');
+  if (!modal) {
+    // Create the modal if it doesn't exist
+    modal = document.createElement('div');
+    modal.id = 'delete-modal';
+    modal.className = 'modal';
+    modal.innerHTML = `
+      <div class="modal-content delete-modal-content">
+        <div class="modal-header">
+          <h2>🗑️ Confirm Deletion</h2>
+        </div>
+        <div class="modal-body">
+          <p id="delete-message">Are you sure you want to delete this task?</p>
+          <div class="delete-task-preview" id="delete-preview"></div>
+          <p style="font-size: 0.9rem; color: var(--text-color); opacity: 0.7; margin-top: 1rem;">
+            💡 You can use the Undo button to restore deleted tasks.
+          </p>
+        </div>
+        <div class="modal-buttons">
+          <button id="cancel-delete-btn" class="delete-cancel-btn">Cancel</button>
+          <button id="confirm-delete-btn" class="delete-confirm-btn">🗑️ Delete</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    
+    // Add event listeners
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        cancelDelete();
+      }
+    });
+    
+    document.getElementById('cancel-delete-btn').addEventListener('click', cancelDelete);
+    document.getElementById('confirm-delete-btn').addEventListener('click', confirmDelete);
+    
+    // Handle Escape key
+    const escapeHandler = (e) => {
+      if (e.key === 'Escape' && modal.style.display === 'flex') {
+        cancelDelete();
+      }
+    };
+    document.addEventListener('keydown', escapeHandler);
+  }
+  return modal;
+}
+
+// Show delete confirmation for a single task
+function showDeleteConfirmation(index, taskText = null) {
+  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
+    alert("❌ Admin login required to delete tasks");
+    return;
+  }
+  
+  const modal = getDeleteModal();
+  const task = todosData[index];
+  
+  if (!task) {
+    alert("Task not found");
+    return;
+  }
+  
+  // Store what we're about to delete
+  pendingDeletion = {
+    type: 'single',
+    index: index,
+    task: task
+  };
+  
+  // Update modal content
+  document.getElementById('delete-message').textContent = 'Are you sure you want to delete this task?';
+  document.getElementById('delete-preview').innerHTML = `
+    <div class="delete-task-item">
+      <span class="delete-task-text">${task.text}</span>
+      ${task.tags && task.tags.length ? 
+        `<div class="delete-task-tags">${task.tags.map(tag => `<span class="pill">${tag}</span>`).join(' ')}</div>` 
+        : ''}
+      ${task.priority ? 
+        `<span class="pill priority-${task.priority.toLowerCase()}">${task.priority === 'H' ? '!!! High' : task.priority === 'M' ? '!! Medium' : '! Low'}</span>` 
+        : ''}
+    </div>
+  `;
+  
+  // Show modal
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  
+  // Focus the cancel button by default (safer)
+  document.getElementById('cancel-delete-btn').focus();
+}
+
+// Show delete confirmation for multiple selected tasks
+function showBulkDeleteConfirmation() {
+  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
+    alert("❌ Admin login required to delete tasks");
+    return;
+  }
+  
+  const selected = [...document.querySelectorAll('.select-todo:checked')]
+    .map(cb => parseInt(cb.dataset.trueindex, 10));
+    
+  if (selected.length === 0) {
+    alert("No tasks selected");
+    return;
+  }
+  
+  const modal = getDeleteModal();
+  
+  // Store what we're about to delete
+  pendingDeletion = {
+    type: 'bulk',
+    indices: selected,
+    tasks: selected.map(i => todosData[i]).filter(Boolean)
+  };
+  
+  // Update modal content
+  const count = selected.length;
+  document.getElementById('delete-message').textContent = 
+    `Are you sure you want to delete ${count} task${count > 1 ? 's' : ''}?`;
+  
+  // Show preview of tasks to be deleted
+  const previewHtml = selected.slice(0, 5).map(index => {
+    const task = todosData[index];
+    if (!task) return '';
+    return `
+      <div class="delete-task-item">
+        <span class="delete-task-text">${task.text}</span>
+        ${task.tags && task.tags.length ? 
+          `<div class="delete-task-tags">${task.tags.map(tag => `<span class="pill">${tag}</span>`).join(' ')}</div>` 
+          : ''}
+      </div>
+    `;
+  }).join('');
+  
+  document.getElementById('delete-preview').innerHTML = 
+    previewHtml + (selected.length > 5 ? `<div class="delete-more">...and ${selected.length - 5} more tasks</div>` : '');
+  
+  // Show modal
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  
+  // Focus the cancel button by default (safer)
+  document.getElementById('cancel-delete-btn').focus();
+}
+
+// Cancel deletion
+function cancelDelete() {
+  const modal = document.getElementById('delete-modal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
+  pendingDeletion = null;
+}
+
+// Confirm and execute deletion
+async function confirmDelete() {
+  if (!pendingDeletion) {
+    cancelDelete();
+    return;
+  }
+  
+  try {
+    if (pendingDeletion.type === 'single') {
+      // Delete single task
+      const index = pendingDeletion.index;
+      deletedTodos.push(todosData[index]); // for undo
+      
+      await fetch(`/todos/${index}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY)}`
+        }
+      });
+      
+    } else if (pendingDeletion.type === 'bulk') {
+      // Delete multiple tasks (in reverse order to maintain indices)
+      const indices = [...pendingDeletion.indices].sort((a, b) => b - a);
+      
+      for (const index of indices) {
+        deletedTodos.push(todosData[index]); // for undo
+        
+        await fetch(`/todos/${index}`, {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY)}`
+          }
+        });
+      }
+    }
+    
+    // Close modal and refresh
+    cancelDelete();
+    await loadTodosFromServer();
+    
+    // Exit select mode if we were in bulk delete
+    if (pendingDeletion.type === 'bulk' && selectMode) {
+      toggleSelectMode();
+    }
+    
+  } catch (error) {
+    console.error('Delete failed:', error);
+    alert("Failed to delete. Please try again.");
+  }
+}
 
   exportBtn?.addEventListener('click', async () => {
   try {

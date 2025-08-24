@@ -1355,29 +1355,13 @@ function disableDrag() {
 function getDeleteModal() {
   let modal = document.getElementById('delete-modal');
   if (!modal) {
-    // Create the modal if it doesn't exist
-    modal = document.createElement('div');
-    modal.id = 'delete-modal';
-    modal.className = 'modal';
-    modal.innerHTML = `
-      <div class="modal-content delete-modal-content">
-        <div class="modal-header">
-          <h2>🗑️ Confirm Deletion</h2>
-        </div>
-        <div class="modal-body">
-          <p id="delete-message">Are you sure you want to delete this task?</p>
-          <div class="delete-task-preview" id="delete-preview"></div>
-          <p style="font-size: 0.9rem; color: var(--text-color); opacity: 0.7; margin-top: 1rem;">
-            💡 You can use the Undo button to restore deleted tasks.
-          </p>
-        </div>
-        <div class="modal-buttons">
-          <button id="cancel-delete-btn" class="delete-cancel-btn">Cancel</button>
-          <button id="confirm-delete-btn" class="delete-confirm-btn">🗑️ Delete</button>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(modal);
+    console.error('Delete modal not found in HTML');
+    return null;
+  }
+  
+  // Only add event listeners once
+  if (!modal.hasAttribute('data-listeners-added')) {
+    modal.setAttribute('data-listeners-added', 'true');
     
     // Add event listeners
     modal.addEventListener('click', (e) => {
@@ -1386,17 +1370,20 @@ function getDeleteModal() {
       }
     });
     
-    document.getElementById('cancel-delete-btn').addEventListener('click', cancelDelete);
-    document.getElementById('confirm-delete-btn').addEventListener('click', confirmDelete);
+    const cancelBtn = document.getElementById('cancel-delete-btn');
+    const confirmBtn = document.getElementById('confirm-delete-btn');
+    
+    if (cancelBtn) cancelBtn.addEventListener('click', cancelDelete);
+    if (confirmBtn) confirmBtn.addEventListener('click', confirmDelete);
     
     // Handle Escape key
-    const escapeHandler = (e) => {
+    document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && modal.style.display === 'flex') {
         cancelDelete();
       }
-    };
-    document.addEventListener('keydown', escapeHandler);
+    });
   }
+  
   return modal;
 }
 

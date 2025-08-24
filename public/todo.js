@@ -35,7 +35,8 @@ let selectMode = false;
   const sortSelect  = document.getElementById('sort-select');    // Sort: …
   // Force default sort on startup
   if (sortSelect) {
-  sortSelect.value = 'default';
+  sortSelect.value = 'dueAsc';
+  sortSelect.dispatchEvent(new Event('change'));
   }
   const tagInput    = document.getElementById('tag-input');      // Tags
   const prioSelect  = document.getElementById('priority-select');// Priority: …

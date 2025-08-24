@@ -142,7 +142,13 @@ function isDueToday(todo) {
   intervalUnit.textContent = v === 'weekly' ? 'week(s)' : 'day(s)';
   weeklyWrap.style.display = v === 'weekly' ? 'flex' : 'none';
 });
-  
+
+// Due Tomorrow Helper
+function isDueTomorrow(todo) {
+  if (!todo?.due) return false;
+  return toISO(todo.due) === addDays(todayISO(), 1);
+}
+
   function updateSelectAllState() {
     const all = document.querySelectorAll('.select-todo');
     const checked = document.querySelectorAll('.select-todo:checked');
@@ -727,17 +733,23 @@ const renderTodos = () => {
     if (isDueToday(todo)) {
       li.setAttribute('data-due-today', 'true');
     }
+    // NEW: Add due-tomorrow data attribute
+    if (isDueTomorrow(todo)) {
+      li.setAttribute('data-due-tomorrow', 'true');
+    }
     
     li.style.animationDelay = `${Math.random() * 0.5}s`;
 
     const overduePill = isOverdue(todo) ? `<span class="pill overdue">Overdue</span>` : '';
     
 // NEW: Create due today vs regular due pill
-const duePill = isDueToday(todo) 
-  ? `<span class="pill due" style="border:1px solid #a855f7; color:#a855f7; background:rgba(168,85,247,.12);">Due Today!</span>`
-  : (todo.due 
-      ? `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${toISO(todo.due)}</span>` 
-      : '');
+const duePill = todo.due
+  ? (isDueToday(todo)
+      ? `<span class="pill due" style="border:1px solid #a855f7; color:#a855f7; background:rgba(168,85,247,.12);">Due Today!</span>`
+      : (isDueTomorrow(todo) 
+          ? `<span class="pill due" style="border:1px solid #0ea5e9; color:#0ea5e9; background:rgba(14,165,233,.12);">Due Tomorrow</span>`
+          : `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${toISO(todo.due)}</span>`))
+  : '';
 
     // Map priority to !, !!, !!! with colors
     let prioSymbol = '';
@@ -801,7 +813,9 @@ const renderDone = () => {
         ${todo.due 
   ? (isDueToday(todo)
       ? `<span class="pill due" style="border:1px solid #a855f7; color:#a855f7; background:rgba(168,85,247,.12);">Due Today!</span>`
-      : `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${toISO(todo.due)}</span>`)
+      : (isDueTomorrow(todo)
+          ? `<span class="pill due" style="border:1px solid #0ea5e9; color:#0ea5e9; background:rgba(14,165,233,.12);">Due Tomorrow</span>`
+          : `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${toISO(todo.due)}</span>`))
   : ''}
         ${todo.repeat ? `<span class="pill pill-repeat">${repeatLabel(todo)}</span>` : ''}
         ${(todo.tags || []).map(t => `<span class="pill pill-tag">${t}</span>`).join(' ')}

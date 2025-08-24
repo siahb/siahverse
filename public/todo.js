@@ -125,7 +125,8 @@ function getTagEmoji(tagName) {
     'chores': '🧹',
     'school': '🎓',
     'work': '💼',
-    'car': '🚗'
+    'car': '🚗',
+    'website: '🌐'
   };
   
   return tagEmojis[tag] || '';

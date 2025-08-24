@@ -1066,13 +1066,6 @@ bindEnterToAdd(prioSelect);
 bindEnterToAdd(repeatSelect);
 bindEnterToAdd(intervalInput);
 
-// Fix markAsDone function - add admin check
-window.markAsDone = async (index) => {
-  if (!requireAdmin("mark tasks as done")) return;
-  
-  const task = todosData[index];
-  if (!task) return;
-
   // Fixed markAsDone function with safeguards
 window.markAsDone = async (index) => {
   if (!requireAdmin("mark tasks as done")) return;

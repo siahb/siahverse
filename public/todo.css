@@ -1403,3 +1403,12 @@ body.light-mode .delete-more {
 .task-deleting {
   animation: fadeOutDelete 0.3s ease-out forwards;
 }
+/* Hide individual task delete buttons when in select mode */
+.select-mode-active li .todo-meta + div button:last-child {
+  display: none !important;
+}
+
+/* Alternative - hide all action buttons except the first one (✅) in select mode */
+.select-mode-active li > div:last-child button:not(:first-child) {
+  display: none !important;
+}

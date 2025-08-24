@@ -520,7 +520,13 @@ function forceCustomSort() {
 function toISO(d) {
   if (!d) return null;
   if (typeof d === 'string') return d.slice(0,10);
-  return new Date(d).toISOString().slice(0,10);
+  
+  // Use local date conversion to avoid timezone issues
+  const date = new Date(d);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 function addDays(iso, n){
   const d = new Date(iso || todayISO());
@@ -630,7 +636,12 @@ function computeNextDue(task, fromISO) {
   const rep = task.repeat;
   if (!rep) return task.due || null;
 
+  // Always work in local timezone
   const base = new Date(fromISO || (task.nextDue || task.due || todayISO()));
+  
+  // Reset to local midnight to avoid timezone issues
+  base.setHours(12, 0, 0, 0); // Use noon to avoid DST issues
+  
   if (rep.freq === 'daily') {
     const interval = Math.max(1, rep.interval || 1);
     base.setDate(base.getDate() + interval);
@@ -644,7 +655,10 @@ function computeNextDue(task, fromISO) {
     // find next listed weekday strictly after 'base'
     for (const wd of days) {
       const diff = (wd - todayIdx + 7) % 7;
-      if (diff > 0) { base.setDate(base.getDate() + diff); return toISO(base); }
+      if (diff > 0) { 
+        base.setDate(base.getDate() + diff); 
+        return toISO(base); 
+      }
     }
     // none left this week → jump to first day in the next interval block
     const first = days[0];
@@ -1077,14 +1091,22 @@ window.markAsDone = async (index) => {
   if (task.repeat) {
     const nowISO = todayISO();
     const updates = { lastDone: nowISO };
-    const startFrom = toISO(task.nextDue || task.due || nowISO);
-
-    // always advance at least one occurrence
-    let next = computeNextDue(task, startFrom);
-    while (next <= nowISO) next = computeNextDue(task, next);
+    
+    // Use current due date or today as starting point
+    const currentDue = toISO(task.due || nowISO);
+    
+    // Always advance from the current due date, not from "next" due
+    let next = computeNextDue(task, currentDue);
+    
+    // If the computed next date is not in the future, keep advancing
+    while (next && next <= nowISO) {
+      next = computeNextDue(task, next);
+    }
 
     updates.nextDue = next;
     updates.due = next;
+
+    console.log(`Advancing task from ${currentDue} to ${next}`); // Debug log
 
     try {
       await fetch(`/todos/${index}`, {

@@ -143,18 +143,11 @@ function isDueToday(todo) {
   weeklyWrap.style.display = v === 'weekly' ? 'flex' : 'none';
 });
 
-// Fixed Due Tomorrow Helper - more robust implementation
+// Due Tomorrow Helper
 function isDueTomorrow(todo) {
-  if (!todo || !todo.due) return false;
-  
-  try {
-    const todoDate = toISO(todo.due);
-    const tomorrowDate = addDays(todayISO(), 1);
-    return todoDate === tomorrowDate;
-  } catch (error) {
-    console.warn('Error checking due tomorrow:', error, todo);
-    return false;
-  }
+  if (!todo.due) return false;
+  const tomorrow = addDays(todayISO(), 1);
+  return toISO(todo.due) === tomorrow;
 }
 
   function updateSelectAllState() {
@@ -726,105 +719,58 @@ function weekdayBoxes(selected = []) {
   `).join('');
 }
 
-// Updated renderTodos function with better error handling for due pills
+// Render Todos
 const renderTodos = () => {
   todoList.innerHTML = '';
   const base = todosData.filter(t => !t.done);
   const view = sortTodos(filteredTodos(base));
 
   view.forEach((todo) => {
-    const i = todosData.indexOf(todo);
+    const i = todosData.indexOf(todo); // true index in the data array
     const li = document.createElement('li');
     li.setAttribute('data-trueindex', i);
     
-    // Safely check due dates with error handling
-    let isDueToday = false;
-    let isDueTomorrow = false;
-    
-    try {
-      isDueToday = todo.due && toISO(todo.due) === todayISO();
-      isDueTomorrow = todo.due && toISO(todo.due) === addDays(todayISO(), 1);
-    } catch (error) {
-      console.warn('Error processing due dates for todo:', error, todo);
-    }
-    
-    // Add data attributes safely
-    if (isDueToday) {
+    // NEW: Add due-today data attribute
+    if (isDueToday(todo)) {
       li.setAttribute('data-due-today', 'true');
-    }
-    if (isDueTomorrow) {
-      li.setAttribute('data-due-tomorrow', 'true');
     }
     
     li.style.animationDelay = `${Math.random() * 0.5}s`;
 
     const overduePill = isOverdue(todo) ? `<span class="pill overdue">Overdue</span>` : '';
     
-    // Safer due pill generation with fallbacks
-    let duePill = '';
-    try {
-      if (todo.due) {
-        if (isDueToday) {
-          duePill = `<span class="pill due" style="border:1px solid #a855f7; color:#a855f7; background:rgba(168,85,247,.12);">Due Today!</span>`;
-        } else if (isDueTomorrow) {
-          duePill = `<span class="pill due" style="border:1px solid #0ea5e9; color:#0ea5e9; background:rgba(14,165,233,.12);">Due Tomorrow</span>`;
-        } else {
-          const dueDate = toISO(todo.due);
-          duePill = `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${dueDate}</span>`;
-        }
-      }
-    } catch (error) {
-      console.warn('Error generating due pill:', error, todo);
-      // Fallback to simple due display
-      if (todo.due) {
-        duePill = `<span class="pill due">Due: ${todo.due}</span>`;
-      }
-    }
+// NEW: Create due today vs regular due pill
+const duePill = isDueToday(todo) 
+  ? `<span class="pill due due-today">Due Today!</span>`
+  : (isDueTomorrow(todo)
+      ? `<span class="pill due due-tomorrow">Due Tomorrow</span>`
+      : (todo.due 
+          ? `<span class="pill due">Due: ${toISO(todo.due)}</span>` 
+          : ''));
 
-    // Priority pills with error handling
+    // Map priority to !, !!, !!! with colors
     let prioSymbol = '';
     let prioClass = '';
-    try {
-      if (todo.priority === 'L') {
-        prioSymbol = '!';
-        prioClass = 'priority-low';
-      } else if (todo.priority === 'M') {
-        prioSymbol = '!!';
-        prioClass = 'priority-medium';
-      } else if (todo.priority === 'H') {
-        prioSymbol = '!!!';
-        prioClass = 'priority-high';
-      }
-    } catch (error) {
-      console.warn('Error processing priority:', error, todo);
+    if (todo.priority === 'L') {
+      prioSymbol = '!';
+      prioClass = 'priority-low';
+    } else if (todo.priority === 'M') {
+      prioSymbol = '!!';
+      prioClass = 'priority-medium';
+    } else if (todo.priority === 'H') {
+      prioSymbol = '!!!';
+      prioClass = 'priority-high';
     }
 
     const prioPill = todo.priority ? `<span class="pill ${prioClass}">${prioSymbol}</span>` : '';
-    
-    // Safe tag processing
-    let tagPills = '';
-    try {
-      tagPills = (todo.tags || []).map(t => `<span class="pill">${t || ''}</span>`).join(' ');
-    } catch (error) {
-      console.warn('Error processing tags:', error, todo);
-      tagPills = '';
-    }
-
-    // Safe repeat label
-    let repeatPill = '';
-    try {
-      repeatPill = todo.repeat ? `<span class="pill repeat">${repeatLabel(todo)}</span>` : '';
-    } catch (error) {
-      console.warn('Error processing repeat:', error, todo);
-      repeatPill = '';
-    }
+    const tagPills = (todo.tags || []).map(t => `<span class="pill">${t}</span>`).join(' ');
 
     li.innerHTML = `
       <input type="checkbox" class="select-todo" data-trueindex="${i}" />
-      <span class="todo-text">${todo.text || ''}</span>
+      <span class="todo-text">${todo.text}</span>
       <div class="todo-meta">
         ${duePill}
-        ${repeatPill}
+        ${todo.repeat ? `<span class="pill repeat">${repeatLabel(todo)}</span>` : ''}
         ${overduePill} ${prioPill} ${tagPills}
       </div>
       <div>
@@ -837,61 +783,39 @@ const renderTodos = () => {
   });
 
   updateProgress();
+  // Reset and sync Select All
   updateSelectAllState();
   updateSelectModeVisibility();
 };
   
-// Also fix the renderDone function with similar error handling
+// Render Done
 const renderDone = () => {
   doneList.innerHTML = '';
+
+  // keep search filter behavior
   const view = filteredTodos(todosData.filter(t => t.done));
 
   view.forEach((todo) => {
     const i = todosData.indexOf(todo);
+
     const li = document.createElement('li');
     li.classList.add('done');
     li.setAttribute('data-trueindex', i);
     li.style.animationDelay = `${Math.random() * 0.5}s`;
 
-    // Safe due pill generation for done items
-    let duePill = '';
-    try {
-      if (todo.due) {
-        const isDueToday = toISO(todo.due) === todayISO();
-        const isDueTomorrow = toISO(todo.due) === addDays(todayISO(), 1);
-        
-        if (isDueToday) {
-          duePill = `<span class="pill due" style="border:1px solid #a855f7; color:#a855f7; background:rgba(168,85,247,.12);">Due Today!</span>`;
-        } else if (isDueTomorrow) {
-          duePill = `<span class="pill due" style="border:1px solid #0ea5e9; color:#0ea5e9; background:rgba(14,165,233,.12);">Due Tomorrow</span>`;
-        } else {
-          duePill = `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${toISO(todo.due)}</span>`;
-        }
-      }
-    } catch (error) {
-      console.warn('Error generating due pill for done item:', error, todo);
-      if (todo.due) {
-        duePill = `<span class="pill due">Due: ${todo.due}</span>`;
-      }
-    }
-
-    // Safe repeat and tag processing
-    let repeatPill = '';
-    let tagPills = '';
-    try {
-      repeatPill = todo.repeat ? `<span class="pill pill-repeat">${repeatLabel(todo)}</span>` : '';
-      tagPills = (todo.tags || []).map(t => `<span class="pill pill-tag">${t || ''}</span>`).join(' ');
-    } catch (error) {
-      console.warn('Error processing repeat/tags for done item:', error, todo);
-    }
-
     li.innerHTML = `
       <input type="checkbox" class="select-todo" data-trueindex="${i}" />
-      <span class="todo-text">${todo.text || ''}</span>
+      <span class="todo-text">${todo.text}</span>
       <div class="todo-meta">
-        ${duePill}
-        ${repeatPill}
-        ${tagPills}
+       ${todo.due 
+  ? (isDueToday(todo)
+      ? `<span class="pill due due-today">Due Today!</span>`
+      : (isDueTomorrow(todo)
+          ? `<span class="pill due due-tomorrow">Due Tomorrow</span>`
+          : `<span class="pill due">Due: ${toISO(todo.due)}</span>`))
+  : ''}
+        ${todo.repeat ? `<span class="pill pill-repeat">${repeatLabel(todo)}</span>` : ''}
+        ${(todo.tags || []).map(t => `<span class="pill pill-tag">${t}</span>`).join(' ')}
       </div>
       <div>
         <button onclick="unmarkDone(${i})">↩️</button>
@@ -904,7 +828,7 @@ const renderDone = () => {
 
   updateProgress();
   updateSelectAllState();
-  updateSelectModeVisibility();
+  updateSelectModeVisibility();// ensure header reflects state right after render
 };
 
 selectAll?.addEventListener('change', (e) => {

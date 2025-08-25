@@ -7,116 +7,107 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-const PORT = 3002;
-const DB_FILE = path.resolve(__dirname, 'db.json');
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD; // set in .env
-
-app.use(cors());
-app.use(express.json());
+const PORT = process.env.PORT || 3002;
 
 // Resolve __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname  = path.dirname(__filename);
 
-// Serve static files from /public
+// Absolute path so PM2/systemd cwd can't break it
+const DB_FILE = path.resolve(__dirname, 'db.json');
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? '';
+
+app.use(cors({
+  origin: true,         // reflect the request origin
+  credentials: true
+}));
+
+app.use(express.json());
+
+// serve frontend
 app.use(express.static(path.join(__dirname, 'public')));
-app.get('/', (req, res) => {
-  res.redirect('/index.html');
-});
+app.get('/', (_req, res) =>
+  res.sendFile(path.join(__dirname, 'public', 'index.html'))
+);
 
-// Load todos from db.json
+// health check
+app.get('/healthz', (_req, res) => res.json({ ok: true }));
+
+// persistence helpers
 const loadTodos = async () => {
   try {
     const data = await fs.readFile(DB_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch {
+    try { return JSON.parse(data); }
+    catch {
+      await fs.writeFile(DB_FILE + '.bad', data);
+      await fs.writeFile(DB_FILE, '[]');
+      return [];
+    }
+  } catch (e) {
+    if (e.code === 'ENOENT') { await fs.writeFile(DB_FILE, '[]'); return []; }
+    console.error('read error:', e);
     return [];
   }
 };
+const saveTodos = async (todos) =>
+  fs.writeFile(DB_FILE, JSON.stringify(todos, null, 2));
 
-// Save todos to db.json
-const saveTodos = async (todos) => {
-  await fs.writeFile(DB_FILE, JSON.stringify(todos, null, 2));
-};
+// routes
+app.get('/todos', async (_req, res) => res.json(await loadTodos()));
 
-// GET all todos
-app.get('/todos', async (req, res) => {
-  const todos = await loadTodos();
-  res.json(todos);
-});
-
-// POST new todo
 app.post('/todos', async (req, res) => {
-  const { text, ...rest } = req.body;
-  if (!text || typeof text !== 'string' || !text.trim()) {
+  const { text, ...rest } = req.body || {};
+  if (!text || typeof text !== 'string' || !text.trim())
     return res.status(400).json({ error: 'Missing text' });
-  }
 
   const todos = await loadTodos();
-  const newTodo = {
-    text: text.trim(),
-    done: false,
-    ...rest // optional fields: due, repeat, priority, tags, etc.
-  };
-
+  const newTodo = { text: text.trim(), done: false, ...rest };
   todos.push(newTodo);
   await saveTodos(todos);
   res.json({ status: 'added', todo: newTodo });
 });
 
-// PATCH update todo
 app.patch('/todos/:index', async (req, res) => {
-  const index = parseInt(req.params.index);
-  const updates = req.body;
+  const index = Number(req.params.index);
   const todos = await loadTodos();
-
-  if (index < 0 || index >= todos.length) {
+  if (!Number.isInteger(index) || index < 0 || index >= todos.length)
     return res.status(404).json({ error: 'Invalid index' });
-  }
 
-  todos[index] = { ...todos[index], ...updates };
+  todos[index] = { ...todos[index], ...(req.body || {}) };
   await saveTodos(todos);
   res.json({ status: 'updated', todo: todos[index] });
 });
 
-// DELETE todo (admin only)
-app.delete('/todos/:index', async (req, res) => {
+function isAdmin(req, res) {
   const auth = req.headers.authorization;
-  if (auth !== `Bearer ${ADMIN_PASSWORD}`) {
-    return res.status(401).json({ error: 'Unauthorized' });
+  if (!ADMIN_PASSWORD || auth !== `Bearer ${ADMIN_PASSWORD}`) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return false;
   }
+  return true;
+}
 
-  const index = parseInt(req.params.index);
+app.delete('/todos/:index', async (req, res) => {
+  if (!isAdmin(req, res)) return;
+  const index = Number(req.params.index);
   const todos = await loadTodos();
-
-  if (index < 0 || index >= todos.length) {
+  if (!Number.isInteger(index) || index < 0 || index >= todos.length)
     return res.status(404).json({ error: 'Invalid index' });
-  }
 
   const removed = todos.splice(index, 1);
   await saveTodos(todos);
   res.json({ status: 'deleted', removed });
 });
 
-// POST reorder todos (admin only)
 app.post('/todos/reorder', async (req, res) => {
-  const auth = req.headers.authorization;
-  if (auth !== `Bearer ${ADMIN_PASSWORD}`) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
-
-  const reorderedTodos = req.body;
-  if (!Array.isArray(reorderedTodos)) {
+  if (!isAdmin(req, res)) return;
+  if (!Array.isArray(req.body))
     return res.status(400).json({ error: 'Invalid data' });
-  }
 
-  await saveTodos(reorderedTodos);
+  await saveTodos(req.body);
   res.json({ status: 'reordered' });
 });
 
-app.get('/healthz', (_req, res) => res.json({ ok: true }));
-
-// Start server
-app.listen(PORT, () => {
-  console.log(`✅ TODO API running at http://localhost:${PORT}`);
-});
+app.listen(PORT, () =>
+  console.log(`✅ TODO API running at http://localhost:${PORT}`)
+);

@@ -1,5 +1,6 @@
   // Global variable to track what we're about to delete
   let pendingDeletion = null;
+  let repeatUndos = [];
   const todoInput = document.getElementById('todo-input');
   const todoList = document.getElementById('todo-list');
   const doneList = document.getElementById('done-list');
@@ -1145,9 +1146,18 @@ window.markAsDone = async (index) => {
   if (!task) return;
 
   // If it's a repeating task, advance dates instead of moving to Done
-  if (task.repeat) {
-    const nowISO = todayISO();
-    const updates = { lastDone: nowISO };
+ if (task.repeat) {
+  const nowISO = todayISO();
+
+  // 🔹 Save previous state for UNDO
+  repeatUndos.push({
+    index: Number(index),
+    prevDue: task.due ?? null,
+    prevNextDue: task.nextDue ?? null,
+    prevLastDone: task.lastDone ?? null
+  });
+
+  const updates = { lastDone: nowISO };
     
     // Use the current due date as the starting point, or today if no due date
     const currentDue = toISO(task.nextDue || task.due || nowISO);
@@ -1281,11 +1291,36 @@ window.unmarkDone = async (index) => {
 
   // Fix undo button - add admin check
 undoBtn.addEventListener('click', async () => {
-  if (!requireAdmin("undo deletions")) return;
-  
-  if (!deletedTodos.length) return;
+  if (!requireAdmin("undo actions")) return;
 
-  const restoring = [...deletedTodos]; // Clone to avoid timing issues
+  // 🔹 First: try to undo a repeating-task advance
+  if (repeatUndos.length) {
+    const u = repeatUndos.pop();
+    try {
+      await fetch(`/todos/${u.index}`, {
+        method: 'PATCH',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY)}`
+        },
+        body: JSON.stringify({
+          due: u.prevDue,
+          nextDue: u.prevNextDue,
+          lastDone: u.prevLastDone
+        })
+      });
+      await loadTodosFromServer();
+      return; // done—don’t also try deletion undo
+    } catch (e) {
+      console.error("Failed to undo repeating advance:", e);
+      alert("Failed to undo the repeating task. Please try again.");
+      return;
+    }
+  }
+  
+ if (!deletedTodos.length) return;
+
+  const restoring = [...deletedTodos];
   deletedTodos = [];
 
   for (const obj of restoring) {
@@ -1295,7 +1330,7 @@ undoBtn.addEventListener('click', async () => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY)}`
       },
-      body: JSON.stringify(obj) // send full object
+      body: JSON.stringify(obj)
     });
   }
 

@@ -8,16 +8,10 @@ dotenv.config();
 
 const app = express();
 const PORT = 3002;
-const DB_FILE = './db.json';
+const DB_FILE = path.resolve(__dirname, 'db.json');
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD; // set in .env
 
-app.use(cors({
-  origin: [
-    'https://siahverse.cc',
-    'https://todo.siahverse.cc'
-  ],
-  credentials: true
-}));
+app.use(cors());
 app.use(express.json());
 
 // Resolve __dirname for ES modules
@@ -119,6 +113,8 @@ app.post('/todos/reorder', async (req, res) => {
   await saveTodos(reorderedTodos);
   res.json({ status: 'reordered' });
 });
+
+app.get('/healthz', (_req, res) => res.json({ ok: true }));
 
 // Start server
 app.listen(PORT, () => {

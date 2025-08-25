@@ -11,7 +11,13 @@ const PORT = 3002;
 const DB_FILE = './db.json';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD; // set in .env
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://siahverse.cc',
+    'https://todo.siahverse.cc'
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 // Resolve __dirname for ES modules

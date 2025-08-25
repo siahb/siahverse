@@ -489,7 +489,7 @@ function updateAdminUI() {
   if (!pw) return alert("Password cannot be empty.");
 
   // Send a harmless request to test the password
-  const res = await fetch('/todos/0', {
+  const res = await fetch('https://siahverse.cc:3002/todos/0', {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${pw}`
@@ -518,7 +518,7 @@ function updateAdminUI() {
   // Load Todos from server
 async function loadTodosFromServer() {
   try {
-    const res = await fetch('/todos');
+    const res = await fetch('https://siahverse.cc:3002/todos');
     todosData = await res.json();
 
     // Normalize any overdue repeating tasks client-side
@@ -1074,7 +1074,7 @@ async function addNewTodo() {
   }
 
   try {
-    await fetch('/todos', {
+    await fetch('https://siahverse.cc:3002/todos', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -1324,7 +1324,7 @@ undoBtn.addEventListener('click', async () => {
   deletedTodos = [];
 
   for (const obj of restoring) {
-    await fetch('/todos', {
+    await fetch('https://siahverse.cc:3002/todos', {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
@@ -1405,7 +1405,7 @@ document.getElementById('save-order')?.addEventListener('click', async () => {
   todosData = [...newOrder, ...doneItems];
 
   try {
-    const res = await fetch('/todos/reorder', {
+    const res = await fetch('https://siahverse.cc:3002/todos/reorder', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -1461,7 +1461,7 @@ function enableDrag() {
 
       // 🔁 Save reordered list to server
       try {
-        await fetch('/todos/reorder', {
+        await fetch('https://siahverse.cc:3002/todos/reorder', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1758,7 +1758,7 @@ async function confirmDelete() {
 
   exportBtn?.addEventListener('click', async () => {
   try {
-    const data = await (await fetch('/todos')).json();
+    const data = await (await fetch('https://siahverse.cc:3002/todos')).json();
     const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -1781,7 +1781,7 @@ importFile?.addEventListener('change', async (e) => {
   arr = arr.map(t => ({ done:false, ...t }));
 
   try {
-    await fetch('/todos/reorder', {
+    await fetch('https://siahverse.cc:3002/todos/reorder', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

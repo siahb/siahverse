@@ -1,69 +1,48 @@
+# Interactive PDF Question Quiz
 
-# 🌌 Siahverse Portal
+A Claude Artifact-style single-page quiz app built with React + Vite. It is designed for studying questions derived from PDFs without needing a backend.
 
-A sleek, dark-themed tech portal built by Siah — powered by Proxmox and glowing with cosmic vibes.
+## Features
 
-## 🔗 Live Site
+- Upload `.json`, `.txt`, or `.md` files containing PDF-derived questions.
+- Paste extracted questions directly into the app.
+- Multiple choice quiz mode with immediate feedback.
+- Score and completion progress tracking.
+- Rationales shown after each answer.
+- Optional question randomization.
+- Dark/light mode toggle.
+- Mobile-friendly responsive layout.
+- Progress, loaded questions, theme, and randomization preference stored in `localStorage`.
+- No backend required.
 
-> [https://siahverse.cc](https://siahverse.cc)
+## Question format
 
-## 📁 File Structure
+Paste or upload either an array of questions or an object with a `questions` array:
 
+```json
+[
+  {
+    "question": "What is the main purpose of randomizing questions?",
+    "options": ["Reduce memorization by order", "Delete rationales", "Disable scoring", "Upload PDFs"],
+    "answer": "Reduce memorization by order",
+    "rationale": "Random order makes each attempt feel fresh and encourages learning the content rather than positions."
+  }
+]
 ```
-📦 Root
-├── assets/              # Images, media, and other static files
-├── 404.html             # Custom 404 Not Found page
-├── README.md            # Project documentation
-├── _headers             # Netlify custom headers (e.g., CORS, HSTS)
-├── easter-egg.js        # Konami Code listener and hidden interactions
-├── favicon.svg          # Site favicon
-├── index.html           # Main HTML landing page
-├── manifest.json        # PWA support file
-├── secret.html          # Hidden page unlocked by the Konami Code
-├── style.css            # CSS styles (dark mode, layout, etc.)
-├── toggle-theme.js      # JavaScript to toggle light/dark mode
+
+You can also use `answerIndex` instead of `answer`, or letter answers like `"A"`, `"B"`, `"C"`, and `"D"`.
+
+> Note: Direct binary PDF parsing is intentionally not included yet. Export or extract quiz questions from a PDF tool first, then paste or upload the text/JSON output.
+
+## Development
+
+```bash
+npm install
+npm run dev
 ```
 
-## 🛠 Features
+## Build
 
-- 🌓 Toggle between dark and light mode (`toggle-theme.js`)
-- 🌠 Animated star background using `<canvas>`
-- 🤖 Siahbot hover and click Easter egg messages (`#siahbot`)
-- 🎮 Konami Code listener (`easter-egg.js`) to unlock `secret.html`
-- 🛡 Custom `_headers` for security/performance (Netlify)
-- 📱 Fully responsive layout for mobile + desktop
-- 🚫 Clean and custom 404 page
-- 📦 `manifest.json` for optional Progressive Web App support
-
-## ✅ To-Do
-
-- [ ] Add favicon variants for different platforms
-- [ ] Improve accessibility (ARIA roles, landmarks)
-- [ ] Add Open Graph preview image (`assets/preview.png`)
-
-## 📸 Preview
-
-> Coming soon...
-
-## 🚀 Deployment
-
-This site is optimized for static hosting platforms like **Netlify**, **Vercel**, or **GitHub Pages**.
-
-### Deploy to Netlify:
-
-1. Push your project to GitHub.
-2. Go to [Netlify](https://www.netlify.com/), connect your repo.
-3. Set build settings (use `/` as publish directory).
-4. Done.
-
-### Netlify Files
-
-- `_headers` → Controls security headers and caching.
-- `_redirects` → *(optional)* For single-page app fallback or custom routes.
-
-## 🙌 Author
-
-Made with ❤️ by Siah
-Check out the live portal: [https://siahverse.cc](https://siahverse.cc)
-
----
+```bash
+npm run build
+```

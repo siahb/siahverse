@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<meta name="description" content="Siahverse Medical-Surgical Nursing Exam 1 practice app — work in progress.">
+<title>Med-Surg Exam 1 | Siahverse</title>
+<link rel="icon" href="/favicon.svg">
+<style>
+:root{--bg:#0b1020;--panel:#121a2d;--panel2:#18223a;--text:#eef3ff;--muted:#aebad4;--accent:#7c9cff;--accent2:#9a7cff;--ok:#4fd1a1;--warn:#f4c95d;--border:#2a3858;--shadow:0 18px 50px rgba(0,0,0,.26)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(circle at top,#151f3a 0,#0b1020 42%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.wrap{max-width:940px;margin:auto;padding:28px 18px 52px}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.logo{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:25px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 8px 18px rgba(0,0,0,.22)}
+.brand strong{font-size:20px}.brand small{display:block;color:var(--muted);margin-top:2px}
+.card{background:rgba(18,26,45,.94);border:1px solid var(--border);border-radius:22px;padding:24px;box-shadow:var(--shadow)}
+.hero h1{font-size:clamp(30px,5vw,48px);line-height:1.04;margin:0 0 10px}
+.hero p{color:var(--muted);font-size:16px;line-height:1.65}
+.status{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid rgba(244,201,93,.4);background:rgba(244,201,93,.08);color:var(--warn);border-radius:999px;font-size:12px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;margin-bottom:16px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--warn);box-shadow:0 0 14px rgba(244,201,93,.8)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}
+.stat{background:var(--panel2);border:1px solid var(--border);border-radius:16px;padding:14px}
+.stat b{font-size:22px;display:block}.stat span{font-size:12px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}
+.topic{border:1px solid var(--border);background:#0f1729;border-radius:15px;padding:15px;opacity:.78}
+.topic strong{display:block;margin-bottom:5px}.topic span{color:var(--muted);font-size:13px}
+.notice{margin-top:18px;padding:16px;border-radius:16px;border:1px dashed #465a88;background:#0e1628;color:var(--muted);line-height:1.6}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:12px 16px;border-radius:13px;text-decoration:none;font-weight:800}
+.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:22px}
+@media(max-width:700px){.stats,.grid{grid-template-columns:1fr}.card{padding:18px}.wrap{padding-top:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <div class="logo" aria-hidden="true">🩺</div>
+    <div>
+      <strong>Siahverse</strong>
+      <small>Medical-Surgical Nursing Exam 1</small>
+    </div>
+  </div>
+
+  <section class="card hero">
+    <div class="status"><span class="dot"></span> Work in progress</div>
+    <h1>Med-Surg Exam 1 Practice Questions</h1>
+    <p>The next Siahverse nursing practice app is being built. The question bank will be added after the official study guide and course materials are available.</p>
+
+    <div class="stats">
+      <div class="stat"><b>0</b><span>Questions loaded</span></div>
+      <div class="stat"><b>Oct 12</b><span>Exam date</span></div>
+      <div class="stat"><b>Waiting</b><span>Study guide status</span></div>
+    </div>
+
+    <div class="grid" aria-label="Planned topic sections">
+      <div class="topic"><strong>Diabetic Complications</strong><span>Planned section</span></div>
+      <div class="topic"><strong>Upper GI Problems</strong><span>Planned section</span></div>
+      <div class="topic"><strong>Lower GI Problems</strong><span>Planned section</span></div>
+      <div class="topic"><strong>CVA / Stroke</strong><span>Planned section</span></div>
+    </div>
+
+    <div class="notice">
+      <strong style="color:var(--text)">Waiting for the study guide 👀</strong><br>
+      Once the official materials are available, this page will become a full practice app with the same style and study tools as Pharm 1.
+    </div>
+
+    <div class="actions">
+      <a class="btn primary" href="/nursing/">← Nursing Resources</a>
+      <a class="btn secondary" href="/pharm1/">Open Pharm 1</a>
+    </div>
+  </section>
+
+  <div class="footer">Made with Siahverse • Med-Surg 1 coming soon</div>
+</div>
+</body>
+</html>

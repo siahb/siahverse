@@ -526,19 +526,20 @@ function updateAdminUI() {
   const pw = passwordInput.value.trim();
   if (!pw) return alert("Password cannot be empty.");
 
-  // Validate the password against an impossible index so no real task can be deleted.
-  const res = await fetch('https://siahverse.cc:3002/todos/-1', {
-    method: 'DELETE',
+  const res = await fetch('/todos/auth-check', {
+    method: 'POST',
     headers: {
       Authorization: `Bearer ${pw}`
     }
   });
 
-  if (res.status === 401) {
-    alert("❌ Incorrect password.");
+  if (!res.ok) {
+    alert(res.status === 503
+      ? "SiahDo Cloudflare admin password is not configured yet."
+      : "❌ Incorrect password.");
   } else {
     localStorage.setItem(ADMIN_PASSWORD_KEY, pw);
-    alert("✅ Admin logged in!");
+    passwordInput.value = '';
     adminModal.style.display = 'none';
     updateAdminUI();
   }
@@ -556,7 +557,7 @@ function updateAdminUI() {
   // Load Todos from server
 async function loadTodosFromServer() {
   try {
-    const res = await fetch('https://siahverse.cc:3002/todos');
+    const res = await fetch('/todos');
     todosData = await res.json();
 
     // Normalize any overdue repeating tasks client-side
@@ -567,9 +568,13 @@ async function loadTodosFromServer() {
         if (rollForwardIfMissed(t)) {
           // persist normalization
           changed = true;
+          if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) continue;
           await fetch(`/todos/${i}`, {
             method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY) || ''}`
+        },
             body: JSON.stringify({ due: t.due, nextDue: t.nextDue })
           });
         }
@@ -580,7 +585,7 @@ async function loadTodosFromServer() {
     renderDone();
     updateButtonVisibility();
   } catch {
-    alert("Failed to load todos.");
+    alert("Failed to load tasks.");
   }
 }
 
@@ -1061,7 +1066,10 @@ window.editTodo = function(index) {
     try {
       const res = await fetch(`/todos/${index}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY) || ''}`
+        },
         body: JSON.stringify(patch)
       });
       if (!res.ok) return alert(`Failed to save (${res.status}).`);
@@ -1124,11 +1132,18 @@ async function addNewTodo() {
   }
 
   try {
-    await fetch('https://siahverse.cc:3002/todos', {
+    const addRes = await fetch('/todos', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY) || ''}`
+        },
       body: JSON.stringify(payload)
     });
+    if (!addRes.ok) {
+      if (addRes.status === 401) return alert("❌ Unlock SiahDo before adding tasks.");
+      throw new Error(`HTTP ${addRes.status}`);
+    }
 
     // Reset inputs
     todoInput.value = '';
@@ -1143,7 +1158,7 @@ async function addNewTodo() {
 
     await loadTodosFromServer();
   } catch {
-    alert("Failed to add todo.");
+    alert("Failed to add task.");
   }
 }
 
@@ -1332,7 +1347,7 @@ window.unmarkDone = async (index) => {
     });
     await loadTodosFromServer();
   } catch {
-    alert("Failed to move back to To Do.");
+    alert("Failed to move task back to Open.");
   }
 };
 
@@ -1376,7 +1391,7 @@ undoBtn.addEventListener('click', async () => {
   deletedTodos = [];
 
   for (const obj of restoring) {
-    await fetch('https://siahverse.cc:3002/todos', {
+    await fetch('/todos', {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
@@ -1457,7 +1472,7 @@ document.getElementById('save-order')?.addEventListener('click', async () => {
   todosData = [...newOrder, ...doneItems];
 
   try {
-    const res = await fetch('https://siahverse.cc:3002/todos/reorder', {
+    const res = await fetch('/todos/reorder', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -1513,7 +1528,7 @@ function enableDrag() {
 
       // 🔁 Save reordered list to server
       try {
-        await fetch('https://siahverse.cc:3002/todos/reorder', {
+        await fetch('/todos/reorder', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1811,7 +1826,7 @@ async function confirmDelete() {
 
   exportBtn?.addEventListener('click', async () => {
   try {
-    const data = await (await fetch('https://siahverse.cc:3002/todos')).json();
+    const data = await (await fetch('/todos')).json();
     const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -1834,7 +1849,7 @@ importFile?.addEventListener('change', async (e) => {
   arr = arr.map(t => ({ done:false, ...t }));
 
   try {
-    await fetch('https://siahverse.cc:3002/todos/reorder', {
+    await fetch('/todos/reorder', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -41,7 +41,7 @@ body{
 }
 body.page-ready{opacity:1;transform:none}
 body.page-leaving{opacity:0;transform:translateY(-3px)}
-a{color:inherit}
+a,a:visited,a:active{color:inherit}
 canvas#stars{
   position:fixed;
   inset:0;
@@ -105,7 +105,15 @@ a.portal-card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,va
   border-radius:11px;padding:9px 11px;font-size:13px;font-weight:800
 }
 .service-links a:hover{border-color:var(--accent)}
-.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:34px}
+.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:34px;display:flex;justify-content:center;align-items:center;gap:7px}
+.admin-secret{
+  width:22px;height:22px;display:inline-grid;place-items:center;border-radius:999px;
+  text-decoration:none;color:var(--muted)!important;font-size:16px;line-height:1;
+  opacity:.12;transition:opacity .18s ease,background .18s ease,transform .18s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.admin-secret:hover,.admin-secret:focus-visible{opacity:.9;background:var(--panel);outline:none;transform:scale(1.06)}
+.admin-secret:visited,.admin-secret:active{color:var(--muted)!important}
 #siahbot{position:fixed;right:20px;bottom:18px;font-size:36px;cursor:pointer;z-index:10;transition:transform .18s ease}
 #siahbot:hover{transform:scale(1.1) rotate(-7deg)}
 .bot-message{

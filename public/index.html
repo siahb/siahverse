@@ -2,76 +2,90 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>📝 Test To Do</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="todo.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="SiahDo — a focused task and routine manager by Siahverse.">
+  <title>SiahDo • Siahverse</title>
+  <link rel="stylesheet" href="todo.css?v=20260928-1">
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
 </head>
 <body>
-  <canvas id="stars"></canvas>
+  <canvas id="stars" aria-hidden="true"></canvas>
 
-  <!-- Theme Toggle -->
-  <div id="toggle-theme" class="theme-switch">
-    <label class="theme-switch">
-      <input type="checkbox" id="toggle-theme-checkbox">
-      <span class="slider"></span>
-    </label>
-  </div>
+  <main class="app-shell">
+    <header class="app-header">
+      <a class="brand" href="https://siahverse.cc/" aria-label="Back to Siahverse">
+        <span class="brand-mark">✓</span>
+        <span class="brand-copy">
+          <span class="brand-kicker">Siahverse</span>
+          <strong>SiahDo</strong>
+          <small>Focus. Finish. Repeat.</small>
+        </span>
+      </a>
 
-  <div class="container">
-    <div class="top-bar">
-      <div class="button-group">
-        <button id="enter-password">🔐 Enter Password</button>
-        <button id="logout">🚪 Logout</button>
-        <button id="help-btn">❓ Help</button>
+      <div class="header-actions">
+        <button id="enter-password" class="ghost-btn" type="button">🔐 Unlock</button>
+        <button id="logout" class="ghost-btn" type="button">🚪 Lock</button>
+        <button id="help-btn" class="icon-btn" type="button" aria-label="Help" title="Help">?</button>
+        <div id="toggle-theme">
+          <label class="theme-switch" aria-label="Toggle color theme">
+            <input type="checkbox" id="toggle-theme-checkbox">
+            <span class="slider"></span>
+          </label>
+        </div>
       </div>
-      <h1><span>✅</span> Siah To Do</h1>
-    </div>
-  </div>
+    </header>
 
-  <div class="main-content">
-    <div class="main-wrapper">
-     <div class="todo-wrapper"> 
-      <!-- To Do List -->
-      <div id="todo-wrapper" class="card-container">
-      <div class="toolbar top">
-        
-        <!-- Top bar: Search • Sort • Progress -->
-<div class="sort-and-buttons">
-  <div class="search-wrapper">
-    <button id="search-toggle" type="button" class="search-icon" aria-label="Open search" title="Ctrl+F to Show, and Esc to Hide">🔍</button>
-    <input id="search-input" type="text" placeholder="Search…">
-  </div>
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Personal task space</div>
+        <h1>Get it out of your head.<br><span>Get it done.</span></h1>
+        <p>One clean place for tasks, routines, priorities, due dates, and everything you do not want to forget.</p>
+      </div>
+    </section>
 
-  <select id="sort-select">
-    <option value="default">Sort: Custom (drag)</option>
-    <option value="priority">Priority (H→L)</option>
-    <option value="dueAsc">Due date ↑</option>
-    <option value="dueDesc">Due date ↓</option>
-    <option value="alpha">A→Z</option>
-    <option value="tagsAZ">Tags (A→Z)</option>
-    <option value="created">Newest</option>
-  </select>
-
-  <div class="spacer"></div> <!-- pushes progress to the far right -->
-
-  <div id="progress-inline">
-    <div id="progress-bar"></div>
-  </div>
-  <div id="progress-label" style="font-size:.9rem;opacity:.8;"></div>
-</div>
-        <!-- Add Task -->
-        <input type="text" id="todo-input" placeholder="Type a task and hit Enter..." />
-
-        <!-- Tags + Priority below enter -->
-        <div class="toolbar below-enter">
-          <div class="field-wrap">
-            <label for="tag-input" class="tag-label">Tags:</label>
-            <input id="tag-input" type="text" placeholder="chores, projects, etc...">
+    <section id="todo-wrapper" class="card-container workspace">
+      <div class="workspace-toolbar">
+        <div class="sort-and-buttons">
+          <div class="search-wrapper">
+            <button id="search-toggle" type="button" class="search-icon" aria-label="Search tasks" title="Search tasks">⌕</button>
+            <input id="search-input" type="text" placeholder="Search…">
           </div>
 
+          <select id="sort-select" aria-label="Sort tasks">
+            <option value="default">Custom order</option>
+            <option value="priority">Priority: high to low</option>
+            <option value="dueAsc">Due date: soonest</option>
+            <option value="dueDesc">Due date: latest</option>
+            <option value="alpha">A → Z</option>
+            <option value="tagsAZ">Tags: A → Z</option>
+            <option value="created">Newest first</option>
+          </select>
+
+          <div class="spacer"></div>
+
+          <div class="progress-wrap">
+            <div id="progress-inline" aria-label="Task completion progress">
+              <div id="progress-bar"></div>
+            </div>
+            <div id="progress-label"></div>
+          </div>
+        </div>
+      </div>
+
+      <section class="composer" aria-label="Add a task">
+        <div class="composer-label">New task</div>
+        <input type="text" id="todo-input" placeholder="What needs to get done?" autocomplete="off">
+
+        <div class="toolbar below-enter">
           <div class="field-wrap">
-            <label for="priority-select" class="priority-label">Priority:</label>
+            <label for="tag-input">Tags</label>
+            <input id="tag-input" type="text" placeholder="school, errands, work…">
+          </div>
+
+          <div class="field-wrap compact">
+            <label for="priority-select">Priority</label>
             <select id="priority-select">
               <option value="">None</option>
               <option value="H">High 🔥</option>
@@ -79,27 +93,33 @@
               <option value="L">Low 🌿</option>
             </select>
           </div>
-        </div>
 
-        <!-- Due + Repeat -->
-        <div class="repeat-row">
-          <label for="due-input">Due:</label>
-            <input type="date" id="due-input">
-            <button id="due-today" type="button" class="mini-btn">Today</button>
-          </label>
-          <label>Repeat:
+          <div class="field-wrap compact">
+            <label for="due-input">Due</label>
+            <div class="field-inline">
+              <input type="date" id="due-input">
+              <button id="due-today" type="button" class="mini-btn">Today</button>
+            </div>
+          </div>
+
+          <div class="field-wrap compact">
+            <label for="repeat-select">Repeat</label>
             <select id="repeat-select">
               <option value="">None</option>
               <option value="daily">Daily</option>
               <option value="weekly">Weekly</option>
             </select>
-          </label>
+          </div>
+        </div>
+
+        <div class="repeat-row">
           <label id="interval-wrap" style="display:none;">Every
-            <input type="number" id="interval-input" min="1" value="1" style="width:4rem;">
+            <input type="number" id="interval-input" min="1" value="1">
             <span class="interval-unit">day(s)</span>
           </label>
-          <div id="weekly-wrap" style="display:none; gap:.4rem; align-items:center;">
-            <span>Days:</span>
+
+          <div id="weekly-wrap" style="display:none;">
+            <span class="repeat-label">On</span>
             <label><input type="checkbox" value="0" class="byweekday">Sun</label>
             <label><input type="checkbox" value="1" class="byweekday">Mon</label>
             <label><input type="checkbox" value="2" class="byweekday">Tue</label>
@@ -109,187 +129,112 @@
             <label><input type="checkbox" value="6" class="byweekday">Sat</label>
           </div>
         </div>
+      </section>
 
-        <!-- Controls -->
-        <div class="controls">
-  <!-- Add the Select Mode button -->
-  <button id="select-mode-btn" title="Toggle selection mode">☐ Select</button>
-  
-  <!-- Add Select All checkbox (will be hidden by default) -->
-  <input type="checkbox" id="select-all" title="Select/deselect all todos">
-  <label for="select-all" style="margin-right: 1rem;">Select All</label>
-  
-  <!-- Your existing buttons -->
-  <button id="delete-btn" onclick="deleteSelected()">🗑️ Delete Selected</button>
-  <button id="undo-btn">↩️ Undo</button>
-  <button id="toggle-drag">↕️ Reorder</button>
-  <button id="save-order" type="button">💾 Save Order</button>
-</div>
+      <div class="controls">
+        <button id="select-mode-btn" type="button">☐ Select</button>
+        <input type="checkbox" id="select-all" title="Select/deselect all tasks">
+        <label for="select-all">Select all</label>
+        <button id="delete-btn" type="button" onclick="deleteSelected()">Delete selected</button>
+        <button id="undo-btn" type="button">↩ Undo</button>
+        <button id="toggle-drag" type="button">↕ Reorder</button>
+        <button id="save-order" type="button">Save order</button>
+      </div>
 
+      <section class="task-section">
+        <div class="section-heading">
+          <div>
+            <div class="section-kicker">Now</div>
+            <h3>Open tasks</h3>
+          </div>
+        </div>
         <ul id="todo-list"></ul>
-        
-          <hr class="divider">
-          <h2>Marked as Done ✅</h2>
-          <ul id="done-list"></ul>
+      </section>
 
-      </div> <!-- closes todo-container -->
-     </div>
-    </div> <!-- closes main-wrapper -->
-  </div> <!-- closes main-content -->
-    
-  <!-- Admin Modal -->
-  <div id="admin-modal" class="modal">
-    <div class="modal-content">
-      <h2>Admin Login</h2>
-      <input type="password" id="password-input" placeholder="Password" />
+      <hr class="divider">
+
+      <section class="done-section">
+        <h2>Completed</h2>
+        <ul id="done-list"></ul>
+      </section>
+    </section>
+
+    <footer class="app-footer">
+      <a href="https://siahverse.cc/" class="back-button">← Back to Siahverse</a>
+      <span>Made with Siahverse</span>
+    </footer>
+  </main>
+
+  <div id="admin-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="admin-title">
+    <div class="modal-content auth-modal">
+      <div class="modal-icon">🔐</div>
+      <h2 id="admin-title">Unlock SiahDo</h2>
+      <p>Enter your admin password to add, edit, reorder, or delete tasks.</p>
+      <input type="password" id="password-input" placeholder="Password" autocomplete="current-password">
       <div class="modal-buttons">
-        <button id="login-btn">Login</button>
-        <button id="cancel-btn">Cancel</button>
+        <button id="cancel-btn" class="secondary-btn" type="button">Cancel</button>
+        <button id="login-btn" class="primary-btn" type="button">Unlock</button>
       </div>
     </div>
   </div>
 
-  <!-- ✅ Back Button -->
-  <div class="back-button-wrapper">
-    <a href="https://siahverse.cc/" class="back-button">Back to Portal</a>
-  </div>
- <!-- Add this modal HTML before your closing </body> tag -->
-<div id="help-modal" class="modal">
-  <div class="modal-content help-modal-content">
-    <div class="modal-header">
-      <h2>📝 How to Use Siah To Do</h2>
-      <span class="close-help">&times;</span>
-    </div>
-    
-    <div class="modal-body">
-      <h3>🚀 Getting Started</h3>
-      <ol>
-        <li><strong>Login:</strong> Click "🔐 Enter Password" and enter your admin password</li>
-        <li><strong>Add Tasks:</strong> Type in the main input field and press <span class="kbd">Enter</span></li>
-        <li><strong>Set Properties:</strong> Add tags, priority, due dates, and repeating schedules before pressing Enter</li>
-      </ol>
-
-      <h3>⌨️ Keyboard Shortcuts</h3>
-      <div class="feature-grid">
-        <div class="feature-card">
-          <h4>Search</h4>
-          <ul>
-            <li><span class="kbd">Ctrl</span> + <span class="kbd">F</span> - Open search</li>
-            <li><span class="kbd">/</span> - Quick search</li>
-            <li><span class="kbd">Esc</span> - Close search</li>
-          </ul>
+  <div id="help-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="help-title">
+    <div class="modal-content help-modal-content">
+      <div class="modal-header">
+        <div>
+          <div class="modal-kicker">Quick guide</div>
+          <h2 id="help-title">Using SiahDo</h2>
         </div>
-        <div class="feature-card">
-          <h4>Adding Tasks</h4>
-          <ul>
-            <li><span class="kbd">Enter</span> - Add task (from any input)</li>
-            <li><span class="kbd">Tab</span> - Navigate between fields</li>
-          </ul>
-        </div>
+        <button class="close-help" type="button" aria-label="Close help">×</button>
       </div>
 
-      <h3>🔍 Special Search Terms</h3>
-      <p>Use these special searches to quickly filter your tasks:</p>
-      <ul>
-        <li><code>untagged</code> or <code>no-tags</code> - Find tasks without tags</li>
-        <li><code>high</code> or <code>p:high</code> - Show high priority tasks <span class="pill-demo pill-high">!!!</span></li>
-        <li><code>medium</code> or <code>p:medium</code> - Show medium priority tasks <span class="pill-demo pill-medium">!!</span></li>
-        <li><code>low</code> or <code>p:low</code> - Show low priority tasks <span class="pill-demo pill-low">!</span></li>
-        <li><code>no-priority</code> or <code>p:none</code> - Show tasks without priority</li>
-      </ul>
-
-      <h3>📋 Task Management</h3>
-      <div class="feature-grid">
-        <div class="feature-card">
-          <h4>Task Actions</h4>
-          <ul>
-            <li><strong>✅</strong> - Mark as done (or advance repeating tasks)</li>
-            <li><strong>✏️</strong> - Edit task inline</li>
-            <li><strong>❌</strong> - Delete task</li>
-            <li><strong>↩️</strong> - Undo (restore deleted tasks)</li>
-          </ul>
+      <div class="modal-body">
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h3>Add & organize</h3>
+            <p>Unlock editing, type a task, set tags, priority, due date, or a repeat schedule, then press <span class="kbd">Enter</span>.</p>
+          </div>
+          <div class="feature-card">
+            <h3>Find tasks fast</h3>
+            <p>Use search or press <span class="kbd">Ctrl/Cmd + F</span>. Try <code>high</code>, <code>p:medium</code>, or <code>untagged</code>.</p>
+          </div>
+          <div class="feature-card">
+            <h3>Keep order</h3>
+            <p>Sort by due date, priority, tags, or newest. Use Reorder for your own custom sequence.</p>
+          </div>
+          <div class="feature-card">
+            <h3>Repeat automatically</h3>
+            <p>Daily and weekly tasks advance to their next occurrence when completed.</p>
+          </div>
         </div>
-        <div class="feature-card">
-          <h4>Bulk Actions</h4>
-          <ul>
-            <li>Select multiple tasks with checkboxes</li>
-            <li>Use "🗑️ Delete Selected" for bulk deletion</li>
-            <li>Select All checkbox in header</li>
-          </ul>
+
+        <div class="help-note">
+          <strong>Tip:</strong> Click the Completed heading to collapse or expand finished tasks.
         </div>
       </div>
-
-      <h3>📅 Scheduling & Repeating</h3>
-      <h4>Due Dates</h4>
-      <ul>
-        <li>Set due dates with the date picker</li>
-        <li>Click "Today" button for quick date setting</li>
-        <li>Overdue tasks show <span class="pill-demo pill-overdue">Overdue</span> pills</li>
-      </ul>
-
-      <h4>Repeating Tasks</h4>
-      <ul>
-        <li><strong>Daily:</strong> Repeats every X days</li>
-        <li><strong>Weekly:</strong> Choose specific days of the week</li>
-        <li>When you complete a repeating task, it automatically advances to the next occurrence</li>
-      </ul>
-
-      <h3>🏷️ Tags & Priority</h3>
-      <h4>Tags</h4>
-      <ul>
-        <li>Add multiple tags separated by commas: <code>work, urgent, meeting</code></li>
-        <li>Search by tag name to filter tasks</li>
-        <li>Use <code>untagged</code> search to find tasks that need tags</li>
-      </ul>
-
-      <h4>Priority Levels</h4>
-      <ul>
-        <li><span class="pill-demo pill-high">!!! High</span> - Critical/urgent tasks (red)</li>
-        <li><span class="pill-demo pill-medium">!! Medium</span> - Important tasks (orange)</li>
-        <li><span class="pill-demo pill-low">! Low</span> - Nice to have tasks (green)</li>
-      </ul>
-
-      <h3>📊 Sorting & Organization</h3>
-      <ul>
-        <li><strong>Custom (drag):</strong> Drag and drop to reorder (click "↕️ Reorder" first)</li>
-        <li><strong>Priority:</strong> High to low priority</li>
-        <li><strong>Due date:</strong> Ascending or descending</li>
-        <li><strong>A-Z:</strong> Alphabetical by task name</li>
-        <li><strong>Newest:</strong> Most recently created first</li>
-      </ul>
-
-      <h3>💡 Pro Tips</h3>
-      <ul>
-        <li>Use the <code>untagged</code> search to find and organize tasks without tags</li>
-        <li>Priority search terms help you focus: try <code>high</code> to see urgent tasks</li>
-        <li>The progress bar shows completion percentage and overdue task count</li>
-        <li>Done tasks are collapsible - click the "Marked as Done ✅" header</li>
-        <li>Drag reordering only works when sorted by "Custom (drag)"</li>
-      </ul>
     </div>
   </div>
-</div>
-<!-- Delete Confirmation Modal -->
-<div id="delete-modal" class="modal">
-  <div class="modal-content delete-modal-content">
-    <div class="modal-header">
-      <h2>🗑️ Confirm Deletion</h2>
-    </div>
-    <div class="modal-body">
-      <p id="delete-message">Are you sure you want to delete this task?</p>
-      <div class="delete-task-preview" id="delete-preview">
-        <!-- Task preview will be populated by JavaScript -->
+
+  <div id="delete-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="delete-title">
+    <div class="modal-content delete-modal-content">
+      <div class="modal-header">
+        <div>
+          <div class="modal-kicker danger-text">Delete task</div>
+          <h2 id="delete-title">Are you sure?</h2>
+        </div>
       </div>
-      <p style="font-size: 0.9rem; color: var(--text-color); opacity: 0.7; margin-top: 1rem;">
-        💡 You can use the Undo button to restore deleted tasks.
-      </p>
-    </div>
-    <div class="modal-buttons">
-      <button id="cancel-delete-btn" class="delete-cancel-btn">Cancel</button>
-      <button id="confirm-delete-btn" class="delete-confirm-btn">🗑️ Delete</button>
+      <div class="modal-body">
+        <p id="delete-message">Are you sure you want to delete this task?</p>
+        <div class="delete-task-preview" id="delete-preview"></div>
+        <p class="modal-hint">You can use Undo to restore a recently deleted task.</p>
+      </div>
+      <div class="modal-buttons modal-footer">
+        <button id="cancel-delete-btn" class="secondary-btn" type="button">Cancel</button>
+        <button id="confirm-delete-btn" class="danger-btn" type="button">Delete</button>
+      </div>
     </div>
   </div>
-</div>
-<script src="todo.js"></script>
+
+  <script src="todo.js"></script>
 </body>
 </html>

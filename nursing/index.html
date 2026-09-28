@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Nursing study resources from Siahverse.">
+  <title>Nursing Resources | Siahverse</title>
+  <link rel="icon" href="/favicon.svg">
+  <style>
+    :root{
+      --bg:#080b12;
+      --panel:#111827;
+      --panel2:#172033;
+      --text:#f4f7ff;
+      --muted:#aeb8cf;
+      --accent:#7c9cff;
+      --accent2:#9a7cff;
+      --border:#2c3955;
+    }
+    *{box-sizing:border-box}
+    html{background:var(--bg)}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 20% 0%,rgba(124,156,255,.12),transparent 32rem),
+        radial-gradient(circle at 90% 20%,rgba(154,124,255,.10),transparent 28rem),
+        var(--bg);
+      color:var(--text);
+    }
+    .wrap{width:min(960px,calc(100% - 32px));margin:0 auto;padding:42px 0 64px}
+    .brand{display:flex;align-items:center;gap:14px;margin-bottom:44px}
+    .logo{
+      width:52px;height:52px;border-radius:16px;
+      display:grid;place-items:center;font-size:28px;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      box-shadow:0 10px 30px rgba(124,156,255,.2)
+    }
+    .brand strong{font-size:1.25rem}
+    .brand span{display:block;color:var(--muted);font-size:.9rem;margin-top:2px}
+    h1{font-size:clamp(2.2rem,7vw,4.2rem);line-height:1.02;margin:0 0 14px}
+    .lead{color:var(--muted);font-size:1.08rem;line-height:1.6;max-width:680px;margin:0 0 34px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+    .card{
+      display:flex;flex-direction:column;gap:14px;
+      min-height:230px;padding:24px;border:1px solid var(--border);
+      border-radius:22px;background:linear-gradient(180deg,var(--panel2),var(--panel));
+    }
+    .eyebrow{color:#b8c5e5;font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    .card h2{font-size:1.4rem;line-height:1.25;margin:0}
+    .card p{color:var(--muted);line-height:1.55;margin:0;flex:1}
+    .btn,.back{
+      display:inline-flex;align-items:center;justify-content:center;
+      min-height:46px;padding:0 18px;border-radius:12px;
+      text-decoration:none;font-weight:800;
+    }
+    .btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white}
+    .back{border:1px solid var(--border);color:var(--text);margin-top:28px}
+    .footer{color:var(--muted);font-size:.86rem;text-align:center;margin-top:52px}
+    @media(max-width:520px){
+      .wrap{width:min(100% - 22px,960px);padding-top:24px}
+      .brand{margin-bottom:34px}
+      .card{padding:20px;border-radius:18px}
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">🩺</div>
+      <div>
+        <strong>Siahverse</strong>
+        <span>Nursing Resources</span>
+      </div>
+    </div>
+
+    <h1>Nursing Resources</h1>
+    <p class="lead">Study tools and practice resources for nursing school, collected in one place.</p>
+
+    <section class="grid" aria-label="Nursing resources">
+      <article class="card">
+        <div class="eyebrow">Pharmacology</div>
+        <h2>Pharmacology Exam 1 Practice Questions</h2>
+        <p>Interactive practice bank with MC, SATA, dosage questions, saved sessions, review tools, and exam mode.</p>
+        <a class="btn" href="/pharm1/">Open Pharm 1 →</a>
+      </article>
+    </section>
+
+    <a class="back" href="/">← Back to Siahverse</a>
+    <div class="footer">Made with Siahverse</div>
+  </main>
+</body>
+</html>

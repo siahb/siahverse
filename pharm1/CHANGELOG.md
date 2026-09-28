@@ -1,5 +1,9 @@
 # Pharm1 Changelog
 
+## v8.4 — 2026-09-28
+- Standardized navigation: the Siahverse logo/wordmark now always returns to the main Siahverse homepage.
+- Added an explicit Back button to return to Nursing Resources.
+
 ## v8.3 — 2026-09-28
 - Made the Siahverse logo and wordmark link back to Nursing Resources.
 - Renamed “Dosage / completion” to “DDC / Fill-ins” throughout the app.

@@ -1,2 +1,6 @@
+/main.css
+  Content-Type: text/css; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+
 /assets/*
   Content-Type: text/css

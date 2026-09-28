@@ -159,6 +159,70 @@ async function logEvent(db,credentialId,event,path=null) {
   ).bind(credentialId || null,event,path).run();
 }
 
+async function ensureAccessRequests(db) {
+  await db.prepare(`
+    CREATE TABLE IF NOT EXISTS access_requests (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      requested_name TEXT NOT NULL,
+      credential_id TEXT REFERENCES credentials(id) ON DELETE SET NULL,
+      status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','approved','denied')),
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      resolved_at TEXT,
+      resolved_by TEXT REFERENCES credentials(id) ON DELETE SET NULL
+    )
+  `).run();
+  await db.prepare(
+    "CREATE INDEX IF NOT EXISTS idx_access_requests_status_created ON access_requests(status,created_at)"
+  ).run();
+}
+
+function cleanName(value) {
+  return String(value || "").trim().replace(/\s+/g," ").slice(0,100);
+}
+
+async function handleAccessRequest(context) {
+  const {request,env}=context;
+  await ensureAccessRequests(env.DB);
+
+  let form;
+  try { form=await request.formData(); }
+  catch { return loginPage("/nursing/","Unable to read the request form.",400); }
+
+  const name=cleanName(form.get("name"));
+  if (name.length < 2) return loginPage("/nursing/","Enter your full name to request access.",400);
+
+  const credential=await env.DB.prepare(
+    "SELECT id,name FROM credentials WHERE lower(trim(name))=lower(?) LIMIT 1"
+  ).bind(name).first();
+
+  if (!credential) {
+    return loginPage("/nursing/","Name not found. Check the spelling of your full name.",400);
+  }
+
+  const pending=await env.DB.prepare(
+    "SELECT id FROM access_requests WHERE credential_id=? AND status='pending' LIMIT 1"
+  ).bind(credential.id).first();
+
+  if (!pending) {
+    await env.DB.prepare(
+      "INSERT INTO access_requests (requested_name,credential_id) VALUES (?,?)"
+    ).bind(credential.name,credential.id).run();
+  }
+
+  return htmlResponse(`<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Access request sent</title>
+<style>
+:root{color-scheme:dark;--bg:#080b12;--p:#111827;--p2:#172033;--t:#f4f7ff;--m:#aeb8cf;--a:#7c9cff;--a2:#9a7cff;--b:#2c3955}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;font-family:Inter,system-ui,-apple-system,sans-serif;background:radial-gradient(circle at top,#151f3a,#080b12 48%);color:var(--t)}
+.card{width:min(430px,100%);padding:28px;border:1px solid var(--b);border-radius:22px;background:linear-gradient(180deg,var(--p2),var(--p));box-shadow:0 24px 80px rgba(0,0,0,.45)}
+.logo{width:54px;height:54px;display:grid;place-items:center;border-radius:17px;background:linear-gradient(135deg,var(--a),var(--a2));font-size:24px;font-weight:950;margin-bottom:18px}
+h1{margin:0 0 10px}.sub{color:var(--m);line-height:1.55}.btn{display:block;text-align:center;text-decoration:none;margin-top:22px;padding:13px;border-radius:12px;background:linear-gradient(135deg,var(--a),var(--a2));color:#fff;font-weight:850}
+</style></head><body><main class="card"><div class="logo">S</div><h1>Request sent</h1>
+<p class="sub">Your access request was submitted. Check with Josiah for approval and your password.</p>
+<a class="btn" href="/nursing/">Back to sign in</a></main></body></html>`);
+}
+
 function htmlResponse(html,status=200,extra={}) {
   return new Response(html,{status,headers:{
     "Content-Type":"text/html; charset=UTF-8",
@@ -182,7 +246,7 @@ function loginPage(next="/nursing/",error="",status=200) {
 label{display:block;font-size:13px;font-weight:850;color:#c9d3ea;margin-bottom:7px}.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
 input{width:100%;min-height:50px;border:1px solid var(--b);border-radius:12px;background:#0d1422;color:#fff;padding:11px 12px;font:inherit;outline:none}input:focus{border-color:var(--a);box-shadow:0 0 0 3px rgba(124,156,255,.16)}
 button{font:inherit;font-weight:850;cursor:pointer}.show{min-width:66px;border:1px solid var(--b);border-radius:12px;background:var(--p2);color:var(--t);padding:0 12px}.unlock{width:100%;min-height:50px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--a),var(--a2));color:#fff;margin-top:8px}
-.error{min-height:27px;padding-top:7px;color:var(--bad);font-size:13px;font-weight:800}.note{margin:16px 0 0;color:var(--m);font-size:12px;line-height:1.5}
+.error{min-height:27px;padding-top:7px;color:var(--bad);font-size:13px;font-weight:800}.note{margin:16px 0 0;color:var(--m);font-size:12px;line-height:1.5}.request{margin-top:20px;padding-top:18px;border-top:1px solid var(--b)}.request summary{cursor:pointer;font-weight:850;color:#cfd8ef}.request form{margin-top:14px}.request input{margin-bottom:8px}.request button{width:100%;min-height:46px;border:1px solid var(--b);border-radius:12px;background:var(--p2);color:var(--t)}
 </style></head><body><main class="card">
 <div class="logo">S</div><div class="k">Siahverse</div><h1>Nursing Resources</h1>
 <p class="sub">Enter the access password to continue.</p>
@@ -192,7 +256,13 @@ button{font:inherit;font-weight:850;cursor:pointer}.show{min-width:66px;border:1
 <input id="password" name="password" type="password" autocomplete="current-password" autofocus required>
 <button class="show" type="button" id="show">Show</button></div>
 <div class="error" role="status">${esc(error)}</div><button class="unlock" type="submit">Unlock</button>
-</form><p class="note">Do not share your password.</p></main>
+</form><p class="note">Do not share your password.</p>
+<details class="request"><summary>Need access?</summary>
+<form method="post" action="/api/access-request">
+<label for="request-name">Full name</label>
+<input id="request-name" name="name" type="text" autocomplete="name" maxlength="100" required>
+<button type="submit">Request access</button>
+</form></details></main>
 <script>const p=document.getElementById("password"),s=document.getElementById("show");s.addEventListener("click",()=>{const v=p.type==="text";p.type=v?"password":"text";s.textContent=v?"Show":"Hide";p.focus()});</script>
 </body></html>`,status);
 }
@@ -253,6 +323,18 @@ async function adminRows(db) {
   return results;
 }
 
+async function pendingAccessRequests(db) {
+  await ensureAccessRequests(db);
+  const {results=[]}=await db.prepare(`
+    SELECT r.id,r.requested_name,r.credential_id,r.created_at,c.name,c.enabled
+    FROM access_requests r
+    LEFT JOIN credentials c ON c.id=r.credential_id
+    WHERE r.status='pending'
+    ORDER BY r.created_at ASC,r.id ASC
+  `).all();
+  return results;
+}
+
 function fmtTime(v) {
   if (!v) return "Never";
   const d=new Date(v.endsWith("Z")?v:v.replace(" ","T")+"Z");
@@ -261,6 +343,7 @@ function fmtTime(v) {
 
 async function adminPage(context,session,notice="",newCode="") {
   const rows=await adminRows(context.env.DB);
+  const requests=await pendingAccessRequests(context.env.DB);
   const enabled=rows.filter(r=>Number(r.enabled)===1).length;
   const logins=rows.reduce((n,r)=>n+Number(r.login_count||0),0);
   const cards=rows.map(r=>{
@@ -289,22 +372,41 @@ async function adminPage(context,session,notice="",newCode="") {
 </tr>`;
   }).join("");
 
+  const requestCards=requests.map(r=>`
+<div class="req-card">
+  <div><strong>${esc(r.name || r.requested_name)}</strong><div class="muted tiny">Requested ${esc(fmtTime(r.created_at))}</div></div>
+  <div class="acts">
+    <form method="post" action="/admin/request-action">
+      <input type="hidden" name="request_id" value="${Number(r.id)}">
+      <input type="hidden" name="action" value="approve">
+      <button class="btn primary">Approve + create password</button>
+    </form>
+    <form method="post" action="/admin/request-action">
+      <input type="hidden" name="request_id" value="${Number(r.id)}">
+      <input type="hidden" name="action" value="deny">
+      <button class="btn danger">Deny</button>
+    </form>
+  </div>
+</div>`).join("");
+
   return htmlResponse(`<!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
 <title>Siahverse Access Admin</title><style>
 :root{color-scheme:dark;--bg:#080b12;--p:#111827;--p2:#172033;--t:#f4f7ff;--m:#aeb8cf;--a:#7c9cff;--a2:#9a7cff;--b:#2c3955;--ok:#4fd1a1;--bad:#ff7b86}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#151f3a 0,#080b12 44%);color:var(--t);font-family:Inter,system-ui,-apple-system,sans-serif}
 .wrap{width:min(1180px,calc(100% - 28px));margin:auto;padding:24px 0 60px}.top{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:22px}.brand{display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(135deg,var(--a),var(--a2));font-weight:950}.muted{color:var(--m)}.tiny{font-size:12px}.nav{display:flex;gap:8px;align-items:center}.nav a,.nav button{font:inherit;font-weight:800;color:var(--t);background:var(--p2);border:1px solid var(--b);border-radius:11px;padding:9px 12px;text-decoration:none;cursor:pointer}
-.panel{background:rgba(17,24,39,.96);border:1px solid var(--b);border-radius:20px;padding:20px;margin-bottom:16px}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.stat{background:var(--p2);border:1px solid var(--b);border-radius:14px;padding:14px}.stat b{display:block;font-size:24px}.notice{padding:12px 14px;border:1px solid #476b62;background:#102923;border-radius:12px;margin-bottom:14px}.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:17px;font-weight:900;word-break:break-all;color:#dfe6ff}
+.panel{background:rgba(17,24,39,.96);border:1px solid var(--b);border-radius:20px;padding:20px;margin-bottom:16px}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.stat{background:var(--p2);border:1px solid var(--b);border-radius:14px;padding:14px}.stat b{display:block;font-size:24px}.notice{padding:12px 14px;border:1px solid #476b62;background:#102923;border-radius:12px;margin-bottom:14px}.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:17px;font-weight:900;word-break:break-all;color:#dfe6ff}
 .tablewrap{overflow:auto;border:1px solid var(--b);border-radius:16px}table{width:100%;border-collapse:collapse;min-width:900px;background:var(--p)}th,td{text-align:left;padding:13px 12px;border-bottom:1px solid var(--b);vertical-align:middle}th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#bcc8e0;background:#111a2c;position:sticky;top:0}tr:last-child td{border-bottom:0}.status{display:inline-block;padding:5px 8px;border-radius:999px;font-size:12px;font-weight:850}.status.on{color:#b9ffe7;background:#103128;border:1px solid #285f50}.status.off{color:#c8d0e2;background:#20283a;border:1px solid #35415b}
-.device{display:inline-block;padding:5px 8px;border-radius:999px;font-size:12px;font-weight:850;color:#c8d0e2;background:#20283a;border:1px solid #35415b}.device.changed{color:#ffe1b8;background:#332314;border-color:#79552b}.device.neutral{color:#c8d0e2}.acts{display:flex;gap:6px;flex-wrap:wrap}.acts form{margin:0}.btn{font:inherit;font-size:12px;font-weight:850;border:1px solid var(--b);border-radius:9px;padding:8px 10px;background:var(--p2);color:var(--t);cursor:pointer}.btn.primary{background:linear-gradient(135deg,var(--a),var(--a2));border:0}.btn.danger{color:#ffd5d9;border-color:#70404a;background:#321b22}.btn:disabled{opacity:.45;cursor:not-allowed}
+.device{display:inline-block;padding:5px 8px;border-radius:999px;font-size:12px;font-weight:850;color:#c8d0e2;background:#20283a;border:1px solid #35415b}.device.changed{color:#ffe1b8;background:#332314;border-color:#79552b}.device.neutral{color:#c8d0e2}.req-list{display:grid;gap:10px}.req-card{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 14px;border:1px solid var(--b);border-radius:13px;background:var(--p2)}.acts{display:flex;gap:6px;flex-wrap:wrap}.acts form{margin:0}.btn{font:inherit;font-size:12px;font-weight:850;border:1px solid var(--b);border-radius:9px;padding:8px 10px;background:var(--p2);color:var(--t);cursor:pointer}.btn.primary{background:linear-gradient(135deg,var(--a),var(--a2));border:0}.btn.danger{color:#ffd5d9;border-color:#70404a;background:#321b22}.btn:disabled{opacity:.45;cursor:not-allowed}
 @media(max-width:700px){.stats{grid-template-columns:1fr}.wrap{width:min(100% - 18px,1180px)}}
 </style></head><body><div class="wrap">
 <div class="top"><div class="brand"><div class="logo">S</div><div><strong>Siahverse</strong><div class="muted tiny">Nursing Resources • Access Admin</div></div></div>
 <div class="nav"><a href="/nursing/">Nursing Resources</a><form method="post" action="/api/nursing-logout"><button>Log out</button></form></div></div>
 <div class="panel"><h1 style="margin:0 0 6px">Access Admin</h1><p class="muted">Signed in as ${esc(session.name)}. Passwords are never displayed after creation; resetting a code shows the new code once.</p><p class="muted tiny">Browser/device status uses a random cookie only. No location, city, network, or IP information is stored. Clearing cookies or using private browsing will appear as a new browser/device.</p>
 ${notice?`<div class="notice">${esc(notice)}${newCode?`<div class="code">${esc(newCode)}</div>`:""}</div>`:""}
-<div class="stats"><div class="stat"><b>${rows.length}</b><span class="muted">Credentials</span></div><div class="stat"><b>${enabled}</b><span class="muted">Enabled</span></div><div class="stat"><b>${logins}</b><span class="muted">Successful logins</span></div></div></div>
+<div class="stats"><div class="stat"><b>${rows.length}</b><span class="muted">Credentials</span></div><div class="stat"><b>${enabled}</b><span class="muted">Enabled</span></div><div class="stat"><b>${logins}</b><span class="muted">Successful logins</span></div><div class="stat"><b>${requests.length}</b><span class="muted">Pending requests</span></div></div></div>
+<div class="panel"><h2 style="margin-top:0">Pending access requests</h2>
+<div class="req-list">${requestCards || '<div class="muted">No pending requests.</div>'}</div></div>
 <div class="tablewrap"><table><thead><tr><th>Person</th><th>Status</th><th>Logins</th><th>Last login</th><th>Sessions</th><th>Browser/device</th><th>Actions</th></tr></thead><tbody>${cards}</tbody></table></div>
 </div></body></html>`);
 }
@@ -324,6 +426,59 @@ async function uniqueNewCode(db) {
     if (!collision) return code;
   }
   throw new Error("Could not generate a unique code.");
+}
+
+async function adminRequestAction(context,session) {
+  await ensureAccessRequests(context.env.DB);
+  const origin=new URL(context.request.url).origin;
+  const reqOrigin=context.request.headers.get("Origin");
+  if (reqOrigin && reqOrigin!==origin) return new Response("Forbidden",{status:403});
+
+  const form=await context.request.formData();
+  const requestId=Number(form.get("request_id"));
+  const action=String(form.get("action")||"");
+  if (!Number.isInteger(requestId) || requestId<1) return adminPage(context,session,"Invalid request.");
+
+  const req=await context.env.DB.prepare(`
+    SELECT r.id,r.requested_name,r.credential_id,r.status,c.name
+    FROM access_requests r LEFT JOIN credentials c ON c.id=r.credential_id
+    WHERE r.id=? LIMIT 1
+  `).bind(requestId).first();
+
+  if (!req || req.status!=="pending") return adminPage(context,session,"That request is no longer pending.");
+
+  if (action==="deny") {
+    await context.env.DB.prepare(
+      "UPDATE access_requests SET status='denied',resolved_at=CURRENT_TIMESTAMP,resolved_by=? WHERE id=?"
+    ).bind(session.credential_id,requestId).run();
+    await logEvent(context.env.DB,session.credential_id,"admin_deny_access_request",String(requestId));
+    return adminPage(context,session,`Access request denied for ${req.name || req.requested_name}.`);
+  }
+
+  if (action==="approve") {
+    if (!req.credential_id) return adminPage(context,session,"This request is not linked to a classmate account.");
+    const code=await uniqueNewCode(context.env.DB);
+    const saltBytes=new Uint8Array(16); crypto.getRandomValues(saltBytes);
+    const salt=b64url(saltBytes);
+    const hash=b64url(await derive(code,salt));
+
+    await context.env.DB.batch([
+      context.env.DB.prepare(
+        "UPDATE credentials SET salt=?,password_hash=?,enabled=1,updated_at=CURRENT_TIMESTAMP WHERE id=?"
+      ).bind(salt,hash,req.credential_id),
+      context.env.DB.prepare(
+        "UPDATE sessions SET revoked=1 WHERE credential_id=?"
+      ).bind(req.credential_id),
+      context.env.DB.prepare(
+        "UPDATE access_requests SET status='approved',resolved_at=CURRENT_TIMESTAMP,resolved_by=? WHERE id=?"
+      ).bind(session.credential_id,requestId)
+    ]);
+
+    await logEvent(context.env.DB,session.credential_id,"admin_approve_access_request",req.credential_id);
+    return adminPage(context,session,`Access approved for ${req.name || req.requested_name}. Copy the password now; it will not be shown again.`,code);
+  }
+
+  return adminPage(context,session,"Unknown request action.");
 }
 
 async function adminAction(context,session) {
@@ -390,6 +545,11 @@ export async function onRequest(context) {
     return handleLogout(context);
   }
 
+  if (path==="/api/access-request") {
+    if (request.method!=="POST") return new Response("Method Not Allowed",{status:405});
+    return handleAccessRequest(context);
+  }
+
   const protectedPath =
     path==="/nursing" || path.startsWith("/nursing/") ||
     path==="/pharm1" || path.startsWith("/pharm1/") ||
@@ -410,6 +570,12 @@ export async function onRequest(context) {
     if (!session.is_admin) return forbiddenPage();
     if (request.method!=="POST") return new Response("Method Not Allowed",{status:405});
     return adminAction(context,session);
+  }
+
+  if (path==="/admin/request-action") {
+    if (!session.is_admin) return forbiddenPage();
+    if (request.method!=="POST") return new Response("Method Not Allowed",{status:405});
+    return adminRequestAction(context,session);
   }
 
   return context.next();

@@ -1,186 +1,86 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="color-scheme" content="light dark">
-  <meta name="description" content="Siahverse — Josiah's portal for nursing resources, cloud tools, productivity, and homelab services.">
-  <meta name="author" content="Josiah Borja">
-  <meta property="og:title" content="Siahverse">
-  <meta property="og:description" content="Nursing, cloud, productivity, and homelab tools in one place.">
-  <meta property="og:image" content="https://siahverse.cc/assets/preview.png">
-  <meta property="og:url" content="https://siahverse.cc">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Siahverse">
-  <meta name="twitter:description" content="Nursing, cloud, productivity, and homelab tools in one place.">
-  <meta name="twitter:image" content="https://siahverse.cc/assets/preview.png">
-  <title>Siahverse</title>
-  <link rel="stylesheet" href="/main.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Nursing study resources from Siahverse.">
+  <title>Nursing Resources | Siahverse</title>
   <link rel="icon" href="/favicon.svg">
-  <link rel="manifest" href="/manifest.json">
-  <script defer src="/toggle-theme.js"></script>
+  <style>
+    :root{--bg:#080b12;--panel:#111827;--panel2:#172033;--text:#f4f7ff;--muted:#aeb8cf;--accent:#7c9cff;--accent2:#9a7cff;--border:#2c3955;--warn:#f4c95d;--ok:#4fd1a1}
+    *{box-sizing:border-box}
+    html{background:var(--bg)}
+    body{margin:0;min-height:100vh;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 20% 0%,rgba(124,156,255,.12),transparent 32rem),radial-gradient(circle at 90% 20%,rgba(154,124,255,.10),transparent 28rem),var(--bg);color:var(--text)}
+    .wrap{width:min(1040px,calc(100% - 32px));margin:0 auto;padding:28px 0 64px}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:58px}
+    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+    .logo{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:25px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 10px 30px rgba(124,156,255,.2)}
+    .brand strong{display:block;font-size:1.16rem}.brand span{display:block;color:var(--muted);font-size:.82rem;margin-top:2px}
+    .nav{display:flex;gap:8px;flex-wrap:wrap}
+    .nav a{color:var(--muted);text-decoration:none;border:1px solid var(--border);border-radius:11px;padding:9px 12px;font-size:.84rem;font-weight:800}
+    .nav a.active{color:var(--text);border-color:#52678f;background:var(--panel2)}
+    .eyebrow{color:#b8c5e5;font-size:.75rem;font-weight:850;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+    h1{font-size:clamp(2.5rem,7vw,5rem);letter-spacing:-.04em;line-height:.98;margin:0 0 16px}
+    .lead{color:var(--muted);font-size:1.08rem;line-height:1.65;max-width:690px;margin:0 0 36px}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .card{display:flex;flex-direction:column;gap:14px;min-height:260px;padding:24px;border:1px solid var(--border);border-radius:22px;background:linear-gradient(180deg,var(--panel2),var(--panel));transition:transform .18s,border-color .18s}
+    .card:hover{transform:translateY(-3px);border-color:#4b608c}
+    .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+    .course{color:#b8c5e5;font-size:.76rem;font-weight:850;letter-spacing:.08em;text-transform:uppercase}
+    .status{border-radius:999px;padding:6px 9px;font-size:.69rem;font-weight:900;white-space:nowrap;border:1px solid var(--border);color:var(--muted)}
+    .status.live{color:var(--ok);border-color:rgba(79,209,161,.45);background:rgba(79,209,161,.08)}
+    .status.wip{color:var(--warn);border-color:rgba(244,201,93,.45);background:rgba(244,201,93,.08)}
+    .card h2{font-size:1.45rem;line-height:1.25;margin:0}.card p{color:var(--muted);line-height:1.55;margin:0;flex:1}
+    .meta{display:flex;flex-wrap:wrap;gap:7px}
+    .meta span{border:1px solid var(--border);border-radius:999px;padding:6px 9px;font-size:.72rem;color:var(--muted)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 18px;border-radius:12px;text-decoration:none;font-weight:850;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white}
+    .footer{color:var(--muted);font-size:.82rem;text-align:center;margin-top:48px}
+    @media(max-width:700px){.wrap{width:min(100% - 22px,1040px);padding-top:20px}.topbar{align-items:flex-start;margin-bottom:44px}.nav{justify-content:flex-end}.grid{grid-template-columns:1fr}.card{min-height:240px;padding:20px;border-radius:18px}}
+  </style>
 </head>
 <body>
-  <canvas id="stars" aria-hidden="true"></canvas>
-  <div id="siahbot" title="Need help navigating the Siahverse?" aria-label="Siahbot">🤖</div>
-
-  <main class="shell">
+  <main class="wrap">
     <header class="topbar">
-      <a class="brand" href="/" aria-label="Siahverse home">
-        <span class="brand-mark">S</span>
-        <span>
-          <strong>Siahverse</strong>
-          <small>Personal portal</small>
-        </span>
+      <a class="brand" href="/">
+        <div class="logo" aria-hidden="true">🩺</div>
+        <div><strong>Siahverse</strong><span>Nursing Resources</span></div>
       </a>
-
-      <label class="theme-switch" aria-label="Toggle color theme">
-        <input type="checkbox" id="toggle-theme">
-        <span class="slider"></span>
-      </label>
+      <nav class="nav" aria-label="Site navigation">
+        <a href="https://siahverse.cc/">Home</a>
+        <a class="active" href="/">Nursing</a>
+      </nav>
     </header>
 
-    <section class="hero">
-      <div class="eyebrow">Welcome to the Siahverse</div>
-      <h1>Everything has its own space.</h1>
-      <p>Study tools, cloud services, productivity apps, and homelab controls — organized without turning the homepage into a wall of buttons.</p>
-    </section>
+    <div class="eyebrow">Study hub</div>
+    <h1>Nursing Resources</h1>
+    <p class="lead">Practice apps and study tools in one place. Each course gets its own space, so this hub can grow without cluttering the main Siahverse portal.</p>
 
-    <section class="portal-grid" aria-label="Siahverse sections">
-      <a class="portal-card featured route-link" href="/nursing/">
-        <div class="card-icon">🩺</div>
-        <div class="card-copy">
-          <div class="card-kicker">Study</div>
-          <h2>Nursing Resources</h2>
-          <p>Practice exams, study tools, skills, DDC, and future nursing resources.</p>
-          <span class="card-action">Open Nursing →</span>
+    <section class="grid" aria-label="Nursing resources">
+      <article class="card">
+        <div class="card-top">
+          <div class="course">Pharmacology</div>
+          <span class="status live">Live</span>
         </div>
-      </a>
+        <h2>Pharmacology Exam 1</h2>
+        <p>100-question practice bank with MC, SATA, DDC/fill-ins, saved sessions, hints, review tools, and exam mode.</p>
+        <div class="meta"><span>100 questions</span><span>Practice + Exam modes</span></div>
+        <a class="btn" href="/pharm1/">Open Pharm 1 →</a>
+      </article>
 
-      <a class="portal-card" href="https://vault.siahverse.cc">
-        <div class="card-icon">☁️</div>
-        <div class="card-copy">
-          <div class="card-kicker">Cloud</div>
-          <h2>SiahCloud</h2>
-          <p>Your personal cloud and file access portal.</p>
-          <span class="card-action">Open SiahCloud ↗</span>
+      <article class="card">
+        <div class="card-top">
+          <div class="course">Medical-Surgical Nursing</div>
+          <span class="status wip">Work in progress</span>
         </div>
-      </a>
-
-      <a class="portal-card" href="https://todo.siahverse.cc">
-        <div class="card-icon">✅</div>
-        <div class="card-copy">
-          <div class="card-kicker">Productivity</div>
-          <h2>TODO</h2>
-          <p>Tasks and quick personal organization.</p>
-          <span class="card-action">Open TODO ↗</span>
-        </div>
-      </a>
-
-      <article class="portal-card services-card">
-        <div class="card-icon">🖥️</div>
-        <div class="card-copy">
-          <div class="card-kicker">Infrastructure</div>
-          <h2>Homelab</h2>
-          <p>Server management, smart home, and system monitoring.</p>
-          <div class="service-links">
-            <a href="https://proxmox.siahverse.cc">Proxmox ↗</a>
-            <a href="https://home.siahverse.cc">Home Assistant ↗</a>
-            <a href="https://status.siahverse.cc">Status ↗</a>
-          </div>
-        </div>
+        <h2>Med-Surg Exam 1</h2>
+        <p>The app shell is ready. The question bank is waiting for the official study guide and course materials.</p>
+        <div class="meta"><span>Exam Oct 12</span><span>Waiting for study guide</span></div>
+        <a class="btn" href="/medsurg1/">Preview Med-Surg 1 →</a>
       </article>
     </section>
 
-    <footer class="footer">Made with Siahverse</footer>
+    <div class="footer">Made with Siahverse</div>
   </main>
-
-<script>
-window.addEventListener("DOMContentLoaded", () => {
-  document.body.classList.add("page-ready");
-
-  const canvas = document.getElementById("stars");
-  const ctx = canvas.getContext("2d");
-  let w = 0;
-  let h = 0;
-  let stars = [];
-
-  function resetStars(count) {
-    stars = Array.from({length: count}, () => ({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      r: Math.random() * 1.35 + .35,
-      d: Math.random() * .35 + .12
-    }));
-  }
-
-  function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    w = canvas.width;
-    h = canvas.height;
-    resetStars(window.innerWidth < 700 ? 110 : 220);
-  }
-
-  function animate() {
-    ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--star-color").trim();
-    for (const s of stars) {
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      ctx.fill();
-      s.y -= s.d;
-      if (s.y < -2) {
-        s.y = h + 2;
-        s.x = Math.random() * w;
-      }
-    }
-    requestAnimationFrame(animate);
-  }
-
-  resizeCanvas();
-  animate();
-  window.addEventListener("resize", resizeCanvas);
-
-  document.querySelectorAll(".route-link").forEach(link => {
-    link.addEventListener("click", e => {
-      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      e.preventDefault();
-      document.body.classList.add("page-leaving");
-      setTimeout(() => { window.location.href = link.href; }, 140);
-    });
-  });
-
-  const siahbot = document.getElementById("siahbot");
-  if (siahbot) {
-    siahbot.addEventListener("click", () => {
-      const messages = [
-        "👋 Hi! I'm Siahbot, guardian of portals.",
-        "🌌 Pick a universe and jump in.",
-        "💡 Hint: Try the Konami Code 😉",
-        "🛰️ All systems nominal."
-      ];
-      const box = document.createElement("div");
-      box.className = "bot-message";
-      box.textContent = messages[Math.floor(Math.random() * messages.length)];
-      document.body.appendChild(box);
-      requestAnimationFrame(() => box.classList.add("show"));
-      setTimeout(() => {
-        box.classList.remove("show");
-        setTimeout(() => box.remove(), 250);
-      }, 2600);
-    });
-  }
-
-  const konamiCode = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
-  let konamiInput = [];
-  window.addEventListener("keydown", e => {
-    konamiInput.push(e.key);
-    konamiInput = konamiInput.slice(-konamiCode.length);
-    if (konamiCode.every((v, i) => v === konamiInput[i])) window.location.href = "/secret.html";
-  });
-});
-</script>
 </body>
 </html>

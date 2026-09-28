@@ -1,5 +1,13 @@
 # Pharm1 Changelog
 
+## v8.2 — 2026-09-27
+- Separated the 19 supplemental study-guide questions from the original 81-question bank.
+- Added a Question Bank filter: All 100, Original 81, or Extra 19.
+- Chapter and question-type counts now update based on the selected question bank.
+- Extra questions are labeled with an “Extra question” badge during quizzes and in review.
+- Saved quiz sessions remember whether they were built from All, Original, or Extra questions.
+
+
 ## v8.1 — 2026-09-27
 - Added one curated hint per question for all 100 questions.
 - Hints are available in Practice Mode only and are limited to one hint per question.

@@ -107,9 +107,18 @@ async function verifyPassword(db,password) {
 async function createSession(db,credentialId) {
   const token=randomToken(32);
   const tokenHash=b64url(await sha256(token));
-  await db.prepare(
-    "INSERT INTO sessions (token_hash,credential_id,expires_at) VALUES (?,?,datetime('now','+7 days'))"
-  ).bind(tokenHash,credentialId).run();
+
+  // One active login per credential: a new login immediately revokes
+  // every previous session for that credential.
+  await db.batch([
+    db.prepare(
+      "UPDATE sessions SET revoked=1 WHERE credential_id=? AND revoked=0"
+    ).bind(credentialId),
+    db.prepare(
+      "INSERT INTO sessions (token_hash,credential_id,expires_at) VALUES (?,?,datetime('now','+7 days'))"
+    ).bind(tokenHash,credentialId)
+  ]);
+
   return token;
 }
 

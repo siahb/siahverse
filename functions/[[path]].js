@@ -1,4 +1,6 @@
 const COOKIE_NAME = "sv_nursing_session";
+const DEVICE_COOKIE_NAME = "sv_nursing_device";
+const DEVICE_TTL_SECONDS = 60 * 60 * 24 * 365;
 const PBKDF2_ITERATIONS = 100000;
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7;
 const RATE_WINDOW_MS = 10 * 60 * 1000;
@@ -50,6 +52,14 @@ function randomToken(bytes=32) {
   const arr = new Uint8Array(bytes);
   crypto.getRandomValues(arr);
   return b64url(arr);
+}
+
+async function getDeviceIdentity(request) {
+  const cookies=parseCookies(request);
+  let token=cookies[DEVICE_COOKIE_NAME] || "";
+  if (!/^[A-Za-z0-9_-]{20,100}$/.test(token)) token=randomToken(24);
+  const hash=b64url(await sha256(token));
+  return { token, hash };
 }
 
 function parseCookies(request) {
@@ -175,7 +185,7 @@ button{font:inherit;font-weight:850;cursor:pointer}.show{min-width:66px;border:1
 .error{min-height:27px;padding-top:7px;color:var(--bad);font-size:13px;font-weight:800}.note{margin:16px 0 0;color:var(--m);font-size:12px;line-height:1.5}
 </style></head><body><main class="card">
 <div class="logo">S</div><div class="k">Siahverse</div><h1>Nursing Resources</h1>
-<p class="sub">Enter your assigned access password to continue.</p>
+<p class="sub">Enter the access password to continue.</p>
 <form method="post" action="/api/nursing-login">
 <input type="hidden" name="next" value="${esc(safe)}">
 <label for="password">Access password</label><div class="row">
@@ -208,13 +218,17 @@ async function handleLogin(context) {
     return loginPage(next,"Incorrect or inactive access password.",401);
   }
   clearFailures(request);
+  const device=await getDeviceIdentity(request);
   const token=await createSession(env.DB,credential.id);
-  await logEvent(env.DB,credential.id,"login_success",next);
-  return new Response(null,{status:303,headers:{
+  await logEvent(env.DB,credential.id,"login_success","device:"+device.hash);
+
+  const headers=new Headers({
     "Location":next,
-    "Set-Cookie":`${COOKIE_NAME}=${encodeURIComponent(token)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${SESSION_TTL_SECONDS}`,
     "Cache-Control":"no-store"
-  }});
+  });
+  headers.append("Set-Cookie",`${COOKIE_NAME}=${encodeURIComponent(token)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${SESSION_TTL_SECONDS}`);
+  headers.append("Set-Cookie",`${DEVICE_COOKIE_NAME}=${encodeURIComponent(device.token)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${DEVICE_TTL_SECONDS}`);
+  return new Response(null,{status:303,headers});
 }
 
 async function handleLogout(context) {
@@ -231,6 +245,8 @@ async function adminRows(db) {
     SELECT c.id,c.name,c.enabled,c.is_admin,
       (SELECT COUNT(*) FROM access_log a WHERE a.credential_id=c.id AND a.event='login_success') AS login_count,
       (SELECT MAX(created_at) FROM access_log a WHERE a.credential_id=c.id AND a.event='login_success') AS last_login,
+      (SELECT path FROM access_log a WHERE a.credential_id=c.id AND a.event='login_success' AND a.path LIKE 'device:%' ORDER BY a.id DESC LIMIT 1) AS last_device,
+      (SELECT path FROM access_log a WHERE a.credential_id=c.id AND a.event='login_success' AND a.path LIKE 'device:%' ORDER BY a.id DESC LIMIT 1 OFFSET 1) AS previous_device,
       (SELECT COUNT(*) FROM sessions s WHERE s.credential_id=c.id AND s.revoked=0 AND s.expires_at>CURRENT_TIMESTAMP) AS active_sessions
     FROM credentials c ORDER BY c.id
   `).all();
@@ -247,19 +263,31 @@ async function adminPage(context,session,notice="",newCode="") {
   const rows=await adminRows(context.env.DB);
   const enabled=rows.filter(r=>Number(r.enabled)===1).length;
   const logins=rows.reduce((n,r)=>n+Number(r.login_count||0),0);
-  const cards=rows.map(r=>`
+  const cards=rows.map(r=>{
+    const currentDevice=String(r.last_device||"");
+    const previousDevice=String(r.previous_device||"");
+    let deviceText="Not tracked yet";
+    let deviceClass="neutral";
+    if (currentDevice) {
+      if (!previousDevice) deviceText="First tracked login";
+      else if (currentDevice===previousDevice) deviceText="Same browser";
+      else { deviceText="Changed"; deviceClass="changed"; }
+    }
+    return `
 <tr>
 <td><strong>${esc(r.name)}</strong><div class="muted tiny">${esc(r.id)}${r.is_admin?" • Admin":""}</div></td>
 <td><span class="status ${r.enabled?"on":"off"}">${r.enabled?"Enabled":"Disabled"}</span></td>
 <td>${Number(r.login_count||0)}</td>
 <td>${esc(fmtTime(r.last_login))}</td>
 <td>${Number(r.active_sessions||0)}</td>
+<td><span class="device ${deviceClass}">${esc(deviceText)}</span></td>
 <td><div class="acts">
 <form method="post" action="/admin/action"><input type="hidden" name="id" value="${esc(r.id)}"><input type="hidden" name="action" value="${r.enabled?"disable":"enable"}"><button class="btn ${r.enabled?"danger":"primary"}" ${r.id===session.credential_id&&r.enabled?"disabled title='You cannot disable your own admin account'":""}>${r.enabled?"Disable":"Enable"}</button></form>
 <form method="post" action="/admin/action"><input type="hidden" name="id" value="${esc(r.id)}"><input type="hidden" name="action" value="revoke"><button class="btn">Revoke sessions</button></form>
 <form method="post" action="/admin/action" onsubmit="return confirm('Reset the access code for ${esc(r.name).replace(/'/g,"&#39;")}? The old code will stop working.')"><input type="hidden" name="id" value="${esc(r.id)}"><input type="hidden" name="action" value="reset"><button class="btn">Reset code</button></form>
 </div></td>
-</tr>`).join("");
+</tr>`;
+  }).join("");
 
   return htmlResponse(`<!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
@@ -269,15 +297,15 @@ async function adminPage(context,session,notice="",newCode="") {
 .wrap{width:min(1180px,calc(100% - 28px));margin:auto;padding:24px 0 60px}.top{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:22px}.brand{display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(135deg,var(--a),var(--a2));font-weight:950}.muted{color:var(--m)}.tiny{font-size:12px}.nav{display:flex;gap:8px;align-items:center}.nav a,.nav button{font:inherit;font-weight:800;color:var(--t);background:var(--p2);border:1px solid var(--b);border-radius:11px;padding:9px 12px;text-decoration:none;cursor:pointer}
 .panel{background:rgba(17,24,39,.96);border:1px solid var(--b);border-radius:20px;padding:20px;margin-bottom:16px}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.stat{background:var(--p2);border:1px solid var(--b);border-radius:14px;padding:14px}.stat b{display:block;font-size:24px}.notice{padding:12px 14px;border:1px solid #476b62;background:#102923;border-radius:12px;margin-bottom:14px}.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:17px;font-weight:900;word-break:break-all;color:#dfe6ff}
 .tablewrap{overflow:auto;border:1px solid var(--b);border-radius:16px}table{width:100%;border-collapse:collapse;min-width:900px;background:var(--p)}th,td{text-align:left;padding:13px 12px;border-bottom:1px solid var(--b);vertical-align:middle}th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#bcc8e0;background:#111a2c;position:sticky;top:0}tr:last-child td{border-bottom:0}.status{display:inline-block;padding:5px 8px;border-radius:999px;font-size:12px;font-weight:850}.status.on{color:#b9ffe7;background:#103128;border:1px solid #285f50}.status.off{color:#c8d0e2;background:#20283a;border:1px solid #35415b}
-.acts{display:flex;gap:6px;flex-wrap:wrap}.acts form{margin:0}.btn{font:inherit;font-size:12px;font-weight:850;border:1px solid var(--b);border-radius:9px;padding:8px 10px;background:var(--p2);color:var(--t);cursor:pointer}.btn.primary{background:linear-gradient(135deg,var(--a),var(--a2));border:0}.btn.danger{color:#ffd5d9;border-color:#70404a;background:#321b22}.btn:disabled{opacity:.45;cursor:not-allowed}
+.device{display:inline-block;padding:5px 8px;border-radius:999px;font-size:12px;font-weight:850;color:#c8d0e2;background:#20283a;border:1px solid #35415b}.device.changed{color:#ffe1b8;background:#332314;border-color:#79552b}.device.neutral{color:#c8d0e2}.acts{display:flex;gap:6px;flex-wrap:wrap}.acts form{margin:0}.btn{font:inherit;font-size:12px;font-weight:850;border:1px solid var(--b);border-radius:9px;padding:8px 10px;background:var(--p2);color:var(--t);cursor:pointer}.btn.primary{background:linear-gradient(135deg,var(--a),var(--a2));border:0}.btn.danger{color:#ffd5d9;border-color:#70404a;background:#321b22}.btn:disabled{opacity:.45;cursor:not-allowed}
 @media(max-width:700px){.stats{grid-template-columns:1fr}.wrap{width:min(100% - 18px,1180px)}}
 </style></head><body><div class="wrap">
 <div class="top"><div class="brand"><div class="logo">S</div><div><strong>Siahverse</strong><div class="muted tiny">Nursing Resources • Access Admin</div></div></div>
 <div class="nav"><a href="/nursing/">Nursing Resources</a><form method="post" action="/api/nursing-logout"><button>Log out</button></form></div></div>
-<div class="panel"><h1 style="margin:0 0 6px">Access Admin</h1><p class="muted">Signed in as ${esc(session.name)}. Passwords are never displayed after creation; resetting a code shows the new code once.</p>
+<div class="panel"><h1 style="margin:0 0 6px">Access Admin</h1><p class="muted">Signed in as ${esc(session.name)}. Passwords are never displayed after creation; resetting a code shows the new code once.</p><p class="muted tiny">Browser/device status uses a random cookie only. No location, city, network, or IP information is stored. Clearing cookies or using private browsing will appear as a new browser/device.</p>
 ${notice?`<div class="notice">${esc(notice)}${newCode?`<div class="code">${esc(newCode)}</div>`:""}</div>`:""}
 <div class="stats"><div class="stat"><b>${rows.length}</b><span class="muted">Credentials</span></div><div class="stat"><b>${enabled}</b><span class="muted">Enabled</span></div><div class="stat"><b>${logins}</b><span class="muted">Successful logins</span></div></div></div>
-<div class="tablewrap"><table><thead><tr><th>Person</th><th>Status</th><th>Logins</th><th>Last login</th><th>Sessions</th><th>Actions</th></tr></thead><tbody>${cards}</tbody></table></div>
+<div class="tablewrap"><table><thead><tr><th>Person</th><th>Status</th><th>Logins</th><th>Last login</th><th>Sessions</th><th>Browser/device</th><th>Actions</th></tr></thead><tbody>${cards}</tbody></table></div>
 </div></body></html>`);
 }
 

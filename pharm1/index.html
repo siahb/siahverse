@@ -77,6 +77,30 @@ html[data-theme="light"] .confidence-choice{background:#fff}
 html[data-theme="light"] .confidence-choice.active{background:#eef2ff}
 @media(max-width:700px){.study-tools{display:grid;grid-template-columns:1fr}.confidence-options{display:grid;grid-template-columns:1fr 1fr 1fr}.confidence-choice{padding:10px 8px}}
 
+
+/* v8.3 DDC-only calculator + conversion reference */
+.ddc-tools{margin-top:14px;padding:13px 14px;border:1px solid var(--border);border-radius:14px;background:var(--panel2)}
+.ddc-tools-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.ddc-tool-actions{display:flex;gap:8px;flex-wrap:wrap}
+.ddc-panel{margin-top:12px;padding:12px;border:1px solid var(--border);border-radius:12px;background:var(--panel)}
+.conversion-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}
+.conversion-item{padding:9px 10px;border:1px solid var(--border);border-radius:10px;background:var(--panel2);font-size:13px;line-height:1.4}
+.calc-display{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;margin-bottom:10px}
+.calc-display input{width:100%;min-height:46px;border-radius:11px;border:1px solid var(--border);background:var(--panel2);color:var(--text);padding:10px 12px;font-size:18px}
+.calc-result{min-width:88px;text-align:center;font-weight:900;border:1px solid var(--border);border-radius:11px;padding:11px 10px;background:var(--panel2)}
+.calc-keypad{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.calc-key{min-height:42px;border:1px solid var(--border);border-radius:10px;background:var(--panel2);color:var(--text);font-weight:800}
+.calc-key.op{color:var(--accent)}
+.calc-key.equals{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:0}
+.calc-key.wide{grid-column:span 2}
+html[data-theme="light"] .ddc-tools,
+html[data-theme="light"] .ddc-panel,
+html[data-theme="light"] .conversion-item,
+html[data-theme="light"] .calc-display input,
+html[data-theme="light"] .calc-result,
+html[data-theme="light"] .calc-key{background:#fff}
+@media(max-width:520px){.conversion-grid{grid-template-columns:1fr}.calc-display{grid-template-columns:1fr}.calc-result{text-align:left}}
+
 </style>
 <script>
 (function(){try{document.documentElement.dataset.theme=localStorage.getItem('siahverse_pharm1_theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}})();
@@ -130,6 +154,53 @@ html[data-theme="light"] .confidence-choice.active{background:#eef2ff}
     <div class="meta"><span class="pill" id="typePill"></span><span class="pill hidden" id="sourcePill">Extra question</span><span class="pill hidden" id="reviewPill">Marked for review</span></div>
     <div class="qstem" id="stem"></div>
     <form id="answerArea"></form>
+    <div id="ddcTools" class="ddc-tools hidden">
+      <div class="ddc-tools-head">
+        <strong>DDC Tools</strong>
+        <div class="ddc-tool-actions">
+          <button type="button" class="btn secondary" id="calcToggle">Calculator</button>
+          <button type="button" class="btn secondary" id="conversionToggle">Unit conversion help</button>
+        </div>
+      </div>
+      <div id="conversionPanel" class="ddc-panel hidden">
+        <strong>Common conversions</strong>
+        <div class="conversion-grid">
+          <div class="conversion-item"><b>lb → kg</b><br>Divide pounds by 2.2</div>
+          <div class="conversion-item"><b>kg → lb</b><br>Multiply kilograms by 2.2</div>
+          <div class="conversion-item"><b>g ↔ mg</b><br>1 g = 1,000 mg</div>
+          <div class="conversion-item"><b>mg ↔ mcg</b><br>1 mg = 1,000 mcg</div>
+          <div class="conversion-item"><b>L ↔ mL</b><br>1 L = 1,000 mL</div>
+          <div class="conversion-item"><b>hr ↔ min</b><br>1 hr = 60 min</div>
+        </div>
+      </div>
+      <div id="calcPanel" class="ddc-panel hidden">
+        <div class="calc-display">
+          <input id="miniCalcInput" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 121 ÷ 2.2" aria-label="Calculator expression">
+          <div id="miniCalcResult" class="calc-result" aria-live="polite">—</div>
+        </div>
+        <div class="calc-keypad" id="calcKeypad">
+          <button type="button" class="calc-key" data-calc="7">7</button>
+          <button type="button" class="calc-key" data-calc="8">8</button>
+          <button type="button" class="calc-key" data-calc="9">9</button>
+          <button type="button" class="calc-key op" data-calc="÷">÷</button>
+          <button type="button" class="calc-key" data-calc="4">4</button>
+          <button type="button" class="calc-key" data-calc="5">5</button>
+          <button type="button" class="calc-key" data-calc="6">6</button>
+          <button type="button" class="calc-key op" data-calc="×">×</button>
+          <button type="button" class="calc-key" data-calc="1">1</button>
+          <button type="button" class="calc-key" data-calc="2">2</button>
+          <button type="button" class="calc-key" data-calc="3">3</button>
+          <button type="button" class="calc-key op" data-calc="−">−</button>
+          <button type="button" class="calc-key" data-calc="0">0</button>
+          <button type="button" class="calc-key" data-calc=".">.</button>
+          <button type="button" class="calc-key" data-calc="(">(</button>
+          <button type="button" class="calc-key" data-calc=")">)</button>
+          <button type="button" class="calc-key wide" data-calc-action="clear">Clear</button>
+          <button type="button" class="calc-key op" data-calc="+">+</button>
+          <button type="button" class="calc-key equals" data-calc-action="equals">=</button>
+        </div>
+      </div>
+    </div>
     <div id="confidenceBox" class="confidence-box hidden">
       <div class="confidence-head"><strong>How confident are you?</strong><span class="tiny muted">Optional study tracking</span></div>
       <div class="confidence-options">
@@ -253,6 +324,9 @@ function render(){
     hintBtn.textContent=usedHint?'💡 Hint used':'💡 Give me a hint';
     if(usedHint&&q.hint){hintBox.innerHTML='<strong>Hint:</strong> '+esc(q.hint);hintBox.classList.remove('hidden')}
   }
+  const ddcTools=$('#ddcTools'),isDDC=q.section==='COMPLETION';
+  ddcTools.classList.toggle('hidden',!isDDC);
+  if(!isDDC){$('#calcPanel').classList.add('hidden');$('#conversionPanel').classList.add('hidden')}
   const confidenceBox=$('#confidenceBox'),confidenceEnabled=!!state.settings?.confidenceRating,currentConfidence=state.confidence?.[q.id]||'';
   confidenceBox.classList.toggle('hidden',!confidenceEnabled);
   if(confidenceEnabled){
@@ -278,6 +352,26 @@ function render(){
     if(graded)showFeedback(q,graded);
   }
   $('#prev').disabled=state.i===0;updateScore();saveState();
+}
+function toggleDDCPanel(which){
+  if(!state||state.qs[state.i]?.section!=='COMPLETION')return;
+  const calc=$('#calcPanel'),conv=$('#conversionPanel');
+  if(which==='calc'){const opening=calc.classList.contains('hidden');calc.classList.toggle('hidden');if(opening){conv.classList.add('hidden');setTimeout(()=>$('#miniCalcInput')?.focus(),0)}}
+  if(which==='conversion'){const opening=conv.classList.contains('hidden');conv.classList.toggle('hidden');if(opening)calc.classList.add('hidden')}
+}
+function calcAppend(value){const input=$('#miniCalcInput');if(!input)return;input.value+=value;input.focus()}
+function calcClear(){const input=$('#miniCalcInput');if(input)input.value='';const out=$('#miniCalcResult');if(out)out.textContent='—'}
+function calcEvaluate(){
+  const input=$('#miniCalcInput'),out=$('#miniCalcResult');if(!input||!out)return;
+  const raw=input.value.trim();
+  if(!raw){out.textContent='—';return}
+  const expr=raw.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-');
+  if(!/^[0-9+\-*/().\s]+$/.test(expr)){out.textContent='Invalid';return}
+  try{
+    const result=Function('"use strict";return ('+expr+')')();
+    if(typeof result!=='number'||!Number.isFinite(result)){out.textContent='Error';return}
+    out.textContent=Number.isInteger(result)?String(result):String(Math.round((result+Number.EPSILON)*1000000)/1000000);
+  }catch(e){out.textContent='Error'}
 }
 function setConfidence(value){
   if(!state||!state.settings?.confidenceRating||!['confident','unsure','guessing'].includes(value))return;
@@ -330,7 +424,12 @@ function retakeWrong(){
 function newQuiz(){state=null;results.classList.add('hidden');quiz.classList.add('hidden');progressView.classList.add('hidden');setup.classList.remove('hidden');refreshSavedCard();window.scrollTo({top:0,behavior:'smooth'})}
 populateChapters();$('#nAll').textContent=BANK.length;$('#nMC').textContent=BANK.filter(q=>q.section==='MULTIPLE CHOICE').length;$('#nSATA').textContent=BANK.filter(q=>q.section==='MULTIPLE RESPONSE').length;$('#nCalc').textContent=BANK.filter(q=>q.section==='COMPLETION').length;
 $('#sourceSet').addEventListener('change',populateChapters);$('#chapter').addEventListener('change',updateQuestionTypeOptions);
-$('#start').addEventListener('click',startQuiz);document.querySelectorAll('.confidence-choice').forEach(b=>b.addEventListener('click',()=>setConfidence(b.dataset.confidence)));$('#hintBtn').addEventListener('click',useHint);$('#answerArea').addEventListener('submit',e=>{e.preventDefault();submitCurrent()});$('#submit').addEventListener('click',submitCurrent);$('#next').addEventListener('click',next);$('#prev').addEventListener('click',prev);$('#mark').addEventListener('click',()=>{const q=state.qs[state.i];state.marked[q.id]=!state.marked[q.id];render()});$('#menuBtn').addEventListener('click',goMenu);$('#progressBtn').addEventListener('click',showProgress);$('#backQuiz').addEventListener('click',showQuiz);$('#progressMenu').addEventListener('click',goMenu);$('#retakeWrong').addEventListener('click',retakeWrong);$('#restart').addEventListener('click',newQuiz);document.querySelectorAll('.reviewFilter').forEach(b=>b.addEventListener('click',()=>review(b.dataset.review)));$('#hideReview').addEventListener('click',hideReview);$('#resultsMenu').addEventListener('click',goMenu);
+$('#start').addEventListener('click',startQuiz);
+$('#calcToggle').addEventListener('click',()=>toggleDDCPanel('calc'));
+$('#conversionToggle').addEventListener('click',()=>toggleDDCPanel('conversion'));
+$('#miniCalcInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();calcEvaluate()}});
+$('#calcKeypad').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.calcAction==='clear')calcClear();else if(b.dataset.calcAction==='equals')calcEvaluate();else if(b.dataset.calc)calcAppend(b.dataset.calc)});
+document.querySelectorAll('.confidence-choice').forEach(b=>b.addEventListener('click',()=>setConfidence(b.dataset.confidence)));$('#hintBtn').addEventListener('click',useHint);$('#answerArea').addEventListener('submit',e=>{e.preventDefault();submitCurrent()});$('#submit').addEventListener('click',submitCurrent);$('#next').addEventListener('click',next);$('#prev').addEventListener('click',prev);$('#mark').addEventListener('click',()=>{const q=state.qs[state.i];state.marked[q.id]=!state.marked[q.id];render()});$('#menuBtn').addEventListener('click',goMenu);$('#progressBtn').addEventListener('click',showProgress);$('#backQuiz').addEventListener('click',showQuiz);$('#progressMenu').addEventListener('click',goMenu);$('#retakeWrong').addEventListener('click',retakeWrong);$('#restart').addEventListener('click',newQuiz);document.querySelectorAll('.reviewFilter').forEach(b=>b.addEventListener('click',()=>review(b.dataset.review)));$('#hideReview').addEventListener('click',hideReview);$('#resultsMenu').addEventListener('click',goMenu);
 $('#themeToggle').addEventListener('click',toggleTheme);syncThemeButton();
 testStorage();refreshSavedCard();
 

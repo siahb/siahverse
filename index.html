@@ -1,222 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light dark">
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="Siahverse Portal – Tech Flex Hub built by Josiah and powered by Proxmox.">
-  <meta name="keywords" content="Siahverse, Proxmox, Tech Portal, Josiah Borja, Home Server, Dashboard">
+  <meta name="description" content="Siahverse — Josiah's portal for nursing resources, cloud tools, productivity, and homelab services.">
   <meta name="author" content="Josiah Borja">
-
-  <!-- Open Graph Meta Tags -->
-  <meta property="og:title" content="Siahverse Portal">
-  <meta property="og:description" content="Tech Flex Hub · Powered by Proxmox · Made by Josiah">
+  <meta property="og:title" content="Siahverse">
+  <meta property="og:description" content="Nursing, cloud, productivity, and homelab tools in one place.">
   <meta property="og:image" content="https://siahverse.cc/assets/preview.png">
   <meta property="og:url" content="https://siahverse.cc">
   <meta property="og:type" content="website">
-
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Siahverse Portal">
-  <meta name="twitter:description" content="Tech Flex Hub · Powered by Proxmox · Made by Josiah">
+  <meta name="twitter:title" content="Siahverse">
+  <meta name="twitter:description" content="Nursing, cloud, productivity, and homelab tools in one place.">
   <meta name="twitter:image" content="https://siahverse.cc/assets/preview.png">
-
-  <title>Siahverse Portal</title>
-  <link rel="stylesheet" href="main.css" />
-  <link rel="icon" href="favicon.svg" />
-  <link rel="manifest" href="manifest.json">
-  <script defer src="toggle-theme.js"></script>
+  <title>Siahverse</title>
+  <link rel="stylesheet" href="/main.css">
+  <link rel="icon" href="/favicon.svg">
+  <link rel="manifest" href="/manifest.json">
+  <script defer src="/toggle-theme.js"></script>
 </head>
-
 <body>
-  <!-- 🤖 Siahbot Easter Egg -->
-  <div id="siahbot" title="Need help navigating the Siahverse?">🤖</div>
+  <canvas id="stars" aria-hidden="true"></canvas>
+  <div id="siahbot" title="Need help navigating the Siahverse?" aria-label="Siahbot">🤖</div>
 
-  <div class="container">
-    <label class="theme-switch">
-      <input type="checkbox" id="toggle-theme">
-      <span class="slider"></span>
-    </label>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Siahverse home">
+        <span class="brand-mark">S</span>
+        <span>
+          <strong>Siahverse</strong>
+          <small>Personal portal</small>
+        </span>
+      </a>
 
-    <canvas id="stars"></canvas>
+      <label class="theme-switch" aria-label="Toggle color theme">
+        <input type="checkbox" id="toggle-theme">
+        <span class="slider"></span>
+      </label>
+    </header>
 
-    <h1>🌌 Welcome to the Siahverse</h1>
-    <p class="tagline">Tech Flex Portal · Powered by Proxmox · Made by Josiah</p>
+    <section class="hero">
+      <div class="eyebrow">Welcome to the Siahverse</div>
+      <h1>Everything has its own space.</h1>
+      <p>Study tools, cloud services, productivity apps, and homelab controls — organized without turning the homepage into a wall of buttons.</p>
+    </section>
 
-   <div style="display: flex; gap: 12px; justify-content: center; margin-top: 2.5rem; flex-wrap: wrap;">
-  <a href="https://todo.siahverse.cc" style="
-    padding: 0.75rem 1.5rem;
-    background: #0ff;
-    color: #000;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    box-shadow: 0 0 12px #0ff;
-    transition: 0.3s;
-    text-align: center;"
-    onmouseover="this.style.boxShadow='0 0 24px #0ff'"
-    onmouseout="this.style.boxShadow='0 0 12px #0ff'">
-    ✅ Open TODO List
-  </a>
+    <section class="portal-grid" aria-label="Siahverse sections">
+      <a class="portal-card featured route-link" href="/nursing/">
+        <div class="card-icon">🩺</div>
+        <div class="card-copy">
+          <div class="card-kicker">Study</div>
+          <h2>Nursing Resources</h2>
+          <p>Practice exams, study tools, skills, DDC, and future nursing resources.</p>
+          <span class="card-action">Open Nursing →</span>
+        </div>
+      </a>
 
-  <a href="https://vault.siahverse.cc" style="
-    padding: 0.75rem 1.5rem;
-    background: #0ff;
-    color: #000;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    box-shadow: 0 0 12px #0ff;
-    transition: 0.3s;
-    text-align: center;"
-    onmouseover="this.style.boxShadow='0 0 24px #0ff'"
-    onmouseout="this.style.boxShadow='0 0 12px #0ff'">
-    ☁️ Open SiahCloud
-  </a>
+      <a class="portal-card" href="https://vault.siahverse.cc">
+        <div class="card-icon">☁️</div>
+        <div class="card-copy">
+          <div class="card-kicker">Cloud</div>
+          <h2>SiahCloud</h2>
+          <p>Your personal cloud and file access portal.</p>
+          <span class="card-action">Open SiahCloud ↗</span>
+        </div>
+      </a>
 
-  <a href="/nursing/" style="
-    padding: 0.75rem 1.5rem;
-    background: #0ff;
-    color: #000;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    box-shadow: 0 0 12px #0ff;
-    transition: 0.3s;
-    text-align: center;"
-    onmouseover="this.style.boxShadow='0 0 24px #0ff'"
-    onmouseout="this.style.boxShadow='0 0 12px #0ff'">
-    🩺 Nursing Resources
-  </a>
-</div>
+      <a class="portal-card" href="https://todo.siahverse.cc">
+        <div class="card-icon">✅</div>
+        <div class="card-copy">
+          <div class="card-kicker">Productivity</div>
+          <h2>TODO</h2>
+          <p>Tasks and quick personal organization.</p>
+          <span class="card-action">Open TODO ↗</span>
+        </div>
+      </a>
 
-    <div class="links">
-      <a href="https://status.siahverse.cc" target="_blank">📊 Uptime Kuma</a>
-      <a href="https://proxmox.siahverse.cc" target="_blank">🖥️ Proxmox</a>
-      <a href="https://home.siahverse.cc" target="_blank">🏠 Home Assistant</a>
-    </div>
-  </div>
+      <article class="portal-card services-card">
+        <div class="card-icon">🖥️</div>
+        <div class="card-copy">
+          <div class="card-kicker">Infrastructure</div>
+          <h2>Homelab</h2>
+          <p>Server management, smart home, and system monitoring.</p>
+          <div class="service-links">
+            <a href="https://proxmox.siahverse.cc">Proxmox ↗</a>
+            <a href="https://home.siahverse.cc">Home Assistant ↗</a>
+            <a href="https://status.siahverse.cc">Status ↗</a>
+          </div>
+        </div>
+      </article>
+    </section>
 
-  <script>
-  window.addEventListener("DOMContentLoaded", () => {
+    <footer class="footer">Made with Siahverse</footer>
+  </main>
+
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+  document.body.classList.add("page-ready");
+
   const canvas = document.getElementById("stars");
   const ctx = canvas.getContext("2d");
+  let w = 0;
+  let h = 0;
+  let stars = [];
+
+  function resetStars(count) {
+    stars = Array.from({length: count}, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      r: Math.random() * 1.35 + .35,
+      d: Math.random() * .35 + .12
+    }));
+  }
 
   function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     w = canvas.width;
     h = canvas.height;
-  }
-
-  let w, h;
-  resizeCanvas();
-
-  let stars = Array.from({ length: 500 }, () => ({
-    x: Math.random() * w,
-    y: Math.random() * h,
-    r: Math.random() * 1.5 + 0.5,
-    d: Math.random() * 0.5 + 0.2
-  }));
-
-  function draw() {
-    ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--star-color').trim();
-    for (let s of stars) {
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    move();
-  }
-
-  function move() {
-    for (let s of stars) {
-      s.y -= s.d;
-      if (s.y < 0) {
-        s.y = h;
-        s.x = Math.random() * w;
-      }
-    }
+    resetStars(window.innerWidth < 700 ? 110 : 220);
   }
 
   function animate() {
-    draw();
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--star-color").trim();
+    for (const s of stars) {
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+      s.y -= s.d;
+      if (s.y < -2) {
+        s.y = h + 2;
+        s.x = Math.random() * w;
+      }
+    }
     requestAnimationFrame(animate);
   }
 
+  resizeCanvas();
   animate();
-  document.body.classList.add("fade-in");
+  window.addEventListener("resize", resizeCanvas);
 
-  window.addEventListener('resize', () => {
-    resizeCanvas();
-    stars = Array.from({ length: 150 }, () => ({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      r: Math.random() * 1.5 + 0.5,
-      d: Math.random() * 0.5 + 0.2
-    }));
+  document.querySelectorAll(".route-link").forEach(link => {
+    link.addEventListener("click", e => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      e.preventDefault();
+      document.body.classList.add("page-leaving");
+      setTimeout(() => { window.location.href = link.href; }, 140);
+    });
   });
 
-    // Siahbot click event
-const siahbot = document.getElementById("siahbot");
-if (siahbot) {
-  siahbot.addEventListener("click", () => {
-    const messages = [
-      "👋 Hi! I'm Siahbot, guardian of portals.",
-      "🌌 You’ve entered a hidden node...",
-      "💡 Hint: Try the Konami Code 😉",
-      "🛰️ Searching for lost travelers..."
-    ];
-    const random = messages[Math.floor(Math.random() * messages.length)];
-    const box = document.createElement('div');
-    box.textContent = random;
-    box.style.position = 'fixed';
-    box.style.bottom = '80px';
-    box.style.right = '20px';
-    box.style.background = '#111';
-    box.style.color = '#0ff';
-    box.style.padding = '12px 16px';
-    box.style.borderRadius = '10px';
-    box.style.boxShadow = '0 0 10px #0ff';
-    box.style.zIndex = '9999';
-    box.style.fontSize = '1rem';
-    box.style.opacity = '0';
-    box.style.transition = 'opacity 0.3s ease-in-out';
-
-    document.body.appendChild(box);
-    setTimeout(() => box.style.opacity = '1', 10);
-    setTimeout(() => {
-      box.style.opacity = '0';
-      setTimeout(() => document.body.removeChild(box), 300);
-    }, 3000);
-
-  });
-}
-    // Konami Code Listener
-const konamiCode = [
-  "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
-  "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight",
-  "b", "a"
-];
-
-let konamiInput = [];
-
-window.addEventListener("keydown", (e) => {
-  konamiInput.push(e.key);
-  konamiInput.splice(
-    -konamiCode.length - 1,
-    konamiInput.length - konamiCode.length
-  );
-
-  if (konamiCode.every((v, i) => v === konamiInput[i])) {
-    window.location.href = "/secret.html"; // 🔥 You can change this
+  const siahbot = document.getElementById("siahbot");
+  if (siahbot) {
+    siahbot.addEventListener("click", () => {
+      const messages = [
+        "👋 Hi! I'm Siahbot, guardian of portals.",
+        "🌌 Pick a universe and jump in.",
+        "💡 Hint: Try the Konami Code 😉",
+        "🛰️ All systems nominal."
+      ];
+      const box = document.createElement("div");
+      box.className = "bot-message";
+      box.textContent = messages[Math.floor(Math.random() * messages.length)];
+      document.body.appendChild(box);
+      requestAnimationFrame(() => box.classList.add("show"));
+      setTimeout(() => {
+        box.classList.remove("show");
+        setTimeout(() => box.remove(), 250);
+      }, 2600);
+    });
   }
-});
 
+  const konamiCode = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
+  let konamiInput = [];
+  window.addEventListener("keydown", e => {
+    konamiInput.push(e.key);
+    konamiInput = konamiInput.slice(-konamiCode.length);
+    if (konamiCode.every((v, i) => v === konamiInput[i])) window.location.href = "/secret.html";
   });
+});
 </script>
 </body>
 </html>

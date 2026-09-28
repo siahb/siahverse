@@ -3,6 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script>document.documentElement.classList.add('nursing-auth-pending');</script>
+  <style>
+    .nursing-auth-pending body>*{visibility:hidden}
+    .nursing-auth-pending #nursingAuthGate{visibility:visible}
+    #nursingAuthGate{position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;padding:20px;background:#080b12;color:#f4f7ff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    #nursingAuthGate *{box-sizing:border-box}
+    #nursingAuthGate .nag-card{width:min(420px,100%);padding:28px;border:1px solid #2c3955;border-radius:22px;background:linear-gradient(180deg,#172033,#111827);box-shadow:0 22px 70px rgba(0,0,0,.45)}
+    #nursingAuthGate .nag-logo{width:52px;height:52px;display:grid;place-items:center;margin-bottom:18px;border-radius:16px;background:linear-gradient(135deg,#7c9cff,#9a7cff);font-size:24px;font-weight:900}
+    #nursingAuthGate .nag-kicker{color:#b8c5e5;font-size:12px;font-weight:900;letter-spacing:.11em;text-transform:uppercase}
+    #nursingAuthGate h1{margin:6px 0 8px;font-size:30px;line-height:1.05}
+    #nursingAuthGate p{margin:0 0 22px;color:#aeb8cf;line-height:1.55}
+    #nursingAuthGate label{display:block;margin-bottom:7px;color:#c9d3ea;font-size:13px;font-weight:800}
+    #nursingAuthGate .nag-input-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+    #nursingAuthGate input{width:100%;min-height:48px;border:1px solid #2c3955;border-radius:12px;background:#0d1422;color:#fff;padding:11px 12px;font:inherit;outline:none}
+    #nursingAuthGate input:focus{border-color:#7c9cff;box-shadow:0 0 0 3px rgba(124,156,255,.16)}
+    #nursingAuthGate button{font:inherit;font-weight:850;cursor:pointer}
+    #nursingAuthGate .nag-secondary{min-width:64px;border:1px solid #2c3955;border-radius:12px;background:#172033;color:#eef3ff;padding:0 12px}
+    #nursingAuthGate .nag-primary{width:100%;min-height:48px;margin-top:8px;border:0;border-radius:12px;background:linear-gradient(135deg,#7c9cff,#9a7cff);color:#fff}
+    #nursingAuthGate .nag-primary:disabled{opacity:.7;cursor:wait}
+    #nursingAuthGate .nag-error{min-height:24px;padding-top:7px;color:#ff9aa4;font-size:13px;font-weight:750}
+  </style>
+  <script src="/nursing-auth.js" defer></script>
   <meta name="color-scheme" content="dark">
   <meta name="description" content="Nursing study resources from Siahverse.">
   <title>Nursing Resources | Siahverse</title>

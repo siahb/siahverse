@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="color-scheme" content="dark light">
-  <meta name="theme-color" content="#0b1020">
-  <meta name="description" content="SiahDo — a focused task and routine manager by Siahverse.">
+  <meta name="theme-color" content="#090d17">
+  <meta name="description" content="SiahDo — tasks, routines, priorities, and personal planning by Siahverse.">
   <title>SiahDo • Siahverse</title>
-  <link rel="stylesheet" href="todo.css?v=20260928-1">
+  <link rel="stylesheet" href="todo.css?v=20260928-2">
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
 </head>
 <body>
@@ -15,18 +15,20 @@
 
   <main class="app-shell">
     <header class="app-header">
-      <a class="brand" href="https://siahverse.cc/" aria-label="Back to Siahverse">
-        <span class="brand-mark">✓</span>
-        <span class="brand-copy">
-          <span class="brand-kicker">Siahverse</span>
-          <strong>SiahDo</strong>
-          <small>Focus. Finish. Repeat.</small>
-        </span>
-      </a>
+      <div class="header-left">
+        <a class="back-home" href="https://siahverse.cc/" aria-label="Back to Siahverse">← Back</a>
+        <a class="brand" href="https://siahverse.cc/" aria-label="Siahverse home">
+          <span class="brand-mark">S</span>
+          <span class="brand-copy">
+            <span class="brand-kicker">Siahverse</span>
+            <strong>SiahDo</strong>
+          </span>
+        </a>
+      </div>
 
       <div class="header-actions">
-        <button id="enter-password" class="ghost-btn" type="button">🔐 Unlock</button>
-        <button id="logout" class="ghost-btn" type="button">🚪 Lock</button>
+        <button id="enter-password" class="ghost-btn" type="button">Unlock</button>
+        <button id="logout" class="ghost-btn" type="button">Lock</button>
         <button id="help-btn" class="icon-btn" type="button" aria-label="Help" title="Help">?</button>
         <div id="toggle-theme">
           <label class="theme-switch" aria-label="Toggle color theme">
@@ -38,125 +40,176 @@
     </header>
 
     <section class="hero">
-      <div>
-        <div class="eyebrow">Personal task space</div>
-        <h1>Get it out of your head.<br><span>Get it done.</span></h1>
-        <p>One clean place for tasks, routines, priorities, due dates, and everything you do not want to forget.</p>
+      <div class="hero-copy">
+        <div class="eyebrow">Personal command center</div>
+        <h1>Do what matters.<br><span>Forget nothing.</span></h1>
+        <p>Tasks, routines, deadlines, and priorities in one focused place.</p>
+      </div>
+
+      <div class="hero-badge" aria-hidden="true">
+        <span>✓</span>
+        <small>SiahDo</small>
       </div>
     </section>
 
+    <section class="overview-grid" aria-label="Task overview">
+      <button class="overview-card view-card active" type="button" data-task-view="all">
+        <span class="overview-icon">◎</span>
+        <span><b id="stat-open">0</b><small>Open</small></span>
+      </button>
+      <button class="overview-card view-card" type="button" data-task-view="today">
+        <span class="overview-icon">◷</span>
+        <span><b id="stat-today">0</b><small>Due today</small></span>
+      </button>
+      <button class="overview-card view-card danger-card" type="button" data-task-view="overdue">
+        <span class="overview-icon">!</span>
+        <span><b id="stat-overdue">0</b><small>Overdue</small></span>
+      </button>
+      <button class="overview-card view-card" type="button" data-task-view="upcoming">
+        <span class="overview-icon">→</span>
+        <span><b id="stat-upcoming">0</b><small>Upcoming</small></span>
+      </button>
+    </section>
+
     <section id="todo-wrapper" class="card-container workspace">
-      <div class="workspace-toolbar">
-        <div class="sort-and-buttons">
+      <div class="workspace-head">
+        <div>
+          <div class="section-kicker">Workspace</div>
+          <h2 id="current-view-title">All open tasks</h2>
+        </div>
+
+        <div class="workspace-head-actions">
           <div class="search-wrapper">
             <button id="search-toggle" type="button" class="search-icon" aria-label="Search tasks" title="Search tasks">⌕</button>
-            <input id="search-input" type="text" placeholder="Search…">
+            <input id="search-input" type="text" placeholder="Search tasks…">
           </div>
 
           <select id="sort-select" aria-label="Sort tasks">
             <option value="default">Custom order</option>
-            <option value="priority">Priority: high to low</option>
-            <option value="dueAsc">Due date: soonest</option>
-            <option value="dueDesc">Due date: latest</option>
+            <option value="priority">Priority</option>
+            <option value="dueAsc">Due soonest</option>
+            <option value="dueDesc">Due latest</option>
             <option value="alpha">A → Z</option>
-            <option value="tagsAZ">Tags: A → Z</option>
+            <option value="tagsAZ">Tags A → Z</option>
             <option value="created">Newest first</option>
           </select>
+        </div>
+      </div>
 
-          <div class="spacer"></div>
+      <div class="workspace-layout">
+        <aside class="composer-panel">
+          <section class="composer" aria-label="Add a task">
+            <div class="composer-top">
+              <div>
+                <div class="composer-label">Quick add</div>
+                <h3>New task</h3>
+              </div>
+              <span class="enter-hint">↵ Enter</span>
+            </div>
 
-          <div class="progress-wrap">
+            <div class="task-entry-row">
+              <input type="text" id="todo-input" placeholder="What needs to get done?" autocomplete="off">
+              <button id="add-task-btn" class="add-task-btn" type="button">Add</button>
+            </div>
+
+            <div class="composer-fields">
+              <div class="field-wrap wide">
+                <label for="tag-input">Tags</label>
+                <input id="tag-input" type="text" placeholder="school, work, errands…">
+              </div>
+
+              <div class="field-wrap">
+                <label for="priority-select">Priority</label>
+                <select id="priority-select">
+                  <option value="">None</option>
+                  <option value="H">High</option>
+                  <option value="M">Medium</option>
+                  <option value="L">Low</option>
+                </select>
+              </div>
+
+              <div class="field-wrap">
+                <label for="due-input">Due date</label>
+                <div class="field-inline">
+                  <input type="date" id="due-input">
+                  <button id="due-today" type="button" class="mini-btn">Today</button>
+                </div>
+              </div>
+
+              <div class="field-wrap">
+                <label for="repeat-select">Repeat</label>
+                <select id="repeat-select">
+                  <option value="">None</option>
+                  <option value="daily">Daily</option>
+                  <option value="weekly">Weekly</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="repeat-row">
+              <label id="interval-wrap" style="display:none;">Every
+                <input type="number" id="interval-input" min="1" value="1">
+                <span class="interval-unit">day(s)</span>
+              </label>
+
+              <div id="weekly-wrap" style="display:none;">
+                <span class="repeat-label">On</span>
+                <label><input type="checkbox" value="0" class="byweekday">Sun</label>
+                <label><input type="checkbox" value="1" class="byweekday">Mon</label>
+                <label><input type="checkbox" value="2" class="byweekday">Tue</label>
+                <label><input type="checkbox" value="3" class="byweekday">Wed</label>
+                <label><input type="checkbox" value="4" class="byweekday">Thu</label>
+                <label><input type="checkbox" value="5" class="byweekday">Fri</label>
+                <label><input type="checkbox" value="6" class="byweekday">Sat</label>
+              </div>
+            </div>
+          </section>
+
+          <section class="focus-card">
+            <div class="focus-head">
+              <span>Progress</span>
+              <strong id="progress-label"></strong>
+            </div>
             <div id="progress-inline" aria-label="Task completion progress">
               <div id="progress-bar"></div>
             </div>
-            <div id="progress-label"></div>
-          </div>
-        </div>
-      </div>
+            <p>Small wins count. Finish one thing, then the next.</p>
+          </section>
+        </aside>
 
-      <section class="composer" aria-label="Add a task">
-        <div class="composer-label">New task</div>
-        <input type="text" id="todo-input" placeholder="What needs to get done?" autocomplete="off">
-
-        <div class="toolbar below-enter">
-          <div class="field-wrap">
-            <label for="tag-input">Tags</label>
-            <input id="tag-input" type="text" placeholder="school, errands, work…">
-          </div>
-
-          <div class="field-wrap compact">
-            <label for="priority-select">Priority</label>
-            <select id="priority-select">
-              <option value="">None</option>
-              <option value="H">High 🔥</option>
-              <option value="M">Medium ⚡</option>
-              <option value="L">Low 🌿</option>
-            </select>
+        <div class="task-column">
+          <div class="controls">
+            <button id="select-mode-btn" type="button">☐ Select</button>
+            <input type="checkbox" id="select-all" title="Select/deselect all tasks">
+            <label for="select-all">Select all</label>
+            <button id="delete-btn" type="button" onclick="deleteSelected()">Delete selected</button>
+            <button id="undo-btn" type="button">↩ Undo</button>
+            <button id="toggle-drag" type="button">↕ Reorder</button>
+            <button id="save-order" type="button">Save order</button>
           </div>
 
-          <div class="field-wrap compact">
-            <label for="due-input">Due</label>
-            <div class="field-inline">
-              <input type="date" id="due-input">
-              <button id="due-today" type="button" class="mini-btn">Today</button>
+          <section class="task-section">
+            <div class="section-heading">
+              <div>
+                <div class="section-kicker">Focus</div>
+                <h3>Open tasks</h3>
+              </div>
             </div>
-          </div>
+            <ul id="todo-list"></ul>
+          </section>
 
-          <div class="field-wrap compact">
-            <label for="repeat-select">Repeat</label>
-            <select id="repeat-select">
-              <option value="">None</option>
-              <option value="daily">Daily</option>
-              <option value="weekly">Weekly</option>
-            </select>
-          </div>
+          <section class="done-section">
+            <div class="done-heading">
+              <div>
+                <div class="section-kicker">Archive</div>
+                <h2>Completed</h2>
+              </div>
+              <span class="collapse-hint">Tap to expand</span>
+            </div>
+            <ul id="done-list"></ul>
+          </section>
         </div>
-
-        <div class="repeat-row">
-          <label id="interval-wrap" style="display:none;">Every
-            <input type="number" id="interval-input" min="1" value="1">
-            <span class="interval-unit">day(s)</span>
-          </label>
-
-          <div id="weekly-wrap" style="display:none;">
-            <span class="repeat-label">On</span>
-            <label><input type="checkbox" value="0" class="byweekday">Sun</label>
-            <label><input type="checkbox" value="1" class="byweekday">Mon</label>
-            <label><input type="checkbox" value="2" class="byweekday">Tue</label>
-            <label><input type="checkbox" value="3" class="byweekday">Wed</label>
-            <label><input type="checkbox" value="4" class="byweekday">Thu</label>
-            <label><input type="checkbox" value="5" class="byweekday">Fri</label>
-            <label><input type="checkbox" value="6" class="byweekday">Sat</label>
-          </div>
-        </div>
-      </section>
-
-      <div class="controls">
-        <button id="select-mode-btn" type="button">☐ Select</button>
-        <input type="checkbox" id="select-all" title="Select/deselect all tasks">
-        <label for="select-all">Select all</label>
-        <button id="delete-btn" type="button" onclick="deleteSelected()">Delete selected</button>
-        <button id="undo-btn" type="button">↩ Undo</button>
-        <button id="toggle-drag" type="button">↕ Reorder</button>
-        <button id="save-order" type="button">Save order</button>
       </div>
-
-      <section class="task-section">
-        <div class="section-heading">
-          <div>
-            <div class="section-kicker">Now</div>
-            <h3>Open tasks</h3>
-          </div>
-        </div>
-        <ul id="todo-list"></ul>
-      </section>
-
-      <hr class="divider">
-
-      <section class="done-section">
-        <h2>Completed</h2>
-        <ul id="done-list"></ul>
-      </section>
     </section>
 
     <footer class="app-footer">
@@ -168,6 +221,7 @@
   <div id="admin-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="admin-title">
     <div class="modal-content auth-modal">
       <div class="modal-icon">🔐</div>
+      <div class="modal-kicker">Private controls</div>
       <h2 id="admin-title">Unlock SiahDo</h2>
       <p>Enter your admin password to add, edit, reorder, or delete tasks.</p>
       <input type="password" id="password-input" placeholder="Password" autocomplete="current-password">
@@ -192,24 +246,20 @@
         <div class="feature-grid">
           <div class="feature-card">
             <h3>Add & organize</h3>
-            <p>Unlock editing, type a task, set tags, priority, due date, or a repeat schedule, then press <span class="kbd">Enter</span>.</p>
+            <p>Unlock editing, add a task, then attach tags, priority, a due date, or a repeat schedule.</p>
+          </div>
+          <div class="feature-card">
+            <h3>Focus views</h3>
+            <p>Use the overview cards to jump between all open tasks, today, overdue, and upcoming work.</p>
           </div>
           <div class="feature-card">
             <h3>Find tasks fast</h3>
             <p>Use search or press <span class="kbd">Ctrl/Cmd + F</span>. Try <code>high</code>, <code>p:medium</code>, or <code>untagged</code>.</p>
           </div>
           <div class="feature-card">
-            <h3>Keep order</h3>
-            <p>Sort by due date, priority, tags, or newest. Use Reorder for your own custom sequence.</p>
-          </div>
-          <div class="feature-card">
             <h3>Repeat automatically</h3>
             <p>Daily and weekly tasks advance to their next occurrence when completed.</p>
           </div>
-        </div>
-
-        <div class="help-note">
-          <strong>Tip:</strong> Click the Completed heading to collapse or expand finished tasks.
         </div>
       </div>
     </div>
@@ -235,6 +285,6 @@
     </div>
   </div>
 
-  <script src="todo.js"></script>
+  <script src="todo.js?v=20260928-2"></script>
 </body>
 </html>

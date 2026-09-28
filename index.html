@@ -16,7 +16,7 @@
   <meta name="twitter:description" content="Nursing, cloud, productivity, and homelab tools in one place.">
   <meta name="twitter:image" content="https://siahverse.cc/assets/preview.png">
   <title>Siahverse</title>
-  <link rel="stylesheet" href="/main.css?v=20260928-2">
+  <link rel="stylesheet" href="/main.css?v=20260928-3">
   <link rel="icon" href="/favicon.svg">
   <link rel="manifest" href="/manifest.json">
   <script defer src="/toggle-theme.js"></script>
@@ -93,7 +93,7 @@
       </article>
     </section>
 
-    <footer class="footer"><span>Made with Siahverse</span><a class="admin-secret" href="/admin/" aria-label="Admin access">·</a></footer>
+    <footer class="footer">Made with Siahverse</footer>
   </main>
 
 <script>
@@ -153,6 +153,8 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   const siahbot = document.getElementById("siahbot");
+  let activeBotMessage = null;
+  let botMessageTimer = null;
   if (siahbot) {
     siahbot.addEventListener("click", () => {
       const messages = [
@@ -161,14 +163,24 @@ window.addEventListener("DOMContentLoaded", () => {
         "💡 Hint: Try the Konami Code 😉",
         "🛰️ All systems nominal."
       ];
+
+      if (botMessageTimer) clearTimeout(botMessageTimer);
+      if (activeBotMessage) activeBotMessage.remove();
+
       const box = document.createElement("div");
       box.className = "bot-message";
       box.textContent = messages[Math.floor(Math.random() * messages.length)];
       document.body.appendChild(box);
+      activeBotMessage = box;
+
       requestAnimationFrame(() => box.classList.add("show"));
-      setTimeout(() => {
+
+      botMessageTimer = setTimeout(() => {
         box.classList.remove("show");
-        setTimeout(() => box.remove(), 250);
+        setTimeout(() => {
+          if (activeBotMessage === box) activeBotMessage = null;
+          box.remove();
+        }, 250);
       }, 2600);
     });
   }
@@ -178,7 +190,7 @@ window.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("keydown", e => {
     konamiInput.push(e.key);
     konamiInput = konamiInput.slice(-konamiCode.length);
-    if (konamiCode.every((v, i) => v === konamiInput[i])) window.location.href = "/secret.html";
+    if (konamiCode.every((v, i) => v === konamiInput[i])) window.location.href = "/admin/";
   });
 });
 </script>

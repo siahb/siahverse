@@ -347,7 +347,7 @@ async function serveSiahDoAsset(context,path) {
   const url=new URL(context.request.url);
   const cleanPath=path==="/" ? "/public/" : "/public"+path;
   url.pathname=cleanPath;
-  return context.env.ASSETS.fetch(new Request(url.toString(),context.request));
+  return context.env.ASSETS.fetch(url);
 }
 
 async function ensureAccessRequests(db) {

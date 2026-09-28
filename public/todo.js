@@ -82,7 +82,7 @@ weekdayCheckboxes.forEach(cb => {
 });
 
 // Disable/enable buttons
-const relatedButtons = [dueTodayBtn];
+const relatedButtons = [dueTodayBtn, addTaskBtn];
 relatedButtons.forEach(btn => {
   if (btn) {
     btn.disabled = !isLoggedIn;
@@ -229,14 +229,15 @@ viewButtons.forEach(btn => {
 // DOMContentloaded listener
 document.addEventListener("DOMContentLoaded", () => {
   const doneHeader = document.querySelector(".done-section h2");
+  const doneHeading = document.querySelector(".done-heading");
   const doneList = document.getElementById("done-list");
 
-  if (doneHeader && doneList) {
+  if (doneHeader && doneHeading && doneList) {
     // Start collapsed
     doneHeader.classList.add("collapsed");
     doneList.classList.add("collapsed");
 
-    doneHeader.addEventListener("click", () => {
+    doneHeading.addEventListener("click", () => {
       doneHeader.classList.toggle("collapsed");
       doneList.classList.toggle("collapsed");
     });
@@ -525,8 +526,8 @@ function updateAdminUI() {
   const pw = passwordInput.value.trim();
   if (!pw) return alert("Password cannot be empty.");
 
-  // Send a harmless request to test the password
-  const res = await fetch('https://siahverse.cc:3002/todos/0', {
+  // Validate the password against an impossible index so no real task can be deleted.
+  const res = await fetch('https://siahverse.cc:3002/todos/-1', {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${pw}`

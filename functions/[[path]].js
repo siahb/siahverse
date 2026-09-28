@@ -107,10 +107,9 @@ async function verifyPassword(db,password) {
 async function createSession(db,credentialId) {
   const token=randomToken(32);
   const tokenHash=b64url(await sha256(token));
-  const expires=new Date(Date.now()+SESSION_TTL_SECONDS*1000).toISOString();
   await db.prepare(
-    "INSERT INTO sessions (token_hash,credential_id,expires_at) VALUES (?,?,?)"
-  ).bind(tokenHash,credentialId,expires).run();
+    "INSERT INTO sessions (token_hash,credential_id,expires_at) VALUES (?,?,datetime('now','+7 days'))"
+  ).bind(tokenHash,credentialId).run();
   return token;
 }
 

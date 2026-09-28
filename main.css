@@ -1,371 +1,130 @@
-:root[data-theme="light"] {
-  --bg: #ffffff;
-  --text: #000000;
-  --box: #f5f5f58e;
-  --link: #0047ab;
-  --accent: #111111;
-  --star-color: #222222;
+:root[data-theme="light"]{
+  --bg:#f4f7fb;
+  --bg2:#e9efff;
+  --text:#182033;
+  --muted:#637089;
+  --panel:rgba(255,255,255,.80);
+  --panel-solid:#fff;
+  --border:#d7dfeb;
+  --accent:#637dff;
+  --accent2:#9476ff;
+  --star-color:#aebddd;
+  --shadow:0 20px 60px rgba(55,75,110,.13);
 }
-
-:root[data-theme="dark"] {
-  --bg: #0d1117;
-  --text: #ffffff;
-  --box: #161b2288;
-  --link: #58a6ff;
-  --accent: #ccc;
-  --star-color: #58a6ff;
+:root[data-theme="dark"]{
+  --bg:#090d17;
+  --bg2:#121b31;
+  --text:#f4f7ff;
+  --muted:#aeb8cf;
+  --panel:rgba(17,24,39,.80);
+  --panel-solid:#111827;
+  --border:#2b3957;
+  --accent:#7c9cff;
+  --accent2:#9a7cff;
+  --star-color:#5878b8;
+  --shadow:0 20px 60px rgba(0,0,0,.30);
 }
-
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+html{min-height:100%;background:var(--bg);overflow-x:hidden}
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 18% 0%,color-mix(in srgb,var(--accent) 18%,transparent),transparent 32rem),
+    radial-gradient(circle at 92% 18%,color-mix(in srgb,var(--accent2) 15%,transparent),transparent 30rem),
+    linear-gradient(180deg,var(--bg2),var(--bg) 42%);
+  opacity:0;
+  transform:translateY(4px);
+  transition:opacity .22s ease,transform .22s ease,background .3s,color .3s;
 }
-
-/* Ensure html and body always fill the viewport */
-html {
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  min-width: 100vw;
-  width: 100vw;
-  height: 100%;
-  box-sizing: border-box;
-  overflow-x: hidden;
+body.page-ready{opacity:1;transform:none}
+body.page-leaving{opacity:0;transform:translateY(-3px)}
+a{color:inherit}
+canvas#stars{
+  position:fixed;
+  inset:0;
+  width:100vw!important;
+  height:100vh!important;
+  z-index:-1;
+  pointer-events:none;
 }
-
-body {
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  min-width: 100vw;
-  width: 100vw;
-  height: 100%;
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Inter', sans-serif;
-  transition: background 0.3s, color 0.3s;
-  box-sizing: border-box;
-  overflow-x: hidden;
-
-  /* Center content vertically and horizontally */
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.shell{width:min(1100px,calc(100% - 32px));margin:0 auto;padding:28px 0 48px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:70px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brand-mark{
+  width:44px;height:44px;border-radius:14px;display:grid;place-items:center;
+  color:#fff;font-weight:950;font-size:20px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 30%,transparent)
 }
-
-canvas#stars {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw !important;
-  height: 100vh !important;
-  min-width: 100vw;
-  min-height: 100vh;
-  max-width: 100vw;
-  max-height: 100vh;
-  z-index: -1;
-  pointer-events: none;
-  background: transparent;
-  display: block;
+.brand strong{display:block;font-size:18px;line-height:1.1}
+.brand small{display:block;color:var(--muted);margin-top:3px;font-size:12px}
+.theme-switch{width:60px;height:30px;display:block;position:relative;cursor:pointer}
+.theme-switch input{position:absolute;opacity:0;pointer-events:none}
+.slider{
+  position:absolute;inset:0;border-radius:999px;border:1px solid var(--border);
+  background:var(--panel);box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);
 }
-
-.container {
-  max-width: 600px;
-  width: 95vw;
-  padding: 3.5rem 1.9rem;
-  background-color: var(--box);
-  border-radius: 12px;
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.966);
-  z-index: 1;
-  position: relative;
-  text-align: center;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
+.slider:before{
+  content:"☀️";position:absolute;left:3px;top:3px;width:22px;height:22px;border-radius:50%;
+  display:grid;place-items:center;font-size:13px;background:var(--panel-solid);
+  transition:transform .2s ease;
 }
-
-/* Place the theme switch at the top INSIDE the container */
-.theme-switch {
-  position: absolute;
-  top: 1.2rem;
-  right: 1.2rem;
-  z-index: 2;
+.theme-switch input:checked + .slider:before{content:"🌙";transform:translateX(29px)}
+.hero{max-width:760px;margin-bottom:34px}
+.eyebrow{
+  color:color-mix(in srgb,var(--accent) 78%,var(--text));
+  font-size:12px;font-weight:900;letter-spacing:.11em;text-transform:uppercase;margin-bottom:13px
 }
-
-h1 {
-  font-size: 2.3rem;
-  margin-bottom: 2rem;
-  color: var(--heading);
-  font-family: 'Proxima Nova', 'Roboto', 'Inter', sans-serif;
-  word-break: break-word;
+.hero h1{font-size:clamp(2.6rem,7vw,5.6rem);line-height:.98;letter-spacing:-.045em;margin:0 0 18px}
+.hero p{max-width:700px;color:var(--muted);font-size:clamp(1rem,2vw,1.15rem);line-height:1.7;margin:0}
+.portal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.portal-card{
+  min-height:235px;padding:24px;border:1px solid var(--border);border-radius:24px;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--panel-solid) 10%,var(--panel)),var(--panel));
+  box-shadow:var(--shadow);backdrop-filter:blur(16px);
+  text-decoration:none;display:flex;align-items:flex-start;gap:18px;
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
 }
-
-.tagline {
-  margin-bottom: 1rem;
-  font-size: 0.95rem;
-  color: var(--accent);
+a.portal-card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--accent) 58%,var(--border));box-shadow:0 24px 70px rgba(0,0,0,.24)}
+.portal-card.featured{background:linear-gradient(145deg,color-mix(in srgb,var(--accent) 13%,var(--panel)),color-mix(in srgb,var(--accent2) 9%,var(--panel)))}
+.card-icon{
+  flex:0 0 52px;width:52px;height:52px;border-radius:16px;display:grid;place-items:center;
+  font-size:25px;background:var(--panel-solid);border:1px solid var(--border)
 }
-
-.links {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
+.card-copy{display:flex;flex-direction:column;min-width:0;height:100%}
+.card-kicker{color:var(--muted);font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;margin:2px 0 7px}
+.card-copy h2{margin:0 0 9px;font-size:1.45rem}
+.card-copy p{margin:0;color:var(--muted);line-height:1.55;flex:1}
+.card-action{display:inline-block;margin-top:23px;font-weight:850;color:color-mix(in srgb,var(--accent) 80%,var(--text))}
+.service-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:19px}
+.service-links a{
+  text-decoration:none;border:1px solid var(--border);background:var(--panel-solid);
+  border-radius:11px;padding:9px 11px;font-size:13px;font-weight:800
 }
-
-.links a {
-  display: inline-block;
-  margin: 2rem 1rem;
-  color: var(--link);
-  text-decoration: none;
-  font-weight: 500;
-  text-align: center;
-  word-break: break-word;
+.service-links a:hover{border-color:var(--accent)}
+.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:34px}
+#siahbot{position:fixed;right:20px;bottom:18px;font-size:36px;cursor:pointer;z-index:10;transition:transform .18s ease}
+#siahbot:hover{transform:scale(1.1) rotate(-7deg)}
+.bot-message{
+  position:fixed;right:20px;bottom:72px;z-index:20;
+  max-width:min(330px,calc(100vw - 40px));padding:12px 15px;border-radius:13px;
+  background:var(--panel-solid);border:1px solid var(--border);color:var(--text);
+  box-shadow:var(--shadow);opacity:0;transform:translateY(6px);transition:.2s ease
 }
-
-button, .copy-btn {
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 8px;
-  border: none;
-  background-color: var(--link);
-  color: var(--bg);
-  cursor: pointer;
-  transition: background 0.3s, opacity 0.2s;
-  margin-top: 1rem;
-  word-break: break-word;
-  max-width: 100%;
+.bot-message.show{opacity:1;transform:none}
+@media(max-width:720px){
+  .shell{width:min(100% - 22px,1100px);padding-top:18px}
+  .topbar{margin-bottom:48px}
+  .portal-grid{grid-template-columns:1fr}
+  .portal-card{min-height:205px;padding:20px;border-radius:20px}
+  .hero h1{font-size:clamp(2.6rem,15vw,4.4rem)}
+  .card-icon{width:46px;height:46px;flex-basis:46px;border-radius:14px;font-size:22px}
+  #siahbot{font-size:28px;right:14px;bottom:14px}
 }
-
-button:hover, .copy-btn:hover {
-  opacity: 0.9;
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
+  body{opacity:1;transform:none}
 }
-
-.theme-switch {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 999;
-  width: 64px;   /* was 48px */
-  height: 28px;
-  display: flex;
-  align-items: center;
-}
-
-/* Hide the default checkbox */
-.theme-switch input[type="checkbox"] {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-/* The slider */
-.theme-switch .slider {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  height: 100%;
-  min-width: 48px;
-  width: 100%;
-  height: 100%;
-  background: #ccc;
-  border-radius: 34px;
-  transition: background 0.3s;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
-  border: 1px solid #eee;
-  overflow: hidden;
-}
-
-.theme-switch .slider:before {
-  content: "🌞";
-  position: absolute;
-  left: 2px;
-  top: 4px;
-  width: 24px;
-  height: 20px;
-  background: #fff;
-  border-radius: 50%;
-  transition: transform 0.3s, width 0.3s, height 0.3s;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.10);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-  line-height: 1;
-}
-
-/* Checked state (dark mode) */
-.theme-switch input:checked + .slider:before {
-  content: "🌙";
-  background: transparent;    /* Remove white circle for moon */
-  box-shadow: none;           /* Remove shadow for moon */
-  color: #58a6ff;             /* Optional: make moon blue */
-  /* Move the knob to the end, but keep it inside the track */
-  transform: translateX(22px);
-}
-
-/* Checked state */
-.theme-switch input:checked + .slider {
-  background: #006dd3;; /* Apple green */
-}
-
-.copy-btn {
-  display: inline-block;
-  background-color: #222;
-  color: #fff;
-  font-size: 0.9rem;
-  padding: 0.6rem 1.2rem;
-  border-radius: 6px;
-  border: 1px solid #444;
-}
-#siahbot {
-  position: fixed;
-  right: 2vw;
-  bottom: 2vw;
-  font-size: 3rem;
-  cursor: pointer;
-  z-index: 1000;
-  transition: transform 0.2s;
-}
-#siahbot:hover {
-  transform: scale(1.15) rotate(-10deg);
-}
-
-/* Responsive Styles */
-@media (max-width: 900px) {
-  .container {
-    max-width: 98vw;
-    margin: 4vh auto;
-    padding: 1.6rem 0.7rem;
-  }
-  h1 {
-    font-size: 1.7rem;
-  }
-  .links a {
-    margin: 1rem 0.5rem;
-    font-size: 1rem;
-  }
-}
-
-/* Responsive adjustments for phones and tall/narrow screens */
-@media (max-width: 600px), (max-aspect-ratio: 4/5) {
-  .container {
-    max-width: 99vw;
-    margin: 2vh auto;
-    padding: 0.7rem 0.3rem;
-    border-radius: 7px;
-  }
-  h1 {
-    font-size: 1.1rem;
-    margin-bottom: 0.7rem;
-  }
-  .tagline {
-    font-size: 0.8rem;
-  }
-  .links {
-    flex-direction: column;
-    gap: 0.4rem;
-  }
-  .links a {
-    margin: 0.4rem 0;
-    font-size: 0.95rem;
-    padding: 0.5rem 0.8rem;
-  }
-  .theme-switch {
-    top: 0.7rem;
-    right: 0.7rem;
-    width: 36px;
-    height: 22px;
-  }
-  .theme-switch .slider {
-    min-width: 36px;
-    min-height: 22px;
-    width: 100%;
-    height: 100%;
-  }
-  .theme-switch .slider:before {
-    width: calc(100% / 2.4);
-    height: calc(100% - 8px);
-    left: 2px;
-    top: 2px;
-    font-size: 0.95rem;
-  }
-  .theme-switch input:checked + .slider:before {
-    transform: translateX(12px);
-  }
-  #siahbot {
-    right: 2vw;
-    bottom: 2vw;
-    font-size: 1.7rem;
-  }
-  button, .copy-btn {
-    font-size: 0.9rem;
-    padding: 0.4rem 0.7rem;
-    margin-top: 0.5rem;
-  }
-}
-
-/* Extra: handle ultra-wide screens */
-@media (min-aspect-ratio: 21/9) {
-  .container {
-    margin-top: 4vh;
-    margin-bottom: 4vh;
-  }
-}
-
-:root[data-theme="light"] .theme-switch .slider {
-  background: #fff;
-  border: 1px solid #eee;
-}
-
-:root[data-theme="light"] .theme-switch .slider:before {
-  background: #fff;
-  color: #fbc02d; /* Optional: sun color */
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-}
-/* stack + center */
-.portal-buttons{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:12px;            /* space between buttons */
-  margin:18px 0 8px;
-}
-
-/* shared button look */
-.btn{
-  display:inline-block;
-  min-width: 260px;    /* makes both same width */
-  text-align:center;
-  padding:12px 18px;
-  border-radius:12px;
-  font-weight:700;
-  text-decoration:none;
-  transition:transform .15s ease, filter .15s ease, box-shadow .15s ease;
-}
-
-/* glowing primary */
-.btn-primary{
-  background: #00fff0;            /* match your cyan */
-  color:#07161b;
-  box-shadow:
-    0 10px 24px rgba(0,255,240,.35),
-    0 0 32px rgba(0,255,240,.25) inset;
-}
-.btn-primary:hover{ transform: translateY(-1px); filter: brightness(1.05); }
-.btn-primary:active{ transform: translateY(1px); }
-
-/* optional: if you want SiahCloud a bit subtler, give it this class instead:
-   <a class="btn btn-secondary" ...> */
-.btn-secondary{
-  background: rgba(0,255,240,.12);
-  color:#dff6f8;
-  border: 2px solid rgba(0,255,240,.45);
-  box-shadow: 0 6px 16px rgba(0,255,240,.18);
-}
-.btn-secondary:hover{ filter: brightness(1.1); transform: translateY(-1px); }

@@ -159,6 +159,197 @@ async function logEvent(db,credentialId,event,path=null) {
   ).bind(credentialId || null,event,path).run();
 }
 
+
+function jsonResponse(data,status=200) {
+  return new Response(JSON.stringify(data),{
+    status,
+    headers:{
+      "Content-Type":"application/json; charset=UTF-8",
+      "Cache-Control":"no-store"
+    }
+  });
+}
+
+async function ensureSiahDoTasks(db) {
+  await db.prepare(`
+    CREATE TABLE IF NOT EXISTS siahdo_tasks (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      sort_order INTEGER NOT NULL DEFAULT 0,
+      data TEXT NOT NULL,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )
+  `).run();
+  await db.prepare(
+    "CREATE INDEX IF NOT EXISTS idx_siahdo_tasks_order ON siahdo_tasks(sort_order,id)"
+  ).run();
+}
+
+async function loadSiahDoRows(db) {
+  await ensureSiahDoTasks(db);
+  const {results=[]}=await db.prepare(
+    "SELECT id,sort_order,data FROM siahdo_tasks ORDER BY sort_order ASC,id ASC"
+  ).all();
+  return results.map(r=>{
+    let task={};
+    try { task=JSON.parse(r.data); } catch {}
+    return {id:r.id,sort_order:r.sort_order,task};
+  });
+}
+
+async function replaceSiahDoTasks(db,tasks) {
+  if (!Array.isArray(tasks)) throw new Error("Invalid task list");
+  await ensureSiahDoTasks(db);
+  await db.prepare("DELETE FROM siahdo_tasks").run();
+  for (let i=0;i<tasks.length;i++) {
+    await db.prepare(
+      "INSERT INTO siahdo_tasks (sort_order,data) VALUES (?,?)"
+    ).bind(i,JSON.stringify(tasks[i] ?? {})).run();
+  }
+}
+
+async function verifySiahDoAdmin(env,request) {
+  const expected=String(env.SIAHDO_ADMIN_PASSWORD || "");
+  if (!expected) return false;
+  const auth=request.headers.get("Authorization") || "";
+  const supplied=auth.startsWith("Bearer ") ? auth.slice(7) : "";
+  if (!supplied) return false;
+  const [a,b]=await Promise.all([sha256(supplied),sha256(expected)]);
+  return timingSafeEqual(a,b);
+}
+
+async function requireSiahDoAdmin(context) {
+  if (!context.env.SIAHDO_ADMIN_PASSWORD) {
+    return jsonResponse({error:"SiahDo admin secret is not configured."},503);
+  }
+  if (!(await verifySiahDoAdmin(context.env,context.request))) {
+    return jsonResponse({error:"Unauthorized"},401);
+  }
+  return null;
+}
+
+async function handleSiahDoApi(context,path) {
+  const {request,env}=context;
+  await ensureSiahDoTasks(env.DB);
+
+  if (path==="/todos/auth-check") {
+    if (request.method!=="POST") return new Response("Method Not Allowed",{status:405});
+    const denied=await requireSiahDoAdmin(context);
+    return denied || jsonResponse({ok:true});
+  }
+
+  if (path==="/todos" || path==="/todos/") {
+    if (request.method==="GET") {
+      const rows=await loadSiahDoRows(env.DB);
+      return jsonResponse(rows.map(r=>r.task));
+    }
+
+    if (request.method==="POST") {
+      const denied=await requireSiahDoAdmin(context);
+      if (denied) return denied;
+      let body;
+      try { body=await request.json(); } catch { return jsonResponse({error:"Invalid JSON"},400); }
+      const text=typeof body?.text==="string" ? body.text.trim() : "";
+      if (!text) return jsonResponse({error:"Missing text"},400);
+      const {text:_ignored,...rest}=body || {};
+      const task={text,done:false,...rest};
+      const row=await env.DB.prepare("SELECT COALESCE(MAX(sort_order),-1)+1 AS n FROM siahdo_tasks").first();
+      await env.DB.prepare(
+        "INSERT INTO siahdo_tasks (sort_order,data) VALUES (?,?)"
+      ).bind(Number(row?.n || 0),JSON.stringify(task)).run();
+      return jsonResponse({status:"added",todo:task});
+    }
+
+    return new Response("Method Not Allowed",{status:405});
+  }
+
+  if (path==="/todos/reorder") {
+    if (request.method!=="POST") return new Response("Method Not Allowed",{status:405});
+    const denied=await requireSiahDoAdmin(context);
+    if (denied) return denied;
+    let body;
+    try { body=await request.json(); } catch { return jsonResponse({error:"Invalid JSON"},400); }
+    if (!Array.isArray(body)) return jsonResponse({error:"Invalid data"},400);
+    await replaceSiahDoTasks(env.DB,body);
+    return jsonResponse({status:"reordered"});
+  }
+
+  const m=path.match(/^\/todos\/(\d+)$/);
+  if (m) {
+    const index=Number(m[1]);
+    const denied=await requireSiahDoAdmin(context);
+    if (denied) return denied;
+
+    const row=await env.DB.prepare(
+      "SELECT id,data FROM siahdo_tasks ORDER BY sort_order ASC,id ASC LIMIT 1 OFFSET ?"
+    ).bind(index).first();
+    if (!row) return jsonResponse({error:"Invalid index"},404);
+
+    if (request.method==="PATCH") {
+      let patch;
+      try { patch=await request.json(); } catch { return jsonResponse({error:"Invalid JSON"},400); }
+      let current={};
+      try { current=JSON.parse(row.data); } catch {}
+      const task={...current,...(patch || {})};
+      await env.DB.prepare(
+        "UPDATE siahdo_tasks SET data=?,updated_at=CURRENT_TIMESTAMP WHERE id=?"
+      ).bind(JSON.stringify(task),row.id).run();
+      return jsonResponse({status:"updated",todo:task});
+    }
+
+    if (request.method==="DELETE") {
+      let deleted={};
+      try { deleted=JSON.parse(row.data); } catch {}
+      await env.DB.prepare("DELETE FROM siahdo_tasks WHERE id=?").bind(row.id).run();
+      const remaining=await loadSiahDoRows(env.DB);
+      for (let i=0;i<remaining.length;i++) {
+        if (Number(remaining[i].sort_order)!==i) {
+          await env.DB.prepare("UPDATE siahdo_tasks SET sort_order=? WHERE id=?")
+            .bind(i,remaining[i].id).run();
+        }
+      }
+      return jsonResponse({status:"deleted",removed:[deleted]});
+    }
+
+    return new Response("Method Not Allowed",{status:405});
+  }
+
+  return jsonResponse({error:"Not found"},404);
+}
+
+async function migrateSiahDoFromHomelab(context,session) {
+  const origin=new URL(context.request.url).origin;
+  const reqOrigin=context.request.headers.get("Origin");
+  if (reqOrigin && reqOrigin!==origin) return new Response("Forbidden",{status:403});
+
+  let res;
+  try {
+    res=await fetch("https://todo.siahverse.cc/todos",{
+      headers:{"Accept":"application/json","Cache-Control":"no-cache"}
+    });
+  } catch {
+    return adminPage(context,session,"Could not reach the current SiahDo homelab server. Nothing was changed.");
+  }
+  if (!res.ok) return adminPage(context,session,`Homelab SiahDo returned HTTP ${res.status}. Nothing was changed.`);
+
+  let tasks;
+  try { tasks=await res.json(); } catch {
+    return adminPage(context,session,"The homelab returned invalid task data. Nothing was changed.");
+  }
+  if (!Array.isArray(tasks)) return adminPage(context,session,"The homelab task response was not a list. Nothing was changed.");
+
+  await replaceSiahDoTasks(context.env.DB,tasks);
+  await logEvent(context.env.DB,session.credential_id,"admin_migrate_siahdo",String(tasks.length));
+  return adminPage(context,session,`Imported ${tasks.length} SiahDo task${tasks.length===1?"":"s"} into Cloudflare D1.`);
+}
+
+async function serveSiahDoAsset(context,path) {
+  const url=new URL(context.request.url);
+  const cleanPath=path==="/" ? "/public/" : "/public"+path;
+  url.pathname=cleanPath;
+  return context.env.ASSETS.fetch(new Request(url.toString(),context.request));
+}
+
 async function ensureAccessRequests(db) {
   await db.prepare(`
     CREATE TABLE IF NOT EXISTS access_requests (
@@ -405,6 +596,9 @@ ${notice?`<div class="notice">${esc(notice)}${newCode?`<div class="code">${esc(n
 <div class="stats"><div class="stat"><b>${rows.length}</b><span class="muted">Credentials</span></div><div class="stat"><b>${enabled}</b><span class="muted">Enabled</span></div><div class="stat"><b>${logins}</b><span class="muted">Successful logins</span></div><div class="stat"><b>${requests.length}</b><span class="muted">Pending requests</span></div></div></div>
 <div class="panel"><h2 style="margin-top:0">Pending access requests</h2>
 <div class="req-list">${requestCards || '<div class="muted">No pending requests.</div>'}</div></div>
+<div class="panel"><h2 style="margin-top:0">SiahDo Cloudflare migration</h2>
+<p class="muted">Before moving <strong>todo.siahverse.cc</strong> away from the homelab, import its current tasks into D1. This replaces the Cloudflare SiahDo task list with the current homelab list.</p>
+<form method="post" action="/admin/siahdo-migrate" onsubmit="return confirm('Import the current SiahDo task list from the homelab into Cloudflare D1?')"><button class="btn primary">Import SiahDo tasks from homelab</button></form></div>
 <div class="tablewrap"><table><thead><tr><th>Person</th><th>Status</th><th>Logins</th><th>Last login</th><th>Sessions</th><th>Browser/device</th><th>Actions</th></tr></thead><tbody>${cards}</tbody></table></div>
 </div></body></html>`);
 }
@@ -533,6 +727,16 @@ export async function onRequest(context) {
 
   if (!env.DB) return htmlResponse("<h1>Siahverse configuration error</h1><p>Cloudflare D1 binding <strong>DB</strong> is missing.</p>",500);
 
+  const isSiahDoHost=url.hostname.toLowerCase()==="todo.siahverse.cc";
+
+  if (path==="/todos" || path==="/todos/" || path==="/todos/reorder" || path==="/todos/auth-check" || /^\/todos\/\d+$/.test(path)) {
+    return handleSiahDoApi(context,path);
+  }
+
+  if (isSiahDoHost) {
+    return serveSiahDoAsset(context,path);
+  }
+
   if (path==="/api/nursing-login") {
     if (request.method!=="POST") return new Response("Method Not Allowed",{status:405});
     return handleLogin(context);
@@ -562,6 +766,12 @@ export async function onRequest(context) {
     if (!session.is_admin) return forbiddenPage();
     if (request.method!=="GET") return new Response("Method Not Allowed",{status:405});
     return adminPage(context,session);
+  }
+
+  if (path==="/admin/siahdo-migrate") {
+    if (!session.is_admin) return forbiddenPage();
+    if (request.method!=="POST") return new Response("Method Not Allowed",{status:405});
+    return migrateSiahDoFromHomelab(context,session);
   }
 
   if (path==="/admin/action") {

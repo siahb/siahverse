@@ -173,7 +173,7 @@ button{font:inherit;font-weight:850;cursor:pointer}.show{min-width:66px;border:1
 <input id="password" name="password" type="password" autocomplete="current-password" autofocus required>
 <button class="show" type="button" id="show">Show</button></div>
 <div class="error" role="status">${esc(error)}</div><button class="unlock" type="submit">Unlock</button>
-</form><p class="note">Access is assigned individually. Do not share your password.</p></main>
+</form><p class="note">Do not share your password.</p></main>
 <script>const p=document.getElementById("password"),s=document.getElementById("show");s.addEventListener("click",()=>{const v=p.type==="text";p.type=v?"password":"text";s.textContent=v?"Show":"Hide";p.focus()});</script>
 </body></html>`,status);
 }

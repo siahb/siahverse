@@ -72,6 +72,19 @@ html[data-theme="light"] .hintbox{background:#fff9e8;border-color:#e8cf80}
 .auto-next-range input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 .auto-next-range input[type=range]:disabled{opacity:.45;cursor:not-allowed}
 .range-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}
+.quiz-auto-next{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:-2px 0 14px;padding:10px 12px;border:1px solid var(--border);border-radius:14px;background:var(--panel2)}
+.quiz-auto-toggle{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;white-space:nowrap}
+.quiz-auto-toggle input{width:17px;height:17px;accent-color:var(--accent)}
+.quiz-auto-range{display:grid;grid-template-columns:auto minmax(110px,220px);align-items:center;gap:10px;color:var(--muted);font-size:12px;flex:1 1 220px}
+.quiz-auto-range strong{color:var(--text)}
+.quiz-auto-range input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
+.quiz-auto-range input[type=range]:disabled{opacity:.42;cursor:not-allowed}
+.auto-next-backdrop{position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,.46);display:grid;place-items:center;padding:18px}
+.auto-next-prompt{width:min(440px,100%);border:1px solid var(--border);border-radius:18px;background:var(--panel);box-shadow:var(--shadow);padding:18px}
+.auto-next-prompt h3{margin:0 0 7px;font-size:18px}
+.auto-next-prompt p{margin:0;color:var(--muted);line-height:1.5}
+.auto-next-prompt .actions{margin-top:16px}
+@media(max-width:700px){.quiz-auto-range{grid-template-columns:1fr;gap:5px}.quiz-auto-next{align-items:flex-start}}
 .confidence-box{margin-top:14px;padding:13px 14px;border:1px solid var(--border);border-radius:14px;background:var(--panel2)}
 .confidence-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
 .confidence-options{display:flex;flex-wrap:wrap;gap:8px}
@@ -164,6 +177,13 @@ html[data-theme="light"] .calc-key{background:#fff}
 
   <section id="quiz" class="card hidden">
     <div class="menu-actions"><button type="button" class="btn secondary" id="menuBtn">← Main Menu</button><button type="button" class="btn secondary" id="progressBtn">Progress</button><span class="pill" id="sessionPill"></span><span class="pill marked-count" id="markedCount">★ 0 marked</span></div>
+    <div class="quiz-auto-next" id="quizAutoNextBox">
+      <label class="quiz-auto-toggle"><input id="quizAutoNext" type="checkbox"> Auto-next</label>
+      <label class="quiz-auto-range" for="quizAutoNextSeconds">
+        <span>Delay <strong id="quizAutoNextSecondsValue">5s</strong></span>
+        <input id="quizAutoNextSeconds" type="range" min="3" max="10" step="1" value="5" aria-label="Auto-next delay during quiz">
+      </label>
+    </div>
     <div class="topbar"><div><span class="pill" id="qnum"></span> <span class="pill" id="chapterPill"></span></div><div><span class="pill" id="scorePill">Score: 0/0</span></div></div>
     <div class="progress"><div id="bar"></div></div>
     <div class="meta"><span class="pill" id="typePill"></span><span class="pill hidden" id="sourcePill">Extra question</span><span class="pill hidden" id="reviewPill">Marked for review</span></div>
@@ -325,6 +345,8 @@ function showQuiz(){setup.classList.add('hidden');results.classList.add('hidden'
 function goMenu(){clearAdvanceTimers();quiz.classList.add('hidden');results.classList.add('hidden');progressView.classList.add('hidden');setup.classList.remove('hidden');saveState();refreshSavedCard();window.scrollTo({top:0,behavior:'smooth'})}
 function render(){
   clearAdvanceTimers();
+  closeAutoNextPrompt();
+  syncQuizAutoNextControls();
   const q=state.qs[state.i], a=state.answers[q.id];
   $('#qnum').textContent=`Question ${state.i+1} of ${state.qs.length}`; $('#chapterPill').textContent=q.chapter_short; $('#typePill').textContent=shortType(q); $('#sourcePill').classList.toggle('hidden',!q.supplemental); $('#bar').style.width=((state.i+1)/state.qs.length*100)+'%'; $('#stem').textContent=q.stem;
   $('#sessionPill').textContent=state.label||'Quiz session';const marks=Object.values(state.marked||{}).filter(Boolean).length;$('#markedCount').textContent=`★ ${marks} marked`;
@@ -427,12 +449,82 @@ function protectNext(){
   btn.disabled=true;
   nextProtectionTimer=setTimeout(()=>{nextProtectionTimer=null;btn.disabled=false},1000);
 }
+function getAutoNextSeconds(){
+  return Math.max(3,Math.min(10,parseInt(state?.settings?.autoNextSeconds,10)||5));
+}
+function syncQuizAutoNextControls(){
+  if(!state)return;
+  if(!state.settings)state.settings={};
+  if(typeof state.settings.autoNext!=='boolean')state.settings.autoNext=true;
+  state.settings.autoNextSeconds=getAutoNextSeconds();
+  const toggle=$('#quizAutoNext'),range=$('#quizAutoNextSeconds'),value=$('#quizAutoNextSecondsValue');
+  if(!toggle||!range||!value)return;
+  toggle.checked=state.settings.autoNext!==false;
+  range.value=state.settings.autoNextSeconds;
+  range.disabled=!toggle.checked;
+  value.textContent=state.settings.autoNextSeconds+'s';
+}
+function resetNextButtonText(){
+  const btn=$('#next');
+  if(btn)btn.textContent=state&&state.i===state.qs.length-1?'Finish quiz':'Next';
+}
+function applyQuizAutoNextSettings(){
+  if(!state)return;
+  if(!state.settings)state.settings={};
+  state.settings.autoNext=$('#quizAutoNext').checked;
+  state.settings.autoNextSeconds=Math.max(3,Math.min(10,parseInt($('#quizAutoNextSeconds').value,10)||5));
+  syncQuizAutoNextControls();
+  saveState();
+  clearAutoNext();
+  resetNextButtonText();
+  const q=state.qs[state.i];
+  if(state.mode==='practice'&&state.graded?.[q.id]&&!$('#next').classList.contains('hidden')&&state.settings.autoNext!==false){
+    scheduleAutoNext();
+  }
+}
+function closeAutoNextPrompt(){
+  document.querySelector('.auto-next-backdrop')?.remove();
+}
+function showAutoNextBackPrompt(){
+  closeAutoNextPrompt();
+  if(!state||state.mode!=='practice'||state.settings?.autoNext===false)return;
+  const current=getAutoNextSeconds();
+  const nextDelay=Math.min(10,current+1);
+  const backdrop=document.createElement('div');
+  backdrop.className='auto-next-backdrop';
+  backdrop.innerHTML=`<div class="auto-next-prompt" role="dialog" aria-modal="true" aria-labelledby="autoNextPromptTitle">
+    <h3 id="autoNextPromptTitle">Was auto-next too fast?</h3>
+    <p>${current<10?`You went back a question. Increase the delay from ${current}s to ${nextDelay}s?`:`You went back a question and auto-next is already set to the maximum 10s delay.`}</p>
+    <div class="actions">
+      ${current<10?'<button type="button" class="btn primary" data-auto-action="increase">Increase delay</button>':''}
+      <button type="button" class="btn secondary" data-auto-action="keep">Keep ${current}s</button>
+      <button type="button" class="btn secondary" data-auto-action="off">Turn auto-next off</button>
+    </div>
+  </div>`;
+  backdrop.addEventListener('click',e=>{
+    if(e.target===backdrop){closeAutoNextPrompt();return}
+    const btn=e.target.closest('[data-auto-action]');
+    if(!btn)return;
+    const action=btn.dataset.autoAction;
+    if(action==='increase'){
+      state.settings.autoNextSeconds=nextDelay;
+      saveState();
+      syncQuizAutoNextControls();
+    }else if(action==='off'){
+      state.settings.autoNext=false;
+      saveState();
+      syncQuizAutoNextControls();
+    }
+    closeAutoNextPrompt();
+  });
+  document.body.appendChild(backdrop);
+}
 function scheduleAutoNext(){
   clearAutoNext();
   if(!state||state.mode!=='practice'||state.settings?.autoNext===false)return;
   const btn=$('#next');
   const base=state.i===state.qs.length-1?'Finish quiz':'Next';
-  let remaining=Math.max(3,Math.min(10,parseInt(state.settings?.autoNextSeconds,10)||5));
+  let remaining=getAutoNextSeconds();
   btn.textContent=`${base} (${remaining}s)`;
   const tick=()=>{
     remaining--;
@@ -447,7 +539,7 @@ function colorChoices(q,g){if(q.section==='COMPLETION')return;document.querySele
 function submitCurrent(){const q=state.qs[state.i],a=state.answers[q.id],warning=$('#answerWarning');if(q.section==='COMPLETION'&&!String(a||'').trim()){warning.textContent='Enter an answer before continuing.';warning.classList.remove('hidden');$('#calcInput')?.focus();return}if(q.section!=='COMPLETION'&&(!a||(Array.isArray(a)&&!a.length))){warning.textContent=q.section==='MULTIPLE RESPONSE'?'Select at least one answer before continuing.':'Choose an answer before continuing.';warning.classList.remove('hidden');return}warning.classList.add('hidden');warning.textContent='';if(state.mode==='practice'){const g=grade(q);showFeedback(q,g)}else{saveState();if(state.i===state.qs.length-1)finish();else{state.i++;render()}}}
 function updateScore(){if(state.mode==='exam'){const n=state.qs.filter(answered).length;$('#scorePill').textContent=`Saved: ${n}/${state.qs.length}`;return}const gs=Object.values(state.graded||{});$('#scorePill').textContent=`Score: ${gs.filter(x=>x.ok).length}/${gs.length}`}
 function next(){if(nextProtectionTimer)return;clearAdvanceTimers();if(state.i===state.qs.length-1){finish();return}state.i++;render()}
-function prev(){clearAdvanceTimers();if(state.i>0){state.i--;render()}}
+function prev(){clearAdvanceTimers();if(state.i>0){state.i--;render();showAutoNextBackPrompt()}}
 function showProgress(){clearAdvanceTimers();if(!state)return;quiz.classList.add('hidden');setup.classList.add('hidden');results.classList.add('hidden');progressView.classList.remove('hidden');renderProgress();window.scrollTo({top:0,behavior:'smooth'})}
 function renderProgress(){const answeredN=state.qs.filter(answered).length,marks=state.qs.filter(q=>state.marked?.[q.id]).length,graded=Object.keys(state.graded||{}).length,hints=Object.values(state.hinted||{}).filter(Boolean).length,ratings=Object.keys(state.confidence||{}).length;$('#progressSummary').innerHTML=`<span class="pill">${esc(state.label||'Quiz session')}</span><span class="pill">${answeredN}/${state.qs.length} answered</span><span class="pill marked-count">★ ${marks} marked</span><span class="pill">💡 ${hints} hints</span>${state.settings?.confidenceRating?`<span class="pill">${ratings} rated</span>`:''}<span class="pill">${graded} checked</span>`;$('#questionGrid').innerHTML=state.qs.map((q,i)=>`<button type="button" class="qjump ${answered(q)?'answered':''} ${state.marked?.[q.id]?'marked':''} ${i===state.i?'current':''}" data-i="${i}" aria-label="Question ${i+1}${state.marked?.[q.id]?', marked for review':''}">${i+1}${state.marked?.[q.id]?'<span class="star">★</span>':''}</button>`).join('');$('#questionGrid').querySelectorAll('.qjump').forEach(b=>b.addEventListener('click',()=>{state.i=+b.dataset.i;showQuiz()}));renderMarkedList()}
 function renderMarkedList(){const box=$('#markedList');const rows=state.qs.map((q,i)=>({q,i})).filter(x=>state.marked?.[x.q.id]);if(!rows.length){box.innerHTML='<p class="muted" style="margin:16px 0 0">No questions are marked for review.</p>';return}box.innerHTML='<div class="marked-list">'+rows.map(({q,i})=>`<div class="marked-row"><div class="txt"><b>Question ${i+1}: ${esc(q.stem)}</b><span>${esc(q.chapter_short)} • ${answered(q)?'Answered':'Not answered'}</span></div><button type="button" class="btn secondary goMarked" data-i="${i}">Open</button></div>`).join('')+'</div>';box.querySelectorAll('.goMarked').forEach(b=>b.addEventListener('click',()=>{state.i=+b.dataset.i;showQuiz()}))}
@@ -487,6 +579,15 @@ function syncAutoNextControls(){
 autoNextToggle.addEventListener('change',syncAutoNextControls);
 autoNextSeconds.addEventListener('input',syncAutoNextControls);
 syncAutoNextControls();
+$('#quizAutoNext').addEventListener('change',applyQuizAutoNextSettings);
+$('#quizAutoNextSeconds').addEventListener('input',()=>{
+  if(!state)return;
+  if(!state.settings)state.settings={};
+  state.settings.autoNextSeconds=Math.max(3,Math.min(10,parseInt($('#quizAutoNextSeconds').value,10)||5));
+  $('#quizAutoNextSecondsValue').textContent=state.settings.autoNextSeconds+'s';
+  saveState();
+});
+$('#quizAutoNextSeconds').addEventListener('change',applyQuizAutoNextSettings);
 $('#themeToggle').addEventListener('click',toggleTheme);syncThemeButton();
 testStorage();refreshSavedCard();
 

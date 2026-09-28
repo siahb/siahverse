@@ -9,6 +9,10 @@
   const themeCheckbox = document.getElementById('toggle-theme-checkbox');
   const selectModeBtn = document.getElementById('select-mode-btn');
   const deleteSelectedBtn = document.getElementById('delete-btn'); // Your existing delete button
+  const addTaskBtn = document.getElementById('add-task-btn');
+  const viewButtons = [...document.querySelectorAll('[data-task-view]')];
+  const currentViewTitle = document.getElementById('current-view-title');
+  let activeTaskView = 'all';
   selectModeBtn?.addEventListener('click', toggleSelectMode);
 let selectMode = false;
   const dueInput = document.getElementById('due-input');
@@ -175,6 +179,39 @@ function isDueTomorrow(todo) {
   return toISO(todo.due) === tomorrow;
 }
 
+function taskViewFilter(list) {
+  if (activeTaskView === 'today') {
+    return list.filter(t => isDueToday(t));
+  }
+  if (activeTaskView === 'overdue') {
+    return list.filter(t => isOverdue(t));
+  }
+  if (activeTaskView === 'upcoming') {
+    return list.filter(t => t.due && toISO(t.due) > todayISO());
+  }
+  return list;
+}
+
+function updateViewTitle() {
+  if (!currentViewTitle) return;
+  const titles = {
+    all: 'All open tasks',
+    today: 'Due today',
+    overdue: 'Overdue',
+    upcoming: 'Upcoming'
+  };
+  currentViewTitle.textContent = titles[activeTaskView] || titles.all;
+}
+
+viewButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    activeTaskView = btn.dataset.taskView || 'all';
+    viewButtons.forEach(b => b.classList.toggle('active', b === btn));
+    updateViewTitle();
+    renderTodos();
+  });
+});
+
   function updateSelectAllState() {
     const all = document.querySelectorAll('.select-todo');
     const checked = document.querySelectorAll('.select-todo:checked');
@@ -191,7 +228,7 @@ function isDueTomorrow(todo) {
   const passwordInput = document.getElementById('password-input');
 // DOMContentloaded listener
 document.addEventListener("DOMContentLoaded", () => {
-  const doneHeader = document.querySelector(".card-container h2");
+  const doneHeader = document.querySelector(".done-section h2");
   const doneList = document.getElementById("done-list");
 
   if (doneHeader && doneList) {
@@ -649,16 +686,28 @@ function sortTodos(list){
 function updateProgress(){
   const total = todosData.length;
   const done  = todosData.filter(t=>t.done).length;
+  const open = todosData.filter(t=>!t.done).length;
+  const today = todosData.filter(t=>!t.done && isDueToday(t)).length;
   const overdue = todosData.filter(t=>!t.done && t.due && toISO(t.due) < todayISO()).length;
+  const upcoming = todosData.filter(t=>!t.done && t.due && toISO(t.due) > todayISO()).length;
   const pct = total ? Math.round((done/total)*100) : 0;
 
   const bar = document.getElementById('progress-bar');
   const label = document.getElementById('progress-label');
-  if (!bar || !label) return;
+  const statOpen = document.getElementById('stat-open');
+  const statToday = document.getElementById('stat-today');
+  const statOverdue = document.getElementById('stat-overdue');
+  const statUpcoming = document.getElementById('stat-upcoming');
 
+  if (statOpen) statOpen.textContent = String(open);
+  if (statToday) statToday.textContent = String(today);
+  if (statOverdue) statOverdue.textContent = String(overdue);
+  if (statUpcoming) statUpcoming.textContent = String(upcoming);
+
+  if (!bar || !label) return;
   bar.style.width = `${pct}%`;
   label.textContent = total
-    ? `${done}/${total} tasks • ${pct}% complete${overdue ? ` • ${overdue} overdue` : ''}`
+    ? `${done}/${total} • ${pct}%`
     : 'No tasks yet';
 }
 
@@ -761,7 +810,7 @@ function weekdayBoxes(selected = []) {
   const renderTodos = () => {
   todoList.innerHTML = '';
   const base = todosData.filter(t => !t.done);
-  const view = sortTodos(filteredTodos(base));
+  const view = sortTodos(filteredTodos(taskViewFilter(base)));
 
   view.forEach((todo) => {
     const i = todosData.indexOf(todo); // true index in the data array
@@ -1096,6 +1145,8 @@ async function addNewTodo() {
     alert("Failed to add todo.");
   }
 }
+
+addTaskBtn?.addEventListener('click', addNewTodo);
 
 // === Step 2: Enter on main text field ===
 todoInput.addEventListener('keydown', (e) => {
@@ -1489,6 +1540,7 @@ function disableDrag() {
 }
   // Init
   toggleDragBtn.textContent = '↕️Reorder';
+  updateViewTitle();
   loadTodosFromServer();
 
   // Stars

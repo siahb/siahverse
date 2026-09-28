@@ -12,7 +12,7 @@
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;background:radial-gradient(circle at top,#151f3a 0,#0b1020 42%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
 .wrap{max-width:940px;margin:auto;padding:28px 18px 52px}
-.brand{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:24px;color:inherit;text-decoration:none}
 .logo{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:25px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 8px 18px rgba(0,0,0,.22)}
 .brand strong{font-size:20px}.brand small{display:block;color:var(--muted);margin-top:2px}
 .card{background:rgba(18,26,45,.94);border:1px solid var(--border);border-radius:22px;padding:24px;box-shadow:var(--shadow)}
@@ -37,13 +37,13 @@ body{margin:0;min-height:100vh;background:radial-gradient(circle at top,#151f3a 
 </head>
 <body>
 <div class="wrap">
-  <div class="brand">
+  <a class="brand" href="/" aria-label="Siahverse home">
     <div class="logo" aria-hidden="true">🩺</div>
     <div>
       <strong>Siahverse</strong>
       <small>Medical-Surgical Nursing Exam 1</small>
     </div>
-  </div>
+  </a>
 
   <section class="card hero">
     <div class="status"><span class="dot"></span> Work in progress</div>

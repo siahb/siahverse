@@ -97,7 +97,9 @@ function clearFailures(request) { failures.delete(clientKey(request)); }
 
 function safeNext(value) {
   if (typeof value !== "string") return "/nursing/";
-  if (value.startsWith("/nursing") || value.startsWith("/pharm1") || value.startsWith("/admin")) return value;
+  // Redirect only to known local pages; never accept a URL or ambiguous // path.
+  const path=value.split("?")[0];
+  if (/^\/(?:nursing|pharm1|medsurg1|admin)(?:\/|$)/.test(path) && !value.startsWith("//") && !/[\\\r\n]/.test(value)) return value;
   return "/nursing/";
 }
 
@@ -437,7 +439,7 @@ input{width:100%;min-height:50px;border:1px solid var(--b);border-radius:12px;ba
 button{font:inherit;font-weight:850;cursor:pointer}.show{min-width:66px;border:1px solid var(--b);border-radius:12px;background:var(--p2);color:var(--t);padding:0 12px}.unlock{width:100%;min-height:50px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--a),var(--a2));color:#fff;margin-top:8px}
 .error{min-height:27px;padding-top:7px;color:var(--bad);font-size:13px;font-weight:800}.note{margin:16px 0 0;color:var(--m);font-size:12px;line-height:1.5}.request{margin-top:20px;padding-top:18px;border-top:1px solid var(--b)}.request summary{cursor:pointer;font-weight:850;color:#cfd8ef}.request form{margin-top:14px}.request input{margin-bottom:8px}.request button{width:100%;min-height:46px;border:1px solid var(--b);border-radius:12px;background:var(--p2);color:var(--t)}
 </style></head><body><main class="card">
-<a class="back-home" href="/">← Back</a><br><a class="home-brand" href="/" aria-label="Siahverse home"><div class="logo">S</div><div class="k">Siahverse</div></a><h1>Nursing Resources</h1>
+<a class="back-home" href="/">← Back</a><br><a class="home-brand" href="/" aria-label="Siahverse home"><div class="logo">S</div><div class="k">Siahverse</div></a><h1>${safe.startsWith("/pharm1")?"Unlock Pharmacology Exam 1":safe.startsWith("/medsurg1")?"Unlock Med-Surg Exam 1":safe.startsWith("/admin")?"Admin access":"Nursing Resources"}</h1>
 <p class="sub">Enter the access password to continue.</p>
 <form method="post" action="/api/nursing-login">
 <input type="hidden" name="next" value="${esc(safe)}">
@@ -485,8 +487,8 @@ async function handleLogin(context) {
     "Location":next,
     "Cache-Control":"no-store"
   });
-  headers.append("Set-Cookie",`${COOKIE_NAME}=${encodeURIComponent(token)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${SESSION_TTL_SECONDS}`);
-  headers.append("Set-Cookie",`${DEVICE_COOKIE_NAME}=${encodeURIComponent(device.token)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${DEVICE_TTL_SECONDS}`);
+  headers.append("Set-Cookie",`${COOKIE_NAME}=${encodeURIComponent(token)}; Domain=siahverse.cc; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${SESSION_TTL_SECONDS}`);
+  headers.append("Set-Cookie",`${DEVICE_COOKIE_NAME}=${encodeURIComponent(device.token)}; Domain=siahverse.cc; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${DEVICE_TTL_SECONDS}`);
   return new Response(null,{status:303,headers});
 }
 
@@ -494,7 +496,7 @@ async function handleLogout(context) {
   await revokeCurrentSession(context.env.DB,context.request);
   return new Response(null,{status:303,headers:{
     "Location":"/nursing/",
-    "Set-Cookie":`${COOKIE_NAME}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`,
+    "Set-Cookie":`${COOKIE_NAME}=; Domain=siahverse.cc; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`,
     "Cache-Control":"no-store"
   }});
 }
@@ -727,7 +729,9 @@ export async function onRequest(context) {
 
   if (!env.DB) return htmlResponse("<h1>Siahverse configuration error</h1><p>Cloudflare D1 binding <strong>DB</strong> is missing.</p>",500);
 
-  const isSiahDoHost=url.hostname.toLowerCase()==="todo.siahverse.cc";
+  const host=url.hostname.toLowerCase();
+  const isSiahDoHost=host==="todo.siahverse.cc";
+  const isNursingHost=host==="nursing.siahverse.cc";
 
   if (path==="/todos" || path==="/todos/" || path==="/todos/reorder" || path==="/todos/auth-check" || /^\/todos\/\d+$/.test(path)) {
     return handleSiahDoApi(context,path);
@@ -735,6 +739,10 @@ export async function onRequest(context) {
 
   if (isSiahDoHost) {
     return serveSiahDoAsset(context,path);
+  }
+
+  if (isNursingHost && (path==="/" || path==="/index.html")) {
+    return Response.redirect(new URL("/nursing/",url),302);
   }
 
   if (path==="/api/nursing-login") {
@@ -753,8 +761,8 @@ export async function onRequest(context) {
   }
 
   const protectedPath =
-    path==="/nursing" || path.startsWith("/nursing/") ||
     path==="/pharm1" || path.startsWith("/pharm1/") ||
+    path==="/medsurg1" || path.startsWith("/medsurg1/") ||
     path==="/admin" || path.startsWith("/admin/");
 
   if (!protectedPath) return context.next();

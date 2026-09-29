@@ -1,5 +1,10 @@
 # Pharm1 Changelog
 
+## v8.5 — 2026-09-29
+- Fixed the Exam Clock control so its dropdown is always available in setup.
+- Clock choices still apply only when Exam Mode is selected.
+- Updated the helper text to make that behavior clear.
+
 ## v8.4 — 2026-09-28
 - Standardized navigation: the Siahverse logo/wordmark now always returns to the main Siahverse homepage.
 - Added an explicit Back button to return to Nursing Resources.

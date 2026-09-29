@@ -3,39 +3,46 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#f4f8fb">
+  <meta name="theme-color" content="#f8f3ef">
   <meta name="description" content="NurseDoku — a nursing-themed logic puzzle.">
   <title>NurseDoku</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="icon" href="/favicon.svg">
+  <link rel="stylesheet" href="styles.css?v=2">
+  <link rel="icon" href="https://siahverse.cc/favicon.svg">
 </head>
 <body>
   <main class="app-shell">
     <header class="topbar">
       <div>
-        <a class="eyebrow brand-link" href="/nursing/">Siahverse Nursing</a>
+        <a class="eyebrow brand-link" href="https://siahverse.cc/nursing/">Siahverse Nursing</a>
         <h1>NurseDoku</h1>
         <p class="subtitle">Staff every row, column, and care zone — safely.</p>
       </div>
-      <div class="top-actions"><a class="ghost-btn back-link" href="/nursing/">Nursing Resources</a><button id="howToBtn" class="ghost-btn" type="button">How to play</button></div>
+      <div class="top-actions"><a class="ghost-btn back-link" href="https://siahverse.cc/nursing/">Nursing Resources</a><button id="howToBtn" class="ghost-btn" type="button">How to play</button></div>
     </header>
 
+    <nav class="play-options" aria-label="Puzzle choices">
+      <button id="journeyBtn" class="secondary-btn" type="button">Learn</button>
+      <button id="dailyBtn" class="secondary-btn" type="button">Daily</button>
+      <button id="practiceBtn" class="primary-btn" type="button">New puzzle</button>
+    </nav>
+    <div class="preferences">
+      <label>Difficulty <select id="difficulty"><option value="4">Easy · 4×4</option><option value="6" selected>Medium · 6×6</option><option value="8">Hard · 8×8</option></select></label>
+      <label>Care team <select id="theme"><option value="general">General</option><option value="peds">Pediatrics</option><option value="ed">Emergency</option></select></label>
+    </div>
+    <p id="statsLine" class="stats-line"></p>
     <section class="status-card" aria-label="Game status">
-      <div><span class="status-label">Puzzle</span><strong>Shift 001</strong></div>
+      <div><span class="status-label">Puzzle</span><strong id="levelLabel">Shift 001</strong></div>
       <div><span class="status-label">Time</span><strong id="timer">00:00</strong></div>
-      <div><span class="status-label">RNs</span><strong><span id="rnCount">0</span>/6</strong></div>
+      <div><span class="status-label">RNs</span><strong><span id="rnCount">0</span>/<span id="targetCount">4</span></strong></div>
     </section>
 
     <section class="game-card">
       <div id="board" class="board" role="grid" aria-label="NurseDoku puzzle board"></div>
 
-      <div class="mode-switch" role="group" aria-label="Placement mode">
-        <button class="mode-btn active" data-mode="rn" type="button"><span class="rn-mini">RN</span>Place RN</button>
-        <button class="mode-btn" data-mode="x" type="button"><span class="x-mini">×</span>Mark X</button>
-      </div>
-
+      <p class="gesture-guide">Tap or drag to mark × · Double-tap to place RN</p>
       <div class="actions">
-        <button id="checkBtn" class="primary-btn" type="button">Check shift</button>
+        <button id="undoBtn" class="secondary-btn" type="button">Undo</button>
+        <button id="hintBtn" class="primary-btn" type="button">Hint</button>
         <button id="resetBtn" class="secondary-btn" type="button">Reset</button>
       </div>
       <p id="message" class="message" aria-live="polite"></p>
@@ -44,9 +51,9 @@
     <section class="rules-card">
       <h2>Shift rules</h2>
       <ul>
-        <li>Exactly one RN in every row.</li>
-        <li>Exactly one RN in every column.</li>
-        <li>Exactly one RN in every colored care zone.</li>
+        <li>One RN per row.</li>
+        <li>One RN per column.</li>
+        <li>One RN per color.</li>
         <li>RNs cannot touch, including diagonally.</li>
       </ul>
     </section>
@@ -58,8 +65,8 @@
         <div><p class="eyebrow">NurseDoku</p><h2>How to play</h2></div>
         <button id="closeHowToBtn" class="icon-btn" type="button" aria-label="Close">×</button>
       </div>
-      <p>Place six RN markers so every row, column, and colored care zone contains exactly one RN.</p>
-      <p>Two RNs cannot occupy neighboring cells, even diagonally. Use X marks to eliminate cells while you reason through the shift.</p>
+      <p>Place one RN per row, column, and care zone.</p>
+      <p>Tap to toggle an X. Drag across cells to mark several Xs in one stroke. Double-tap a cell to place or remove an RN. On a keyboard, press Enter to toggle an X or R to toggle an RN. Two RNs cannot touch, even diagonally.</p>
       <button id="startBtn" class="primary-btn full" type="button">Start shift</button>
     </div>
   </dialog>
@@ -70,10 +77,12 @@
       <p class="eyebrow">Shift complete</p>
       <h2>Safe staffing achieved.</h2>
       <p>You solved NurseDoku in <strong id="finalTime">00:00</strong>.</p>
-      <button id="playAgainBtn" class="primary-btn full" type="button">Play again</button>
+      <div class="bonus-card"><p class="eyebrow">Nursing bonus · Optional</p><p id="bonusQuestion"></p><div id="bonusAnswers"></div><p id="bonusFeedback" aria-live="polite"></p><a class="bonus-source" href="https://www.cdc.gov/clean-hands/hcp/clinical-safety/index.html" target="_blank" rel="noopener">Rationale source: CDC hand hygiene</a></div>
+      <button id="playAgainBtn" class="primary-btn full" type="button">Next shift</button>
     </div>
   </dialog>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=2"></script>
 </body>
 </html>
+

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f4f8fb">
+  <meta name="description" content="NurseDoku — a nursing-themed logic puzzle.">
+  <title>NurseDoku</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="/favicon.svg">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div>
+        <a class="eyebrow brand-link" href="/nursing/">Siahverse Nursing</a>
+        <h1>NurseDoku</h1>
+        <p class="subtitle">Staff every row, column, and care zone — safely.</p>
+      </div>
+      <div class="top-actions"><a class="ghost-btn back-link" href="/nursing/">Nursing Resources</a><button id="howToBtn" class="ghost-btn" type="button">How to play</button></div>
+    </header>
+
+    <section class="status-card" aria-label="Game status">
+      <div><span class="status-label">Puzzle</span><strong>Shift 001</strong></div>
+      <div><span class="status-label">Time</span><strong id="timer">00:00</strong></div>
+      <div><span class="status-label">RNs</span><strong><span id="rnCount">0</span>/6</strong></div>
+    </section>
+
+    <section class="game-card">
+      <div id="board" class="board" role="grid" aria-label="NurseDoku puzzle board"></div>
+
+      <div class="mode-switch" role="group" aria-label="Placement mode">
+        <button class="mode-btn active" data-mode="rn" type="button"><span class="rn-mini">RN</span>Place RN</button>
+        <button class="mode-btn" data-mode="x" type="button"><span class="x-mini">×</span>Mark X</button>
+      </div>
+
+      <div class="actions">
+        <button id="checkBtn" class="primary-btn" type="button">Check shift</button>
+        <button id="resetBtn" class="secondary-btn" type="button">Reset</button>
+      </div>
+      <p id="message" class="message" aria-live="polite"></p>
+    </section>
+
+    <section class="rules-card">
+      <h2>Shift rules</h2>
+      <ul>
+        <li>Exactly one RN in every row.</li>
+        <li>Exactly one RN in every column.</li>
+        <li>Exactly one RN in every colored care zone.</li>
+        <li>RNs cannot touch, including diagonally.</li>
+      </ul>
+    </section>
+  </main>
+
+  <dialog id="howToDialog">
+    <div class="dialog-body">
+      <div class="dialog-header">
+        <div><p class="eyebrow">NurseDoku</p><h2>How to play</h2></div>
+        <button id="closeHowToBtn" class="icon-btn" type="button" aria-label="Close">×</button>
+      </div>
+      <p>Place six RN markers so every row, column, and colored care zone contains exactly one RN.</p>
+      <p>Two RNs cannot occupy neighboring cells, even diagonally. Use X marks to eliminate cells while you reason through the shift.</p>
+      <button id="startBtn" class="primary-btn full" type="button">Start shift</button>
+    </div>
+  </dialog>
+
+  <dialog id="winDialog">
+    <div class="dialog-body win-body">
+      <div class="win-mark">RN</div>
+      <p class="eyebrow">Shift complete</p>
+      <h2>Safe staffing achieved.</h2>
+      <p>You solved NurseDoku in <strong id="finalTime">00:00</strong>.</p>
+      <button id="playAgainBtn" class="primary-btn full" type="button">Play again</button>
+    </div>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>

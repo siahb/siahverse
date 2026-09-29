@@ -392,3 +392,20 @@ select { min-height:36px; width:100%; border:1px solid #eadbd3; border-radius:10
 .bonus-card { background:var(--surface-soft); border-radius:14px; padding:14px; margin:15px 0; }
 #bonusAnswers { display:grid; gap:7px; } #bonusAnswers button { font-size:.82rem; padding:8px; }
 #bonusFeedback { margin:10px 0 0; font-size:.82rem; } dialog { max-height:85dvh; overflow:auto; }
+
+/* Touch feedback inspired by the reference: pop, sparkle, and celebration. */
+.x-marker { animation:x-pop .17s cubic-bezier(.2,.8,.3,1.35) both; pointer-events:none; color:rgba(255,255,255,.94); text-shadow:0 1px 2px #51384020; }
+.rn-marker { animation:rn-pop .32s cubic-bezier(.2,.85,.3,1.5) both; pointer-events:none; }
+.rn-sparkles { position:absolute; width:6px; height:6px; border-radius:50%; top:50%; left:50%; background:#fff1a5; pointer-events:none; animation:rn-sparkle .55s ease-out both; }
+.cell { isolation:isolate; }
+.zone-dot { transition:transform .2s; }
+.zone-dot:not(:empty) { animation:zone-pop .3s ease-out; }
+#soundBtn { font-size:.75rem; }
+@keyframes x-pop { from {opacity:0;transform:scale(.35) rotate(-12deg);} to {opacity:1;transform:scale(1) rotate(0);} }
+@keyframes rn-pop { 0% {opacity:0;transform:scale(.3);} 65% {opacity:1;transform:scale(1.18) rotate(-5deg);} 100% {transform:scale(1) rotate(0);} }
+@keyframes rn-sparkle { 0% {opacity:1;box-shadow:0 0 #fff1a5,0 0 #fff,0 0 #fff1a5,0 0 #fff;} 75% {opacity:.8;box-shadow:20px -22px #fff1a5,-23px -18px #fff,23px 20px #fff1a5,-20px 23px #fff;} 100% {opacity:0;box-shadow:26px -28px #fff1a5,-29px -24px #fff,29px 26px #fff1a5,-26px 29px #fff;} }
+@keyframes zone-pop { 50% {transform:scale(1.2);} }
+.celebration { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:5; border-radius:inherit; }
+.confetti-piece { position:absolute; top:-14px; width:8px; height:13px; border-radius:2px; animation:confetti-fall 1.4s ease-out both; }
+@keyframes confetti-fall { to { transform:translate(var(--drift),550px) rotate(var(--turn)); opacity:0; } }
+@media(prefers-reduced-motion:reduce) { .rn-sparkles,.celebration { display:none; } .x-marker,.rn-marker,.zone-dot { animation:none!important; } }

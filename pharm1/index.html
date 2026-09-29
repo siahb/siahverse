@@ -156,7 +156,7 @@ html[data-theme="light"] .calc-key{background:#fff}
       <div class="field"><label for="count">Number of questions</label><select id="count"><option value="all">All available</option><option value="10">10</option><option value="20">20</option><option value="25">25</option><option value="50">50</option><option value="75">75</option><option value="100">100</option></select></div>
       <div class="field"><label for="order">Order</label><select id="order"><option value="original">In order</option><option value="shuffle">Shuffle questions</option></select></div>
       <div class="field"><label for="mode">Mode</label><select id="mode"><option value="practice">Practice — feedback after each answer</option><option value="exam">Exam — feedback at the end</option></select></div>
-       <div class="field"><label for="timeLimit">Exam clock <span class="muted">(optional)</span></label><select id="timeLimit"><option value="0">Untimed</option><option value="stopwatch">Stopwatch — count up</option><option value="15">15 minutes</option><option value="30">30 minutes</option><option value="45">45 minutes</option><option value="60">60 minutes</option><option value="90">90 minutes</option><option value="120">120 minutes</option></select><small class="muted">Choose anytime; it only applies in Exam Mode. Countdown exams submit automatically at zero; the stopwatch has no time limit.</small></div>
+       <div class="field"><label for="timeLimit">Time limit <span class="muted">(optional)</span></label><select id="timeLimit"><option value="0">No time limit</option><option value="15">15 minutes</option><option value="30">30 minutes</option><option value="45">45 minutes</option><option value="60">60 minutes</option><option value="90">90 minutes</option><option value="120">120 minutes</option></select><small class="muted">Exam Mode always shows elapsed time by default. Choose a time limit only if you want a countdown that submits automatically at zero.</small></div>
       <div class="field"><label for="sessionLabel">Quiz session name <span class="muted">(optional)</span></label><input id="sessionLabel" type="text" maxlength="60" autocomplete="off" placeholder="e.g., Full Exam Run"></div>
     </div>
     <div class="study-tools">
@@ -345,7 +345,8 @@ function startQuiz(){
   const customLabel=String($('#sessionLabel').value||'').trim().slice(0,60);
    const timerChoice=$('#mode').value==='exam'?$('#timeLimit').value:'0';
    const timeLimitMinutes=Number(timerChoice)||0;
-  state={schema:STATE_SCHEMA,sessionId:makeSessionId(),label:customLabel||defaultSessionLabel(),qs:pool,i:0,mode:$('#mode').value,answers:{},graded:{},marked:{},hinted:{},confidence:{},finished:false,deadlineAt:timeLimitMinutes?Date.now()+timeLimitMinutes*60000:null,startedAt:timerChoice==='stopwatch'?Date.now():null,finishedAt:null,timeExpired:false,settings:{timerChoice,timeLimitMinutes,sourceSet,chapter:$('#chapter').value,questionType:type,count:$('#count').value,order:$('#order').value,shuffleChoices:$('#shuffleChoices').checked,confidenceRating:$('#confidenceRating').checked,autoNext:$('#autoNext').checked,autoNextSeconds:Math.max(3,Math.min(10,parseInt($('#autoNextSeconds').value,10)||5))}};
+   const examStartedAt=$('#mode').value==='exam'?Date.now():null;
+  state={schema:STATE_SCHEMA,sessionId:makeSessionId(),label:customLabel||defaultSessionLabel(),qs:pool,i:0,mode:$('#mode').value,answers:{},graded:{},marked:{},hinted:{},confidence:{},finished:false,deadlineAt:timeLimitMinutes?examStartedAt+timeLimitMinutes*60000:null,startedAt:examStartedAt,finishedAt:null,timeExpired:false,settings:{timerChoice,timeLimitMinutes,sourceSet,chapter:$('#chapter').value,questionType:type,count:$('#count').value,order:$('#order').value,shuffleChoices:$('#shuffleChoices').checked,confidenceRating:$('#confidenceRating').checked,autoNext:$('#autoNext').checked,autoNextSeconds:Math.max(3,Math.min(10,parseInt($('#autoNextSeconds').value,10)||5))}};
   $('#sessionLabel').value='';showQuiz();saveState();
 }
 function resumeSession(id){const s=getSession(id);if(!s)return;state=s;state.i=Math.max(0,Math.min(state.i||0,state.qs.length-1));if(state.finished){stopExamTimer();showResultsFromState()}else if(state.deadlineAt&&Date.now()>=state.deadlineAt){finish(true)}else showQuiz()}
@@ -563,14 +564,14 @@ function retakeWrong(){
   const mode=state.mode||'practice';
   const pool=missed.map(q=>{const base=BANK.find(x=>x.id===q.id)||q;const opts=base.options||[];return {...base,displayOptions:settings.shuffleChoices?shuffle(opts):[...opts]}});
   const parentLabel=state.label||'Quiz session';
-  state={schema:STATE_SCHEMA,sessionId:makeSessionId(),label:(parentLabel+' — Missed retake').slice(0,60),qs:pool,i:0,mode,answers:{},graded:{},marked:{},hinted:{},confidence:{},finished:false,deadlineAt:mode==='exam'&&Number(settings.timeLimitMinutes)?Date.now()+Number(settings.timeLimitMinutes)*60000:null,startedAt:mode==='exam'&&settings.timerChoice==='stopwatch'?Date.now():null,finishedAt:null,timeExpired:false,settings:{...settings,count:String(pool.length),retakeWrong:true}};
+  const retakeStartedAt=mode==='exam'?Date.now():null;
+  state={schema:STATE_SCHEMA,sessionId:makeSessionId(),label:(parentLabel+' — Missed retake').slice(0,60),qs:pool,i:0,mode,answers:{},graded:{},marked:{},hinted:{},confidence:{},finished:false,deadlineAt:mode==='exam'&&Number(settings.timeLimitMinutes)?retakeStartedAt+Number(settings.timeLimitMinutes)*60000:null,startedAt:retakeStartedAt,finishedAt:null,timeExpired:false,settings:{...settings,timerChoice:String(Number(settings.timeLimitMinutes)||0),count:String(pool.length),retakeWrong:true}};
   showQuiz();saveState();
 }
 function newQuiz(){stopExamTimer();state=null;results.classList.add('hidden');quiz.classList.add('hidden');progressView.classList.add('hidden');setup.classList.remove('hidden');refreshSavedCard();window.scrollTo({top:0,behavior:'smooth'})}
 populateChapters();$('#nAll').textContent=BANK.length;$('#nMC').textContent=BANK.filter(q=>q.section==='MULTIPLE CHOICE').length;$('#nSATA').textContent=BANK.filter(q=>q.section==='MULTIPLE RESPONSE').length;$('#nCalc').textContent=BANK.filter(q=>q.section==='COMPLETION').length;
 $('#sourceSet').addEventListener('change',populateChapters);$('#chapter').addEventListener('change',updateQuestionTypeOptions);
 $('#start').addEventListener('click',startQuiz);
-$('#mode').addEventListener('change',()=>{});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)updateExamTimer()});
 $('#calcToggle').addEventListener('click',()=>toggleDDCPanel('calc'));
 $('#conversionToggle').addEventListener('click',()=>toggleDDCPanel('conversion'));

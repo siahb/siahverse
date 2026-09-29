@@ -1,5 +1,11 @@
 # Pharm1 Changelog
 
+## v8.6 — 2026-09-29
+- Removed the Stopwatch / count-up choice from setup.
+- Exam Mode now starts an elapsed-time clock automatically.
+- The optional clock setting is now only for countdown time limits.
+- Untimed exams still show elapsed time.
+
 ## v8.5 — 2026-09-29
 - Fixed the Exam Clock control so its dropdown is always available in setup.
 - Clock choices still apply only when Exam Mode is selected.

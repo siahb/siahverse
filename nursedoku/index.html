@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f8f3ef">
   <meta name="description" content="NurseDoku — a nursing-themed logic puzzle.">
   <title>NurseDoku</title>
-  <link rel="stylesheet" href="styles.css?v=dc076610ec">
+  <link rel="stylesheet" href="styles.css?v=bb705f9706">
   <link rel="icon" href="https://siahverse.cc/favicon.svg">
 </head>
 <body>
@@ -17,7 +17,7 @@
         <h1>NurseDoku</h1>
         <p class="subtitle">Staff every row, column, and care zone — safely.</p>
       </div>
-      <div class="top-actions"><a class="ghost-btn back-link" href="https://siahverse.cc/nursing/">Nursing Resources</a><button id="howToBtn" class="ghost-btn" type="button">How to play</button></div>
+      <div class="top-actions"><a class="ghost-btn back-link" href="https://siahverse.cc/nursing/">Nursing Resources</a><button id="soundBtn" class="ghost-btn" type="button" aria-pressed="true">Sound on</button><button id="howToBtn" class="ghost-btn" type="button">How to play</button></div>
     </header>
 
     <nav class="play-options" aria-label="Puzzle choices">
@@ -72,6 +72,7 @@
   </dialog>
 
   <dialog id="winDialog">
+    <div id="celebration" class="celebration" aria-hidden="true"></div>
     <div class="dialog-body win-body">
       <div class="win-mark">RN</div>
       <p class="eyebrow">Shift complete</p>
@@ -82,7 +83,7 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=6bd72f2676"></script>
+  <script src="app.js?v=816a87636f"></script>
 </body>
 </html>
 

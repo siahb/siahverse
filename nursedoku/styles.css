@@ -342,3 +342,53 @@ dialog {
     gap: 2px;
   }
 }
+
+
+/* Warm, colorful care zones with a quiet interface around the board. */
+:root { --bg:#f8f3ef; --text:#704d51; --muted:#977477; --accent:#397d80;
+  --surface-soft:#f5eae4; --r0:#e9bd43; --r1:#9b7ad5; --r2:#acd68d;
+  --r3:#d87579; --r4:#f5abc9; --r5:#53b7b5; --r6:#6481be; --r7:#ffa66f; }
+body { background:var(--bg); }
+.app-shell { max-width:570px; }
+h1 { letter-spacing:-.04em; }
+.status-card,.game-card,.rules-card { border:0; box-shadow:0 7px 25px #ad7b5d08; }
+.status-card strong { font-size:1.35rem; }
+.status-card > div + div { border:0; }
+.board { border:0; border-radius:16px; padding:4px; gap:5px; overflow:visible; touch-action:none; }
+.cell { border:0!important; border-radius:7px; aspect-ratio:1; transition:box-shadow .15s; }
+.cell.region-6 { background:var(--r6); }
+.cell.region-7 { background:var(--r7); }
+.rn-marker { background:white; color:#704d51; box-shadow:0 3px 8px #704d5126; }
+.x-marker { color:#4f383e; font-weight:700; }
+.cell.conflict { box-shadow:inset 0 0 0 3px #a52441; }
+.cell.conflict .rn-marker { color:white; }
+.gesture-guide { margin:16px 0 10px; text-align:center; font-size:.82rem; color:var(--muted); }
+.actions { grid-template-columns:repeat(3,1fr); }
+.cell.hint { box-shadow:inset 0 0 0 3px white,0 0 0 3px var(--accent); z-index:1; }
+.zone-progress { display:flex; justify-content:center; gap:9px; padding:0 0 12px; }
+.zone-dot { width:21px; height:21px; border-radius:7px; color:#4f383e; font-size:14px; text-align:center; font-weight:900; }
+.rules-card ul { display:flex; flex-wrap:wrap; list-style:none; padding:0; gap:7px; }
+.rules-card li { background:var(--surface-soft); padding:7px 10px; border-radius:10px; font-size:.8rem; }
+.topbar { align-items:center; }
+.subtitle { font-size:.85rem; }
+.secondary-btn { border-color:#eadbd3; color:var(--text); }
+button,a { -webkit-tap-highlight-color:transparent; }
+button:focus-visible,a:focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+button:disabled { opacity:.4; cursor:default; }
+@media(max-width:430px) {
+ .app-shell { padding-top:calc(12px + env(safe-area-inset-top)); }
+ .topbar { margin-bottom:12px; gap:8px; }
+ h1 { font-size:2rem; } .back-link { font-size:.72rem; }
+ .board { gap:4px; } .rules-card { padding:13px; }
+ .cell { border-radius:5px; }
+}
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; } }
+
+.play-options { display:grid; grid-template-columns:1fr 1fr 1.4fr; gap:8px; margin-bottom:12px; }
+.preferences { display:flex; justify-content:space-between; gap:10px; }
+.preferences label { display:grid; gap:5px; font-size:.72rem; color:var(--muted); flex:1; }
+select { min-height:36px; width:100%; border:1px solid #eadbd3; border-radius:10px; padding:5px; background:white; color:var(--text); font:inherit; font-size:.8rem; }
+.stats-line { text-align:center; font-size:.72rem; color:var(--muted); margin:12px 0; }
+.bonus-card { background:var(--surface-soft); border-radius:14px; padding:14px; margin:15px 0; }
+#bonusAnswers { display:grid; gap:7px; } #bonusAnswers button { font-size:.82rem; padding:8px; }
+#bonusFeedback { margin:10px 0 0; font-size:.82rem; } dialog { max-height:85dvh; overflow:auto; }

@@ -437,7 +437,7 @@ function loginPage(next="/nursing/",error="",status=200) {
 label{display:block;font-size:13px;font-weight:850;color:#c9d3ea;margin-bottom:7px}.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
 input{width:100%;min-height:50px;border:1px solid var(--b);border-radius:12px;background:#0d1422;color:#fff;padding:11px 12px;font:inherit;outline:none}input:focus{border-color:var(--a);box-shadow:0 0 0 3px rgba(124,156,255,.16)}
 button{font:inherit;font-weight:850;cursor:pointer}.show{min-width:66px;border:1px solid var(--b);border-radius:12px;background:var(--p2);color:var(--t);padding:0 12px}.unlock{width:100%;min-height:50px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--a),var(--a2));color:#fff;margin-top:8px}
-.error{min-height:27px;padding-top:7px;color:var(--bad);font-size:13px;font-weight:800}.note{margin:16px 0 0;color:var(--m);font-size:12px;line-height:1.5}.request{margin-top:20px;padding-top:18px;border-top:1px solid var(--b)}.request summary{cursor:pointer;font-weight:850;color:#cfd8ef}.request form{margin-top:14px}.request input{margin-bottom:8px}.request button{width:100%;min-height:46px;border:1px solid var(--b);border-radius:12px;background:var(--p2);color:var(--t)}
+.error{min-height:27px;padding-top:7px;color:var(--bad);font-size:13px;font-weight:800}.note{margin:16px 0 0;color:var(--m);font-size:12px;line-height:1.5}.request{margin-top:20px;padding-top:18px;border-top:1px solid var(--b)}.request summary{cursor:pointer;font-weight:850;color:#cfd8ef}.request form{margin-top:14px}.request input{margin-bottom:8px}.request button{width:100%;min-height:46px;border:1px solid var(--b);border-radius:12px;background:var(--p2);color:var(--t)}.forgot{border:1px solid var(--b);border-radius:18px;padding:24px;background:var(--p);color:var(--t);width:min(390px,calc(100% - 32px));box-shadow:0 24px 80px rgba(0,0,0,.55)}.forgot::backdrop{background:rgba(0,0,0,.7)}.forgot h2{margin:0 0 10px}.forgot p{color:var(--m);line-height:1.5}.forgot .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}.forgot .actions button{min-height:44px;border:1px solid var(--b);border-radius:10px;background:var(--p2);color:var(--t);padding:0 14px}.forgot .actions .primary{border:0;background:linear-gradient(135deg,var(--a),var(--a2))}
 </style></head><body><main class="card">
 <a class="back-home" href="/">← Back</a><br><a class="home-brand" href="/" aria-label="Siahverse home"><div class="logo">S</div><div class="k">Siahverse</div></a><h1>${safe.startsWith("/pharm1")?"Unlock Pharmacology Exam 1":safe.startsWith("/medsurg1")?"Unlock Med-Surg Exam 1":safe.startsWith("/admin")?"Admin access":"Nursing Resources"}</h1>
 <p class="sub">Enter the access password to continue.</p>
@@ -448,13 +448,14 @@ button{font:inherit;font-weight:850;cursor:pointer}.show{min-width:66px;border:1
 <button class="show" type="button" id="show">Show</button></div>
 <div class="error" role="status">${esc(error)}</div><button class="unlock" type="submit">Unlock</button>
 </form><p class="note">Do not share your password.</p>
-<details class="request"><summary>Need access?</summary>
+<details class="request" id="request"><summary>Need access or a password reset?</summary>
 <form method="post" action="/api/access-request">
 <label for="request-name">Full name</label>
 <input id="request-name" name="name" type="text" autocomplete="name" maxlength="100" required>
-<button type="submit">Request access</button>
+<button type="submit">Submit request</button>
 </form></details></main>
-<script>const p=document.getElementById("password"),s=document.getElementById("show");s.addEventListener("click",()=>{const v=p.type==="text";p.type=v?"password":"text";s.textContent=v?"Show":"Hide";p.focus()});</script>
+<dialog class="forgot" id="forgot" aria-labelledby="forgot-title"><h2 id="forgot-title">Forgot your password?</h2><p>${safe.startsWith("/admin")?"The access-request form cannot recover your admin account. Use your saved admin password or arrange a manual recovery.":"You can request a new password. Josiah will verify your identity and send it to you."}</p><div class="actions">${safe.startsWith("/admin")?"":'<button type="button" class="primary" id="request-reset">Request a new password</button>'}<button type="button" id="close-forgot">Try again</button></div></dialog>
+<script>const p=document.getElementById("password"),s=document.getElementById("show"),modal=document.getElementById("forgot");s.addEventListener("click",()=>{const v=p.type==="text";p.type=v?"password":"text";s.textContent=v?"Show":"Hide";p.focus()});document.getElementById("close-forgot").addEventListener("click",()=>modal.close());const reset=document.getElementById("request-reset");if(reset)reset.addEventListener("click",()=>{modal.close();const details=document.getElementById("request");details.open=true;document.getElementById("request-name").focus()});try{const key="sv_nursing_failed_logins";let count=Number(sessionStorage.getItem(key))||0;if(${status===401}){count=Math.min(count+1,3);sessionStorage.setItem(key,String(count));if(count>=3)modal.showModal()}else if(${status===200})sessionStorage.removeItem(key)}catch{}</script>
 </body></html>`,status);
 }
 

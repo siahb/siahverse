@@ -488,8 +488,8 @@ async function handleLogin(context) {
     "Location":next,
     "Cache-Control":"no-store"
   });
-  headers.append("Set-Cookie",`${COOKIE_NAME}=${encodeURIComponent(token)}; Domain=siahverse.cc; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${SESSION_TTL_SECONDS}`);
-  headers.append("Set-Cookie",`${DEVICE_COOKIE_NAME}=${encodeURIComponent(device.token)}; Domain=siahverse.cc; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${DEVICE_TTL_SECONDS}`);
+  headers.append("Set-Cookie",`${COOKIE_NAME}=${encodeURIComponent(token)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${SESSION_TTL_SECONDS}`);
+  headers.append("Set-Cookie",`${DEVICE_COOKIE_NAME}=${encodeURIComponent(device.token)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${DEVICE_TTL_SECONDS}`);
   return new Response(null,{status:303,headers});
 }
 
@@ -497,7 +497,7 @@ async function handleLogout(context) {
   await revokeCurrentSession(context.env.DB,context.request);
   return new Response(null,{status:303,headers:{
     "Location":"/nursing/",
-    "Set-Cookie":`${COOKIE_NAME}=; Domain=siahverse.cc; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`,
+    "Set-Cookie":`${COOKIE_NAME}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`,
     "Cache-Control":"no-store"
   }});
 }

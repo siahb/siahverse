@@ -33,6 +33,73 @@ function generatePuzzle(n,seed) {
 const SAVE_KEY = 'nursedoku-v2';
 const $ = id => document.getElementById(id);
 const board = $('board');
+// Original synthesized effects; no audio downloads or autoplay.
+let soundEnabled=true, audioContext=null, lastTickAt=0;
+try {soundEnabled=localStorage.getItem('nursedoku-sound')!=='off';}catch{}
+function updateSoundButton() {
+  $('soundBtn').textContent=soundEnabled?'Sound on':'Sound off';
+  $('soundBtn').setAttribute('aria-pressed',String(soundEnabled));
+  $('soundBtn').setAttribute('aria-label',soundEnabled?'Mute game sounds':'Enable game sounds');
+}
+function unlockAudio() {
+  if(!soundEnabled)return;
+  try {
+    const Context=window.AudioContext||window.webkitAudioContext;
+    if(!Context)return;
+    if(!audioContext)audioContext=new Context();
+    if(audioContext.state==='suspended')audioContext.resume().catch(()=>{});
+  }catch{}
+}
+function tone(freq,when,length,volume=.035,endFreq=freq,type='sine') {
+  if(!audioContext||audioContext.state!=='running')return;
+  const at=audioContext.currentTime+when;
+  const oscillator=audioContext.createOscillator(),gain=audioContext.createGain();
+  oscillator.type=type;oscillator.frequency.setValueAtTime(freq,at);
+  oscillator.frequency.exponentialRampToValueAtTime(endFreq,at+length);
+  gain.gain.setValueAtTime(.0001,at);gain.gain.exponentialRampToValueAtTime(volume,at+.006);
+  gain.gain.exponentialRampToValueAtTime(.0001,at+length);
+  oscillator.connect(gain);gain.connect(audioContext.destination);
+  oscillator.start(at);oscillator.stop(at+length+.01);
+  oscillator.onended=()=>{oscillator.disconnect();gain.disconnect();};
+}
+function sound(kind) {
+  if(!soundEnabled)return;
+  unlockAudio();
+  try {
+    if(kind==='x') {
+      if(Date.now()-lastTickAt<40)return;lastTickAt=Date.now();
+      tone(760,0,.045,.025,420,'triangle');
+    }else if(kind==='rn') {
+      tone(523,0,.12,.04,640);tone(784,.065,.17,.028,1047);
+    }else if(kind==='erase')tone(430,0,.06,.02,260);
+    else if(kind==='hint'){tone(659,0,.12,.03);tone(988,.09,.18,.025);}
+    else if(kind==='win') [523,659,784,1047,1319].forEach((f,i)=>tone(f,i*.10,.28,.04));
+    else if(kind==='undo')tone(520,0,.08,.025,330);
+    else if(kind==='new') {tone(392,0,.10,.025);tone(523,.08,.13,.025);}
+  }catch{}
+}
+function celebrate() {
+  const layer=$('celebration');layer.innerHTML='';
+  if(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;
+  for(let i=0;i<36;i++) {
+    const piece=document.createElement('i');piece.className='confetti-piece';
+    piece.style.left=(Math.random()*100)+'%';
+    piece.style.background=`var(--r${i%6})`;
+    piece.style.setProperty('--drift',(Math.random()*150-75)+'px');
+    piece.style.setProperty('--turn',(Math.random()*720-360)+'deg');
+    piece.style.animationDelay=(Math.random()*.3)+'s';layer.append(piece);
+  }
+  setTimeout(()=>{layer.innerHTML='';},1800);
+}
+$('soundBtn').addEventListener('click',()=>{
+  soundEnabled=!soundEnabled;
+  try{localStorage.setItem('nursedoku-sound',soundEnabled?'on':'off');}catch{}
+  updateSoundButton();if(soundEnabled){unlockAudio();sound('rn');}
+});
+document.addEventListener('pointerdown',unlockAudio,{passive:true});
+document.addEventListener('keydown',unlockAudio);
+updateSoundButton();
+
 let gameKind='journey', customPuzzle=null, dailyDate=null;
 let stats={wins:0,best:null,dailyDates:[]};
 try { const x=JSON.parse(localStorage.getItem('nursedoku-stats'));if(x&&Number.isInteger(x.wins)&&x.wins>=0&&Array.isArray(x.dailyDates))stats=x; } catch {}
@@ -92,7 +159,10 @@ function paint() {
   const bad=conflicts();
   [...board.children].forEach(cell=>{
     const r=+cell.dataset.row,c=+cell.dataset.col,v=state[r][c],zone=puzzle().regions[r][c];
-    cell.innerHTML=v?`<span class="${v==='rn'?'rn':'x'}-marker">${v==='rn'?'RN':'×'}</span>`:'';
+    if(cell.dataset.mark!==v) {
+      cell.dataset.mark=v;
+      cell.innerHTML=v?`<span class="${v==='rn'?'rn':'x'}-marker">${v==='rn'?'RN':'×'}</span>${v==='rn'?'<span class="rn-sparkles" aria-hidden="true"></span>':''}`:'';
+    }
     cell.classList.toggle('conflict',bad.has(`${r},${c}`));
     cell.classList.toggle('hint',hintCell===`${r},${c}`);
     cell.setAttribute('aria-label',`Row ${r+1}, column ${c+1}, care zone ${zone+1}, ${v==='rn'?'RN placed':v==='x'?'marked X':'empty'}${bad.has(`${r},${c}`)?', conflict':''}`);
@@ -118,7 +188,7 @@ function afterMove() {
     $('timer').textContent=format(elapsed);$('finalTime').textContent=format(elapsed);
     tell('Shift complete. Every care zone is staffed!','success');
     $('playAgainBtn').textContent=gameKind==='daily'?'Play a practice shift':gameKind==='practice'?'New practice shift':level===LEVELS.length-1?'Replay from shift 001':'Next shift';
-    $('winDialog').showModal(); paint();
+    $('winDialog').showModal(); celebrate(); sound('win'); paint();
   } else if(conflicts().size) tell('Outlined RNs conflict. Check rows, columns, colors, and touching cells.','error');
   else if(gameKind==='journey'&&level===0 && positions().length) tell('Great! Mark cells in that RN’s row, column, and neighboring squares with Xs.');
   else tell('One RN per row, column, and color. RNs cannot touch.');
@@ -126,7 +196,8 @@ function afterMove() {
 }
 function toggle(r,c,mark) {
   if(finished)return;
-  remember();state[r][c]=state[r][c]===mark?'':mark;afterMove();
+  remember();state[r][c]=state[r][c]===mark?'':mark;
+  sound(state[r][c]==='rn'?'rn':state[r][c]==='x'?'x':'erase');afterMove();
 }
 function cellAt(x,y) {
   const cell=document.elementFromPoint(x,y)?.closest('.cell');
@@ -146,7 +217,7 @@ function markDrag(pos) {
   if(gesture.seen.has(key))return;
   gesture.seen.add(key);
   // Dragging only adds Xs; it never erases an RN or toggles a cell twice.
-  if(state[r][c]!=='rn')state[r][c]='x';
+  if(state[r][c]!=='rn'&&state[r][c]!=='x'){state[r][c]='x';sound('x');}
   paint();
 }
 board.addEventListener('pointerdown',e=>{
@@ -184,9 +255,9 @@ board.addEventListener('pointerup',e=>endPointer(e));
 board.addEventListener('pointercancel',e=>endPointer(e,true));
 board.addEventListener('contextmenu',e=>e.preventDefault());
 board.addEventListener('click',e=>{if(e.detail===0 && e.target.closest('.cell')){const cell=e.target.closest('.cell');toggle(+cell.dataset.row,+cell.dataset.col,'x');}});
-$('undoBtn').addEventListener('click',()=>{flushTap();if(finished||!history.length)return;state=history.pop();afterMove();});
+$('undoBtn').addEventListener('click',()=>{flushTap();if(finished||!history.length)return;state=history.pop();sound('undo');afterMove();});
 $('hintBtn').addEventListener('click',()=>{
-  flushTap();if(finished)return;
+  flushTap();if(finished)return;sound('hint');
   const wrong=positions().find(([r,c])=>puzzle().solution[r]!==c);
   if(wrong) {hintCell=wrong.join(',');paint();tell('Reconsider this RN. It blocks the solution.','error');return;}
   const r=puzzle().solution.findIndex((c,r)=>state[r][c]!=='rn');
@@ -199,7 +270,7 @@ function reset(next=false) {
     else level=(level+1)%LEVELS.length;
   }
   state=blank();history=[];finished=false;hintCell=null;elapsed=0;runningSince=null;
-  resume();render();tell(gameKind==='journey'&&level===0?'Start with the single gold square. Double-tap it to place your first RN.':'New shift. One RN per row, column, and color.');persist();
+  resume();render();sound('new');tell(gameKind==='journey'&&level===0?'Start with the single gold square. Double-tap it to place your first RN.':'New shift. One RN per row, column, and color.');persist();
 }
 $('resetBtn').addEventListener('click',()=>{
   flushTap();if(positions().length||state.flat().includes('x')){if(!confirm('Reset this shift? Your placements will be cleared.'))return;}

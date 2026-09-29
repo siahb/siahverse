@@ -389,7 +389,7 @@ async function handleAccessRequest(context) {
   ).bind(name).first();
 
   if (!credential) {
-    return loginPage("/nursing/","Name not found. Check the spelling of your full name.",400);
+    return loginPage("/nursing/","Name not found. Did you enter your full name, including your middle name if you have one?",400);
   }
 
   const pending=await env.DB.prepare(

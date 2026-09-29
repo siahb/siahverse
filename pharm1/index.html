@@ -156,7 +156,7 @@ html[data-theme="light"] .calc-key{background:#fff}
       <div class="field"><label for="count">Number of questions</label><select id="count"><option value="all">All available</option><option value="10">10</option><option value="20">20</option><option value="25">25</option><option value="50">50</option><option value="75">75</option><option value="100">100</option></select></div>
       <div class="field"><label for="order">Order</label><select id="order"><option value="original">In order</option><option value="shuffle">Shuffle questions</option></select></div>
       <div class="field"><label for="mode">Mode</label><select id="mode"><option value="practice">Practice — feedback after each answer</option><option value="exam">Exam — feedback at the end</option></select></div>
-       <div class="field"><label for="timeLimit">Exam clock <span class="muted">(optional)</span></label><select id="timeLimit" disabled><option value="0">Untimed</option><option value="stopwatch">Stopwatch — count up</option><option value="15">15 minutes</option><option value="30">30 minutes</option><option value="45">45 minutes</option><option value="60">60 minutes</option><option value="90">90 minutes</option><option value="120">120 minutes</option></select><small class="muted">The clock keeps running if you leave or reload. Countdown exams submit automatically at zero; the stopwatch has no time limit.</small></div>
+       <div class="field"><label for="timeLimit">Exam clock <span class="muted">(optional)</span></label><select id="timeLimit"><option value="0">Untimed</option><option value="stopwatch">Stopwatch — count up</option><option value="15">15 minutes</option><option value="30">30 minutes</option><option value="45">45 minutes</option><option value="60">60 minutes</option><option value="90">90 minutes</option><option value="120">120 minutes</option></select><small class="muted">Choose anytime; it only applies in Exam Mode. Countdown exams submit automatically at zero; the stopwatch has no time limit.</small></div>
       <div class="field"><label for="sessionLabel">Quiz session name <span class="muted">(optional)</span></label><input id="sessionLabel" type="text" maxlength="60" autocomplete="off" placeholder="e.g., Full Exam Run"></div>
     </div>
     <div class="study-tools">
@@ -570,7 +570,7 @@ function newQuiz(){stopExamTimer();state=null;results.classList.add('hidden');qu
 populateChapters();$('#nAll').textContent=BANK.length;$('#nMC').textContent=BANK.filter(q=>q.section==='MULTIPLE CHOICE').length;$('#nSATA').textContent=BANK.filter(q=>q.section==='MULTIPLE RESPONSE').length;$('#nCalc').textContent=BANK.filter(q=>q.section==='COMPLETION').length;
 $('#sourceSet').addEventListener('change',populateChapters);$('#chapter').addEventListener('change',updateQuestionTypeOptions);
 $('#start').addEventListener('click',startQuiz);
-$('#mode').addEventListener('change',()=>{$('#timeLimit').disabled=$('#mode').value!=='exam'});
+$('#mode').addEventListener('change',()=>{});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)updateExamTimer()});
 $('#calcToggle').addEventListener('click',()=>toggleDDCPanel('calc'));
 $('#conversionToggle').addEventListener('click',()=>toggleDDCPanel('conversion'));

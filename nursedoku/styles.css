@@ -514,3 +514,7 @@ body { background:linear-gradient(160deg,#f1f8f7,#e9f2f0); }
  .mode-card {padding:15px;}
 }
 @media(prefers-reduced-motion:reduce){.mode-card{transition:none;}.mode-card:hover{transform:none;}}
+
+.social-actions .icon-action {width:44px;height:44px;min-width:44px;min-height:44px;padding:10px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.icon-action svg {width:22px;height:22px;display:block;}
+.social-actions .icon-action:focus-visible {outline:3px solid var(--accent);outline-offset:3px;}

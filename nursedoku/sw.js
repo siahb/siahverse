@@ -1,4 +1,4 @@
-const CACHE='nursedoku-907d7d3e97';
+const CACHE='nursedoku-d32157cc31';
 const ASSETS=["./","index.html","manifest.webmanifest","icon.svg","assets/app.909e78524b.js","assets/styles.b258fc1988.css","assets/puzzles.ad028b6d5f.js","assets/large-puzzles.b5dbb536ca.js","assets/account-config.acc6cc855d.js","assets/accounts.c4a1e22e7b.js"];
 
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS))));

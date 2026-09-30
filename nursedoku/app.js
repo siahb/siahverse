@@ -305,7 +305,7 @@ function explainHint(p,marks) {
  const label=(type,k)=>type==='r'?`row ${k+1}`:type==='c'?`column ${k+1}`:`care zone ${k+1}`;
  const groups=[];
  for(const type of ['z','r','c'])for(let k=0;k<n;k++)if(!placed.some(x=>x[type]===k))groups.push({type,k,ids:candidates.filter(x=>x[type]===k)});
- for(const g of groups)if(g.ids.length===1){const x=g.ids[0];return {...x,kind:'rn',text:`Only row ${x.r+1}, column ${x.c+1} can staff ${label(g.type,g.k)}. The other squares are ruled out by placed RNs in their row, column, care zone, or neighboring cells. ${marks[x.r][x.c]==='x'?'Erase that X, then double-tap':'Double-tap'} the outlined square to place an RN.`};}
+ for(const g of groups)if(g.ids.length===1){const x=g.ids[0];return {...x,kind:'rn',text:`Only row ${x.r+1}, column ${x.c+1} can staff ${label(g.type,g.k)}. ${cells.filter(y=>y[g.type]===g.k).length===1?'This care zone contains just one square, and every care zone needs an RN.':'The other squares are ruled out by placed RNs in their row, column, care zone, or neighboring cells.'} ${marks[x.r][x.c]==='x'?'Erase that X, then double-tap':'Double-tap'} the outlined square to place an RN.`};}
  for(const g of groups)if(g.ids.length)for(const type of ['r','c','z']){
   if(type===g.type||new Set(g.ids.map(x=>x[type])).size!==1)continue;
   const k=g.ids[0][type],x=candidates.find(x=>x[type]===k&&x[g.type]!==g.k&&marks[x.r][x.c]==='');

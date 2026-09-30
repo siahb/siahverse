@@ -42,7 +42,8 @@ const board = $('board');
 let soundEnabled=true, audioContext=null, lastTickAt=0;
 try {soundEnabled=localStorage.getItem('nursedoku-sound')!=='off';}catch{}
 function updateSoundButton() {
-  $('soundBtn').textContent=soundEnabled?'Sound on':'Sound off';
+  $('soundBtn').setAttribute('data-muted',String(!soundEnabled));
+  $('soundBtn').setAttribute('title',soundEnabled?'Mute game sounds':'Enable game sounds');
   $('soundBtn').setAttribute('aria-pressed',String(soundEnabled));
   $('soundBtn').setAttribute('aria-label',soundEnabled?'Mute game sounds':'Enable game sounds');
 }

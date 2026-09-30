@@ -1,5 +1,5 @@
 const fs=require('fs'),vm=require('vm'),assert=require('assert');
-class El {constructor(){this.children=[];this.dataset={};this.style={setProperty(){}};this.classList={toggle(){},add(){}};this.events={};this.open=false;}set innerHTML(v){this.children=[];} get innerHTML(){return '';}append(x){this.children.push(x);}before(){}contains(x){return this.children.includes(x);}setAttribute(){}addEventListener(n,f){(this.events[n]??=[]).push(f);}showModal(){this.open=true;}close(){this.open=false;}focus(){}setPointerCapture(){}hasPointerCapture(){return false;}releasePointerCapture(){}}
+class El {constructor(){this.children=[];this.dataset={};this.style={setProperty(){}};this.classList={toggle(){},add(){}};this.events={};this.open=false;}set innerHTML(v){this.children=[];} get innerHTML(){return '';}append(x){this.children.push(x);}before(){}contains(x){return this.children.includes(x);}setAttribute(k,v){(this.attributes??={})[k]=v;}addEventListener(n,f){(this.events[n]??=[]).push(f);}showModal(){this.open=true;}close(){this.open=false;}focus(){}setPointerCapture(){}hasPointerCapture(){return false;}releasePointerCapture(){}}
 const els={};const get=id=>els[id]??=new El();get('difficulty').value='6';
 const storage={};let hit=null;
 const doc={getElementById:get,createElement:()=>new El(),querySelectorAll:()=>[],addEventListener(){},hidden:false,documentElement:new El(),elementFromPoint:()=>hit};
@@ -24,7 +24,8 @@ context.window.AudioContext=class {
 };
 run("soundEnabled=true;sound('rn')");assert.equal(notes,2);
 run("soundEnabled=false;sound('rn')");assert.equal(notes,2);
-run("updateSoundButton()");assert.equal(get('soundBtn').textContent,'Sound off');
+run("updateSoundButton()");assert.equal(get('soundBtn').attributes['data-muted'],'true');assert.equal(get('soundBtn').attributes['aria-label'],'Enable game sounds');
+run('soundEnabled=true;updateSoundButton()');assert.equal(get('soundBtn').attributes['data-muted'],'false');assert.equal(get('soundBtn').attributes['aria-label'],'Mute game sounds');
 console.log('PASS: original audio synthesis, mute suppresses audio, mute control reflects state.');
 console.log('PASS: single tap, double tap, drag, RN protection, whole-stroke undo, auto-win, saved completion.');
 for(const d of ['easy','medium','hard'])for(let seed=1;seed<16;seed++){

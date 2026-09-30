@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f8f3ef">
   <meta name="description" content="NurseDoku — a nursing-themed logic puzzle.">
   <title>NurseDoku</title>
-  <link rel="stylesheet" href="styles.css?v=9bd0e599e8">
+  <link rel="stylesheet" href="styles.css?v=c41f309679">
   <link rel="icon" href="icon.svg">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,7 +19,7 @@
         <h1>NurseDoku</h1>
         <p class="subtitle">Staff every row, column, and care zone — safely.</p>
       </div>
-      <div class="top-actions"><a class="ghost-btn back-link" href="https://siahverse.cc/nursing/">Nursing Resources</a><button id="soundBtn" class="ghost-btn" type="button" aria-pressed="true">Sound on</button><button id="howToBtn" class="ghost-btn" type="button">How to play</button></div>
+      <div class="top-actions"><a class="ghost-btn back-link" href="https://siahverse.cc/nursing/">Nursing Resources</a><button id="soundBtn" class="ghost-btn volume-btn" type="button" aria-pressed="true" aria-label="Mute game sounds" title="Mute game sounds"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path class="volume-waves" d="M15 8a6 6 0 0 1 0 8M18 5a10 10 0 0 1 0 14"/><path class="volume-muted" d="m16 9 5 6m0-6-5 6"/></svg></button><button id="howToBtn" class="ghost-btn" type="button">How to play</button></div>
     </header>
 
     <nav class="play-options" aria-label="Puzzle choices">
@@ -95,7 +95,7 @@
       <p class="eyebrow">Shift complete</p>
       <h2>Safe staffing achieved.</h2>
       <p>You solved NurseDoku in <strong id="finalTime">00:00</strong>.</p>
-      <details class="bonus-card"><summary>Nursing bonus · Optional</summary><p id="bonusQuestion"></p><div id="bonusAnswers"></div><p id="bonusFeedback" aria-live="polite"></p><a id="bonusSource" class="bonus-source" href="https://www.cdc.gov/clean-hands/hcp/clinical-safety/index.html" target="_blank" rel="noopener">Read the CDC rationale</a></details>
+      <p class="bonus-intro">Instead of ads, we have this nursing question for you.</p><details class="bonus-card"><summary>Try the nursing question · Optional</summary><p id="bonusQuestion"></p><div id="bonusAnswers"></div><p id="bonusFeedback" aria-live="polite"></p><a id="bonusSource" class="bonus-source" href="https://www.cdc.gov/clean-hands/hcp/clinical-safety/index.html" target="_blank" rel="noopener">Read the CDC rationale</a></details>
       <button id="shareBtn" class="secondary-btn full" type="button">Copy result</button><p id="shareStatus" aria-live="polite"></p>
       <button id="playAgainBtn" class="primary-btn full" type="button">Next shift</button>
     </div>
@@ -103,7 +103,7 @@
 
   <script src="large-puzzles.js?v=35c4586a8d"></script>
   <script src="puzzles.js?v=ad028b6d5f"></script>
-  <script src="app.js?v=6ff65da3af"></script>
+  <script src="app.js?v=bdf2505a6a"></script>
 </body>
 </html>
 

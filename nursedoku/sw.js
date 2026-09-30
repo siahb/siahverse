@@ -1,5 +1,5 @@
-const CACHE='nursedoku-d71638ae93';
-const ASSETS=["./","index.html","manifest.webmanifest","icon.svg","app.js?v=6ff65da3af","styles.css?v=9bd0e599e8","puzzles.js?v=35c4586a8d","large-puzzles.js?v=35c4586a8d"];
+const CACHE='nursedoku-72e8a610f8';
+const ASSETS=["./","index.html","manifest.webmanifest","icon.svg","app.js?v=bdf2505a6a","styles.css?v=c41f309679","puzzles.js?v=35c4586a8d","large-puzzles.js?v=35c4586a8d"];
 
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS))));
 // Activate on the next visit, keeping an in-progress board on a consistent version.

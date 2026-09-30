@@ -604,7 +604,7 @@ function toISO(d) {
 }
 function addDays(iso, n){
   const d = new Date(iso || todayISO());
-  d.setDate(d.getDate()+n);
+  d.setUTCDate(d.getUTCDate()+n);
   return toISO(d);
 }
 function isOverdue(todo){
@@ -725,23 +725,23 @@ function computeNextDue(task, fromISO) {
   const base = new Date(fromISO || (task.nextDue || task.due || todayISO()));
   if (rep.freq === 'daily') {
     const interval = Math.max(1, rep.interval || 1);
-    base.setDate(base.getDate() + interval);
+    base.setUTCDate(base.getUTCDate() + interval);
     return toISO(base);
   }
   if (rep.freq === 'weekly') {
     const interval = Math.max(1, rep.interval || 1);
-    const days = Array.isArray(rep.byWeekday) && rep.byWeekday.length ? [...rep.byWeekday].sort() : [base.getDay()];
-    const todayIdx = base.getDay();
+    const days = Array.isArray(rep.byWeekday) && rep.byWeekday.length ? [...rep.byWeekday].sort() : [base.getUTCDay()];
+    const todayIdx = base.getUTCDay();
 
     // find next listed weekday strictly after 'base'
     for (const wd of days) {
       const diff = (wd - todayIdx + 7) % 7;
-      if (diff > 0) { base.setDate(base.getDate() + diff); return toISO(base); }
+      if (diff > 0) { base.setUTCDate(base.getUTCDate() + diff); return toISO(base); }
     }
     // none left this week → jump to first day in the next interval block
     const first = days[0];
     const toNextBlock = (7 * interval) - ((todayIdx - first + 7) % 7);
-    base.setDate(base.getDate() + toNextBlock);
+    base.setUTCDate(base.getUTCDate() + toNextBlock);
     return toISO(base);
   }
   return task.due || null;
@@ -756,10 +756,15 @@ function rollForwardIfMissed(task) {
   let cur = next;
   const t = todayISO();
   let moved = false;
-  while (cur < t) {
-    cur = computeNextDue(task, cur);
+  let iterations = 0;
+  while (cur < t && iterations++ < 10000) {
+    const advanced = computeNextDue(task, cur);
+    // Malformed recurrence data must never block the entire application.
+    if (!advanced || advanced <= cur) return false;
+    cur = advanced;
     moved = true;
   }
+  if (cur < t) return false;
   if (moved) {
     task.nextDue = cur;
     task.due = cur;

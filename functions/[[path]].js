@@ -272,7 +272,19 @@ async function handleSiahDoApi(context,path) {
     let body;
     try { body=await request.json(); } catch { return jsonResponse({error:"Invalid JSON"},400); }
     if (!Array.isArray(body)) return jsonResponse({error:"Invalid data"},400);
-    await replaceSiahDoTasks(env.DB,body);
+    // Reorder existing rows only: stale/filtered lists must not erase tasks.
+    const rows=await loadSiahDoRows(env.DB);
+    if (body.length!==rows.length) return jsonResponse({error:"Task list changed. Reload before reordering."},409);
+    const available=[...rows];
+    const ordered=[];
+    for (const task of body) {
+      const match=available.findIndex(row=>JSON.stringify(row.task)===JSON.stringify(task));
+      if (match<0) return jsonResponse({error:"Task list changed. Reload before reordering."},409);
+      ordered.push(available.splice(match,1)[0]);
+    }
+    if (ordered.length) await env.DB.batch(ordered.map((row,index)=>
+      env.DB.prepare("UPDATE siahdo_tasks SET sort_order=? WHERE id=?").bind(index,row.id)
+    ));
     return jsonResponse({status:"reordered"});
   }
 
@@ -320,6 +332,8 @@ async function handleSiahDoApi(context,path) {
 }
 
 async function migrateSiahDoFromHomelab(context,session) {
+  const existing=await context.env.DB.prepare("SELECT COUNT(*) AS n FROM siahdo_tasks").first();
+  if (existing?.n) return adminPage(context,session,"Migration blocked: D1 already contains tasks. Existing data was preserved.");
   const origin=new URL(context.request.url).origin;
   const reqOrigin=context.request.headers.get("Origin");
   if (reqOrigin && reqOrigin!==origin) return new Response("Forbidden",{status:403});

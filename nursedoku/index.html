@@ -4,9 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#f8f3ef">
-  <meta name="description" content="NurseDoku — a nursing-themed logic puzzle.">
+  <meta name="description" content="Colorful logic puzzles with a nursing question after every shift. Play NurseDoku free.">
+  <meta property="og:title" content="NurseDoku · A little logic. A little nursing.">
+  <meta property="og:description" content="Staff every row, column, and care zone. A colorful puzzle break with a nursing question after every shift.">
+  <meta property="og:url" content="https://siahverse.cc/nursedoku/">
+  <meta property="og:type" content="website">
   <title>NurseDoku</title>
-  <link rel="stylesheet" href="styles.css?v=469b182b04">
+  <link rel="stylesheet" href="styles.css?v=bc83847f40">
   <link rel="icon" href="icon.svg">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,8 +23,29 @@
         <h1>NurseDoku</h1>
         <p class="subtitle">Staff every row, column, and care zone — safely.</p>
       </div>
-      <div class="top-actions"><a class="ghost-btn back-link" href="https://siahverse.cc/nursing/">Nursing Resources</a><button id="soundBtn" class="ghost-btn volume-btn" type="button" aria-pressed="true" aria-label="Mute game sounds" title="Mute game sounds"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path class="volume-waves" d="M15 8a6 6 0 0 1 0 8M18 5a10 10 0 0 1 0 14"/><path class="volume-muted" d="m16 9 5 6m0-6-5 6"/></svg></button><button id="accountBtn" class="ghost-btn" type="button">Sign in</button><button id="howToBtn" class="ghost-btn" type="button">How to play</button></div>
+      <div class="top-actions"><a class="ghost-btn back-link" href="https://siahverse.cc/nursing/">Nursing Resources</a><button id="soundBtn" class="ghost-btn volume-btn" type="button" aria-pressed="true" aria-label="Mute game sounds" title="Mute game sounds"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path class="volume-waves" d="M15 8a6 6 0 0 1 0 8M18 5a10 10 0 0 1 0 14"/><path class="volume-muted" d="m16 9 5 6m0-6-5 6"/></svg></button><button id="menuBtn" class="ghost-btn" type="button" hidden>Menu</button><button id="accountBtn" class="ghost-btn" type="button">Sign in</button><button id="howToBtn" class="ghost-btn" type="button">How to play</button></div>
     </header>
+
+    <p id="cloudStatus" class="cloud-status" role="status">Guest · saved on device</p>
+    <section id="mainMenu" class="main-menu" aria-labelledby="menuHeading">
+      <div class="menu-hero">
+        <div class="menu-emblem" aria-hidden="true"><span>×</span><span></span><span>RN</span><span>RN</span><span>×</span><span></span><span></span><span>RN</span><span>×</span></div>
+        <p class="eyebrow">Your next little victory</p>
+        <h2 id="menuHeading">A little logic.<br>A little nursing.</h2>
+        <p>Colorful care zones, one RN in each. Take a puzzle break, then put your nursing knowledge to work.</p>
+        <button id="continueBtn" class="primary-btn full" type="button">Start your shift</button>
+        <p id="menuStats" class="stats-line"></p>
+      </div>
+      <div class="menu-modes">
+        <button id="menuLearnBtn" class="mode-card" type="button"><span class="mode-symbol">01</span><span><strong>Learn &amp; progress</strong><small>56 shifts · easy to hard</small></span><span aria-hidden="true">→</span></button>
+        <button id="menuDailyBtn" class="mode-card" type="button"><span class="mode-symbol">D</span><span><strong>Daily shift</strong><small>A fresh challenge every day</small></span><span aria-hidden="true">→</span></button>
+        <button id="menuPracticeBtn" class="mode-card" type="button"><span class="mode-symbol">×</span><span><strong>Practice your way</strong><small>Choose a board and difficulty below</small></span><span aria-hidden="true">→</span></button>
+      </div>
+      <div id="menuPreferences"></div>
+      <section class="menu-share"><h3>Pass the puzzle along</h3><p>A little break for your study group.</p><div class="social-actions"><button id="menuShareBtn" class="secondary-btn" type="button">Share…</button><a id="menuShareX" class="social-link" target="_blank" rel="noopener noreferrer">X</a><a id="menuShareWhatsapp" class="social-link" target="_blank" rel="noopener noreferrer">WhatsApp</a><a id="menuShareFacebook" class="social-link" target="_blank" rel="noopener noreferrer">Facebook</a><button id="menuCopyBtn" class="ghost-btn" type="button">Copy link</button></div><p id="menuShareStatus" class="share-status" role="status"></p></section>
+      <button id="changelogBtn" class="ghost-btn" type="button">What’s new · Changelog</button><p class="menu-version">NurseDoku · September 29 update</p>
+    </section>
+    <div id="gameView" hidden>
 
     <nav class="play-options" aria-label="Puzzle choices">
       <button id="journeyBtn" class="secondary-btn" type="button">Learn</button>
@@ -28,11 +53,10 @@
       <button id="practiceBtn" class="primary-btn" type="button">New puzzle</button>
     </nav>
     <div class="preferences">
-      <label>Difficulty <select id="difficulty"><option value="easy">Easy · direct deductions</option><option value="medium" selected>Medium · zone elimination</option><option value="hard">Hard · deeper reasoning</option></select></label>
+      <label>Difficulty <select id="difficulty"><option value="easy" selected>Easy · direct deductions</option><option value="medium">Medium · zone elimination</option><option value="hard">Hard · deeper reasoning</option></select></label>
       <label>Board <select id="boardSize"><option value="6">6×6</option><option value="10">10×10</option></select></label>
       <label>Palette <select id="theme"><option value="general">General</option><option value="peds">Pediatrics</option><option value="ed">Emergency</option></select></label>
     </div>
-    <p id="cloudStatus" class="cloud-status" role="status">Guest · saved on device</p>
     <p id="statsLine" class="stats-line"></p>
     <div class="shift-info"><p id="puzzleInfo"></p><button id="archiveBtn" class="ghost-btn" type="button">Daily archive</button></div>
     <p id="milestone" class="milestone"></p>
@@ -44,9 +68,10 @@
     </section>
 
     <section class="game-card">
+      <div id="boardCelebration" class="celebration" aria-hidden="true"></div>
       <div id="board" class="board" role="grid" aria-label="NurseDoku puzzle board"></div>
 
-      <p class="gesture-guide">Tap or drag to mark × · Double-tap to place RN</p>
+      <p class="gesture-guide">Swipe from an empty cell to add × · Swipe from × to erase · Double-tap for RN</p>
       <div class="actions">
         <button id="undoBtn" class="secondary-btn" type="button">Undo</button>
         <button id="hintBtn" class="primary-btn" type="button">Hint</button>
@@ -65,7 +90,14 @@
       </ul>
     </section>
     <p class="install-tip">Keep your shift close: on iPhone, use Safari’s Share menu → Add to Home Screen. Offline play becomes available after your first online visit.</p>
+    </div>
   </main>
+
+  <dialog id="changelogDialog"><div class="dialog-body changelog-body">
+    <p class="eyebrow">September 29, 2026 · New update</p><h2>Your shift just got smoother.</h2><p>Here’s what’s new in NurseDoku:</p>
+    <ul class="changelog-list"><li><strong>A proper welcome.</strong> Choose your shift from a new main menu; your timer starts when you play.</li><li><strong>Swipe both ways.</strong> Start on an empty cell to add Xs, or on an X to erase several at once.</li><li><strong>Savor your win.</strong> Enjoy your finished board and confetti for two seconds before the result screen.</li><li><strong>A question after every shift.</strong> Select an answer, then confirm it to see the explanation.</li><li><strong>Share your little victory.</strong> Sharing buttons on the main menu and results screen.</li><li><strong>Bigger challenges.</strong> 10×10 puzzles, 56 training shifts, and three strikes per attempt.</li><li><strong>Account beta.</strong> Private cloud saves are built; public registration is awaiting email setup.</li></ul>
+    <button id="closeChangelogBtn" class="primary-btn full" type="button">Let’s play</button>
+  </div></dialog>
 
   <dialog id="accountDialog"><div class="dialog-body">
     <div class="dialog-header"><div><p class="eyebrow">Your shifts, anywhere</p><h2>Account &amp; cloud saves</h2></div><button id="closeAccountBtn" class="icon-btn" type="button" aria-label="Close account">×</button></div>
@@ -85,7 +117,7 @@
       <button id="signOutBtn" class="ghost-btn" type="button">Sign out on this device</button>
     </div>
     <p id="accountStatus" class="account-note" role="status"></p>
-    <p class="account-note">Game progress only—please do not enter patient information. Passwords go directly to Supabase Auth. Your browser keeps a session until you sign out.</p>
+    <p class="account-note">Your browser keeps you signed in until you sign out.</p>
   </div></dialog>
 
   <dialog id="lossDialog"><div class="dialog-body win-body">
@@ -105,8 +137,8 @@
         <button id="closeHowToBtn" class="icon-btn" type="button" aria-label="Close">×</button>
       </div>
       <p>Place one RN per row, column, and care zone.</p>
-      <p>Tap to toggle an X. Drag across cells to mark several Xs in one stroke. Double-tap a cell to place or remove an RN. On a keyboard, press Enter to toggle an X or R to toggle an RN. Two RNs cannot touch, even diagonally. An RN placement that breaks a rule costs one strike; three strikes end the shift. Undo does not remove strikes.</p>
-      <button id="startBtn" class="primary-btn full" type="button">Start shift</button>
+      <p>Tap to toggle an X. Drag across cells to mark several Xs in one stroke. Start a swipe on an X to erase Xs; start on an empty cell to add them. Swipes always protect RNs. Double-tap a cell to place or remove an RN. On a keyboard, press Enter to toggle an X or R to toggle an RN. Two RNs cannot touch, even diagonally. An RN placement that breaks a rule costs one strike; three strikes end the shift. Undo does not remove strikes.</p>
+      <button id="startBtn" class="primary-btn full" type="button">Got it</button>
     </div>
   </dialog>
 
@@ -117,16 +149,16 @@
       <p class="eyebrow">Shift complete</p>
       <h2>Safe staffing achieved.</h2>
       <p>You solved NurseDoku in <strong id="finalTime">00:00</strong>.</p>
-      <p class="bonus-intro">Instead of ads, we have this nursing question for you.</p><details class="bonus-card"><summary>Try the nursing question · Optional</summary><p id="bonusQuestion"></p><div id="bonusAnswers"></div><p id="bonusFeedback" aria-live="polite"></p><a id="bonusSource" class="bonus-source" href="https://www.cdc.gov/clean-hands/hcp/clinical-safety/index.html" target="_blank" rel="noopener">Read the CDC rationale</a></details>
-      <button id="shareBtn" class="secondary-btn full" type="button">Copy result</button><p id="shareStatus" aria-live="polite"></p>
-      <button id="playAgainBtn" class="primary-btn full" type="button">Next shift</button>
+      <p class="bonus-intro">Instead of ads, we have this nursing question for you.</p><section class="bonus-card" aria-labelledby="bonusHeading"><h3 id="bonusHeading">One question before your next shift</h3><p id="bonusQuestion"></p><div id="bonusAnswers"></div><button id="confirmBonusBtn" class="primary-btn full" type="button" disabled>Confirm answer</button><p id="bonusFeedback" aria-live="polite"></p><a id="bonusSource" class="bonus-source" href="https://www.cdc.gov/clean-hands/hcp/clinical-safety/index.html" target="_blank" rel="noopener">Read the CDC rationale</a></section>
+      <div class="social-actions result-share"><button id="shareBtn" class="secondary-btn" type="button">Share result…</button><button id="copyResultBtn" class="ghost-btn" type="button">Copy result</button><a id="resultShareX" class="social-link" target="_blank" rel="noopener noreferrer">X</a><a id="resultShareWhatsapp" class="social-link" target="_blank" rel="noopener noreferrer">WhatsApp</a></div><p id="shareStatus" aria-live="polite"></p>
+      <button id="playAgainBtn" class="primary-btn full" type="button" disabled>Next shift</button>
     </div>
   </dialog>
 
   <script src="account-config.js?v=acc6cc855d"></script>
   <script src="large-puzzles.js?v=35c4586a8d"></script>
   <script src="puzzles.js?v=ad028b6d5f"></script>
-  <script src="app.js?v=88fe656cf8"></script>
+  <script src="app.js?v=1d39c32b96"></script>
   <script src="accounts.js?v=93c94224ab"></script>
 </body>
 </html>

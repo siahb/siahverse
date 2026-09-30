@@ -85,8 +85,8 @@ function sound(kind) {
     else if(kind==='new') {tone(392,0,.10,.025);tone(523,.08,.13,.025);}
   }catch{}
 }
-function celebrate() {
-  const layer=$('celebration');layer.innerHTML='';
+function celebrate(target='celebration') {
+  const layer=$(target);layer.innerHTML='';
   if(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;
   for(let i=0;i<36;i++) {
     const piece=document.createElement('i');piece.className='confetti-piece';
@@ -121,6 +121,7 @@ try { const x=JSON.parse(progressStorage.getItem('nursedoku-stats'));if(x&&Numbe
 let completedShifts=[];
 try {const current=progressStorage.getItem('nursedoku-journey-v2');const x=JSON.parse(current||progressStorage.getItem('nursedoku-journey'));if(Array.isArray(x))completedShifts=[...new Set(x.filter(v=>Number.isInteger(v)&&v>=0&&v<LEVELS.length).map(v=>current?v:migrateLevel(v)))];}catch{}
 let level = 0, state, history = [], elapsed = 0, runningSince = null, finished = false, strikes=0, lost=false;
+let inGame=false,winTimeout=null,winSequence=0,bonusIndex=null,bonusChoice=null,bonusSubmitted=false;
 let gesture = null, lastTap = null, pendingTap = null, hintCell = null;
 const puzzle = () => customPuzzle || LEVELS[level];
 const size = () => puzzle().regions.length;
@@ -129,11 +130,11 @@ const copy = value => JSON.parse(JSON.stringify(value));
 const time = () => elapsed + (runningSince === null ? 0 : Date.now() - runningSince);
 const format = ms => `${String(Math.floor(ms / 60000)).padStart(2,'0')}:${String(Math.floor(ms / 1000) % 60).padStart(2,'0')}`;
 function persist() {
-  try { progressStorage.setItem(SAVE_KEY, JSON.stringify({level,state,elapsed:time(),finished,gameKind,customPuzzle,dailyDate,strikes,lost,journeyVersion:2})); } catch {}
+  try { progressStorage.setItem(SAVE_KEY, JSON.stringify({level,state,elapsed:time(),finished,gameKind,customPuzzle,dailyDate,strikes,lost,journeyVersion:2,bonusIndex,bonusChoice,bonusSubmitted})); } catch {}
   window.NurseDokuCloud?.changed();
 }
 function pause() { elapsed = time(); runningSince = null; persist(); }
-function resume() { if (!finished && !document.hidden && runningSince===null && !['howToDialog','accountDialog','archiveDialog'].some(id=>$(id)?.open)) runningSince = Date.now(); }
+function resume() { if (!finished && !document.hidden && runningSince===null && inGame && !['howToDialog','accountDialog','archiveDialog','changelogDialog'].some(id=>$(id)?.open)) runningSince = Date.now(); }
 function positions() { return state.flatMap((row,r) => row.flatMap((v,c) => v === 'rn' ? [[r,c]] : [])); }
 function conflicts() {
   const ps = positions(), bad = new Set(), zones = puzzle().regions;
@@ -201,13 +202,16 @@ function paint() {
 }
 function afterMove() {
   hintCell=null; paint();
+  if(finished){persist();return;}
   if(positions().length===size() && !conflicts().size) {
     finished=true; elapsed=time();runningSince=null;
-    recordWin(); showBonus();
+    recordWin();bonusIndex=(stats.wins-1+BONUS.length)%BONUS.length;bonusChoice=null;bonusSubmitted=false;showBonus();
     $('timer').textContent=format(elapsed);$('finalTime').textContent=format(elapsed);
     tell('Shift complete. Every care zone is staffed!','success');
     $('playAgainBtn').textContent=gameKind==='daily'?'Play a practice shift':gameKind==='practice'?'New practice shift':level===LEVELS.length-1?'Replay from shift 001':'Next shift';
-    $('winDialog').showModal(); celebrate(); sound('win'); paint();
+    celebrate('boardCelebration');sound('win');paint();
+    const sequence=++winSequence;clearTimeout(winTimeout);
+    winTimeout=setTimeout(()=>{if(sequence===winSequence&&inGame&&finished&&!lost){$('winDialog').showModal();celebrate();}},2000);
   } else if(conflicts().size) tell('Outlined RNs conflict. Check rows, columns, colors, and touching cells.','error');
   else if(gameKind==='journey'&&level===0 && positions().length) tell('Great! Mark cells in that RN’s row, column, and neighboring squares with Xs.');
   else tell('One RN per row, column, and color. RNs cannot touch.');
@@ -238,6 +242,7 @@ function flushTap() {
 }
 function startDrag() {
   flushTap();remember();gesture.drag=true;gesture.seen=new Set();
+  gesture.erase=state[gesture.start[0]][gesture.start[1]]==='x';
   markDrag(gesture.start);
 }
 function markDrag(pos) {
@@ -245,8 +250,9 @@ function markDrag(pos) {
   const [r,c]=pos,key=`${r},${c}`;
   if(gesture.seen.has(key))return;
   gesture.seen.add(key);
-  // Dragging only adds Xs; it never erases an RN or toggles a cell twice.
-  if(state[r][c]!=='rn'&&state[r][c]!=='x'){state[r][c]='x';sound('x');}
+  // A stroke chooses add or erase from its starting cell and always protects RNs.
+  if(gesture.erase){if(state[r][c]==='x'){state[r][c]='';sound('erase');}}
+  else if(state[r][c]===''){state[r][c]='x';sound('x');}
   paint();
 }
 board.addEventListener('pointerdown',e=>{
@@ -296,12 +302,13 @@ $('hintBtn').addEventListener('click',()=>{
   if(r>=0){hintCell=`${r},${puzzle().solution[r]}`;paint();tell('Double-tap the outlined square to place an RN.');}
 });
 function reset(next=false) {
-  clearTap();if(next) {
+  if(requireNursingAnswer())return;
+  clearTap();clearTimeout(winTimeout);winSequence++;if(next) {
     if(gameKind==='daily') {gameKind='practice';dailyDate=null;customPuzzle=practicePuzzle($('difficulty').value,Date.now());}
     else if(gameKind==='practice')customPuzzle=practicePuzzle($('difficulty').value,Date.now());
     else level=(level+1)%LEVELS.length;
   }
-  state=blank();history=[];finished=false;strikes=0;lost=false;hintCell=null;elapsed=0;runningSince=null;
+  state=blank();history=[];finished=false;strikes=0;lost=false;hintCell=null;elapsed=0;runningSince=null;bonusIndex=null;bonusChoice=null;bonusSubmitted=false;
   resume();render();sound('new');tell(gameKind==='journey'&&level===0?'Start with the single gold square. Double-tap it to place your first RN.':'New shift. One RN per row, column, and color.');persist();
 }
 $('resetBtn').addEventListener('click',()=>{
@@ -327,16 +334,13 @@ try {
       state=saved.state;elapsed=Number.isFinite(saved.elapsed)?Math.max(0,saved.elapsed):0;
       strikes=Number.isInteger(saved.strikes)?Math.max(0,Math.min(3,saved.strikes)):0;
       lost=saved.lost===true&&strikes===3;
+      bonusIndex=Number.isInteger(saved.bonusIndex)?saved.bonusIndex:null;bonusChoice=Number.isInteger(saved.bonusChoice)?saved.bonusChoice:null;bonusSubmitted=saved.bonusSubmitted===true;
       finished=lost||(saved.finished===true && positions().length===size() && !conflicts().size);
     }
   }
 } catch {}
 if(!state)state=blank();
 render();resume();updateStats();
-if(lost) { $('lossDialog').showModal();tell('Three strikes. This shift is over.','error'); }
-else if(finished) {
-  $('finalTime').textContent=format(elapsed);$('playAgainBtn').textContent=gameKind==='daily'?'Play a practice shift':gameKind==='practice'?'New practice shift':level===LEVELS.length-1?'Replay from shift 001':'Next shift';$('winDialog').showModal();
-}
 $('timer').textContent=format(time());setInterval(()=>{$('timer').textContent=format(time());},500);
 
 function validPuzzle(p) {
@@ -357,13 +361,14 @@ function recordWin() {
   updateStats();updatePuzzleInfo();
 }
 function switchGame(kind) {
+  if(requireNursingAnswer())return false;
   flushTap();
-  if(!finished&&state.flat().some(Boolean)&&!confirm('Start a new puzzle? Your current placements will be cleared.'))return;
+  if(!finished&&state.flat().some(Boolean)&&!confirm('Start a new puzzle? Your current placements will be cleared.'))return false;
   gameKind=kind;dailyDate=kind==='daily'?localDate():null;
   let seed=Date.now();if(dailyDate)seed=Number(dailyDate.replaceAll('-',''));
   customPuzzle=kind==='journey'?null:kind==='daily'?generatePuzzle(6,seed):practicePuzzle($('difficulty').value,seed);
   if(kind==='journey'){level=Array.from({length:LEVELS.length},(_,i)=>i).find(i=>!completedShifts.includes(i))??0;}
-  reset();
+  reset();return true;
 }
 $('dailyBtn').addEventListener('click',()=>switchGame('daily'));
 $('practiceBtn').addEventListener('click',()=>switchGame('practice'));
@@ -382,27 +387,37 @@ const BONUS=[
  {q:'A reusable blood-pressure cuff will be used on another patient. What should the nurse do?',a:['Clean and disinfect it according to its instructions','Wipe it with a dry cloth only','Wait until the end of the shift','Assume it is clean if no dirt is visible'],correct:0,why:'Reusable equipment needs appropriate reprocessing between patients.',source:'https://www.cdc.gov/infection-control/hcp/core-practices/index.html'}
 ];
 function showBonus() {
- const item=BONUS[(stats.wins-1+BONUS.length)%BONUS.length];
+ const index=Number.isInteger(bonusIndex)&&bonusIndex>=0&&bonusIndex<BONUS.length?bonusIndex:(stats.wins-1+BONUS.length)%BONUS.length;
+ bonusIndex=index;const item=BONUS[index];
+ if(!Number.isInteger(bonusChoice)||bonusChoice<0||bonusChoice>=item.a.length){bonusChoice=null;bonusSubmitted=false;}
  $('bonusQuestion').textContent=item.q;$('bonusAnswers').innerHTML='';$('bonusFeedback').textContent='';
  $('bonusFeedback').className='';$('shareStatus').textContent='';$('bonusSource').href=item.source;
- $('bonusSource').textContent='Read the CDC rationale';
+ $('bonusSource').hidden=!bonusSubmitted;$('bonusSource').textContent='Read the CDC rationale';
  const choices=item.a.map((answer,i)=>({answer,i}));
  for(let i=choices.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[choices[i],choices[j]]=[choices[j],choices[i]];}
- let answered=false;
+ function updateSelection(){
+  [...$('bonusAnswers').children].forEach(b=>{const chosen=+b.dataset.choice===bonusChoice;b.setAttribute('aria-pressed',String(chosen));b.classList.toggle('answer-selected',chosen);});
+  $('confirmBonusBtn').disabled=bonusChoice===null||bonusSubmitted;
+  $('confirmBonusBtn').textContent=bonusSubmitted?'Answer submitted':'Confirm answer';
+  $('playAgainBtn').disabled=!bonusSubmitted;
+ }
+ function feedback(){
+  [...$('bonusAnswers').children].forEach(b=>{b.disabled=true;if(+b.dataset.choice===item.correct)b.classList.add('answer-correct');else if(+b.dataset.choice===bonusChoice)b.classList.add('answer-wrong');});
+  const correct=bonusChoice===item.correct;
+  $('bonusFeedback').className=correct?'feedback-correct':'feedback-review';
+  $('bonusFeedback').textContent=(correct?'Correct. ':'Review: '+item.a[item.correct]+'. ')+item.why;
+  $('bonusSource').hidden=false;
+ }
  choices.forEach(({answer,i})=>{
-   const button=document.createElement('button');button.type='button';button.className='secondary-btn bonus-answer';button.textContent=answer;
-   button.onclick=()=>{
-     if(answered)return;answered=true;
-     [...$('bonusAnswers').children].forEach(b=>{b.disabled=true;if(+b.dataset.choice===item.correct)b.classList.add('answer-correct');});
-     button.classList.add(i===item.correct?'answer-selected':'answer-wrong');
-     $('bonusFeedback').className=i===item.correct?'feedback-correct':'feedback-review';
-     $('bonusFeedback').textContent=(i===item.correct?'Correct. ':'Review: '+item.a[item.correct]+'. ')+item.why;
-   };
-   button.dataset.choice=i;$('bonusAnswers').append(button);
+  const button=document.createElement('button');button.type='button';button.className='secondary-btn bonus-answer';button.textContent=answer;button.dataset.choice=i;
+  button.onclick=()=>{if(bonusSubmitted)return;bonusChoice=i;updateSelection();$('bonusFeedback').textContent='Ready? Confirm your answer to see the explanation.';persist();};
+  $('bonusAnswers').append(button);
  });
+ $('confirmBonusBtn').onclick=()=>{if(bonusChoice===null||bonusSubmitted)return;bonusSubmitted=true;updateSelection();feedback();persist();};
+ updateSelection();if(bonusSubmitted)feedback();updateResultLinks();
 }
 
-if(finished&&!lost)showBonus();
+
 
 function practicePuzzle(difficulty,seed) {
  const bank=$('boardSize').value==='10'?LARGE_PUZZLE_BANK:PUZZLE_BANK;
@@ -428,6 +443,7 @@ function updatePuzzleInfo() {
  $('milestone').textContent=stats.wins>=25?'Milestone: 25 shifts completed':stats.wins>=10?'Milestone: 10 shifts completed':stats.wins>=1?'Milestone: first shift completed':'';
 }
 function openArchive() {
+ if(requireNursingAnswer())return;
  $('archiveDate').max=localDate();$('archiveDate').value=localDate();
  $('archiveStatus').textContent=`${stats.dailyDates.length} daily puzzles completed. Choose today or an earlier date.`;
  pause();$('archiveDialog').showModal();
@@ -440,13 +456,29 @@ $('loadArchiveBtn').addEventListener('click',()=>{
  if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||date>localDate()||date<'2026-09-29'){ $('archiveStatus').textContent='Choose a date between September 29, 2026 and today.';return; }
  flushTap();if(!finished&&state.flat().some(Boolean)&&!confirm('Open this daily puzzle and clear your current placements?'))return;
  gameKind='daily';dailyDate=date;customPuzzle=generatePuzzle(6,Number(date.replaceAll('-','')));
- $('archiveDialog').close();reset();
+ $('archiveDialog').close();reset();enterGame();
 });
-$('shareBtn').addEventListener('click',async()=>{
- const text=`NurseDoku ${gameKind==='daily'?dailyDate:gameKind==='journey'?'Shift '+(level+1):'Practice'}\nSolved in ${format(elapsed)} · ${size()}×${size()}\nhttps://siahverse.cc/nursedoku/`;
- try {await navigator.clipboard.writeText(text);$('shareStatus').textContent='Result copied. Paste it anywhere.';}
- catch {$('shareStatus').textContent=text;}
-});
+const SHARE_URL='https://siahverse.cc/nursedoku/';
+function resultText(){return 'NurseDoku '+(gameKind==='daily'?dailyDate:gameKind==='journey'?'Shift '+(level+1):'Practice')+'\nSolved in '+format(elapsed)+' · '+size()+'×'+size()+' · '+strikes+'/3 strikes';}
+function socialLinks(prefix,text){
+ $(prefix+'X').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(SHARE_URL);
+ $(prefix+'Whatsapp').href='https://wa.me/?text='+encodeURIComponent(text+'\n'+SHARE_URL);
+}
+function updateResultLinks(){socialLinks('resultShare',resultText());}
+async function copyShare(text,status){
+ try{await navigator.clipboard.writeText(text);$(status).textContent='Copied. Paste it in your post or message.';}
+ catch{$(status).textContent=text;}
+}
+async function nativeShare(text,status){
+ if(navigator.share){try{await navigator.share({title:'NurseDoku',text,url:SHARE_URL});$(status).textContent='Share sheet opened.';return;}catch(error){if(error.name==='AbortError')return;}}
+ await copyShare(text+'\n'+SHARE_URL,status);
+}
+$('shareBtn').addEventListener('click',()=>nativeShare(resultText(),'shareStatus'));
+$('copyResultBtn').addEventListener('click',()=>copyShare(resultText()+'\n'+SHARE_URL,'shareStatus'));
+$('menuShareBtn').addEventListener('click',()=>nativeShare('A little logic. A little nursing. Play NurseDoku with me.','menuShareStatus'));
+$('menuCopyBtn').addEventListener('click',()=>copyShare(SHARE_URL,'menuShareStatus'));
+socialLinks('menuShare','A little logic. A little nursing. Play NurseDoku with me.');
+$('menuShareFacebook').href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(SHARE_URL);
 if('serviceWorker' in navigator && location.protocol==='https:')navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(()=>{});
 
 $('retryBtn').addEventListener('click',()=>{$('lossDialog').close();reset();});
@@ -455,7 +487,7 @@ $('newAfterLossBtn').addEventListener('click',()=>{$('lossDialog').close();reset
 // Narrow bridge used by the account controller. Cloud data never contains credentials.
 window.NurseDokuProgress={
  owner(){return progressOwner;},
- snapshot(){return copy({version:2,game:{level,state,elapsed:time(),finished,gameKind,customPuzzle,dailyDate,strikes,lost,journeyVersion:2},stats,completed:completedShifts});},
+ snapshot(){return copy({version:2,game:{level,state,elapsed:time(),finished,gameKind,customPuzzle,dailyDate,strikes,lost,journeyVersion:2,bonusIndex,bonusChoice,bonusSubmitted},stats,completed:completedShifts});},
  readOwner(owner){
   const read=key=>{try{return JSON.parse(localStorage.getItem(owner?'nursedoku-user-'+owner+':'+key:key));}catch{return null;}};
   return {version:2,game:read(SAVE_KEY),stats:read('nursedoku-stats'),completed:read('nursedoku-journey-v2')||[]};
@@ -473,6 +505,8 @@ window.NurseDokuProgress={
   level=nextLevel;customPuzzle=nextCustom;gameKind=nextCustom?nextKind:'journey';dailyDate=gameKind==='daily'&&/^\d{4}-\d{2}-\d{2}$/.test(g.dailyDate)?g.dailyDate:null;
   state=nextState;elapsed=Number.isFinite(g.elapsed)?Math.max(0,g.elapsed):0;runningSince=null;
   strikes=Number.isInteger(g.strikes)?Math.max(0,Math.min(3,g.strikes)):0;
+  bonusIndex=Number.isInteger(g.bonusIndex)?g.bonusIndex:null;bonusChoice=Number.isInteger(g.bonusChoice)?g.bonusChoice:null;bonusSubmitted=g.bonusSubmitted===true;
+  clearTimeout(winTimeout);winSequence++;
   lost=g.lost===true&&strikes===3;finished=lost||(g.finished===true&&positions().length===n&&!conflicts().size);
   history=[];hintCell=null;
   completedShifts=Array.isArray(v.completed)?[...new Set(v.completed.filter(i=>Number.isInteger(i)&&i>=0&&i<LEVELS.length))]:[];
@@ -482,9 +516,47 @@ window.NurseDokuProgress={
   progressStorage.setItem('nursedoku-stats',JSON.stringify(stats));
   progressStorage.setItem('nursedoku-journey-v2',JSON.stringify(completedShifts));
   render();updateStats();resume();persist();
-  if(lost)$('lossDialog').showModal();
-  else if(finished){$('finalTime').textContent=format(elapsed);$('playAgainBtn').textContent=gameKind==='journey'?'Next shift':'New practice shift';showBonus();$('winDialog').showModal();}
+  if(lost&&inGame)$('lossDialog').showModal();
+  else if(finished&&!lost){$('finalTime').textContent=format(elapsed);$('playAgainBtn').textContent=gameKind==='journey'?'Next shift':'New practice shift';showBonus();if(inGame)$('winDialog').showModal();}
+  updateMenu();
   tell(lost?'Three strikes. Retry this shift to continue.':finished?'Saved shift complete. Start another shift to continue.':'Your saved shift is ready.');
  },
  pause,resume
 };
+
+// The menu owns starting/resuming a shift; loading the app never starts the clock.
+function updateMenu(){
+ $('menuStats').textContent=$('statsLine').textContent;
+ $('continueBtn').textContent=finished&&!lost&&!bonusSubmitted?'Finish your nursing question':lost?'Review ended shift':finished?'Review completed shift':state.flat().some(Boolean)||elapsed>0?'Continue your shift':'Start your shift';
+}
+function enterGame(){
+ inGame=true;$('mainMenu').hidden=true;$('gameView').hidden=false;$('menuBtn').hidden=false;
+ resume();
+ if(lost)$('lossDialog').showModal();
+ else if(finished){$('finalTime').textContent=format(elapsed);showBonus();$('winDialog').showModal();}
+ $('levelLabel').focus?.();
+}
+function returnToMenu(){
+ flushTap();pause();inGame=false;clearTimeout(winTimeout);winSequence++;
+ for(const id of ['winDialog','lossDialog'])if($(id).open)$(id).close();
+ $('mainMenu').hidden=false;$('gameView').hidden=true;$('menuBtn').hidden=true;updateMenu();$('continueBtn').focus();
+}
+function requireNursingAnswer(){
+ if(finished&&!lost&&!bonusSubmitted){enterGame();return true;}return false;
+}
+$('continueBtn').addEventListener('click',enterGame);
+$('menuBtn').addEventListener('click',returnToMenu);
+for(const [id,kind] of [['menuLearnBtn','journey'],['menuDailyBtn','daily'],['menuPracticeBtn','practice']])$(id).addEventListener('click',()=>{if(switchGame(kind)!==false)enterGame();});
+$('winDialog').addEventListener('cancel',event=>{if(!bonusSubmitted)event.preventDefault();});
+$('menuPreferences').append(document.querySelector('.preferences'));
+const UPDATE_VERSION='2026-09-29-menu-and-flow';
+let changelogShown=false;
+function markChangelogSeen(){try{localStorage.setItem('nursedoku-changelog',UPDATE_VERSION);}catch{}changelogShown=true;}
+function openChangelog(){pause();$('changelogDialog').showModal();}
+$('changelogBtn').addEventListener('click',openChangelog);
+$('closeChangelogBtn').addEventListener('click',()=>$('changelogDialog').close());
+$('changelogDialog').addEventListener('close',()=>{markChangelogSeen();resume();});
+try{changelogShown=localStorage.getItem('nursedoku-changelog')===UPDATE_VERSION;}catch{}
+if(finished&&!lost)showBonus();
+updateMenu();
+if(!changelogShown)openChangelog();

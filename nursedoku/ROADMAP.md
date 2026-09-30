@@ -17,6 +17,18 @@
 
 Difficulty is an automated heuristic: Easy resolves with row/column/zone singles, Medium also needs confined-zone elimination, and Hard is unresolved by those two techniques. Human playtesting is still needed to calibrate perceived difficulty.
 
+## September 29 flow update — delivered
+
+- [x] Main menu; loading the app does not start the game timer
+- [x] Main-menu sharing: device share sheet, X, WhatsApp, Facebook, copy link
+- [x] Swipe from an X to erase multiple Xs; protect RNs; undo the whole stroke
+- [x] Two-second completed-board celebration before results, with reduced-motion support
+- [x] First-open changelog shown once per update, accessible again from the menu
+- [x] Required nursing question; select/change the answer, then confirm before submission
+- [x] Next shift unlocks after submitting the answer; feedback and submitted state persist
+- [x] Results sharing with score/time/board/strikes via device share sheet, X, WhatsApp, copy
+- [x] Removed the patient-information notice from the account screen
+
 ## Phase 2 — next
 
 - [ ] Test gestures and sound on physical iPhones, including VoiceOver
@@ -30,7 +42,7 @@ Difficulty is an automated heuristic: Easy resolves with row/column/zone singles
 ## Optional future work
 
 - [x] Private cloud-save database, account UI, offline saves, guest import, device-conflict handling
-- [ ] Activate public registration: configure email delivery/redirects, then verify signup and recovery end to end
+- [ ] Activate public registration: configure email delivery from nursing@siahverse.cc (redirects done), then verify signup and recovery end to end
 - [ ] Account deletion/export and dedicated privacy page
 - [ ] Public mobile-store release only if requested
 

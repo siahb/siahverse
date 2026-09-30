@@ -7,10 +7,12 @@ Place one RN in every row, column, and colored care zone. RNs cannot touch, even
 ## Controls
 
 - Tap a cell to toggle an X.
-- Drag across cells to add multiple Xs. RNs are protected. Undo reverses the whole stroke.
+- Swipe from an empty cell to add multiple Xs, or from an X to erase multiple Xs. RNs are protected. Undo reverses the whole stroke.
 - Double-tap to place or remove an RN.
 - Keyboard: Enter/Space toggles X; R toggles RN; arrow keys move focus.
 - Hints highlight a suggested placement or a mistaken RN.
+
+Start from the main menu; loading the app leaves the timer paused. The changelog appears once per update. A solved board celebrates for two seconds before opening the required nursing question. You can change your answer before confirming it, then share the result or continue.
 
 ## Completed roadmap
 
@@ -21,7 +23,7 @@ Place one RN in every row, column, and colored care zone. RNs cannot touch, even
 - [x] Daily streak, total wins, and best completion time
 - [x] Hints, undo, reset, automatic completion, next shift
 - [x] General, Pediatrics, and Emergency color themes
-- [x] Optional original NCLEX-style infection-prevention bonus questions with CDC rationales
+- [x] Required original infection-prevention nursing question with answer selection, confirmation, and CDC rationale
 - [x] Siahverse nursing hub integration
 - [x] Synthesized tap, RN, hint, undo, and win sounds with a saved mute setting
 - [x] X pop, RN bounce and sparkle, care-zone feedback, win confetti; reduced-motion support
@@ -45,4 +47,4 @@ Verified the original eight learning boards, all 72 rated practice boards, and 3
 
 See [ROADMAP.md](ROADMAP.md) for delivered Phase 1 features and the next phase. General/Pediatrics/Emergency are color palettes, not specialty gameplay modes. Offline caching is scoped to NurseDoku.
 
-Current rules: three conflicting RN placements end a shift. Invalid placements are rejected; Undo does not restore strikes. Training advances from Easy through Medium to Hard. The palette selector only changes colors. Accounts are pending a Supabase connection; see accounts/README.md.
+Current rules: three conflicting RN placements end a shift. Invalid placements are rejected; Undo does not restore strikes. Training advances from Easy through Medium to Hard. The palette selector only changes colors. Supabase private cloud saves and account UI are implemented. Public registration remains disabled until nursing@siahverse.cc is verified with an email provider and SMTP is configured; see accounts/README.md.

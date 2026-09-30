@@ -72,3 +72,7 @@ Single taps place/erase X immediately; a second tap on the same square within 36
 The menu separates Learn/Daily from custom practice controls. One nursing hub link and one What's new control remain. The bottom footer shows the release date and version. Results sharing includes Facebook and an Instagram image option; file sharing uses the native share sheet when supported, otherwise downloads an image to upload manually. It never posts automatically.
 
 After changing any source file or question/board bank, run `node scripts/build-assets.cjs` from this repository and publish index.html, sw.js, and the generated assets/ files together with the source. Keep old content-hashed assets for existing offline clients. Never overwrite the bytes at an existing hashed asset path.
+
+## Dark mode
+
+Use the moon/sun icon in the header to switch appearance. NurseDoku follows the device setting until you choose a mode, then remembers your preference on this browser. Care-zone colors and progress stay unchanged.

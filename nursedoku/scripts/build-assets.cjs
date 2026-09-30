@@ -2,7 +2,7 @@
 const fs=require('fs'),path=require('path'),crypto=require('crypto');
 const root=path.resolve(__dirname,'..'),hash=value=>crypto.createHash('sha256').update(value).digest('hex').slice(0,10);
 let html=fs.readFileSync(path.join(root,'index.html'),'utf8');const assets=['./','index.html','manifest.webmanifest','icon.svg'];fs.mkdirSync(path.join(root,'assets'),{recursive:true});
-for(const name of ['app.js','styles.css','puzzles.js','large-puzzles.js','account-config.js','accounts.js']){
+for(const name of ['app.js','styles.css','puzzles.js','large-puzzles.js','account-config.js','accounts.js','appearance.js']){
  const data=fs.readFileSync(path.join(root,name)),ext=path.extname(name),stem=path.basename(name,ext),file=`assets/${stem}.${hash(data)}${ext}`;
  fs.writeFileSync(path.join(root,file),data);assets.push(file);
  const escaped=stem.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');

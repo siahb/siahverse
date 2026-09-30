@@ -96,3 +96,9 @@ Keep service credentials in backend environment secrets. NurseDoku's public Supa
 Check the relevant app's README before editing its assets, storage format, or deployment configuration.
 
 Made with Siahverse by Josiah Borja.
+
+## Shared appearance
+
+All Siahverse pages use `sv_theme`, a one-year, Secure, SameSite=Lax cookie scoped to `siahverse.cc` and `/`. Every explicit toggle replaces that value; navigation never writes a preference. Old per-app local storage is ignored. Pages apply it before rendering and refresh on return, focus, visibility, and once per second while visible. Without a choice, the device theme is used. Outside the Siahverse domain, local previews use origin-local storage. Unrelated external services do not share this cookie.
+
+`toggle-theme.js`, `public/theme.js`, and `nursedoku/appearance.js` must contain the same controller; the copies support Tasks subdomain routing and NurseDoku offline assets. Run `node tests/theme-sync.cjs` after changes, then rebuild NurseDoku immutable assets.

@@ -430,6 +430,7 @@ async function handleAccessRequest(context) {
 }
 
 function htmlResponse(html,status=200,extra={}) {
+  html=html.replace("</head>",'<link rel="stylesheet" href="/shared-theme.css?v=20260930-sync"><script src="/toggle-theme.js?v=20260930-sync"></script></head>').replace("<body>",'<body><button type="button" id="sharedThemeToggle" class="shared-theme-toggle">Theme</button>');
   return new Response(html,{status,headers:{
     "Content-Type":"text/html; charset=UTF-8",
     "Cache-Control":"no-store, private",

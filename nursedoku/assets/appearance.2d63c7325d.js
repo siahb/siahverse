@@ -45,9 +45,8 @@
     for (const id of ['toggle-theme', 'toggle-theme-checkbox', 'themeToggle', 'appearanceBtn', 'sharedThemeToggle']) {
       const control = document.getElementById(id);
       if (control) control.addEventListener(control.type === 'checkbox' ? 'change' : 'click', () => {
-        const checkboxChoice = control.checked ? 'dark' : 'light';
         refresh();
-        set(control.type === 'checkbox' ? checkboxChoice : (current === 'dark' ? 'light' : 'dark'));
+        set(control.type === 'checkbox' ? (control.checked ? 'dark' : 'light') : (current === 'dark' ? 'light' : 'dark'));
       });
     }
   }

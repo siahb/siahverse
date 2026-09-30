@@ -123,9 +123,7 @@ html[data-theme="light"] .calc-key{background:#fff}
 @media(max-width:520px){.conversion-grid{grid-template-columns:1fr}.calc-display{grid-template-columns:1fr}.calc-result{text-align:left}}
 
 </style>
-<script>
-(function(){try{document.documentElement.dataset.theme=localStorage.getItem('siahverse_pharm1_theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}})();
-</script>
+<script src="/toggle-theme.js?v=20260930-sync"></script>
 </head>
 <body>
 <noscript><div style="max-width:940px;margin:16px auto;padding:14px 18px;border-radius:12px;background:#3a1d27;color:#ffd5db;font-family:system-ui,sans-serif">This quiz needs JavaScript. On iPhone, open the hosted page in Safari instead of a file preview.</div></noscript>
@@ -289,19 +287,6 @@ let state=null;
 let examTimerInterval=null;
 let storageOK=false;
 let memoryStore={version:1,sessions:{}};
-
-function syncThemeButton(){
-  const btn=$('#themeToggle'); if(!btn)return;
-  const light=document.documentElement.dataset.theme==='light';
-  btn.textContent=light?'🌙 Dark':'☀️ Light';
-  btn.setAttribute('aria-label',light?'Switch to dark mode':'Switch to light mode');
-}
-function toggleTheme(){
-  const next=document.documentElement.dataset.theme==='light'?'dark':'light';
-  document.documentElement.dataset.theme=next;
-  try{localStorage.setItem('siahverse_pharm1_theme',next)}catch(e){}
-  syncThemeButton();
-}
 
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
@@ -599,7 +584,7 @@ $('#quizAutoNextSeconds').addEventListener('input',()=>{
   saveState();
 });
 $('#quizAutoNextSeconds').addEventListener('change',applyQuizAutoNextSettings);
-$('#themeToggle').addEventListener('click',toggleTheme);syncThemeButton();
+// Shared theme controller owns the toggle.
 testStorage();refreshSavedCard();
 
 </script>

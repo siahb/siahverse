@@ -503,21 +503,7 @@ function updateAdminUI() {
   updateInputStates();
 }
 
-  // Theme
-  const savedTheme = localStorage.getItem('theme') || 'dark';
-
-  if (savedTheme === 'light') {
-    document.body.classList.add('light-mode'); // light variables
-    themeCheckbox.checked = false;             // unchecked = light
-  } else {
-    themeCheckbox.checked = true;              // checked = dark
-  }
-
-  themeCheckbox.addEventListener('change', () => {
-    const darkOn = themeCheckbox.checked;      // checked means dark
-    document.body.classList.toggle('light-mode', !darkOn);
-    localStorage.setItem('theme', darkOn ? 'dark' : 'light');
-  });
+  // Shared theme controller owns appearance.
 
   // Admin
   enterPwBtn.addEventListener('click', () => adminModal.style.display = 'block');

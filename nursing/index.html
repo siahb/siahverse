@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   
-  <meta name="color-scheme" content="dark">
+  <meta name="color-scheme" content="light dark">
   <meta name="description" content="Nursing study tools, practice exams, and games including NurseDoku.">
   <title>Nursing | Siahverse</title>
   <link rel="icon" href="/favicon.svg">
@@ -39,6 +39,8 @@
     .footer{color:var(--muted);font-size:.82rem;text-align:center;margin-top:48px}
     @media(max-width:700px){.wrap{width:min(100% - 22px,1040px);padding-top:20px}.topbar{align-items:flex-start;margin-bottom:44px}.nav{justify-content:flex-end}.grid{grid-template-columns:1fr}.card{min-height:240px;padding:20px;border-radius:18px}}
   </style>
+<link rel="stylesheet" href="/shared-theme.css?v=20260930-sync">
+<script src="/toggle-theme.js?v=20260930-sync"></script>
 </head>
 <body>
   <main class="wrap">
@@ -47,6 +49,7 @@
         <div class="logo" aria-hidden="true">🩺</div>
         <div><strong>Siahverse</strong><span>Nursing</span></div>
       </a>
+      <button type="button" id="sharedThemeToggle" class="shared-theme-toggle" aria-label="Switch color theme">Theme</button>
       <nav class="nav" aria-label="Site navigation">
         <a href="https://siahverse.cc/">← Back</a>
         <a class="active" href="/nursing/">Nursing</a>

@@ -26,7 +26,7 @@
   color-scheme:dark;
 }
 
-body.light-mode{
+:is(html[data-theme="light"],body.light-mode){
   --bg:#f5f7fb;
   --bg2:#e9efff;
   --panel:rgba(255,255,255,.84);
@@ -492,9 +492,9 @@ li[data-trueindex] > div:last-child button:hover{
 .pill.overdue,.pill.priority-high{color:#ff9aa4;border-color:#6e3942;background:#2d1820}
 .pill.priority-medium{color:#ffd28a;border-color:#6e5428;background:#2b2214}
 .pill.priority-low{color:#96e6bd;border-color:#315f49;background:#14271f}
-body.light-mode .pill.overdue,body.light-mode .pill.priority-high{color:#b52536;border-color:#eab5bd;background:#fff2f4}
-body.light-mode .pill.priority-medium{color:#8b5a0f;border-color:#edd09e;background:#fff8e9}
-body.light-mode .pill.priority-low{color:#14704d;border-color:#abd8c6;background:#effbf6}
+:is(html[data-theme="light"],body.light-mode) .pill.overdue,:is(html[data-theme="light"],body.light-mode) .pill.priority-high{color:#b52536;border-color:#eab5bd;background:#fff2f4}
+:is(html[data-theme="light"],body.light-mode) .pill.priority-medium{color:#8b5a0f;border-color:#edd09e;background:#fff8e9}
+:is(html[data-theme="light"],body.light-mode) .pill.priority-low{color:#14704d;border-color:#abd8c6;background:#effbf6}
 
 .dragging-active #todo-list li{animation:wiggle .55s ease-in-out infinite}
 @keyframes wiggle{0%,100%{transform:rotate(-.35deg)}50%{transform:rotate(.35deg)}}

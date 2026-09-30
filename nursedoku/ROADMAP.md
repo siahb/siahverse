@@ -77,3 +77,8 @@ Guest question history belongs to the browser/device. Account history travels wi
 - [x] NCLEX question heading and concise introduction
 - [x] Share/copy/Facebook/Instagram/X/WhatsApp on both menu and results
 - [x] Remove redundant navigation and changelog wording; date/year and version footer
+
+## Beginner tutorial — delivered
+
+- [x] Five numbered steps with a solved example, RN and X practice, and plain explanations of every placement rule
+- [x] Independent practice board, keyboard controls, light/dark support, and replay from How to play

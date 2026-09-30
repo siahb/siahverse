@@ -11,7 +11,7 @@
   <meta property="og:type" content="website">
   <title>NurseDoku</title>
   <script src="assets/appearance.11c5f6c987.js"></script>
-  <link rel="stylesheet" href="assets/styles.861ef73b02.css">
+  <link rel="stylesheet" href="assets/styles.9f0d2d4466.css">
   <link rel="icon" href="icon.svg">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -137,15 +137,16 @@
     <div class="calendar-nav"><button id="archivePrevBtn" class="icon-btn" type="button" aria-label="Previous month">‹</button><h3 id="archiveMonthLabel"></h3><button id="archiveNextBtn" class="icon-btn" type="button" aria-label="Next month">›</button></div><div class="calendar-weekdays" aria-hidden="true"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div><div id="archiveCalendar" class="daily-calendar" role="group" aria-label="Daily puzzle dates"></div><p class="calendar-key">✓ Completed · Outlined date is selected</p><label>Choose a date <input id="archiveDate" type="date" min="2026-09-29"></label><p id="archiveStatus" aria-live="polite"></p>
     <button id="loadArchiveBtn" class="primary-btn full" type="button">Open daily shift</button>
   </div></dialog>
-  <dialog id="howToDialog">
-    <div class="dialog-body">
-      <div class="dialog-header">
-        <div><p class="eyebrow">NurseDoku</p><h2>How to play</h2></div>
-        <button id="closeHowToBtn" class="icon-btn" type="button" aria-label="Close">×</button>
-      </div>
-      <p>Place one RN per row, column, and care zone.</p>
-      <p>Tap to toggle an X. Drag across cells to mark several Xs in one stroke. Start a swipe on an X to erase Xs; start on an empty cell to add them. Swipes always protect RNs. Double-tap a cell to place or remove an RN. On a keyboard, press Enter to toggle an X or R to toggle an RN. Two RNs cannot touch, even diagonally. Placing an RN in an incorrect square costs one strike; three strikes end the shift. Undo does not remove strikes.</p>
-      <button id="startBtn" class="primary-btn full" type="button">Got it</button>
+  <dialog id="howToDialog" aria-labelledby="tutorialHeading">
+    <div class="dialog-body tutorial-body">
+      <div class="dialog-header"><div><p class="eyebrow">No puzzle experience needed</p><h2 id="tutorialHeading">How to play</h2></div><button id="closeHowToBtn" class="icon-btn" type="button" aria-label="Close tutorial">×</button></div>
+      <p id="tutorialProgress" class="eyebrow">Step 1 of 5</p>
+      <h3 id="tutorialTitle" tabindex="-1"></h3>
+      <p id="tutorialCopy"></p>
+      <div id="tutorialBoard" class="tutorial-board" role="group" aria-label="Practice board: four rows and four columns"></div>
+      <p id="tutorialCaption" class="tutorial-caption"></p>
+      <p id="tutorialFeedback" class="tutorial-feedback" role="status"></p>
+      <div class="tutorial-nav"><button id="tutorialBack" class="secondary-btn" type="button">Back</button><button id="tutorialNext" class="primary-btn" type="button">Next</button><button id="startBtn" class="primary-btn" type="button" hidden>Ready to play</button></div>
     </div>
   </dialog>
 
@@ -162,10 +163,11 @@
     </div>
   </dialog>
 
-  <script src="assets/account-config.eb68e98f84.js"></script>
-  <script src="assets/large-puzzles.e8d0d5e480.js"></script>
-  <script src="assets/puzzles.f65a8e5e36.js"></script>
-  <script src="assets/app.1908e7d8c2.js"></script>
-  <script src="assets/accounts.555f3dd6b8.js"></script>
+  <script src="assets/account-config.cc916e79c2.js"></script>
+  <script src="assets/large-puzzles.b5dbb536ca.js"></script>
+  <script src="assets/puzzles.ad028b6d5f.js"></script>
+  <script src="assets/app.b20f3024b2.js"></script>
+  <script src="assets/accounts.7f3e1d83e4.js"></script>
+  <script src="assets/tutorial.d3a29e2f49.js"></script>
 </body>
 </html>

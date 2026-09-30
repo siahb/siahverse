@@ -3,7 +3,7 @@ class El {constructor(){this.children=[];this.dataset={};this.style={setProperty
 const els={};const get=id=>els[id]??=new El();get('difficulty').value='6';
 const storage={};let hit=null,timerId=0;const timers=new Map();
 const doc={getElementById:get,createElement:()=>new El(),querySelector:()=>new El(),querySelectorAll:()=>[],addEventListener(){},hidden:false,documentElement:new El(),elementFromPoint:()=>hit};
-const context={document:doc,window:{addEventListener(){}},localStorage:{getItem:k=>storage[k]||null,setItem:(k,v)=>storage[k]=v},setInterval(){},setTimeout(f,ms){timers.set(++timerId,{f,ms});return timerId;},clearTimeout(id){timers.delete(id)},confirm:()=>true,Date,console,navigator:{},location:{protocol:'file:'}};
+const context={document:doc,window:{addEventListener(){}},localStorage:{getItem:k=>storage[k]||null,setItem:(k,v)=>storage[k]=v,removeItem:k=>delete storage[k]},setInterval(){},setTimeout(f,ms){timers.set(++timerId,{f,ms});return timerId;},clearTimeout(id){timers.delete(id)},confirm:()=>true,Date,console,navigator:{},location:{protocol:'file:'}};
 vm.createContext(context);vm.runInContext(fs.readFileSync(require('path').join(__dirname,'../large-puzzles.js'),'utf8')+'\n'+fs.readFileSync(require('path').join(__dirname,'../puzzles.js'),'utf8')+'\n'+fs.readFileSync(require('path').join(__dirname,'../app.js'),'utf8'),context);
 function run(code){return vm.runInContext(code,context);}
 assert.equal(run('inGame'),false);assert.equal(run('runningSince'),null);assert.equal(get('gameView').hidden,undefined);
@@ -80,3 +80,15 @@ get('confirmBonusBtn').onclick();assert.equal(run('bonusSubmitted'),true);assert
 const restored=context.window.NurseDokuProgress.snapshot();context.window.NurseDokuProgress.apply(restored,null);assert.equal(get('playAgainBtn').disabled,false);
 console.log('PASS: startup/menu timer pause; changelog acknowledgment; 2-second win delay; swipe erase + whole stroke undo; required answer selection/confirmation/persistence.');
 
+
+const reloadedEls={},reloadedGet=id=>reloadedEls[id]??=new El();
+const reloadedDoc={...doc,getElementById:reloadedGet,querySelector:()=>new El()};
+const reloaded={...context,document:reloadedDoc,window:{addEventListener(){}},setTimeout(){return 1;},clearTimeout(){}};
+vm.createContext(reloaded);
+vm.runInContext(fs.readFileSync(require('path').join(__dirname,'../large-puzzles.js'),'utf8')+'\n'+fs.readFileSync(require('path').join(__dirname,'../puzzles.js'),'utf8')+'\n'+fs.readFileSync(require('path').join(__dirname,'../app.js'),'utf8'),reloaded);
+assert.equal(vm.runInContext('inGame',reloaded),false);assert.equal(vm.runInContext('runningSince',reloaded),null);
+assert.equal(reloadedGet('winDialog').open,false);assert.equal(reloadedGet('changelogDialog').open,false);
+assert.equal(vm.runInContext('bonusSubmitted',reloaded),true);assert.equal(reloadedGet('playAgainBtn').disabled,false);
+assert(reloadedGet('resultShareX').href.includes('intent/tweet?text='));
+assert(reloadedGet('resultShareWhatsapp').href.includes('wa.me/?text='));
+console.log('PASS: completed-save reload stays on menu; submitted quiz persists; changelog is not repeated; social links include results.');

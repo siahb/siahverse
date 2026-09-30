@@ -1,0 +1,163 @@
+{
+  "date": "2026-09-30",
+  "before": 12,
+  "added": 22,
+  "total": 34,
+  "review": "Source and arithmetic verification by the authoring assistant; not an independent clinician review or official NCLEX content.",
+  "questions": [
+    {
+      "id": "nclex-00013",
+      "topic": "Adult health · Fluid balance",
+      "source": "https://www.nhlbi.nih.gov/health/heart-failure/living-with",
+      "checkedOn": "2026-09-30",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct learning objective reviewed against existing bank."
+    },
+    {
+      "id": "nclex-00014",
+      "topic": "Renal health · Nutrition teaching",
+      "source": "https://www.niddk.nih.gov/health-information/urologic-diseases/kidney-stones/eating-diet-nutrition",
+      "checkedOn": "2026-09-30",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct learning objective reviewed against existing bank."
+    },
+    {
+      "id": "nclex-00015",
+      "topic": "Nutrition · Select a meal",
+      "source": "https://www.niddk.nih.gov/health-information/digestive-diseases/celiac-disease/eating-diet-nutrition",
+      "checkedOn": "2026-09-30",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct learning objective reviewed against existing bank."
+    },
+    {
+      "id": "nclex-00016",
+      "topic": "Adult health · Prepare for testing",
+      "source": "https://www.niddk.nih.gov/health-information/digestive-diseases/celiac-disease/eating-diet-nutrition",
+      "checkedOn": "2026-09-30",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct learning objective reviewed against existing bank."
+    },
+    {
+      "id": "nclex-00017",
+      "topic": "Maternal health · Recognize cues",
+      "source": "https://www.nichd.nih.gov/health/topics/preeclampsia/conditioninfo/symptoms",
+      "checkedOn": "2026-09-30",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct learning objective reviewed against existing bank."
+    },
+    {
+      "id": "nclex-00018",
+      "topic": "Newborn care · Safe sleep",
+      "source": "https://safetosleep.nichd.nih.gov/reduce-risk/back-sleeping",
+      "checkedOn": "2026-09-30",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct learning objective reviewed against existing bank."
+    },
+    {
+      "id": "nclex-00019",
+      "topic": "Pediatrics · Development teaching",
+      "source": "https://safetosleep.nichd.nih.gov/reduce-risk/tummy-time",
+      "checkedOn": "2026-09-30",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct learning objective reviewed against existing bank."
+    },
+    {
+      "id": "nclex-00020",
+      "topic": "Medication safety · Duplicate ingredients",
+      "source": "https://www.fda.gov/drugs/safe-use-over-counter-pain-relievers-and-fever-reducers/acetaminophen",
+      "checkedOn": "2026-09-30",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct learning objective reviewed against existing bank."
+    },
+    {
+      "id": "nclex-00021",
+      "topic": "Renal health · Medication risk",
+      "source": "https://www.niddk.nih.gov/health-information/kidney-disease/keeping-kidneys-safe",
+      "checkedOn": "2026-09-30",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct learning objective reviewed against existing bank."
+    },
+    {
+      "id": "nclex-00022",
+      "topic": "Care coordination · Medication review",
+      "source": "https://www.niddk.nih.gov/health-information/kidney-disease/keeping-kidneys-safe",
+      "checkedOn": "2026-09-30",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct learning objective reviewed against existing bank."
+    },
+    {
+      "id": "nclex-00023",
+      "topic": "Mental health · Recognize mood changes",
+      "source": "https://www.nimh.nih.gov/health/publications/bipolar-disorder",
+      "checkedOn": "2026-09-30",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct learning objective reviewed against existing bank."
+    },
+    {
+      "id": "nclex-00024",
+      "topic": "Mental health · Treatment teaching",
+      "source": "https://www.nimh.nih.gov/health/publications/panic-disorder-when-fear-overwhelms",
+      "checkedOn": "2026-09-30",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct learning objective reviewed against existing bank."
+    },
+    {
+      "id": "nclex-00025",
+      "topic": "Oncology · Bleeding precautions",
+      "source": "https://www.cancer.gov/about-cancer/treatment/side-effects/bleeding-bruising",
+      "checkedOn": "2026-09-30",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct learning objective reviewed against existing bank."
+    },
+    {
+      "id": "nclex-00026",
+      "topic": "Oncology · Interpret laboratory findings",
+      "source": "https://www.cancer.gov/about-cancer/treatment/side-effects/bleeding-bruising",
+      "checkedOn": "2026-09-30",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct learning objective reviewed against existing bank."
+    },
+    {
+      "id": "nclex-00027",
+      "topic": "Neurologic care · Seizure safety",
+      "source": "https://www.cdc.gov/epilepsy/first-aid-for-seizures/index.html",
+      "checkedOn": "2026-09-30",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct learning objective reviewed against existing bank."
+    },
+    {
+      "id": "nclex-00028",
+      "topic": "Emergency · Recognize complications",
+      "source": "https://www.nhlbi.nih.gov/health/venous-thromboembolism/symptoms",
+      "checkedOn": "2026-09-30",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct learning objective reviewed against existing bank."
+    },
+    {
+      "id": "nclex-00029",
+      "topic": "Endocrine health · Recognize cues",
+      "source": "https://www.niddk.nih.gov/health-information/endocrine-diseases/hypothyroidism",
+      "checkedOn": "2026-09-30",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct learning objective reviewed against existing bank."
+    },
+    {
+      "id": "nclex-00030",
+      "topic": "Pharmacology · Thyroid replacement",
+      "source": "https://www.niddk.nih.gov/health-information/endocrine-diseases/hypothyroidism",
+      "checkedOn": "2026-09-30",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct learning objective reviewed against existing bank."
+    },
+    {
+      "id": "nclex-00031",
+      "topic": "Dosage calculation · Oral tablets",
+      "source": null,
+      "checkedOn": "2026-09-30",
+      "method": "Prescription supplied in stem; arithmetic checked independently with exact rational calculations."
+    },
+    {
+      "id": "nclex-00032",
+      "topic": "Dosage calculation · Gravity infusion",
+      "source": null,
+      "checkedOn": "2026-09-30",
+      "method": "Prescription supplied in stem; arithmetic checked independently with exact rational calculations."
+    },
+    {
+      "id": "nclex-00033",
+      "topic": "Dosage calculation · Weight-based infusion",
+      "source": null,
+      "checkedOn": "2026-09-30",
+      "method": "Prescription supplied in stem; arithmetic checked independently with exact rational calculations."
+    },
+    {
+      "id": "nclex-00034",
+      "topic": "Pediatrics · Dosage calculation: divided daily dose",
+      "source": null,
+      "checkedOn": "2026-09-30",
+      "method": "Prescription supplied in stem; arithmetic checked independently with exact rational calculations."
+    }
+  ]
+}

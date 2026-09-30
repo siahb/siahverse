@@ -1,0 +1,182 @@
+[
+  {
+    "id": "nclex-00001",
+    "topic": "Adult health · Take action",
+    "q": "An adult client who takes insulin is shaky and diaphoretic. Blood glucose is 54 mg/dL. The client is alert and can swallow safely. Which action should the nurse take first?",
+    "a": [
+      "Give 15–20 g of fast-acting carbohydrate",
+      "Administer the scheduled rapid-acting insulin",
+      "Wait for the next meal tray",
+      "Give a protein-only snack"
+    ],
+    "correct": 0,
+    "why": "Treat confirmed hypoglycemia promptly with fast-acting carbohydrate when swallowing is safe. Insulin would lower glucose further; waiting delays treatment, and protein alone does not raise glucose quickly.",
+    "source": "https://www.niddk.nih.gov/health-information/diabetes/overview/preventing-problems/low-blood-glucose-hypoglycemia",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00002",
+    "topic": "Adult health · Evaluate outcomes",
+    "q": "A client received glucose tablets for hypoglycemia 15 minutes ago. Repeat blood glucose is 62 mg/dL, and the client remains alert and can swallow. What is the best next action?",
+    "a": [
+      "Document that treatment was successful",
+      "Give another 15–20 g of fast-acting carbohydrate and recheck in 15 minutes",
+      "Give the next insulin dose early",
+      "Wait one hour before repeating the glucose test"
+    ],
+    "correct": 1,
+    "why": "A glucose of 62 mg/dL remains low. Repeat the fast-acting carbohydrate treatment and reassess after 15 minutes. The first treatment did not yet correct the low glucose.",
+    "source": "https://www.niddk.nih.gov/health-information/diabetes/overview/preventing-problems/low-blood-glucose-hypoglycemia",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00003",
+    "topic": "Emergency · Prioritize care",
+    "q": "The triage nurse receives four clients. Which client needs immediate evaluation?",
+    "a": [
+      "A client with a healed incision requesting dressing supplies",
+      "A client with unchanged knee pain for three months",
+      "A client with sudden facial droop and difficulty speaking that began 20 minutes ago",
+      "A client requesting a routine prescription renewal"
+    ],
+    "correct": 2,
+    "why": "Sudden facial weakness and speech changes suggest a stroke, a time-sensitive emergency. Activate the facility stroke response. The other presentations described do not show an acute threat.",
+    "source": "https://www.nhlbi.nih.gov/health/stroke",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00004",
+    "topic": "Pharmacology · Recognize cues",
+    "q": "A client who received an opioid is difficult to awaken and has slow, shallow breathing. Which complication should the nurse suspect?",
+    "a": [
+      "Expected pain relief without a safety concern",
+      "Opioid-related respiratory depression",
+      "A harmless medication taste change",
+      "A therapeutic increase in alertness"
+    ],
+    "correct": 1,
+    "why": "Reduced responsiveness and slow breathing raise concern for opioid toxicity. The nurse should urgently assess and support breathing and activate emergency assistance rather than dismissing these findings.",
+    "source": "https://www.fda.gov/drugs/drug-safety-communications/fda-recommends-health-care-professionals-discuss-naloxone-all-patients-when-prescribing-opioid-pain",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00005",
+    "topic": "Pharmacology · Antidotes",
+    "q": "Emergency help has been activated for a client with suspected opioid overdose. Which medication should the nurse anticipate administering per protocol to reverse opioid effects?",
+    "a": [
+      "Insulin",
+      "Naloxone",
+      "Acetaminophen",
+      "Furosemide"
+    ],
+    "correct": 1,
+    "why": "Naloxone reverses opioid overdose. It supports emergency treatment; emergency assistance and monitoring are still needed. The other listed medications do not reverse opioid effects.",
+    "source": "https://www.fda.gov/consumers/consumer-updates/access-naloxone-can-save-life-during-opioid-overdose",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00006",
+    "topic": "Pediatrics · Prioritize care",
+    "q": "A child with asthma continues to have severe breathing difficulty after the prescribed reliever medicine. What should the nurse advise the caregiver to do?",
+    "a": [
+      "Wait until the next routine appointment",
+      "Stop all asthma medicines permanently",
+      "Seek emergency care now",
+      "Give cough syrup and reassess tomorrow"
+    ],
+    "correct": 2,
+    "why": "Severe symptoms or symptoms that persist after reliever treatment require urgent medical care. Waiting or substituting cough medicine delays assessment and treatment of compromised breathing.",
+    "source": "https://www.nhlbi.nih.gov/health/asthma/attacks",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00007",
+    "topic": "Pediatrics · Teaching",
+    "q": "A toddler with diarrhea from food poisoning is alert and has been prescribed oral rehydration. Which caregiver statement shows understanding?",
+    "a": [
+      "I will use the oral rehydration solution as directed",
+      "I will withhold all liquids until diarrhea stops",
+      "I will start an adult antidiarrheal without asking the clinician",
+      "I will replace all fluids with soda"
+    ],
+    "correct": 0,
+    "why": "Oral rehydration solution helps replace fluid and electrolytes. Withholding fluids increases dehydration risk. Over-the-counter antidiarrheals can be unsafe for young children and require clinician guidance.",
+    "source": "https://www.niddk.nih.gov/health-information/digestive-diseases/food-poisoning/treatment",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00008",
+    "topic": "Mental health · Assess safety",
+    "q": "A client says, “Everyone would be better off without me.” Which response best begins a suicide-risk assessment?",
+    "a": [
+      "You should not feel that way",
+      "Are you thinking about killing yourself?",
+      "Let us talk about something happier",
+      "You would never actually do that, right?"
+    ],
+    "correct": 1,
+    "why": "Ask directly and nonjudgmentally about suicide. Direct questioning helps identify risk and does not increase suicidal thoughts. Reassurance, changing the subject, or a leading question can prevent disclosure.",
+    "source": "https://www.nimh.nih.gov/health/publications/suicide-faq",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00009",
+    "topic": "Oncology · Recognize risk",
+    "q": "A client receiving chemotherapy calls with a temperature of 101°F (38.3°C). Which instruction is most appropriate?",
+    "a": [
+      "Wait until the next clinic visit",
+      "Take a fever reducer and do not report it",
+      "Contact the oncology team immediately for urgent evaluation",
+      "Assume this is expected and continue usual activities"
+    ],
+    "correct": 2,
+    "why": "Fever during chemotherapy can signal an infection, especially when neutrophils are low. The client needs prompt evaluation. Suppressing or ignoring fever can delay identification of a serious infection.",
+    "source": "https://www.cancer.gov/about-cancer/treatment/side-effects/infection",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00010",
+    "topic": "Emergency · Teaching",
+    "q": "During a follow-up call, a client reports new chest pressure, shortness of breath, and sweating at rest. Which instruction should the nurse give first?",
+    "a": [
+      "Drive to the clinic tomorrow",
+      "Call 911 now for emergency medical care",
+      "Wait to see whether symptoms resolve overnight",
+      "Schedule a routine laboratory appointment"
+    ],
+    "correct": 1,
+    "why": "This symptom combination can indicate a heart attack. Emergency medical services can begin evaluation and treatment. Do not delay care or advise the symptomatic client to drive.",
+    "source": "https://www.nhlbi.nih.gov/health/heart-attack/symptoms",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00011",
+    "topic": "Dosage calculation · IV fluids",
+    "q": "The prescription is to infuse 1,000 mL of IV fluid over 8 hours. At what rate should the nurse set the infusion pump?",
+    "a": [
+      "80 mL/hr",
+      "100 mL/hr",
+      "125 mL/hr",
+      "250 mL/hr"
+    ],
+    "correct": 2,
+    "why": "Rate = volume ÷ time: 1,000 mL ÷ 8 hr = 125 mL/hr. Check that the pump unit is mL/hr.",
+    "source": null,
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00012",
+    "topic": "Pediatrics · Dosage calculation",
+    "q": "A child weighs 20 kg. The prescription is acetaminophen 15 mg/kg PO for one dose. The bottle contains 160 mg/5 mL. How many mL should the nurse give? Round only the final answer to the nearest tenth.",
+    "a": [
+      "3.0 mL",
+      "6.3 mL",
+      "9.4 mL",
+      "15.0 mL"
+    ],
+    "correct": 2,
+    "why": "Ordered dose: 20 kg × 15 mg/kg = 300 mg. Volume: 300 mg × 5 mL ÷ 160 mg = 9.375 mL. Rounded to the nearest tenth: 9.4 mL. The dose is supplied by this question’s prescription.",
+    "source": null,
+    "sourceLabel": "Read clinical source"
+  }
+]

@@ -116,18 +116,18 @@ calendar=run("calendarDays('2028-02','2028-02-14',[],'2028-02-14')");assert.equa
 run("stats.dailyDates=['2026-09-29'];openArchive()");assert(get('archiveCalendar').children.length>=30);assert.equal(get('archivePrevBtn').disabled,true);
 get('archiveCalendar').children.find(b=>b.attributes?.['aria-label']==='2026-09-29, completed').onclick();assert.equal(get('archiveDate').value,'2026-09-29');assert(get('archiveStatus').textContent.includes('completed — replay'));
 console.log('PASS: deduction hints agree with unique 6×6/10×10 solutions despite arbitrary Xs; daily calendar marks completion, selection, launch bounds, future dates, and leap years.');
-assert.equal(run('BONUS.length'),12);
-for(let i=0;i<12;i++){
+const questionCount=run('BONUS.length');assert(questionCount>=12&&questionCount<=5000);
+for(let i=0;i<questionCount;i++){
  run(`bonusIndex=${i};bonusChoice=null;bonusSubmitted=false;showBonus()`);
  assert(get('bonusQuestion').textContent.length>40);assert(get('bonusTopic').textContent);
  const correct=run(`BONUS[${i}].correct`);
  get('bonusAnswers').children.find(b=>+b.dataset.choice===correct).onclick();
  assert(get('playAgainBtn').disabled);get('confirmBonusBtn').onclick();
  assert(get('bonusFeedback').textContent.startsWith('Correct. '));assert(!get('playAgainBtn').disabled);
- assert.equal(get('bonusSource').hidden,i>=10);
+ assert.equal(get('bonusSource').hidden,!run(`BONUS[${i}].source`));
 }
 const legacyQuiz=context.window.NurseDokuProgress.snapshot();delete legacyQuiz.game.bonusVersion;legacyQuiz.game.bonusChoice=0;legacyQuiz.game.bonusSubmitted=true;context.window.NurseDokuProgress.apply(legacyQuiz,null);assert.equal(run('bonusSubmitted'),false);assert.equal(run('bonusChoice'),null);
-console.log('PASS: all 12 NCLEX-style items support choice/confirmation, topic/rationale/source display, calculation sources stay hidden, and old-bank answers cannot apply to new questions.');
+console.log('PASS: all NCLEX questions support choice/confirmation, topic/rationale/source display, calculation sources stay hidden, and old-bank answers cannot apply to new questions.');
 // Never recycle correct questions; reserve seen items and revisit only misses.
 run('stats.questionHistory={};bonusIndex=null;bonusChoice=null;bonusSubmitted=false;showBonus()');
 assert.equal(run('bonusIndex'),0);assert.equal(run('stats.questionHistory[BONUS[0].id]'),'seen');
@@ -144,7 +144,16 @@ run('bonusIndex=null;bonusSubmitted=false;showBonus()');assert.equal(get('bonusA
 const mastered=context.window.NurseDokuProgress.snapshot();context.window.NurseDokuProgress.apply(mastered,'quiz-owner');assert.equal(run('chooseQuestion()'),-1);
 context.window.NurseDokuProgress.apply({stats:{wins:0,dailyDates:[]},completed:[]},null);assert.equal(run('chooseQuestion()'),0);
 assert.equal(Object.keys(run("normalizeQuestionHistory({'nclex-00001':'correct','bad':'correct','nclex-00002':'junk'})")).length,1);
-assert.equal(new Set(run('BONUS.map(q=>q.id)')).size,12);
+assert.equal(new Set(run('BONUS.map(q=>q.id)')).size,questionCount);
+// Existing owners who mastered the original bank must receive appended items first.
+run("stats.questionHistory=Object.fromEntries(BONUS.slice(0,12).map(q=>[q.id,'correct']));stats.questionHistory[BONUS[3].id]='missed'");
+assert.equal(run('chooseQuestion()'),12);
+run('bonusIndex=3;bonusChoice=BONUS[3].correct;bonusSubmitted=true');
+const priorSave=context.window.NurseDokuProgress.snapshot();
+context.window.NurseDokuProgress.apply(priorSave,'existing-owner');
+assert.equal(run('bonusIndex'),3);assert.equal(run('bonusChoice'),run('BONUS[3].correct'));assert.equal(run('bonusSubmitted'),true);
+assert.equal(run("stats.questionHistory['nclex-00001']"),'correct');assert.equal(run('chooseQuestion()'),12);
+console.log('PASS: bank append preserves completed answers and cloud history; new items precede previously missed items.');
 console.log('PASS: unseen-first selection, missed-only review, mastery retirement, caught-up state, stable IDs, guest/account/cloud history isolation.');
 
 // Tap feedback is immediate; the second tap replaces the first tap's undo entry.
@@ -163,3 +172,4 @@ assert.equal(run("new Set(Array.from({length:7},(_,i)=>tipForDate('2026-10-'+Str
 run('dismissedTipDate="2026-10-01";renderDailyTip("2026-10-01")');assert.equal(get('dailyTipCard').hidden,true);
 run('renderDailyTip("2026-10-02")');assert.equal(get('dailyTipCard').hidden,false);assert(get('dailyTipSource').href.startsWith('https://'));
 console.log('PASS: immediate X taps, transactional double-tap RN/undo, zone clear requires RN and Xs, restore suppresses celebrations, daily tip rotates and dismissal expires.');
+

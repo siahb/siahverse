@@ -8,7 +8,7 @@ vm.createContext(context);vm.runInContext(fs.readFileSync(require('path').join(_
 function run(code){return vm.runInContext(code,context);}
 assert.equal(run('inGame'),false);assert.equal(run('runningSince'),null);assert.equal(get('gameView').hidden,undefined);
 get('closeChangelogBtn').events.click[0]();get('changelogDialog').events.close[0]();
-assert.equal(storage['nursedoku-changelog'],'2026-09-29-hints-calendar');
+assert.equal(storage['nursedoku-changelog'],'2026-09-29-nclex-guidance');
 get('continueBtn').events.click[0]();assert.equal(run('inGame'),true);assert.notEqual(run('runningSince'),null);
 const evt={pointerId:1,isPrimary:true,button:0,clientX:10,clientY:10,preventDefault(){}};
 hit=get('board').children[1];hit.closest=()=>hit;
@@ -116,3 +116,15 @@ calendar=run("calendarDays('2028-02','2028-02-14',[],'2028-02-14')");assert.equa
 run("stats.dailyDates=['2026-09-29'];openArchive()");assert(get('archiveCalendar').children.length>=30);assert.equal(get('archivePrevBtn').disabled,true);
 get('archiveCalendar').children.find(b=>b.attributes?.['aria-label']==='2026-09-29, completed').onclick();assert.equal(get('archiveDate').value,'2026-09-29');assert(get('archiveStatus').textContent.includes('completed — replay'));
 console.log('PASS: deduction hints agree with unique 6×6/10×10 solutions despite arbitrary Xs; daily calendar marks completion, selection, launch bounds, future dates, and leap years.');
+assert.equal(run('BONUS.length'),12);
+for(let i=0;i<12;i++){
+ run(`bonusIndex=${i};bonusChoice=null;bonusSubmitted=false;showBonus()`);
+ assert(get('bonusQuestion').textContent.length>40);assert(get('bonusTopic').textContent);
+ const correct=run(`BONUS[${i}].correct`);
+ get('bonusAnswers').children.find(b=>+b.dataset.choice===correct).onclick();
+ assert(get('playAgainBtn').disabled);get('confirmBonusBtn').onclick();
+ assert(get('bonusFeedback').textContent.startsWith('Correct. '));assert(!get('playAgainBtn').disabled);
+ assert.equal(get('bonusSource').hidden,i>=10);
+}
+const legacyQuiz=context.window.NurseDokuProgress.snapshot();delete legacyQuiz.game.bonusVersion;legacyQuiz.game.bonusChoice=0;legacyQuiz.game.bonusSubmitted=true;context.window.NurseDokuProgress.apply(legacyQuiz,null);assert.equal(run('bonusSubmitted'),false);assert.equal(run('bonusChoice'),null);
+console.log('PASS: all 12 NCLEX-style items support choice/confirmation, topic/rationale/source display, calculation sources stay hidden, and old-bank answers cannot apply to new questions.');

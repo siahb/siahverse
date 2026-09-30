@@ -33,7 +33,7 @@ Difficulty is an automated heuristic: Easy resolves with row/column/zone singles
 
 - [ ] Test gestures and sound on physical iPhones, including VoiceOver
 - [x] Explain direct deductions and care-zone elimination hints; label deeper solution reveals honestly
-- [ ] Expand original, source-reviewed nursing questions by specialty
+- [x] Replace the initial hand-hygiene set with 12 original NCLEX-style questions, clinical source links, and calculation rationales
 - [ ] Specialty modes with actual question/content differences
 - [ ] Progression map and unlockable palettes
 - [x] Daily calendar with completed-day markers, date selection, and month navigation

@@ -36,6 +36,7 @@ function generatePuzzle(n,seed) {
   return copy(n===8?{"regions":[[2,2,2,2,2,2,2,0],[2,2,1,2,2,2,2,3],[4,4,4,4,2,2,3,3],[5,5,4,4,2,4,3,3],[5,5,5,4,4,4,3,3],[5,5,5,5,4,4,4,4],[7,5,5,5,5,6,6,6],[7,5,5,5,5,6,6,6]],"solution":[7,2,4,6,3,1,5,0]}:LEVELS.find(p=>p.regions.length===n));
 }
 const SAVE_KEY = 'nursedoku-v2';
+const QUIZ_VERSION='nclex-2026-09-29';
 const $ = id => document.getElementById(id);
 const board = $('board');
 // Original synthesized effects; no audio downloads or autoplay.
@@ -130,7 +131,7 @@ const copy = value => JSON.parse(JSON.stringify(value));
 const time = () => elapsed + (runningSince === null ? 0 : Date.now() - runningSince);
 const format = ms => `${String(Math.floor(ms / 60000)).padStart(2,'0')}:${String(Math.floor(ms / 1000) % 60).padStart(2,'0')}`;
 function persist() {
-  try { progressStorage.setItem(SAVE_KEY, JSON.stringify({level,state,elapsed:time(),finished,gameKind,customPuzzle,dailyDate,strikes,lost,journeyVersion:2,bonusIndex,bonusChoice,bonusSubmitted})); } catch {}
+  try { progressStorage.setItem(SAVE_KEY, JSON.stringify({level,state,elapsed:time(),finished,gameKind,customPuzzle,dailyDate,strikes,lost,journeyVersion:2,bonusIndex,bonusChoice,bonusSubmitted,bonusVersion:QUIZ_VERSION})); } catch {}
   window.NurseDokuCloud?.changed();
 }
 function pause() { elapsed = time(); runningSince = null; persist(); }
@@ -353,6 +354,7 @@ try {
       strikes=Number.isInteger(saved.strikes)?Math.max(0,Math.min(3,saved.strikes)):0;
       lost=saved.lost===true&&strikes===3;
       bonusIndex=Number.isInteger(saved.bonusIndex)?saved.bonusIndex:null;bonusChoice=Number.isInteger(saved.bonusChoice)?saved.bonusChoice:null;bonusSubmitted=saved.bonusSubmitted===true;
+      if(saved.bonusVersion!==QUIZ_VERSION){bonusIndex=null;bonusChoice=null;bonusSubmitted=false;}
       finished=lost||(saved.finished===true && positions().length===size() && !conflicts().size);
     }
   }
@@ -395,22 +397,184 @@ const palettes={general:['#e9bd43','#9b7ad5','#acd68d','#d87579','#f5abc9','#53b
 function theme(name) { (palettes[name]||palettes.general).forEach((v,i)=>document.documentElement.style.setProperty('--r'+i,v));$('theme').value=palettes[name]?name:'general';try{localStorage.setItem('nursedoku-theme',$('theme').value);}catch{}}
 $('theme').addEventListener('change',()=>theme($('theme').value));
 try {theme(localStorage.getItem('nursedoku-theme'));}catch{}
+// Original NCLEX-style practice items; clinical sources reviewed September 29, 2026.
 const BONUS=[
- {q:'After patient care, the nurse’s hands are visibly soiled. Which action is best?',a:['Wash with soap and water','Use a dry towel only','Put on clean gloves without cleaning hands','Rinse with water only'],correct:0,why:'Visible soil requires handwashing with soap and water. Gloves do not replace hand hygiene.',source:'https://www.cdc.gov/clean-hands/hcp/clinical-safety/index.html'},
- {q:'The nurse removes gloves after patient care. What should happen next?',a:['Begin care of the next patient','Perform hand hygiene','Reuse the gloves if they look clean','Clean hands only after the shift'],correct:1,why:'Hand hygiene is needed after glove removal because hands may become contaminated.',source:'https://www.cdc.gov/clean-hands/hcp/clinical-safety/index.html'},
- {q:'For most routine clinical care when hands are not visibly soiled, which method does CDC prefer?',a:['Water alone','A dry paper towel','Alcohol-based hand sanitizer','Gloves instead of hand hygiene'],correct:2,why:'Alcohol-based hand sanitizer is preferred in most clinical situations when hands are not visibly soiled.',source:'https://www.cdc.gov/clean-hands/hcp/clinical-safety/index.html'},
- {q:'Which patients require Standard Precautions?',a:['Only patients with a positive culture','Only patients in isolation','Only hospitalized patients','All patients in all care settings'],correct:3,why:'Standard Precautions apply regardless of known infection status.',source:'https://www.cdc.gov/infection-control/hcp/core-practices/index.html'},
- {q:'A nurse expects blood to splash during a procedure. What protection should be included for the eyes, nose, and mouth?',a:['Gloves alone','Eye protection and a mask, or a face shield','A gown alone','No PPE if infection is unconfirmed'],correct:1,why:'Select face protection when splashes could expose mucous membranes.',source:'https://www.cdc.gov/infection-control/hcp/core-practices/index.html'},
- {q:'A syringe was used for one patient. Is changing the needle enough to use that syringe for another patient?',a:['Yes, if the needle is sterile','Yes, if no blood is visible','No; use a new syringe and needle','Yes, if both patients have the same diagnosis'],correct:2,why:'Needles and syringes are for one patient only.',source:'https://www.cdc.gov/infection-control/hcp/core-practices/index.html'},
- {q:'A reusable blood-pressure cuff will be used on another patient. What should the nurse do?',a:['Clean and disinfect it according to its instructions','Wipe it with a dry cloth only','Wait until the end of the shift','Assume it is clean if no dirt is visible'],correct:0,why:'Reusable equipment needs appropriate reprocessing between patients.',source:'https://www.cdc.gov/infection-control/hcp/core-practices/index.html'}
+ {
+  "topic": "Adult health · Take action",
+  "q": "An adult client who takes insulin is shaky and diaphoretic. Blood glucose is 54 mg/dL. The client is alert and can swallow safely. Which action should the nurse take first?",
+  "a": [
+   "Give 15–20 g of fast-acting carbohydrate",
+   "Administer the scheduled rapid-acting insulin",
+   "Wait for the next meal tray",
+   "Give a protein-only snack"
+  ],
+  "correct": 0,
+  "why": "Treat confirmed hypoglycemia promptly with fast-acting carbohydrate when swallowing is safe. Insulin would lower glucose further; waiting delays treatment, and protein alone does not raise glucose quickly.",
+  "source": "https://www.niddk.nih.gov/health-information/diabetes/overview/preventing-problems/low-blood-glucose-hypoglycemia",
+  "sourceLabel": "Read clinical source"
+ },
+ {
+  "topic": "Adult health · Evaluate outcomes",
+  "q": "A client received glucose tablets for hypoglycemia 15 minutes ago. Repeat blood glucose is 62 mg/dL, and the client remains alert and can swallow. What is the best next action?",
+  "a": [
+   "Document that treatment was successful",
+   "Give another 15–20 g of fast-acting carbohydrate and recheck in 15 minutes",
+   "Give the next insulin dose early",
+   "Wait one hour before repeating the glucose test"
+  ],
+  "correct": 1,
+  "why": "A glucose of 62 mg/dL remains low. Repeat the fast-acting carbohydrate treatment and reassess after 15 minutes. The first treatment did not yet correct the low glucose.",
+  "source": "https://www.niddk.nih.gov/health-information/diabetes/overview/preventing-problems/low-blood-glucose-hypoglycemia",
+  "sourceLabel": "Read clinical source"
+ },
+ {
+  "topic": "Emergency · Prioritize care",
+  "q": "The triage nurse receives four clients. Which client needs immediate evaluation?",
+  "a": [
+   "A client with a healed incision requesting dressing supplies",
+   "A client with unchanged knee pain for three months",
+   "A client with sudden facial droop and difficulty speaking that began 20 minutes ago",
+   "A client requesting a routine prescription renewal"
+  ],
+  "correct": 2,
+  "why": "Sudden facial weakness and speech changes suggest a stroke, a time-sensitive emergency. Activate the facility stroke response. The other presentations described do not show an acute threat.",
+  "source": "https://www.nhlbi.nih.gov/health/stroke",
+  "sourceLabel": "Read clinical source"
+ },
+ {
+  "topic": "Pharmacology · Recognize cues",
+  "q": "A client who received an opioid is difficult to awaken and has slow, shallow breathing. Which complication should the nurse suspect?",
+  "a": [
+   "Expected pain relief without a safety concern",
+   "Opioid-related respiratory depression",
+   "A harmless medication taste change",
+   "A therapeutic increase in alertness"
+  ],
+  "correct": 1,
+  "why": "Reduced responsiveness and slow breathing raise concern for opioid toxicity. The nurse should urgently assess and support breathing and activate emergency assistance rather than dismissing these findings.",
+  "source": "https://www.fda.gov/drugs/drug-safety-communications/fda-recommends-health-care-professionals-discuss-naloxone-all-patients-when-prescribing-opioid-pain",
+  "sourceLabel": "Read clinical source"
+ },
+ {
+  "topic": "Pharmacology · Antidotes",
+  "q": "Emergency help has been activated for a client with suspected opioid overdose. Which medication should the nurse anticipate administering per protocol to reverse opioid effects?",
+  "a": [
+   "Insulin",
+   "Naloxone",
+   "Acetaminophen",
+   "Furosemide"
+  ],
+  "correct": 1,
+  "why": "Naloxone reverses opioid overdose. It supports emergency treatment; emergency assistance and monitoring are still needed. The other listed medications do not reverse opioid effects.",
+  "source": "https://www.fda.gov/consumers/consumer-updates/access-naloxone-can-save-life-during-opioid-overdose",
+  "sourceLabel": "Read clinical source"
+ },
+ {
+  "topic": "Pediatrics · Prioritize care",
+  "q": "A child with asthma continues to have severe breathing difficulty after the prescribed reliever medicine. What should the nurse advise the caregiver to do?",
+  "a": [
+   "Wait until the next routine appointment",
+   "Stop all asthma medicines permanently",
+   "Seek emergency care now",
+   "Give cough syrup and reassess tomorrow"
+  ],
+  "correct": 2,
+  "why": "Severe symptoms or symptoms that persist after reliever treatment require urgent medical care. Waiting or substituting cough medicine delays assessment and treatment of compromised breathing.",
+  "source": "https://www.nhlbi.nih.gov/health/asthma/attacks",
+  "sourceLabel": "Read clinical source"
+ },
+ {
+  "topic": "Pediatrics · Teaching",
+  "q": "A toddler with diarrhea from food poisoning is alert and has been prescribed oral rehydration. Which caregiver statement shows understanding?",
+  "a": [
+   "I will use the oral rehydration solution as directed",
+   "I will withhold all liquids until diarrhea stops",
+   "I will start an adult antidiarrheal without asking the clinician",
+   "I will replace all fluids with soda"
+  ],
+  "correct": 0,
+  "why": "Oral rehydration solution helps replace fluid and electrolytes. Withholding fluids increases dehydration risk. Over-the-counter antidiarrheals can be unsafe for young children and require clinician guidance.",
+  "source": "https://www.niddk.nih.gov/health-information/digestive-diseases/food-poisoning/treatment",
+  "sourceLabel": "Read clinical source"
+ },
+ {
+  "topic": "Mental health · Assess safety",
+  "q": "A client says, “Everyone would be better off without me.” Which response best begins a suicide-risk assessment?",
+  "a": [
+   "You should not feel that way",
+   "Are you thinking about killing yourself?",
+   "Let us talk about something happier",
+   "You would never actually do that, right?"
+  ],
+  "correct": 1,
+  "why": "Ask directly and nonjudgmentally about suicide. Direct questioning helps identify risk and does not increase suicidal thoughts. Reassurance, changing the subject, or a leading question can prevent disclosure.",
+  "source": "https://www.nimh.nih.gov/health/publications/suicide-faq",
+  "sourceLabel": "Read clinical source"
+ },
+ {
+  "topic": "Oncology · Recognize risk",
+  "q": "A client receiving chemotherapy calls with a temperature of 101°F (38.3°C). Which instruction is most appropriate?",
+  "a": [
+   "Wait until the next clinic visit",
+   "Take a fever reducer and do not report it",
+   "Contact the oncology team immediately for urgent evaluation",
+   "Assume this is expected and continue usual activities"
+  ],
+  "correct": 2,
+  "why": "Fever during chemotherapy can signal an infection, especially when neutrophils are low. The client needs prompt evaluation. Suppressing or ignoring fever can delay identification of a serious infection.",
+  "source": "https://www.cancer.gov/about-cancer/treatment/side-effects/infection",
+  "sourceLabel": "Read clinical source"
+ },
+ {
+  "topic": "Emergency · Teaching",
+  "q": "During a follow-up call, a client reports new chest pressure, shortness of breath, and sweating at rest. Which instruction should the nurse give first?",
+  "a": [
+   "Drive to the clinic tomorrow",
+   "Call 911 now for emergency medical care",
+   "Wait to see whether symptoms resolve overnight",
+   "Schedule a routine laboratory appointment"
+  ],
+  "correct": 1,
+  "why": "This symptom combination can indicate a heart attack. Emergency medical services can begin evaluation and treatment. Do not delay care or advise the symptomatic client to drive.",
+  "source": "https://www.nhlbi.nih.gov/health/heart-attack/symptoms",
+  "sourceLabel": "Read clinical source"
+ },
+ {
+  "topic": "Dosage calculation · IV fluids",
+  "q": "The prescription is to infuse 1,000 mL of IV fluid over 8 hours. At what rate should the nurse set the infusion pump?",
+  "a": [
+   "80 mL/hr",
+   "100 mL/hr",
+   "125 mL/hr",
+   "250 mL/hr"
+  ],
+  "correct": 2,
+  "why": "Rate = volume ÷ time: 1,000 mL ÷ 8 hr = 125 mL/hr. Check that the pump unit is mL/hr.",
+  "source": null,
+  "sourceLabel": "Read clinical source"
+ },
+ {
+  "topic": "Pediatrics · Dosage calculation",
+  "q": "A child weighs 20 kg. The prescription is acetaminophen 15 mg/kg PO for one dose. The bottle contains 160 mg/5 mL. How many mL should the nurse give? Round only the final answer to the nearest tenth.",
+  "a": [
+   "3.0 mL",
+   "6.3 mL",
+   "9.4 mL",
+   "15.0 mL"
+  ],
+  "correct": 2,
+  "why": "Ordered dose: 20 kg × 15 mg/kg = 300 mg. Volume: 300 mg × 5 mL ÷ 160 mg = 9.375 mL. Rounded to the nearest tenth: 9.4 mL. The dose is supplied by this question’s prescription.",
+  "source": null,
+  "sourceLabel": "Read clinical source"
+ }
 ];
 function showBonus() {
  const index=Number.isInteger(bonusIndex)&&bonusIndex>=0&&bonusIndex<BONUS.length?bonusIndex:(stats.wins-1+BONUS.length)%BONUS.length;
  bonusIndex=index;const item=BONUS[index];
  if(!Number.isInteger(bonusChoice)||bonusChoice<0||bonusChoice>=item.a.length){bonusChoice=null;bonusSubmitted=false;}
- $('bonusQuestion').textContent=item.q;$('bonusAnswers').innerHTML='';$('bonusFeedback').textContent='';
+ $('bonusTopic').textContent=item.topic;$('bonusQuestion').textContent=item.q;$('bonusAnswers').innerHTML='';$('bonusFeedback').textContent='';
  $('bonusFeedback').className='';$('shareStatus').textContent='';$('bonusSource').href=item.source;
- $('bonusSource').hidden=!bonusSubmitted;$('bonusSource').textContent='Read the CDC rationale';
+ $('bonusSource').hidden=!bonusSubmitted||!item.source;$('bonusSource').textContent=item.sourceLabel||'Read clinical source';
  const choices=item.a.map((answer,i)=>({answer,i}));
  for(let i=choices.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[choices[i],choices[j]]=[choices[j],choices[i]];}
  function updateSelection(){
@@ -424,7 +588,7 @@ function showBonus() {
   const correct=bonusChoice===item.correct;
   $('bonusFeedback').className=correct?'feedback-correct':'feedback-review';
   $('bonusFeedback').textContent=(correct?'Correct. ':'Review: '+item.a[item.correct]+'. ')+item.why;
-  $('bonusSource').hidden=false;
+  $('bonusSource').hidden=!item.source;
  }
  choices.forEach(({answer,i})=>{
   const button=document.createElement('button');button.type='button';button.className='secondary-btn bonus-answer';button.textContent=answer;button.dataset.choice=i;
@@ -529,7 +693,7 @@ $('newAfterLossBtn').addEventListener('click',()=>{$('lossDialog').close();reset
 // Narrow bridge used by the account controller. Cloud data never contains credentials.
 window.NurseDokuProgress={
  owner(){return progressOwner;},
- snapshot(){return copy({version:2,game:{level,state,elapsed:time(),finished,gameKind,customPuzzle,dailyDate,strikes,lost,journeyVersion:2,bonusIndex,bonusChoice,bonusSubmitted},stats,completed:completedShifts});},
+ snapshot(){return copy({version:2,game:{level,state,elapsed:time(),finished,gameKind,customPuzzle,dailyDate,strikes,lost,journeyVersion:2,bonusIndex,bonusChoice,bonusSubmitted,bonusVersion:QUIZ_VERSION},stats,completed:completedShifts});},
  readOwner(owner){
   const read=key=>{try{return JSON.parse(localStorage.getItem(owner?'nursedoku-user-'+owner+':'+key:key));}catch{return null;}};
   return {version:2,game:read(SAVE_KEY),stats:read('nursedoku-stats'),completed:read('nursedoku-journey-v2')||[]};
@@ -548,6 +712,7 @@ window.NurseDokuProgress={
   state=nextState;elapsed=Number.isFinite(g.elapsed)?Math.max(0,g.elapsed):0;runningSince=null;
   strikes=Number.isInteger(g.strikes)?Math.max(0,Math.min(3,g.strikes)):0;
   bonusIndex=Number.isInteger(g.bonusIndex)?g.bonusIndex:null;bonusChoice=Number.isInteger(g.bonusChoice)?g.bonusChoice:null;bonusSubmitted=g.bonusSubmitted===true;
+  if(g.bonusVersion!==QUIZ_VERSION){bonusIndex=null;bonusChoice=null;bonusSubmitted=false;}
   clearTimeout(winTimeout);winSequence++;
   lost=g.lost===true&&strikes===3;finished=lost||(g.finished===true&&positions().length===n&&!conflicts().size);
   history=[];hintCell=null;
@@ -591,7 +756,7 @@ $('menuBtn').addEventListener('click',returnToMenu);
 for(const [id,kind] of [['menuLearnBtn','journey'],['menuDailyBtn','daily'],['menuPracticeBtn','practice']])$(id).addEventListener('click',()=>{if(switchGame(kind)!==false)enterGame();});
 $('winDialog').addEventListener('cancel',event=>{if(!bonusSubmitted)event.preventDefault();});
 $('menuPreferences').append(document.querySelector('.preferences'));
-const UPDATE_VERSION='2026-09-29-hints-calendar';
+const UPDATE_VERSION='2026-09-29-nclex-guidance';
 let changelogShown=false;
 function markChangelogSeen(){try{localStorage.setItem('nursedoku-changelog',UPDATE_VERSION);}catch{}changelogShown=true;}
 function openChangelog(){pause();$('changelogDialog').showModal();}

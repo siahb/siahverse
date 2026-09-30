@@ -13,6 +13,7 @@ Josiah Borja's personal portal for nursing study tools, productivity, cloud serv
 | [Med-Surg Exam 1](https://siahverse.cc/medsurg1/) | App shell; question bank awaiting course materials |
 | [NurseDoku](https://siahverse.cc/nursedoku/) | Colorful nursing logic puzzles with a question after each completed shift |
 | [Tasks](https://todo.siahverse.cc) | Tasks, routines, priorities, and planning |
+| [NextSet](https://nextset.siahverse.cc) | PPL at Home workouts, set logging, rest timer, and plate calculator; also accessible through `/nextset` |
 | [SiahCloud](https://vault.siahverse.cc) | Personal cloud portal |
 
 The homepage also links to Proxmox, Home Assistant, and system status services.

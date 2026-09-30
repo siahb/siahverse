@@ -767,6 +767,12 @@ export async function onRequest(context) {
   const {request,env}=context;
   const url=new URL(request.url), path=url.pathname;
 
+  if ((url.hostname==="siahverse.cc" || url.hostname==="www.siahverse.cc") && (path==="/nextset" || path==="/nextset/")) {
+    const destination=new URL("https://nextset.siahverse.cc/");
+    destination.search=url.search;
+    return Response.redirect(destination,308);
+  }
+
   if (!env.DB) return htmlResponse("<h1>Siahverse configuration error</h1><p>Cloudflare D1 binding <strong>DB</strong> is missing.</p>",500);
 
   const host=url.hostname.toLowerCase();

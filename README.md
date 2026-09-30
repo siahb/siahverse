@@ -1,69 +1,98 @@
+# Siahverse
 
-# 🌌 Siahverse Portal
+Josiah Borja's personal portal for nursing study tools, productivity, cloud services, and homelab access.
 
-A sleek, dark-themed tech portal built by Siah — powered by Proxmox and glowing with cosmic vibes.
+**Website:** [siahverse.cc](https://siahverse.cc)
 
-## 🔗 Live Site
+## Explore
 
-> [https://siahverse.cc](https://siahverse.cc)
+| Area | Purpose |
+| --- | --- |
+| [Nursing Resources](https://siahverse.cc/nursing/) | Hub for nursing practice apps and study tools |
+| [Pharmacology Exam 1](https://siahverse.cc/pharm1/) | Practice and exam modes, MC/SATA/DDC questions, hints, review, and saved sessions |
+| [Med-Surg Exam 1](https://siahverse.cc/medsurg1/) | App shell; question bank awaiting course materials |
+| [NurseDoku](https://siahverse.cc/nursedoku/) | Colorful nursing logic puzzles with a question after each completed shift |
+| [SiahDo](https://todo.siahverse.cc) | Tasks, routines, priorities, and planning |
+| [SiahCloud](https://vault.siahverse.cc) | Personal cloud portal |
 
-## 📁 File Structure
+The homepage also links to Proxmox, Home Assistant, and system status services.
 
+## Features
+
+- Responsive portal with separate spaces for each tool.
+- Light/dark theme switching and an animated star background.
+- Siahbot interactions and a keyboard shortcut to the admin area.
+- Nursing access requests and an admin center for accounts and sessions.
+- Cloudflare Pages Functions with D1-backed access and task data.
+- A custom 404 page and web app manifests.
+
+### NurseDoku
+
+NurseDoku starts at a main menu and includes guided training, daily puzzles, practice, 10×10 boards, colorful care zones, sounds, and win celebrations.
+
+Tap to mark Xs, swipe to add or erase several Xs, and double-tap to place an RN. Every incorrect RN square costs a strike; three strikes end the attempt. Winning pauses on the completed board for two seconds before a required nursing question with answer confirmation and a rationale. The menu and results support sharing.
+
+Private Supabase cloud-save code is implemented. Public registration remains disabled pending verified email delivery and end-to-end signup/recovery testing.
+
+See [NurseDoku documentation](nursedoku/README.md), its [roadmap](nursedoku/ROADMAP.md), and the [standalone repository](https://github.com/siahb/nursedoku).
+
+## Repository layout
+
+| Path | Purpose |
+| --- | --- |
+| `index.html`, `main.css`, `toggle-theme.js` | Portal homepage and theme |
+| `nursing/` | Nursing resource hub |
+| `pharm1/` | Pharmacology practice app |
+| `medsurg1/` | Med-Surg app shell |
+| `nursedoku/` | NurseDoku app, account integration, and checks |
+| `public/` | SiahDo frontend served on its subdomain |
+| `functions/[[path]].js` | Pages Function routing, nursing access, admin center, and SiahDo API |
+| `server.mjs` | Separate legacy Express task backend |
+| `wordle/` | Additional game files |
+| `404.html`, `favicon.svg`, `manifest.json`, `_headers` | Site support files |
+| `secret.html`, `easter-egg.js` | Legacy extra page and interaction script |
+
+The current homepage uses `main.css`; it does not use the old README's `style.css` path. Its inline keyboard shortcut opens `/admin/`.
+
+## Local preview
+
+The static frontend has no build step:
+
+```sh
+git clone https://github.com/siahb/siahverse.git
+cd siahverse
+python3 -m http.server 8080
 ```
-📦 Root
-├── assets/              # Images, media, and other static files
-├── 404.html             # Custom 404 Not Found page
-├── README.md            # Project documentation
-├── _headers             # Netlify custom headers (e.g., CORS, HSTS)
-├── easter-egg.js        # Konami Code listener and hidden interactions
-├── favicon.svg          # Site favicon
-├── index.html           # Main HTML landing page
-├── manifest.json        # PWA support file
-├── secret.html          # Hidden page unlocked by the Konami Code
-├── style.css            # CSS styles (dark mode, layout, etc.)
-├── toggle-theme.js      # JavaScript to toggle light/dark mode
+
+Open `http://localhost:8080`. A plain static server previews pages but does not run Cloudflare Functions, D1 access controls, or task API routes.
+
+NurseDoku's checks can be run with Node.js, for example:
+
+```sh
+node nursedoku/tests/check-state.cjs
+node nursedoku/tests/check-offline.cjs
+node nursedoku/tests/check-accounts.cjs
 ```
 
-## 🛠 Features
+## Hosting and backend configuration
 
-- 🌓 Toggle between dark and light mode (`toggle-theme.js`)
-- 🌠 Animated star background using `<canvas>`
-- 🤖 Siahbot hover and click Easter egg messages (`#siahbot`)
-- 🎮 Konami Code listener (`easter-egg.js`) to unlock `secret.html`
-- 🛡 Custom `_headers` for security/performance (Netlify)
-- 📱 Fully responsive layout for mobile + desktop
-- 🚫 Clean and custom 404 page
-- 📦 `manifest.json` for optional Progressive Web App support
+The site targets Cloudflare Pages. Serve the repository root as the static site and deploy `functions/` for server-side routes.
 
-## ✅ To-Do
+The Pages Function requires:
+- A Cloudflare D1 binding named `DB`.
+- The nursing access database tables used by the function, including `credentials`, `sessions`, and `access_log`.
+- A server-side `SIAHDO_ADMIN_PASSWORD` secret for SiahDo changes.
 
-- [ ] Add favicon variants for different platforms
-- [ ] Improve accessibility (ARIA roles, landmarks)
-- [ ] Add Open Graph preview image (`assets/preview.png`)
+The function contains routing for `todo.siahverse.cc` and `nursing.siahverse.cc`; DNS/custom-domain configuration is managed outside the source files. Nursing study apps and the admin center require the appropriate session. The nursing hub and NurseDoku are public routes.
 
-## 📸 Preview
+SiahDo's Cloudflare backend includes task storage in D1 and an admin migration action for importing the homelab list. Source support alone does not establish that a domain cutover or data migration has been completed.
 
-> Coming soon...
+The separate [siah-todo repository](https://github.com/siahb/siah-todo) retains its SSH/rsync homelab frontend deployment workflow. Its `public/` copy and this repository's `public/` copy must be maintained deliberately.
 
-## 🚀 Deployment
+## Development notes
 
-This site is optimized for static hosting platforms like **Netlify**, **Vercel**, or **GitHub Pages**.
+Keep service credentials in backend environment secrets. NurseDoku's public Supabase configuration belongs in `nursedoku/account-config.js`; privileged credentials and SMTP passwords do not belong in frontend files.
 
-### Deploy to Netlify:
+Check the relevant app's README before editing its assets, storage format, or deployment configuration.
 
-1. Push your project to GitHub.
-2. Go to [Netlify](https://www.netlify.com/), connect your repo.
-3. Set build settings (use `/` as publish directory).
-4. Done.
-
-### Netlify Files
-
-- `_headers` → Controls security headers and caching.
-- `_redirects` → *(optional)* For single-page app fallback or custom routes.
-
-## 🙌 Author
-
-Made with ❤️ by Siah
-Check out the live portal: [https://siahverse.cc](https://siahverse.cc)
-
----
+Made with Siahverse by Josiah Borja.

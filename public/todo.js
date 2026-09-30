@@ -1550,6 +1550,13 @@ function disableDrag() {
   }
 }
   // Init
+  window.SiahverseTasksAccountChanged=()=>{
+    todosData=[];deletedTodos=[];repeatUndos=[];pendingDeletion=null;selectMode=false;
+    todoInput.value='';searchInput.value='';
+    document.querySelectorAll('.modal').forEach(modal=>modal.style.display='none');
+    disableDrag();renderTodos();renderDone();updateAdminUI();
+    void loadTodosFromServer();
+  };
   toggleDragBtn.textContent = '↕️Reorder';
   updateViewTitle();
   loadTodosFromServer();

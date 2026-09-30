@@ -32,14 +32,16 @@ window.fetch=(input,init={})=>{
 };
 window.SiahverseAccount.auth.onAuthStateChange((event,session)=>{
   const id=session?.user.id||null;
-  if((window.SiahverseTaskUser?.id||null)!==id){generation++;revision=null;}
+  const changed=(window.SiahverseTaskUser?.id||null)!==id;
+  if(changed){generation++;revision=null;}
   window.SiahverseTaskUser=session?.user||null;
   const status=document.getElementById('task-account-status');
   if(status)status.textContent=session?'Signed in as '+session.user.email:'Sign in with your Siahverse account to use your private task list.';
-  if(typeof window.updateAdminUI==='function')window.updateAdminUI();
-  if(typeof window.loadTodosFromServer==='function')void window.loadTodosFromServer();
+  if(changed&&typeof window.SiahverseTasksAccountChanged==='function')window.SiahverseTasksAccountChanged();
 });
 document.addEventListener('DOMContentLoaded',()=>{
+  const status=document.getElementById('task-account-status');
+  if(window.SiahverseTaskUser!==undefined)status.textContent=window.SiahverseTaskUser?'Signed in as '+window.SiahverseTaskUser.email:'Sign in with your Siahverse account to use your private task list.';
   document.getElementById('import-original-tasks').onclick=()=>{
     if(!window.SiahverseTaskUser)return location.assign('https://siahverse.cc/account/?app=tasks');
     document.getElementById('admin-modal').style.display='block';

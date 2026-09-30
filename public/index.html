@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <script src="/theme.js?v=20260930-sync"></script>
+  <script src="/account-client.js?v=20260930-account"></script>
+  <script src="/task-account.js?v=20260930-account"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="color-scheme" content="dark light">
@@ -28,8 +30,8 @@
       </div>
 
       <div class="header-actions">
-        <button id="enter-password" class="ghost-btn" type="button">Unlock</button>
-        <button id="logout" class="ghost-btn" type="button">Lock</button>
+        <button id="enter-password" class="ghost-btn" type="button">Sign in</button>
+        <button id="logout" class="ghost-btn" type="button">Sign out</button>
         <button id="help-btn" class="icon-btn" type="button" aria-label="Help" title="Help">?</button>
         <div id="toggle-theme">
           <label class="theme-switch" aria-label="Toggle color theme">
@@ -45,6 +47,8 @@
         <div class="eyebrow">To-do list</div>
         <h1>Tasks</h1>
         <p>Add a task, set a due date, and check it off when you’re done.</p>
+        <p id="task-account-status" role="status">Loading your account…</p>
+        <p><button id="import-original-tasks" class="ghost-btn" type="button">Copy original tasks to my account</button> <a href="/?legacy=1">Original task list</a></p>
       </div>
 
       <div class="hero-badge" aria-hidden="true">
@@ -223,12 +227,12 @@
     <div class="modal-content auth-modal">
       <div class="modal-icon">🔐</div>
       <div class="modal-kicker">Editing</div>
-      <h2 id="admin-title">Enable editing</h2>
-      <p>Enter your admin password to add, edit, reorder, or delete tasks.</p>
+      <h2 id="admin-title">Original task password</h2>
+      <p>Enter the original task password to copy that list into your empty account list. The original list stays intact.</p>
       <input type="password" id="password-input" placeholder="Password" autocomplete="current-password">
       <div class="modal-buttons">
         <button id="cancel-btn" class="secondary-btn" type="button">Cancel</button>
-        <button id="login-btn" class="primary-btn" type="button">Unlock</button>
+        <button id="login-btn" class="primary-btn" type="button">Copy tasks</button>
       </div>
     </div>
   </div>
@@ -247,7 +251,7 @@
         <div class="feature-grid">
           <div class="feature-card">
             <h3>Add & organize</h3>
-            <p>Unlock editing, add a task, then attach tags, priority, a due date, or a repeat schedule.</p>
+            <p>Sign in with your Siahverse account, add a task, then attach tags, priority, a due date, or a repeat schedule.</p>
           </div>
           <div class="feature-card">
             <h3>Focus views</h3>
@@ -286,6 +290,6 @@
     </div>
   </div>
 
-  <script src="todo.js?v=20260930-sync"></script>
+  <script src="todo.js?v=20260930-account"></script>
 </body>
 </html>

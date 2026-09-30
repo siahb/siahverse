@@ -55,15 +55,15 @@ let selectMode = false;
 
 // Admin check helper
 function requireAdmin(operation = "perform this action") {
-  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
-    alert(`❌ Admin login required to ${operation}`);
+  if (!window.canEditTasks()) {
+    alert(`❌ Sign in required to ${operation}`);
     return false;
   }
   return true;
 }
 
 function updateInputStates() {
-  const isLoggedIn = !!localStorage.getItem(ADMIN_PASSWORD_KEY);
+  const isLoggedIn = window.canEditTasks();
 
   // Disable/enable related input fields
 const relatedInputs = [tagInput, dueInput, prioSelect, repeatSelect, intervalInput];
@@ -251,8 +251,8 @@ document.addEventListener("DOMContentLoaded", () => {
 // Clean search functions - no searchWrap dependency
 function showSearch() {
   // Check if user is logged in before allowing search
-  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
-    alert("❌ Admin login required to search tasks");
+  if (!window.canEditTasks()) {
+    alert("❌ Sign in required to search tasks");
     return;
   }
   
@@ -303,8 +303,8 @@ document.addEventListener('keydown', (e) => {
 
 // Add the Select Mode toggle function
 function toggleSelectMode() {
-   if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
-    alert("❌ Admin login required to select tasks");
+   if (!window.canEditTasks()) {
+    alert("❌ Sign in required to select tasks");
     return;
   }
   
@@ -399,8 +399,8 @@ searchToggle?.addEventListener('click', (e) => {
   e.stopPropagation();
   
   // Check if user is logged in
-  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
-    alert("❌ Admin login required to search tasks");
+  if (!window.canEditTasks()) {
+    alert("❌ Sign in required to search tasks");
     return;
   }
   
@@ -415,8 +415,8 @@ document.addEventListener('keydown', (e) => {
   e.preventDefault();
   
   // Check if user is logged in
-  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
-    alert("❌ Admin login required to search tasks");
+  if (!window.canEditTasks()) {
+    alert("❌ Sign in required to search tasks");
     return;
   }
   
@@ -472,8 +472,8 @@ document.addEventListener('keydown', (e) => {
     e.preventDefault();
     
     // Check if user is logged in
-    if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
-      alert("❌ Admin login required to search tasks");
+    if (!window.canEditTasks()) {
+      alert("❌ Sign in required to search tasks");
       return;
     }
     
@@ -484,7 +484,7 @@ document.addEventListener('keydown', (e) => {
   // Hide action buttons for non-admin users in the UI
 function updateAdminUI() {
   const pw = localStorage.getItem(ADMIN_PASSWORD_KEY);
-  const isLoggedIn = !!pw;
+  const isLoggedIn = window.canEditTasks();
 
   // Existing code
   document.getElementById('enter-password').style.display = isLoggedIn ? 'none' : 'inline-block';
@@ -506,12 +506,13 @@ function updateAdminUI() {
   // Shared theme controller owns appearance.
 
   // Admin
-  enterPwBtn.addEventListener('click', () => adminModal.style.display = 'block');
+  enterPwBtn.addEventListener('click', () => { if(!window.SiahverseLegacyTasks) return location.assign('https://siahverse.cc/account/?app=tasks'); adminModal.style.display = 'block'; });
   cancelBtn.addEventListener('click', () => adminModal.style.display = 'none');
   loginBtn.addEventListener('click', async () => {
   const pw = passwordInput.value.trim();
   if (!pw) return alert("Password cannot be empty.");
 
+  if(!window.SiahverseLegacyTasks){ try{ const result=await window.importOriginalTasks(pw); passwordInput.value=''; adminModal.style.display='none'; await loadTodosFromServer(); alert(result.count+' tasks copied.'); }catch(error){alert(error.message);} return; }
   const res = await fetch('/todos/auth-check', {
     method: 'POST',
     headers: {
@@ -531,12 +532,13 @@ function updateAdminUI() {
   }
 });
 
-  logoutBtn.addEventListener('click', () => {
+  logoutBtn.addEventListener('click', async () => {
+    if(!window.SiahverseLegacyTasks){const {error}=await window.SiahverseAccount.auth.signOut();if(error)alert(error.message);return;}
     localStorage.removeItem(ADMIN_PASSWORD_KEY);
     alert("Logged out.");
     updateAdminUI();
   });
- if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
+ if (!window.canEditTasks()) {
   updateInputStates(); // This now handles both task input and search
 }
 
@@ -544,7 +546,9 @@ function updateAdminUI() {
 async function loadTodosFromServer() {
   try {
     const res = await fetch('/todos');
-    todosData = await res.json();
+    const loaded = await res.json();
+    if(!Array.isArray(loaded))throw Error();
+    todosData = loaded;
 
     // Normalize any overdue repeating tasks client-side
     let changed = false;
@@ -554,7 +558,7 @@ async function loadTodosFromServer() {
         if (rollForwardIfMissed(t)) {
           // persist normalization
           changed = true;
-          if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) continue;
+          if (!window.canEditTasks()) continue;
           await fetch(`/todos/${i}`, {
             method: 'PATCH',
             headers: {
@@ -571,7 +575,7 @@ async function loadTodosFromServer() {
     renderDone();
     updateButtonVisibility();
   } catch {
-    alert("Failed to load tasks.");
+    alert("Tasks could not load. Check your connection and try again.");
   }
 }
 
@@ -1074,8 +1078,8 @@ window.editTodo = function(index) {
 // === Add New Todo (reusable) ===
 async function addNewTodo() {
   // Better admin check with early return
-  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
-    alert("❌ Admin login required to add tasks");
+  if (!window.canEditTasks()) {
+    alert("❌ Sign in required to add tasks");
     return;
   }
   
@@ -1161,8 +1165,8 @@ todoInput.addEventListener('keydown', (e) => {
     e.preventDefault();
     
     // Check if user is logged in
-    if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
-      alert("❌ Admin login required to add tasks");
+    if (!window.canEditTasks()) {
+      alert("❌ Sign in required to add tasks");
       return;
     }
     
@@ -1181,8 +1185,8 @@ function bindEnterToAdd(el) {
       if (document.activeElement === searchInput) return;
       
       // Check if user is logged in
-      if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
-        alert("❌ Admin login required to add tasks");
+      if (!window.canEditTasks()) {
+        alert("❌ Sign in required to add tasks");
         return;
       }
       
@@ -1445,7 +1449,7 @@ toggleDragBtn.addEventListener('click', () => {
 });
 
 document.getElementById('save-order')?.addEventListener('click', async () => {
-  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) return alert("❌ Admin login required to modify tasks order");
+  if (!window.canEditTasks()) return alert("❌ Sign in required to modify tasks order");
 
   // Rebuild todosData from the current DOM order (not relying on previous state)
   const listItems = document.querySelectorAll('#todo-list li');
@@ -1626,8 +1630,8 @@ function getDeleteModal() {
 
 // Show delete confirmation for a single task
 function showDeleteConfirmation(index, taskText = null) {
-  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
-    alert("❌ Admin login required to delete tasks");
+  if (!window.canEditTasks()) {
+    alert("❌ Sign in required to delete tasks");
     return;
   }
   
@@ -1670,8 +1674,8 @@ function showDeleteConfirmation(index, taskText = null) {
 
 // Show delete confirmation for multiple selected tasks
 function showBulkDeleteConfirmation() {
-  if (!localStorage.getItem(ADMIN_PASSWORD_KEY)) {
-    alert("❌ Admin login required to delete tasks");
+  if (!window.canEditTasks()) {
+    alert("❌ Sign in required to delete tasks");
     return;
   }
   

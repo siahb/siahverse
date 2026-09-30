@@ -1,3 +1,5 @@
+import {accountApi} from '../server/account-api.js';
+import {accountTasks} from '../server/account-tasks.js';
 const COOKIE_NAME = "sv_nursing_session";
 const DEVICE_COOKIE_NAME = "sv_nursing_device";
 const DEVICE_TTL_SECONDS = 60 * 60 * 24 * 365;
@@ -766,6 +768,8 @@ async function adminAction(context,session) {
 export async function onRequest(context) {
   const {request,env}=context;
   const url=new URL(request.url), path=url.pathname;
+  if(path.startsWith('/api/account/'))return accountApi(context,path.slice('/api/account/'.length));
+  if(path==='/account-todos'||path.startsWith('/account-todos/'))return accountTasks(context,path);
 
   if ((url.hostname==="siahverse.cc" || url.hostname==="www.siahverse.cc") && (path==="/nextset" || path==="/nextset/")) {
     const destination=new URL("https://nextset.siahverse.cc/");

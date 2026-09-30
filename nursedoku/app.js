@@ -80,6 +80,7 @@ function sound(kind) {
       tone(523,0,.12,.04,640);tone(784,.065,.17,.028,1047);
     }else if(kind==='erase')tone(430,0,.06,.02,260);
     else if(kind==='hint'){tone(659,0,.12,.03);tone(988,.09,.18,.025);}
+    else if(kind==='zone'){tone(659,0,.10,.025);tone(784,.07,.14,.025);tone(1047,.14,.18,.02);}
     else if(kind==='win') [523,659,784,1047,1319].forEach((f,i)=>tone(f,i*.10,.28,.04));
     else if(kind==='strike'){tone(250,0,.12,.03,160,'triangle');}
     else if(kind==='undo')tone(520,0,.08,.025,330);
@@ -125,6 +126,7 @@ try {const current=progressStorage.getItem('nursedoku-journey-v2');const x=JSON.
 let level = 0, state, history = [], elapsed = 0, runningSince = null, finished = false, strikes=0, lost=false;
 let inGame=false,winTimeout=null,winSequence=0,bonusIndex=null,bonusChoice=null,bonusSubmitted=false;
 let gesture = null, lastTap = null, pendingTap = null, hintCell = null;
+let clearedZones=new Set(),zoneClearTimeout=null;
 const puzzle = () => customPuzzle || LEVELS[level];
 const size = () => puzzle().regions.length;
 const blank = () => Array.from({length:size()}, () => Array(size()).fill(''));
@@ -174,6 +176,7 @@ function render() {
   if(!progress) {progress=document.createElement('div');progress.id='zoneProgress';progress.className='zone-progress';board.before(progress);}
   progress.innerHTML='';
   for(let z=0;z<size();z++) { const dot=document.createElement('span');dot.className='zone-dot';dot.style.background=`var(--r${z})`;dot.dataset.zone=z;progress.append(dot); }
+  clearedZones=completedCareZones();clearTimeout(zoneClearTimeout);$('zoneClearMessage').hidden=true;
   updatePuzzleInfo();paint();
 }
 function paint() {
@@ -196,11 +199,31 @@ function paint() {
     dot.setAttribute('aria-label',`Care zone ${+dot.dataset.zone+1}: ${count} RNs`);
   });
   $('undoBtn').disabled=!history.length||finished;
+  updateZoneClears();
   if(!finished&&strikes===0&&gameKind==='journey'&&level===0&&!ps.length) {
     const col=puzzle().solution[0];
     board.children[col].classList.add('hint');
     tell('Start with the single gold square. Double-tap it to place your first RN.');
   }
+}
+function completedCareZones(){
+ const result=new Set();
+ for(let z=0;z<size();z++){
+  const cells=[];puzzle().regions.forEach((row,r)=>row.forEach((v,c)=>{if(v===z)cells.push({r,c,mark:state[r][c]});}));
+  const rns=cells.filter(x=>x.mark==='rn');
+  if(rns.length===1&&puzzle().solution[rns[0].r]===rns[0].c&&cells.every(x=>x.mark==='rn'||x.mark==='x'))result.add(z);
+ }
+ return result;
+}
+function updateZoneClears(){
+ const now=completedCareZones(),fresh=[...now].filter(z=>!clearedZones.has(z));clearedZones=now;
+ if(!fresh.length)return;
+ for(const cell of board.children)if(fresh.includes(puzzle().regions[+cell.dataset.row][+cell.dataset.col])){
+  cell.classList.add('zone-cleared');setTimeout(()=>cell.classList.remove?.('zone-cleared'),700);
+ }
+ const message=$('zoneClearMessage');message.textContent=fresh.length===1?`Care zone ${fresh[0]+1} cleared!`:`${fresh.length} care zones cleared!`;
+ message.hidden=false;clearTimeout(zoneClearTimeout);sound('zone');
+ zoneClearTimeout=setTimeout(()=>{message.hidden=true;},1800);
 }
 function afterMove() {
   hintCell=null; paint();
@@ -239,9 +262,7 @@ function cellAt(x,y) {
   return cell&&board.contains(cell)?[+cell.dataset.row,+cell.dataset.col]:null;
 }
 function clearTap() { clearTimeout(pendingTap);pendingTap=null;lastTap=null; }
-function flushTap() {
-  if(lastTap) { const {r,c}=lastTap; clearTap(); toggle(r,c,'x'); }
-}
+function flushTap() { clearTap(); }
 function startDrag() {
   flushTap();remember();gesture.drag=true;gesture.seen=new Set();
   gesture.erase=state[gesture.start[0]][gesture.start[1]]==='x';
@@ -284,10 +305,11 @@ function endPointer(e,canceled=false) {
   if(!release||release[0]!==g.start[0]||release[1]!==g.start[1])return;
   const [r,c]=g.start;
   if(lastTap&&lastTap.r===r&&lastTap.c===c&&Date.now()-lastTap.at<360) {
-    clearTap();toggle(r,c,'rn');
+    const first=lastTap;clearTap();state=first.before;history.length=first.historyLength;
+    toggle(r,c,'rn');
   } else {
-    flushTap();lastTap={r,c,at:Date.now()};
-    pendingTap=setTimeout(flushTap,360);
+    flushTap();const before=copy(state),historyLength=history.length;toggle(r,c,'x');
+    lastTap={r,c,at:Date.now(),before,historyLength};
   }
 }
 board.addEventListener('pointerup',e=>endPointer(e));
@@ -394,7 +416,7 @@ function switchGame(kind) {
 $('dailyBtn').addEventListener('click',()=>switchGame('daily'));
 $('practiceBtn').addEventListener('click',()=>switchGame('practice'));
 $('journeyBtn').addEventListener('click',()=>switchGame('journey'));
-const palettes={general:['#e9bd43','#9b7ad5','#acd68d','#d87579','#f5abc9','#53b7b5','#6481be','#ffa66f'],peds:['#ffbe55','#a293e1','#85d5ad','#ff918f','#ef9fc9','#77cbdc','#8ca6e7','#edbe92'],ed:['#e4b441','#9a88d7','#97c785','#d66d7e','#e69abb','#49b2ae','#627dbc','#f49a61']};
+const palettes={general:['#e9bd43','#9b7ad5','#acd68d','#d87579','#f5abc9','#53b7b5','#6481be','#ffa66f','#a7c9ef','#bfca6d'],peds:['#ffbe55','#a293e1','#85d5ad','#ff918f','#ef9fc9','#77cbdc','#8ca6e7','#edbe92','#b8dce8','#d6d98a'],ed:['#e4b441','#9a88d7','#97c785','#d66d7e','#e69abb','#49b2ae','#627dbc','#f49a61','#a0cce7','#b2be65']};
 function theme(name) { (palettes[name]||palettes.general).forEach((v,i)=>document.documentElement.style.setProperty('--r'+i,v));$('theme').value=palettes[name]?name:'general';try{localStorage.setItem('nursedoku-theme',$('theme').value);}catch{}}
 $('theme').addEventListener('change',()=>theme($('theme').value));
 try {theme(localStorage.getItem('nursedoku-theme'));}catch{}
@@ -710,7 +732,7 @@ function socialLinks(prefix,text){
  $(prefix+'X').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(SHARE_URL);
  $(prefix+'Whatsapp').href='https://wa.me/?text='+encodeURIComponent(text+'\n'+SHARE_URL);
 }
-function updateResultLinks(){socialLinks('resultShare',resultText());}
+function updateResultLinks(){socialLinks('resultShare',resultText());$('resultShareFacebook').href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(SHARE_URL);}
 async function copyShare(text,status){
  try{await navigator.clipboard.writeText(text);$(status).textContent='Copied. Paste it in your post or message.';}
  catch{$(status).textContent=text;}
@@ -719,6 +741,38 @@ async function nativeShare(text,status){
  if(navigator.share){try{await navigator.share({title:'NurseDoku',text,url:SHARE_URL});$(status).textContent='Share sheet opened.';return;}catch(error){if(error.name==='AbortError')return;}}
  await copyShare(text+'\n'+SHARE_URL,status);
 }
+async function shareInstagram(isResult){
+ const status=isResult?'shareStatus':'menuShareStatus',button=$(isResult?'resultShareInstagram':'menuShareInstagram');
+ button.disabled=true;
+ try{
+  const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1350;const ctx=canvas.getContext('2d');
+  ctx.fillStyle='#edf5f2';ctx.fillRect(0,0,1080,1350);ctx.textAlign='center';ctx.fillStyle='#0b6b78';
+  ctx.font='bold 72px system-ui';ctx.fillText('NurseDoku',540,140);
+  ctx.font='32px system-ui';ctx.fillText(isResult?'Shift complete!':'A little logic. A little nursing.',540,206);
+  if(isResult){
+   const n=size(),span=880,step=span/n,left=100,top=305,colors=palettes[$('theme').value]||palettes.general;
+   puzzle().regions.forEach((row,r)=>row.forEach((z,c)=>{
+    ctx.fillStyle=colors[z];ctx.fillRect(left+c*step+3,top+r*step+3,step-6,step-6);
+    if(state[r][c]==='rn'){ctx.fillStyle='#17212b';ctx.font=`bold ${Math.floor(step*.35)}px system-ui`;ctx.fillText('RN',left+(c+.5)*step,top+(r+.62)*step);}
+   }));
+   ctx.fillStyle='#0b6b78';ctx.font='bold 32px system-ui';ctx.fillText(format(elapsed)+' · '+n+'×'+n+' · '+strikes+'/3 strikes',540,1260);
+  }else{
+   const colors=palettes.general;ctx.font='bold 64px system-ui';
+   for(let r=0;r<3;r++)for(let c=0;c<3;c++){const x=205+c*230,y=400+r*230;ctx.fillStyle=colors[(r*3+c)%colors.length];ctx.fillRect(x,y,210,210);ctx.fillStyle='#17212b';ctx.fillText(['RN','×',''][((r*3+c)*7)%3],x+105,y+130);}
+   ctx.fillStyle='#0b6b78';ctx.font='32px system-ui';ctx.fillText('Your next little victory.',540,1190);
+  }
+  ctx.fillStyle='#48666b';ctx.font='26px system-ui';ctx.fillText('siahverse.cc/nursedoku',540,1310);
+  const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw Error('No image');
+  const file=new File([blob],'nursedoku-'+(isResult?'results':'play')+'.png',{type:'image/png'});
+  if(navigator.share&&navigator.canShare?.({files:[file]})){
+   try{await navigator.share({files:[file],title:'NurseDoku'});$(status).textContent='Choose Instagram from your share options.';return;}catch(error){if(error.name==='AbortError')return;}
+  }
+  const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=file.name;link.click();setTimeout(()=>URL.revokeObjectURL(url),10000);
+  $(status).textContent='Image saved. Add it to your Instagram story or post.';
+ }catch{$(status).textContent='Could not create the image. Try the Share button.';}finally{button.disabled=false;}
+}
+$('resultShareInstagram').addEventListener('click',()=>shareInstagram(true));
+$('menuShareInstagram').addEventListener('click',()=>shareInstagram(false));
 $('shareBtn').addEventListener('click',()=>nativeShare(resultText(),'shareStatus'));
 $('copyResultBtn').addEventListener('click',()=>copyShare(resultText()+'\n'+SHARE_URL,'shareStatus'));
 $('menuShareBtn').addEventListener('click',()=>nativeShare('A little logic. A little nursing. Play NurseDoku with me.','menuShareStatus'));
@@ -852,7 +906,7 @@ $('menuBtn').addEventListener('click',returnToMenu);
 for(const [id,kind] of [['menuLearnBtn','journey'],['menuDailyBtn','daily'],['menuPracticeBtn','practice']])$(id).addEventListener('click',()=>{if(switchGame(kind)!==false)enterGame();});
 $('winDialog').addEventListener('cancel',event=>{if(!bonusSubmitted)event.preventDefault();});
 $('menuPreferences').append(document.querySelector('.preferences'));
-const UPDATE_VERSION='2026-09-29-daily-tips';
+const UPDATE_VERSION='2026-09-29-v1.1.0';
 let changelogShown=false;
 function markChangelogSeen(){try{localStorage.setItem('nursedoku-changelog',UPDATE_VERSION);}catch{}changelogShown=true;}
 function openChangelog(){pause();$('changelogDialog').showModal();}

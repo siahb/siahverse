@@ -62,3 +62,11 @@ The scheduled bank expansion targets up to 100 original source-checked questions
 ## Daily nursing tips
 
 Main-menu daily nursing tip: seven concise tips with NIH source links, deterministic local-date rotation, dismissal for the current day, and no artificial loading delay. Dismissal is a device preference and persists across reloads.
+
+### Version 1.1.0 — September 29, 2026
+
+All 72 new 10×10 practice boards have exactly one single-cell zone, ten distinct colors in every palette, connected regions, and exactly one solution. No region exceeds 40 cells. Logical difficulty is rechecked independently. Existing saved custom boards remain resumable; choose a new practice shift to use the revised bank.
+
+Single taps place/erase X immediately; a second tap on the same square within 360 ms replaces that first tap with an RN action, with one undo entry. Zone-clear feedback requires a correct RN plus Xs in every other zone square, honors mute/reduced motion, and is suppressed on saved-board restoration.
+
+The menu separates Learn/Daily from custom practice controls. One nursing hub link and one What's new control remain. The bottom footer shows the release date and version. Results sharing includes Facebook and an Instagram image option; file sharing uses the native share sheet when supported, otherwise downloads an image to upload manually. It never posts automatically.

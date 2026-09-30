@@ -67,3 +67,13 @@ Guest progress stays on the browser/device. The private cloud-save backend is im
 Guest question history belongs to the browser/device. Account history travels with cloud progress. Clearing guest storage resets its history. Saved questions can be reopened to review the same completed shift. No historical correctness is inferred for questions answered before tracking existed.
 
 - [x] Main-menu daily nursing tip: seven concise tips with NIH source links, deterministic local-date rotation, dismissal for the current day, and no artificial loading delay. Dismissal is a device preference and persists across reloads.
+
+## Version 1.1.0 — delivered
+
+- [x] 72 rebuilt 10×10 boards, exactly one starter, distinct colors, connected care zones, verified unique solutions and difficulty
+- [x] Immediate single-tap X feedback; double-tap RN preserves a single undo action
+- [x] Care-zone-clear animation, brief message, and synthesized sound; mute/reduced-motion support
+- [x] Practice controls above the separate Practice your way button
+- [x] NCLEX question heading and concise introduction
+- [x] Share/copy/Facebook/Instagram/X/WhatsApp on both menu and results
+- [x] Remove redundant navigation and changelog wording; date/year and version footer

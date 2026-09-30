@@ -8,7 +8,7 @@ vm.createContext(context);vm.runInContext(fs.readFileSync(require('path').join(_
 function run(code){return vm.runInContext(code,context);}
 assert.equal(run('inGame'),false);assert.equal(run('runningSince'),null);assert.equal(get('gameView').hidden,undefined);
 get('closeChangelogBtn').events.click[0]();get('changelogDialog').events.close[0]();
-assert.equal(storage['nursedoku-changelog'],'2026-09-29-daily-tips');
+assert.equal(storage['nursedoku-changelog'],'2026-09-29-v1.1.0');
 get('continueBtn').events.click[0]();assert.equal(run('inGame'),true);assert.notEqual(run('runningSince'),null);
 const evt={pointerId:1,isPrimary:true,button:0,clientX:10,clientY:10,preventDefault(){}};
 hit=get('board').children[1];hit.closest=()=>hit;
@@ -146,3 +146,20 @@ context.window.NurseDokuProgress.apply({stats:{wins:0,dailyDates:[]},completed:[
 assert.equal(Object.keys(run("normalizeQuestionHistory({'nclex-00001':'correct','bad':'correct','nclex-00002':'junk'})")).length,1);
 assert.equal(new Set(run('BONUS.map(q=>q.id)')).size,12);
 console.log('PASS: unseen-first selection, missed-only review, mastery retirement, caught-up state, stable IDs, guest/account/cloud history isolation.');
+
+// Tap feedback is immediate; the second tap replaces the first tap's undo entry.
+run('reset();state=blank();history=[];finished=false;clearTap();render()');
+hit=get('board').children[1];hit.closest=()=>hit;emit('pointerdown');emit('pointerup');
+assert.equal(run('state[0][1]'),'x');assert.equal(run('history.length'),1);
+emit('pointerdown');emit('pointerup');assert.equal(run('state[0][1]'),'rn');assert.equal(run('history.length'),1);
+get('undoBtn').events.click[0]();assert.equal(run('state[0][1]'),'');
+run('state=blank();clearedZones=new Set();render();puzzle().regions.forEach((row,r)=>row.forEach((z,c)=>{if(z===2)state[r][c]="x"}));paint()');
+assert.equal(run('clearedZones.size'),0,'All-X region is not cleared');
+run('state[2][0]="rn";paint()');assert(run('clearedZones.has(2)'));assert.equal(get('zoneClearMessage').textContent,'Care zone 3 cleared!');assert.equal(get('zoneClearMessage').hidden,false);
+run('state[1][0]="";paint()');assert(!run('clearedZones.has(2)'));
+run('state[1][0]="x";paint()');assert(run('clearedZones.has(2)'));
+run('render()');assert.equal(get('zoneClearMessage').hidden,true,'Saved complete region does not replay celebration');
+assert.equal(run("new Set(Array.from({length:7},(_,i)=>tipForDate('2026-10-'+String(i+1).padStart(2,'0')).text)).size"),7);
+run('dismissedTipDate="2026-10-01";renderDailyTip("2026-10-01")');assert.equal(get('dailyTipCard').hidden,true);
+run('renderDailyTip("2026-10-02")');assert.equal(get('dailyTipCard').hidden,false);assert(get('dailyTipSource').href.startsWith('https://'));
+console.log('PASS: immediate X taps, transactional double-tap RN/undo, zone clear requires RN and Xs, restore suppresses celebrations, daily tip rotates and dismissal expires.');

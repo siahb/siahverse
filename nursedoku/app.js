@@ -772,7 +772,63 @@ window.NurseDokuProgress={
 };
 
 // The menu owns starting/resuming a shift; loading the app never starts the clock.
+const DAILY_TIPS=[
+ {
+  "text": "Low glucose, safe swallow: for an alert adult with hypoglycemia who can swallow safely, give 15–20 g of fast-acting carbohydrate.",
+  "source": "https://www.niddk.nih.gov/health-information/diabetes/overview/preventing-problems/low-blood-glucose-hypoglycemia",
+  "sourceLabel": "NIDDK"
+ },
+ {
+  "text": "Recheck after treating hypoglycemia: repeat the glucose check in 15 minutes. If it is still low and swallowing remains safe, repeat the fast-acting carbohydrate.",
+  "source": "https://www.niddk.nih.gov/health-information/diabetes/overview/preventing-problems/low-blood-glucose-hypoglycemia",
+  "sourceLabel": "NIDDK"
+ },
+ {
+  "text": "Exercise can lower blood glucose during activity and for hours afterward. Teach insulin users to plan glucose checks and carry fast-acting carbohydrate.",
+  "source": "https://www.niddk.nih.gov/health-information/diabetes/overview/preventing-problems/low-blood-glucose-hypoglycemia",
+  "sourceLabel": "NIDDK"
+ },
+ {
+  "text": "Ask directly about suicidal thoughts. Asking does not cause or increase suicidal thinking, and it can help identify someone who needs support.",
+  "source": "https://www.nimh.nih.gov/health/publications/suicide-faq",
+  "sourceLabel": "NIMH"
+ },
+ {
+  "text": "If someone says they intend to kill themselves, stay with them and get help. Do not promise secrecy; immediate danger requires emergency assistance.",
+  "source": "https://www.nimh.nih.gov/health/publications/suicide-faq",
+  "sourceLabel": "NIMH"
+ },
+ {
+  "text": "Fever during chemotherapy deserves urgent attention. Contact the oncology team promptly; fever-reducing medicines can mask signs of infection.",
+  "source": "https://www.cancer.gov/about-cancer/treatment/side-effects/infection",
+  "sourceLabel": "National Cancer Institute"
+ },
+ {
+  "text": "Think FAST: facial droop, arm weakness, and speech changes can signal stroke. Call 911 immediately in the community; early treatment matters.",
+  "source": "https://www.nhlbi.nih.gov/health/stroke/symptoms",
+  "sourceLabel": "NHLBI"
+ }
+];
+let dismissedTipDate='';
+try{dismissedTipDate=localStorage.getItem('nursedoku-tip-dismissed')||'';}catch{}
+function tipForDate(date){
+ const [year,month,day]=date.split('-').map(Number);
+ const index=Math.floor(Date.UTC(year,month-1,day)/86400000);
+ return DAILY_TIPS[((index%DAILY_TIPS.length)+DAILY_TIPS.length)%DAILY_TIPS.length];
+}
+function renderDailyTip(date=localDate()){
+ const tip=tipForDate(date);
+ $('dailyTipCard').hidden=dismissedTipDate===date;
+ $('dailyTipText').textContent=tip.text;$('dailyTipSource').href=tip.source;
+ $('dailyTipSource').textContent='Source: '+tip.sourceLabel;
+}
+$('dismissTipBtn').addEventListener('click',()=>{
+ dismissedTipDate=localDate();try{localStorage.setItem('nursedoku-tip-dismissed',dismissedTipDate);}catch{}
+ renderDailyTip();$('continueBtn').focus();
+});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)renderDailyTip();});
 function updateMenu(){
+ renderDailyTip();
  $('menuStats').textContent=$('statsLine').textContent;
  $('continueBtn').textContent=finished&&!lost&&!bonusSubmitted?'Finish your nursing question':lost?'Review ended shift':finished?'Review completed shift':state.flat().some(Boolean)||elapsed>0?'Continue your shift':'Start your shift';
 }
@@ -796,7 +852,7 @@ $('menuBtn').addEventListener('click',returnToMenu);
 for(const [id,kind] of [['menuLearnBtn','journey'],['menuDailyBtn','daily'],['menuPracticeBtn','practice']])$(id).addEventListener('click',()=>{if(switchGame(kind)!==false)enterGame();});
 $('winDialog').addEventListener('cancel',event=>{if(!bonusSubmitted)event.preventDefault();});
 $('menuPreferences').append(document.querySelector('.preferences'));
-const UPDATE_VERSION='2026-09-29-question-history';
+const UPDATE_VERSION='2026-09-29-daily-tips';
 let changelogShown=false;
 function markChangelogSeen(){try{localStorage.setItem('nursedoku-changelog',UPDATE_VERSION);}catch{}changelogShown=true;}
 function openChangelog(){pause();$('changelogDialog').showModal();}

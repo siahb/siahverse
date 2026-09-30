@@ -10,7 +10,7 @@
   <meta property="og:url" content="https://siahverse.cc/nursedoku/">
   <meta property="og:type" content="website">
   <title>NurseDoku</title>
-  <link rel="stylesheet" href="styles.css?v=88c49d949c">
+  <link rel="stylesheet" href="styles.css?v=ba4ffa6ba2">
   <link rel="icon" href="icon.svg">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -36,6 +36,10 @@
         <button id="continueBtn" class="primary-btn full" type="button">Start your shift</button>
         <p id="menuStats" class="stats-line"></p>
       </div>
+      <aside id="dailyTipCard" class="daily-tip" aria-labelledby="dailyTipHeading">
+        <div class="daily-tip-top"><h3 id="dailyTipHeading">Nursing tip of the shift</h3><button id="dismissTipBtn" class="tip-dismiss" type="button" aria-label="Dismiss today’s nursing tip" title="Dismiss for today"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+        <p id="dailyTipText"></p><a id="dailyTipSource" target="_blank" rel="noopener noreferrer">Read source</a>
+      </aside>
       <div class="menu-modes">
         <button id="menuLearnBtn" class="mode-card" type="button"><span class="mode-symbol">01</span><span><strong>Learn &amp; progress</strong><small>56 shifts · easy to hard</small></span><span aria-hidden="true">→</span></button>
         <button id="menuDailyBtn" class="mode-card" type="button"><span class="mode-symbol">D</span><span><strong>Daily shift</strong><small>A fresh challenge every day</small></span><span aria-hidden="true">→</span></button>
@@ -95,7 +99,7 @@
 
   <dialog id="changelogDialog"><div class="dialog-body changelog-body">
     <p class="eyebrow">September 29, 2026 · New update</p><h2>A little more guidance.</h2><p>Here’s what’s new in NurseDoku:</p>
-    <ul class="changelog-list"><li><strong>Fresh questions first.</strong> Correct answers stay retired. Missed questions can return for review; keep playing when you’re caught up.</li><li><strong>Practice for NCLEX.</strong> Original clinical scenarios, prioritization, medication safety, pediatrics, and dosage calculations replace the hand-hygiene question set.</li><li><strong>Hints with a reason.</strong> Learn why a square needs an RN or an X. Deeper hints are clearly labeled as solution reveals.</li><li><strong>Your daily calendar.</strong> Browse dates and see which daily puzzles you’ve completed.</li><li><strong>Cleaner sharing.</strong> Copy icons and social logos replace text labels.</li><li><strong>A proper welcome.</strong> Choose your shift from a new main menu; your timer starts when you play.</li><li><strong>Swipe both ways.</strong> Start on an empty cell to add Xs, or on an X to erase several at once.</li><li><strong>Savor your win.</strong> Enjoy your finished board and confetti for two seconds before the result screen.</li><li><strong>Practice after your shift.</strong> Select an answer, then confirm it to see the explanation.</li><li><strong>Share your little victory.</strong> Sharing buttons on the main menu and results screen.</li><li><strong>Bigger challenges.</strong> 10×10 puzzles, 56 training shifts, and three strikes per attempt.</li><li><strong>Account beta.</strong> Private cloud saves are built; public registration is awaiting email setup.</li></ul>
+    <ul class="changelog-list"><li><strong>A little learning, every day.</strong> A short nursing tip on the main menu, with a source link. Dismiss it for today and get straight to your shift.</li><li><strong>Fresh questions first.</strong> Correct answers stay retired. Missed questions can return for review; keep playing when you’re caught up.</li><li><strong>Practice for NCLEX.</strong> Original clinical scenarios, prioritization, medication safety, pediatrics, and dosage calculations replace the hand-hygiene question set.</li><li><strong>Hints with a reason.</strong> Learn why a square needs an RN or an X. Deeper hints are clearly labeled as solution reveals.</li><li><strong>Your daily calendar.</strong> Browse dates and see which daily puzzles you’ve completed.</li><li><strong>Cleaner sharing.</strong> Copy icons and social logos replace text labels.</li><li><strong>A proper welcome.</strong> Choose your shift from a new main menu; your timer starts when you play.</li><li><strong>Swipe both ways.</strong> Start on an empty cell to add Xs, or on an X to erase several at once.</li><li><strong>Savor your win.</strong> Enjoy your finished board and confetti for two seconds before the result screen.</li><li><strong>Practice after your shift.</strong> Select an answer, then confirm it to see the explanation.</li><li><strong>Share your little victory.</strong> Sharing buttons on the main menu and results screen.</li><li><strong>Bigger challenges.</strong> 10×10 puzzles, 56 training shifts, and three strikes per attempt.</li><li><strong>Account beta.</strong> Private cloud saves are built; public registration is awaiting email setup.</li></ul>
     <button id="closeChangelogBtn" class="primary-btn full" type="button">Let’s play</button>
   </div></dialog>
 
@@ -158,7 +162,7 @@
   <script src="account-config.js?v=acc6cc855d"></script>
   <script src="large-puzzles.js?v=35c4586a8d"></script>
   <script src="puzzles.js?v=ad028b6d5f"></script>
-  <script src="app.js?v=d35ea62d39"></script>
+  <script src="app.js?v=a97b429a2f"></script>
   <script src="accounts.js?v=c4a1e22e7b"></script>
 </body>
 </html>

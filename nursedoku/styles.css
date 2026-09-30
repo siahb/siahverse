@@ -531,3 +531,12 @@ body { background:linear-gradient(160deg,#f1f8f7,#e9f2f0); }
 .calendar-day:focus-visible {outline:3px solid var(--accent);outline-offset:1px;}
 .calendar-key {font-size:.8rem;color:var(--muted);margin:14px 0;}
 #menuArchiveBtn {margin:0 0 18px;}
+
+.daily-tip {margin:0 0 20px;padding:16px 18px;border:1px solid #b9d9da;border-radius:18px;background:linear-gradient(120deg,#e5f5f0,#edf3ff);}
+.daily-tip-top {display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.daily-tip h3 {margin:0;color:var(--accent);font-size:.82rem;letter-spacing:.02em;}
+.daily-tip p {margin:6px 0 10px;font-size:.88rem;line-height:1.55;color:var(--text);}
+.daily-tip a {font-size:.75rem;font-weight:650;color:var(--accent);text-underline-offset:3px;}
+.tip-dismiss {display:flex;align-items:center;justify-content:center;flex-shrink:0;width:44px;height:44px;padding:0;border:0;border-radius:50%;background:transparent;color:var(--accent);cursor:pointer;}
+.tip-dismiss:hover {background:#ffffff80;}
+.tip-dismiss:focus-visible {outline:2px solid var(--accent);outline-offset:2px;}

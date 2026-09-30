@@ -65,3 +65,5 @@ Guest progress stays on the browser/device. The private cloud-save backend is im
 - [ ] Reach 5,000 original reviewed questions (currently 12; daily publishing is subject to successful verification and task execution)
 
 Guest question history belongs to the browser/device. Account history travels with cloud progress. Clearing guest storage resets its history. Saved questions can be reopened to review the same completed shift. No historical correctness is inferred for questions answered before tracking existed.
+
+- [x] Main-menu daily nursing tip: seven concise tips with NIH source links, deterministic local-date rotation, dismissal for the current day, and no artificial loading delay. Dismissal is a device preference and persists across reloads.

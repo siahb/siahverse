@@ -29,7 +29,9 @@ Difficulty is an automated heuristic: Easy resolves with row/column/zone singles
 
 ## Optional future work
 
-- [ ] Account-based cloud saves across devices — Supabase connection pending; preparatory SQL and plan in accounts/
+- [x] Private cloud-save database, account UI, offline saves, guest import, device-conflict handling
+- [ ] Activate public registration: configure email delivery/redirects, then verify signup and recovery end to end
+- [ ] Account deletion/export and dedicated privacy page
 - [ ] Public mobile-store release only if requested
 
 Cloud saves need a backend and an account/privacy design. Current progress remains on the browser/device. No account is required.

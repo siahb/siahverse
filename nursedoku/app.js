@@ -107,11 +107,19 @@ document.addEventListener('pointerdown',unlockAudio,{passive:true});
 document.addEventListener('keydown',unlockAudio);
 updateSoundButton();
 
+// Guest progress retains its original keys; each account has a separate local save.
+let progressOwner=null;
+try {progressOwner=localStorage.getItem('nursedoku-owner')||null;}catch{}
+const progressStorage={
+ getItem(key){return localStorage.getItem(progressOwner?'nursedoku-user-'+progressOwner+':'+key:key);},
+ setItem(key,value){localStorage.setItem(progressOwner?'nursedoku-user-'+progressOwner+':'+key:key,value);}
+};
+
 let gameKind='journey', customPuzzle=null, dailyDate=null;
 let stats={wins:0,best:null,dailyDates:[]};
-try { const x=JSON.parse(localStorage.getItem('nursedoku-stats'));if(x&&Number.isInteger(x.wins)&&x.wins>=0&&Array.isArray(x.dailyDates))stats=x; } catch {}
+try { const x=JSON.parse(progressStorage.getItem('nursedoku-stats'));if(x&&Number.isInteger(x.wins)&&x.wins>=0&&Array.isArray(x.dailyDates))stats=x; } catch {}
 let completedShifts=[];
-try {const current=localStorage.getItem('nursedoku-journey-v2');const x=JSON.parse(current||localStorage.getItem('nursedoku-journey'));if(Array.isArray(x))completedShifts=[...new Set(x.filter(v=>Number.isInteger(v)&&v>=0&&v<LEVELS.length).map(v=>current?v:migrateLevel(v)))];}catch{}
+try {const current=progressStorage.getItem('nursedoku-journey-v2');const x=JSON.parse(current||progressStorage.getItem('nursedoku-journey'));if(Array.isArray(x))completedShifts=[...new Set(x.filter(v=>Number.isInteger(v)&&v>=0&&v<LEVELS.length).map(v=>current?v:migrateLevel(v)))];}catch{}
 let level = 0, state, history = [], elapsed = 0, runningSince = null, finished = false, strikes=0, lost=false;
 let gesture = null, lastTap = null, pendingTap = null, hintCell = null;
 const puzzle = () => customPuzzle || LEVELS[level];
@@ -121,10 +129,11 @@ const copy = value => JSON.parse(JSON.stringify(value));
 const time = () => elapsed + (runningSince === null ? 0 : Date.now() - runningSince);
 const format = ms => `${String(Math.floor(ms / 60000)).padStart(2,'0')}:${String(Math.floor(ms / 1000) % 60).padStart(2,'0')}`;
 function persist() {
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify({level,state,elapsed:time(),finished,gameKind,customPuzzle,dailyDate,strikes,lost,journeyVersion:2})); } catch {}
+  try { progressStorage.setItem(SAVE_KEY, JSON.stringify({level,state,elapsed:time(),finished,gameKind,customPuzzle,dailyDate,strikes,lost,journeyVersion:2})); } catch {}
+  window.NurseDokuCloud?.changed();
 }
 function pause() { elapsed = time(); runningSince = null; persist(); }
-function resume() { if (!finished && !document.hidden && runningSince===null) runningSince = Date.now(); }
+function resume() { if (!finished && !document.hidden && runningSince===null && !['howToDialog','accountDialog','archiveDialog'].some(id=>$(id)?.open)) runningSince = Date.now(); }
 function positions() { return state.flatMap((row,r) => row.flatMap((v,c) => v === 'rn' ? [[r,c]] : [])); }
 function conflicts() {
   const ps = positions(), bad = new Set(), zones = puzzle().regions;
@@ -308,7 +317,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden){flushTap()
 window.addEventListener('pagehide',()=>{flushTap();pause();});
 window.addEventListener('pageshow',()=>{if(runningSince===null&&!$('howToDialog').open)resume();});
 try {
-  const saved=JSON.parse(localStorage.getItem(SAVE_KEY));
+  const saved=JSON.parse(progressStorage.getItem(SAVE_KEY));
   if(saved && Number.isInteger(saved.level)&&saved.level>=0&&saved.level<LEVELS.length) {
     level=saved.gameKind==='journey'&&saved.journeyVersion!==2?migrateLevel(saved.level):saved.level;
     if(['daily','practice'].includes(saved.gameKind)&&validPuzzle(saved.customPuzzle)) {
@@ -341,10 +350,10 @@ function updateStats() {
   $('statsLine').textContent=`${stats.wins} shifts solved · ${streak} day daily streak${stats.best!==null?' · Best '+format(stats.best):''}`;
 }
 function recordWin() {
-  if(gameKind==='journey'&&!completedShifts.includes(level)){completedShifts.push(level);try{localStorage.setItem('nursedoku-journey-v2',JSON.stringify(completedShifts));}catch{}}
+  if(gameKind==='journey'&&!completedShifts.includes(level)){completedShifts.push(level);try{progressStorage.setItem('nursedoku-journey-v2',JSON.stringify(completedShifts));}catch{}}
   stats.wins++;stats.best=stats.best===null?elapsed:Math.min(stats.best,elapsed);
   if(gameKind==='daily'&&dailyDate&&!stats.dailyDates.includes(dailyDate))stats.dailyDates.push(dailyDate);
-  try {localStorage.setItem('nursedoku-stats',JSON.stringify(stats));}catch {}
+  try {progressStorage.setItem('nursedoku-stats',JSON.stringify(stats));}catch {}
   updateStats();updatePuzzleInfo();
 }
 function switchGame(kind) {
@@ -442,3 +451,40 @@ if('serviceWorker' in navigator && location.protocol==='https:')navigator.servic
 
 $('retryBtn').addEventListener('click',()=>{$('lossDialog').close();reset();});
 $('newAfterLossBtn').addEventListener('click',()=>{$('lossDialog').close();reset(true);});
+
+// Narrow bridge used by the account controller. Cloud data never contains credentials.
+window.NurseDokuProgress={
+ owner(){return progressOwner;},
+ snapshot(){return copy({version:2,game:{level,state,elapsed:time(),finished,gameKind,customPuzzle,dailyDate,strikes,lost,journeyVersion:2},stats,completed:completedShifts});},
+ readOwner(owner){
+  const read=key=>{try{return JSON.parse(localStorage.getItem(owner?'nursedoku-user-'+owner+':'+key:key));}catch{return null;}};
+  return {version:2,game:read(SAVE_KEY),stats:read('nursedoku-stats'),completed:read('nursedoku-journey-v2')||[]};
+ },
+ apply(value,owner){
+  const v=value||{},g=v.game||{};
+  const nextLevel=Number.isInteger(g.level)&&g.level>=0&&g.level<LEVELS.length?g.level:0;
+  const nextKind=['journey','daily','practice'].includes(g.gameKind)?g.gameKind:'journey';
+  const nextCustom=nextKind!=='journey'&&validPuzzle(g.customPuzzle)?copy(g.customPuzzle):null;
+  const n=(nextCustom||LEVELS[nextLevel]).regions.length;
+  const nextState=Array.isArray(g.state)&&g.state.length===n&&g.state.every(row=>Array.isArray(row)&&row.length===n&&row.every(x=>['','rn','x'].includes(x)))?copy(g.state):Array.from({length:n},()=>Array(n).fill(''));
+  flushTap();pause();
+  progressOwner=owner||null;
+  try {if(progressOwner)localStorage.setItem('nursedoku-owner',progressOwner);else localStorage.removeItem('nursedoku-owner');}catch{}
+  level=nextLevel;customPuzzle=nextCustom;gameKind=nextCustom?nextKind:'journey';dailyDate=gameKind==='daily'&&/^\d{4}-\d{2}-\d{2}$/.test(g.dailyDate)?g.dailyDate:null;
+  state=nextState;elapsed=Number.isFinite(g.elapsed)?Math.max(0,g.elapsed):0;runningSince=null;
+  strikes=Number.isInteger(g.strikes)?Math.max(0,Math.min(3,g.strikes)):0;
+  lost=g.lost===true&&strikes===3;finished=lost||(g.finished===true&&positions().length===n&&!conflicts().size);
+  history=[];hintCell=null;
+  completedShifts=Array.isArray(v.completed)?[...new Set(v.completed.filter(i=>Number.isInteger(i)&&i>=0&&i<LEVELS.length))]:[];
+  const st=v.stats||{};
+  stats={wins:Number.isInteger(st.wins)&&st.wins>=0?st.wins:0,best:Number.isFinite(st.best)&&st.best>=0?st.best:null,dailyDates:Array.isArray(st.dailyDates)?[...new Set(st.dailyDates.filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)))]:[]};
+  for(const id of ['winDialog','lossDialog'])if($(id).open)$(id).close();
+  progressStorage.setItem('nursedoku-stats',JSON.stringify(stats));
+  progressStorage.setItem('nursedoku-journey-v2',JSON.stringify(completedShifts));
+  render();updateStats();resume();persist();
+  if(lost)$('lossDialog').showModal();
+  else if(finished){$('finalTime').textContent=format(elapsed);$('playAgainBtn').textContent=gameKind==='journey'?'Next shift':'New practice shift';showBonus();$('winDialog').showModal();}
+  tell(lost?'Three strikes. Retry this shift to continue.':finished?'Saved shift complete. Start another shift to continue.':'Your saved shift is ready.');
+ },
+ pause,resume
+};

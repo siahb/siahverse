@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f8f3ef">
   <meta name="description" content="NurseDoku — a nursing-themed logic puzzle.">
   <title>NurseDoku</title>
-  <link rel="stylesheet" href="styles.css?v=c41f309679">
+  <link rel="stylesheet" href="styles.css?v=469b182b04">
   <link rel="icon" href="icon.svg">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,7 +19,7 @@
         <h1>NurseDoku</h1>
         <p class="subtitle">Staff every row, column, and care zone — safely.</p>
       </div>
-      <div class="top-actions"><a class="ghost-btn back-link" href="https://siahverse.cc/nursing/">Nursing Resources</a><button id="soundBtn" class="ghost-btn volume-btn" type="button" aria-pressed="true" aria-label="Mute game sounds" title="Mute game sounds"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path class="volume-waves" d="M15 8a6 6 0 0 1 0 8M18 5a10 10 0 0 1 0 14"/><path class="volume-muted" d="m16 9 5 6m0-6-5 6"/></svg></button><button id="howToBtn" class="ghost-btn" type="button">How to play</button></div>
+      <div class="top-actions"><a class="ghost-btn back-link" href="https://siahverse.cc/nursing/">Nursing Resources</a><button id="soundBtn" class="ghost-btn volume-btn" type="button" aria-pressed="true" aria-label="Mute game sounds" title="Mute game sounds"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path class="volume-waves" d="M15 8a6 6 0 0 1 0 8M18 5a10 10 0 0 1 0 14"/><path class="volume-muted" d="m16 9 5 6m0-6-5 6"/></svg></button><button id="accountBtn" class="ghost-btn" type="button">Sign in</button><button id="howToBtn" class="ghost-btn" type="button">How to play</button></div>
     </header>
 
     <nav class="play-options" aria-label="Puzzle choices">
@@ -32,6 +32,7 @@
       <label>Board <select id="boardSize"><option value="6">6×6</option><option value="10">10×10</option></select></label>
       <label>Palette <select id="theme"><option value="general">General</option><option value="peds">Pediatrics</option><option value="ed">Emergency</option></select></label>
     </div>
+    <p id="cloudStatus" class="cloud-status" role="status">Guest · saved on device</p>
     <p id="statsLine" class="stats-line"></p>
     <div class="shift-info"><p id="puzzleInfo"></p><button id="archiveBtn" class="ghost-btn" type="button">Daily archive</button></div>
     <p id="milestone" class="milestone"></p>
@@ -65,6 +66,27 @@
     </section>
     <p class="install-tip">Keep your shift close: on iPhone, use Safari’s Share menu → Add to Home Screen. Offline play becomes available after your first online visit.</p>
   </main>
+
+  <dialog id="accountDialog"><div class="dialog-body">
+    <div class="dialog-header"><div><p class="eyebrow">Your shifts, anywhere</p><h2>Account &amp; cloud saves</h2></div><button id="closeAccountBtn" class="icon-btn" type="button" aria-label="Close account">×</button></div>
+    <p class="account-note">An account saves your puzzle, completed shifts, and daily progress with Supabase. Guest play stays available. Each account has its own save on this device.</p>
+    <p id="registrationNote" class="account-note" hidden>Accounts are in beta. New registration is waiting for verification email setup. Guest play and device saves are available now.</p>
+    <form id="authForm">
+      <label id="authModeRow">Account <select id="authMode"><option value="signin">Sign in</option><option id="signupOption" value="signup">Create account</option></select></label>
+      <label id="authEmailRow">Email <input id="authEmail" type="email" autocomplete="email" required maxlength="254"></label>
+      <label>Password <input id="authPassword" type="password" autocomplete="current-password" required maxlength="128"></label>
+      <button id="authSubmit" class="primary-btn full" type="submit">Sign in</button>
+      <button id="forgotPasswordBtn" class="ghost-btn" type="button">Forgot password?</button>
+    </form>
+    <div id="accountTools" hidden><p id="accountEmail"></p>
+      <button id="syncNowBtn" class="primary-btn full" type="button">Sync now</button>
+      <button id="importGuestBtn" class="secondary-btn full" type="button">Import guest progress &amp; use guest puzzle</button>
+      <div id="syncConflict" hidden><p>Another device has a different save. Choose the active puzzle to keep.</p><button id="useCloudBtn" class="secondary-btn full" type="button">Use cloud puzzle</button><button id="useDeviceBtn" class="secondary-btn full" type="button">Keep this device’s puzzle &amp; combine completions</button></div>
+      <button id="signOutBtn" class="ghost-btn" type="button">Sign out on this device</button>
+    </div>
+    <p id="accountStatus" class="account-note" role="status"></p>
+    <p class="account-note">Game progress only—please do not enter patient information. Passwords go directly to Supabase Auth. Your browser keeps a session until you sign out.</p>
+  </div></dialog>
 
   <dialog id="lossDialog"><div class="dialog-body win-body">
     <p class="eyebrow">Shift ended</p><h2>Three strikes.</h2><p>A conflicting RN placement costs one strike. Take a breath and try the shift again.</p>
@@ -101,9 +123,11 @@
     </div>
   </dialog>
 
+  <script src="account-config.js?v=acc6cc855d"></script>
   <script src="large-puzzles.js?v=35c4586a8d"></script>
   <script src="puzzles.js?v=ad028b6d5f"></script>
-  <script src="app.js?v=bdf2505a6a"></script>
+  <script src="app.js?v=88fe656cf8"></script>
+  <script src="accounts.js?v=93c94224ab"></script>
 </body>
 </html>
 

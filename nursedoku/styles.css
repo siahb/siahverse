@@ -451,3 +451,13 @@ body { background:linear-gradient(160deg,#f1f8f7,#e9f2f0); }
 .feedback-correct,.feedback-review {color:var(--text);line-height:1.5;}
 
 .status-card {grid-template-columns:repeat(4,1fr);} #strikeCount {color:#a83d50;} #newAfterLossBtn {margin-top:10px;}
+
+.cloud-status {font-size:.75rem;color:var(--muted);margin:8px 0;text-align:right;}
+.account-note {font-size:.82rem;line-height:1.5;color:var(--muted);}
+#authForm {display:grid;gap:14px;}
+#authForm label {display:grid;gap:6px;font-size:.86rem;font-weight:700;}
+#authForm input,#authForm select {width:100%;min-height:44px;padding:10px 12px;border:1px solid #c5d4d1;border-radius:10px;font:inherit;background:var(--surface-soft);color:var(--ink);}
+#accountTools .full {margin-top:10px;}
+#accountEmail {overflow-wrap:anywhere;font-size:.85rem;}
+#syncConflict {background:var(--surface-soft);border-radius:12px;padding:12px;margin-top:12px;}
+[hidden] {display:none!important;}

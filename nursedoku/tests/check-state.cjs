@@ -44,3 +44,17 @@ get('retryBtn').events.click[0]();assert.equal(run('strikes'),0);assert.equal(ru
 run('showBonus()');const choices=get('bonusAnswers').children;choices[0].onclick();assert(choices.every(b=>b.disabled));assert(get('bonusFeedback').textContent.length>20);
 get('boardSize').value='10';for(const d of ['easy','medium','hard']){const p=run(`practicePuzzle('${d}',12)`);assert.equal(p.regions.length,10);assert.equal(p.rating.difficulty,d);}
 console.log('PASS: invalid RN placement rejected; strikes survive undo and saving; third strike ends shift; retry resets; bonus answers lock; 10×10 difficulty selection.');
+const bridge=context.window.NurseDokuProgress;
+const guest=bridge.snapshot();
+bridge.apply({version:2,completed:[0,1],stats:{wins:2,dailyDates:['2026-09-29']},game:guest.game},'test-user-a');
+assert.equal(bridge.owner(),'test-user-a');
+assert.equal(bridge.snapshot().stats.wins,2);
+assert(storage['nursedoku-user-test-user-a:nursedoku-v2']);
+assert.equal(bridge.readOwner(null).stats.wins,guest.stats.wins);
+bridge.apply({},'test-user-b');
+assert.equal(bridge.snapshot().stats.wins,0);
+assert.equal(bridge.readOwner('test-user-a').stats.wins,2);
+bridge.apply(guest,null);
+assert.equal(bridge.snapshot().stats.wins,guest.stats.wins);
+assert.equal(bridge.owner(),null);
+console.log('PASS: separate account saves, guest preservation, account switching, restore validation.');

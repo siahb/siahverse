@@ -1,15 +1,30 @@
-# Account system — pending backend connection
+# Accounts and cloud saves
 
-Proposed provider: Supabase Auth + PostgreSQL. Guest play stays available. The current website has no working sign-in or cloud sync yet.
+Supabase project: duimxtfcnbfgpeawzszl (Siahverse, us-west-1). Project creation quote: $0/month.
 
-Implementation after the Supabase connection is confirmed:
+Implemented:
+- Official Supabase JS 2.117.2, pinned CDN URL, lazy loading; guest play has no SDK dependency.
+- Email/password sign-in, verification-aware sign-up, password recovery and update form, local sign-out.
+- Separate local namespaces per authenticated user and unchanged original guest keys.
+- Debounced private cloud saves, offline local persistence, manual sync retry.
+- Conditional revision updates detect concurrent saves; users choose the active puzzle.
+- Explicit guest import preserves original guest progress and combines completion records.
+- Strict database ownership RLS with SELECT/INSERT/UPDATE/DELETE restricted to authenticated owner.
+- Only project URL and publishable key are public. No service-role/secret key in browser code.
+- SQL transaction tests verify two-user isolation, reassignment denial, stale-write rejection, guest denial. Fixtures roll back.
+- Security advisors: no database findings.
 
-1. Select/create the project and review any plan costs before provisioning paid resources.
-2. Configure email verification and allowed redirects for https://siahverse.cc/nursedoku/.
-3. Use the official Supabase client for email sign-in, sign-out, session refresh, and recovery. Never store user passwords in app code.
-4. Apply schema.sql. Verify two test users cannot access each other's progress and unauthenticated access is denied.
-5. Put only the project URL and publishable browser key in client configuration. No secret/service-role key belongs in the public repository.
-6. Ask each signed-in user before uploading existing guest progress. Merge completed shifts/dates; offer an explicit choice for the active puzzle. Keep guest data separate when signing out.
-7. Show sync status, handle offline changes, and provide account/data deletion.
+## Remaining activation steps
+Registration is disabled in account-config.js until these checks pass:
+1. Authentication URL configuration: Site URL and allowed redirect https://siahverse.cc/nursedoku/.
+2. Custom SMTP for public verification and recovery emails. Supabase default SMTP only sends to organization team members.
+3. End-to-end signup, verification, sign-in, recovery, and cross-device restore with two disposable accounts.
+4. Set registrationEnabled to true, rebuild hashes/cache, republish.
 
-Store game progress only; no patient information. The SQL file is preparatory and has not been executed against a live database.
+Auth settings are not exposed by this connector. Dashboard login is required for configuration.
+
+## Data and behavior
+One row per user stores active game, completed shift IDs and statistics. Each save has a revision; stale updates change zero rows. The UI never imports guest data automatically. Sign-out restores guest progress.
+When combining saves, completion/date records are unioned and best time is the minimum. Win count uses the larger device count, so separately repeated wins on different devices can be undercounted. It is not a leaderboard metric.
+Active board data is validated on restore. Browser data is local to the account namespace; use a private device and sign out on shared devices.
+No patient data is needed. Account deletion/export tooling and a full privacy page remain follow-up work.

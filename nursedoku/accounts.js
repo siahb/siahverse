@@ -105,8 +105,12 @@ async function sync(){
 }
 function mergeProgress(local,remote){
  const a=local.stats||{},b=remote?.stats||{};
+ const questionHistory={},rank={seen:1,missed:2,correct:3};
+ for(const history of [a.questionHistory,b.questionHistory])if(history&&typeof history==='object')for(const [id,status] of Object.entries(history)){
+  if(/^nclex-\d{5}$/.test(id)&&rank[status]&&(!questionHistory[id]||rank[status]>rank[questionHistory[id]]))questionHistory[id]=status;
+ }
  const best=[a.best,b.best].filter(n=>Number.isFinite(n)&&n>=0);
- return {...local,completed:[...new Set([...(local.completed||[]),...(remote?.completed||[])])],stats:{wins:Math.max(a.wins||0,b.wins||0),best:best.length?Math.min(...best):null,dailyDates:[...new Set([...(a.dailyDates||[]),...(b.dailyDates||[])])]}};
+ return {...local,completed:[...new Set([...(local.completed||[]),...(remote?.completed||[])])],stats:{questionHistory,wins:Math.max(a.wins||0,b.wins||0),best:best.length?Math.min(...best):null,dailyDates:[...new Set([...(a.dailyDates||[]),...(b.dailyDates||[])])]}};
 }
 async function resolveConflict(keepLocal){
  if(!user)return;

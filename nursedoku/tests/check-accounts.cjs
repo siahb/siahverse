@@ -4,7 +4,7 @@ class El {constructor(){this.events={};this.value='';this.hidden=false;this.disa
 const els={},get=id=>els[id]??=new El();get('authMode').value='signin';
 const storage={},timers=[];
 let owner=null,save={version:2,completed:[],stats:{wins:0,dailyDates:[]},game:{level:0}},cloud=null,nextUser=null,authCallback,conflictOnce=false,writes=0;
-const bridge={owner:()=>owner,snapshot:()=>JSON.parse(JSON.stringify(save)),readOwner:id=>id?{version:2,stats:{wins:0},completed:[]}:{version:2,stats:{wins:3,dailyDates:['2026-09-29']},completed:[1],game:{level:2}},pause(){},resume(){},apply(v,id){save=JSON.parse(JSON.stringify(v));owner=id;}};
+const bridge={owner:()=>owner,snapshot:()=>JSON.parse(JSON.stringify(save)),readOwner:id=>id?{version:2,stats:{wins:0},completed:[]}:{version:2,stats:{wins:3,dailyDates:['2026-09-29'],questionHistory:{'nclex-00001':'correct','nclex-00002':'missed'}},completed:[1],game:{level:2}},pause(){},resume(){},apply(v,id){save=JSON.parse(JSON.stringify(v));owner=id;}};
 const client={
  auth:{onAuthStateChange(f){authCallback=f;},getSession:async()=>({data:{session:nextUser?{user:nextUser}:null}}),signInWithPassword:async()=>({data:{user:nextUser}}),signOut:async()=>({}),signUp:async()=>({data:{session:null}})},
  from(){let op='read',values,revision;
@@ -21,7 +21,9 @@ vm.createContext(context);vm.runInContext(fs.readFileSync(path.join(__dirname,'.
 nextUser={id:'a',email:'a@example.invalid'};
 await get('accountBtn').events.click();
 assert.equal(owner,'a');assert.equal(writes,0,'Guest data must not upload on login');
+save.stats.questionHistory={'nclex-00002':'correct','nclex-00003':'seen'};
 get('importGuestBtn').events.click();await get('syncNowBtn').events.click();await new Promise(r=>setImmediate(r));
+assert.equal(cloud.progress.stats.questionHistory['nclex-00001'],'correct');assert.equal(cloud.progress.stats.questionHistory['nclex-00002'],'correct');assert.equal(cloud.progress.stats.questionHistory['nclex-00003'],'seen');
 assert.equal(cloud.progress.stats.wins,3);assert.equal(cloud.progress.game.level,2);
 const first=cloud.revision;
 save.completed.push(2);context.window.NurseDokuCloud.changed();await get('syncNowBtn').events.click();await new Promise(r=>setImmediate(r));

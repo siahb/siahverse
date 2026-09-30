@@ -1,5 +1,9 @@
 const LEVELS = [{"regions": [[2, 0, 1, 1], [2, 2, 1, 1], [2, 2, 1, 1], [3, 3, 3, 3]], "solution": [1, 3, 0, 2]}, {"regions": [[0, 0, 0, 0], [2, 0, 0, 1], [2, 0, 3, 3], [2, 2, 3, 3]], "solution": [1, 3, 0, 2]}, {"regions": [[0, 0, 0, 0, 2], [1, 1, 0, 0, 2], [1, 3, 0, 0, 2], [1, 3, 3, 3, 4], [3, 3, 3, 4, 4]], "solution": [2, 0, 4, 1, 3]}, {"regions": [[2, 0, 0, 1, 1], [2, 2, 2, 1, 1], [2, 2, 2, 1, 1], [2, 2, 3, 3, 3], [2, 2, 3, 3, 4]], "solution": [1, 3, 0, 2, 4]}, {"regions": [[3, 0, 1, 1, 1, 1], [3, 3, 2, 1, 1, 1], [3, 3, 2, 2, 1, 1], [3, 3, 2, 2, 1, 1], [3, 3, 2, 4, 4, 4], [3, 3, 4, 4, 4, 5]], "solution": [1, 4, 2, 0, 3, 5]}, {"regions": [[2, 0, 0, 0, 1, 1], [2, 0, 1, 1, 1, 1], [2, 2, 2, 1, 3, 1], [2, 2, 2, 1, 3, 5], [4, 4, 4, 4, 4, 5], [4, 4, 4, 4, 5, 5]], "solution": [1, 3, 0, 4, 2, 5]}, {"regions": [[1, 1, 1, 0, 0, 0], [1, 1, 1, 0, 0, 0], [1, 1, 1, 1, 1, 2], [3, 3, 3, 4, 1, 2], [3, 3, 3, 4, 1, 2], [5, 3, 4, 4, 4, 4]], "solution": [4, 2, 5, 1, 3, 0]}, {"regions": [[2, 2, 0, 0, 0, 1], [2, 2, 3, 3, 3, 1], [2, 2, 2, 2, 3, 3], [5, 5, 2, 2, 3, 3], [5, 4, 4, 3, 3, 3], [5, 5, 5, 3, 3, 3]], "solution": [3, 5, 1, 4, 2, 0]}];
-LEVELS.push(...PUZZLE_BANK.easy.slice(0,12),...PUZZLE_BANK.medium.slice(0,12),...PUZZLE_BANK.hard.slice(0,12));
+const LEGACY_LEVELS=[...LEVELS,...PUZZLE_BANK.easy.slice(0,12),...PUZZLE_BANK.medium.slice(0,12),...PUZZLE_BANK.hard.slice(0,12)];
+LEVELS.push(...PUZZLE_BANK.easy.slice(0,10),...PUZZLE_BANK.medium.slice(0,10),...PUZZLE_BANK.hard.slice(0,10),...LARGE_PUZZLE_BANK.easy.slice(0,6),...LARGE_PUZZLE_BANK.medium.slice(0,6),...LARGE_PUZZLE_BANK.hard.slice(0,6));
+const difficultyOrder={easy:0,medium:1,hard:2};
+LEVELS.sort((a,b)=>difficultyOrder[analyzePuzzle(a).difficulty]-difficultyOrder[analyzePuzzle(b).difficulty]||a.regions.length-b.regions.length);
+function migrateLevel(oldIndex){const old=LEGACY_LEVELS[oldIndex];return old?Math.max(0,LEVELS.findIndex(p=>JSON.stringify(p.regions)===JSON.stringify(old.regions))):0;}
 // Seeded generation: each accepted board has connected zones and exactly one solution.
 function generatePuzzle(n,seed) {
   let randomState=seed>>>0;
@@ -75,6 +79,7 @@ function sound(kind) {
     }else if(kind==='erase')tone(430,0,.06,.02,260);
     else if(kind==='hint'){tone(659,0,.12,.03);tone(988,.09,.18,.025);}
     else if(kind==='win') [523,659,784,1047,1319].forEach((f,i)=>tone(f,i*.10,.28,.04));
+    else if(kind==='strike'){tone(250,0,.12,.03,160,'triangle');}
     else if(kind==='undo')tone(520,0,.08,.025,330);
     else if(kind==='new') {tone(392,0,.10,.025);tone(523,.08,.13,.025);}
   }catch{}
@@ -105,8 +110,8 @@ let gameKind='journey', customPuzzle=null, dailyDate=null;
 let stats={wins:0,best:null,dailyDates:[]};
 try { const x=JSON.parse(localStorage.getItem('nursedoku-stats'));if(x&&Number.isInteger(x.wins)&&x.wins>=0&&Array.isArray(x.dailyDates))stats=x; } catch {}
 let completedShifts=[];
-try {const x=JSON.parse(localStorage.getItem('nursedoku-journey'));if(Array.isArray(x))completedShifts=x.filter(v=>Number.isInteger(v)&&v>=0&&v<LEVELS.length);}catch{}
-let level = 0, state, history = [], elapsed = 0, runningSince = null, finished = false;
+try {const current=localStorage.getItem('nursedoku-journey-v2');const x=JSON.parse(current||localStorage.getItem('nursedoku-journey'));if(Array.isArray(x))completedShifts=[...new Set(x.filter(v=>Number.isInteger(v)&&v>=0&&v<LEVELS.length).map(v=>current?v:migrateLevel(v)))];}catch{}
+let level = 0, state, history = [], elapsed = 0, runningSince = null, finished = false, strikes=0, lost=false;
 let gesture = null, lastTap = null, pendingTap = null, hintCell = null;
 const puzzle = () => customPuzzle || LEVELS[level];
 const size = () => puzzle().regions.length;
@@ -115,7 +120,7 @@ const copy = value => JSON.parse(JSON.stringify(value));
 const time = () => elapsed + (runningSince === null ? 0 : Date.now() - runningSince);
 const format = ms => `${String(Math.floor(ms / 60000)).padStart(2,'0')}:${String(Math.floor(ms / 1000) % 60).padStart(2,'0')}`;
 function persist() {
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify({level,state,elapsed:time(),finished,gameKind,customPuzzle,dailyDate})); } catch {}
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({level,state,elapsed:time(),finished,gameKind,customPuzzle,dailyDate,strikes,lost,journeyVersion:2})); } catch {}
 }
 function pause() { elapsed = time(); runningSince = null; persist(); }
 function resume() { if (!finished && !document.hidden && runningSince===null) runningSince = Date.now(); }
@@ -132,7 +137,7 @@ function conflicts() {
 function tell(text,kind='') { $('message').textContent=text; $('message').className=`message ${kind}`; }
 function remember() { history.push(copy(state)); if(history.length>100) history.shift(); }
 function render() {
-  board.innerHTML=''; board.style.gridTemplateColumns=`repeat(${size()},1fr)`;
+  board.innerHTML=''; board.style.gridTemplateColumns=`repeat(${size()},1fr)`;board.dataset.size=size();
   board.setAttribute('aria-rowcount',size()); board.setAttribute('aria-colcount',size());
   for(let r=0;r<size();r++) for(let c=0;c<size();c++) {
     const cell=document.createElement('button'); cell.type='button';
@@ -171,13 +176,14 @@ function paint() {
     cell.setAttribute('aria-label',`Row ${r+1}, column ${c+1}, care zone ${zone+1}, ${v==='rn'?'RN placed':v==='x'?'marked X':'empty'}${bad.has(`${r},${c}`)?', conflict':''}`);
   });
   const ps=positions(); $('rnCount').textContent=ps.length;
+  $('strikeCount').textContent=strikes;
   document.querySelectorAll('.zone-dot').forEach(dot=>{
     const count=ps.filter(([r,c])=>puzzle().regions[r][c]===+dot.dataset.zone).length;
     dot.textContent=count===1?'✓':count>1?'!':'';
     dot.setAttribute('aria-label',`Care zone ${+dot.dataset.zone+1}: ${count} RNs`);
   });
   $('undoBtn').disabled=!history.length||finished;
-  if(gameKind==='journey'&&level===0&&!ps.length) {
+  if(!finished&&strikes===0&&gameKind==='journey'&&level===0&&!ps.length) {
     const col=puzzle().solution[0];
     board.children[col].classList.add('hint');
     tell('Start with the single gold square. Double-tap it to place your first RN.');
@@ -199,9 +205,19 @@ function afterMove() {
 }
 function toggle(r,c,mark) {
   if(finished)return;
-  remember();state[r][c]=state[r][c]===mark?'':mark;
+  const previous=state[r][c];
+  remember();state[r][c]=previous===mark?'':mark;
+  if(state[r][c]==='rn' && conflicts().size) {
+    state[r][c]=previous;history.pop();strikes++;sound('strike');hintCell=null;
+    if(strikes>=3) {
+      lost=true;finished=true;elapsed=time();runningSince=null;
+      $('lossDialog').showModal();
+    }
+    paint();tell(lost?'Three strikes. This shift is over.':`Strike ${strikes}/3. That RN breaks a staffing rule.`,'error');persist();return;
+  }
   sound(state[r][c]==='rn'?'rn':state[r][c]==='x'?'x':'erase');afterMove();
 }
+
 function cellAt(x,y) {
   const cell=document.elementFromPoint(x,y)?.closest('.cell');
   return cell&&board.contains(cell)?[+cell.dataset.row,+cell.dataset.col]:null;
@@ -275,7 +291,7 @@ function reset(next=false) {
     else if(gameKind==='practice')customPuzzle=practicePuzzle($('difficulty').value,Date.now());
     else level=(level+1)%LEVELS.length;
   }
-  state=blank();history=[];finished=false;hintCell=null;elapsed=0;runningSince=null;
+  state=blank();history=[];finished=false;strikes=0;lost=false;hintCell=null;elapsed=0;runningSince=null;
   resume();render();sound('new');tell(gameKind==='journey'&&level===0?'Start with the single gold square. Double-tap it to place your first RN.':'New shift. One RN per row, column, and color.');persist();
 }
 $('resetBtn').addEventListener('click',()=>{
@@ -293,25 +309,28 @@ window.addEventListener('pageshow',()=>{if(runningSince===null&&!$('howToDialog'
 try {
   const saved=JSON.parse(localStorage.getItem(SAVE_KEY));
   if(saved && Number.isInteger(saved.level)&&saved.level>=0&&saved.level<LEVELS.length) {
-    level=saved.level;
+    level=saved.gameKind==='journey'&&saved.journeyVersion!==2?migrateLevel(saved.level):saved.level;
     if(['daily','practice'].includes(saved.gameKind)&&validPuzzle(saved.customPuzzle)) {
       gameKind=saved.gameKind;customPuzzle=saved.customPuzzle;dailyDate=saved.dailyDate;
     }
     if(Array.isArray(saved.state)&&saved.state.length===size()&&saved.state.every(row=>Array.isArray(row)&&row.length===size()&&row.every(v=>['','rn','x'].includes(v)))) {
       state=saved.state;elapsed=Number.isFinite(saved.elapsed)?Math.max(0,saved.elapsed):0;
-      finished=saved.finished===true && positions().length===size() && !conflicts().size;
+      strikes=Number.isInteger(saved.strikes)?Math.max(0,Math.min(3,saved.strikes)):0;
+      lost=saved.lost===true&&strikes===3;
+      finished=lost||(saved.finished===true && positions().length===size() && !conflicts().size);
     }
   }
 } catch {}
 if(!state)state=blank();
 render();resume();updateStats();
-if(finished) {
+if(lost) { $('lossDialog').showModal();tell('Three strikes. This shift is over.','error'); }
+else if(finished) {
   $('finalTime').textContent=format(elapsed);$('playAgainBtn').textContent=gameKind==='daily'?'Play a practice shift':gameKind==='practice'?'New practice shift':level===LEVELS.length-1?'Replay from shift 001':'Next shift';$('winDialog').showModal();
 }
 $('timer').textContent=format(time());setInterval(()=>{$('timer').textContent=format(time());},500);
 
 function validPuzzle(p) {
-  return p&&[4,6,8].includes(p.regions?.length)&&p.regions.every(row=>Array.isArray(row)&&row.length===p.regions.length&&row.every(z=>Number.isInteger(z)&&z>=0&&z<p.regions.length))&&Array.isArray(p.solution)&&p.solution.length===p.regions.length&&p.solution.every(c=>Number.isInteger(c)&&c>=0&&c<p.regions.length);
+  return p&&[4,5,6,8,10].includes(p.regions?.length)&&p.regions.every(row=>Array.isArray(row)&&row.length===p.regions.length&&row.every(z=>Number.isInteger(z)&&z>=0&&z<p.regions.length))&&Array.isArray(p.solution)&&p.solution.length===p.regions.length&&p.solution.every(c=>Number.isInteger(c)&&c>=0&&c<p.regions.length);
 }
 function localDate(d=new Date()) {return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
 function updateStats() {
@@ -321,7 +340,7 @@ function updateStats() {
   $('statsLine').textContent=`${stats.wins} shifts solved · ${streak} day daily streak${stats.best!==null?' · Best '+format(stats.best):''}`;
 }
 function recordWin() {
-  if(gameKind==='journey'&&!completedShifts.includes(level)){completedShifts.push(level);try{localStorage.setItem('nursedoku-journey',JSON.stringify(completedShifts));}catch{}}
+  if(gameKind==='journey'&&!completedShifts.includes(level)){completedShifts.push(level);try{localStorage.setItem('nursedoku-journey-v2',JSON.stringify(completedShifts));}catch{}}
   stats.wins++;stats.best=stats.best===null?elapsed:Math.min(stats.best,elapsed);
   if(gameKind==='daily'&&dailyDate&&!stats.dailyDates.includes(dailyDate))stats.dailyDates.push(dailyDate);
   try {localStorage.setItem('nursedoku-stats',JSON.stringify(stats));}catch {}
@@ -344,18 +363,40 @@ function theme(name) { (palettes[name]||palettes.general).forEach((v,i)=>documen
 $('theme').addEventListener('change',()=>theme($('theme').value));
 try {theme(localStorage.getItem('nursedoku-theme'));}catch{}
 const BONUS=[
- {q:'A nurse’s hands are visibly soiled after care. Which hand hygiene method is appropriate?',a:['Wash with soap and water','Use gloves without cleaning hands','Wipe hands with a dry towel'],correct:0,why:'Visible soil requires soap and water. Gloves do not replace hand hygiene.'},
- {q:'After removing gloves, what should the nurse do?',a:['Clean hands','Skip hand hygiene if gloves were intact','Put on a second pair without cleaning'],correct:0,why:'Perform hand hygiene after glove removal to reduce the spread of germs.'},
- {q:'In most routine clinical situations when hands are not visibly soiled, which method does CDC prefer?',a:['Water alone','Alcohol-based hand sanitizer','A dry paper towel'],correct:1,why:'Alcohol-based hand sanitizer is preferred in most clinical situations when hands are not visibly soiled.'}
+ {q:'After patient care, the nurse’s hands are visibly soiled. Which action is best?',a:['Wash with soap and water','Use a dry towel only','Put on clean gloves without cleaning hands','Rinse with water only'],correct:0,why:'Visible soil requires handwashing with soap and water. Gloves do not replace hand hygiene.',source:'https://www.cdc.gov/clean-hands/hcp/clinical-safety/index.html'},
+ {q:'The nurse removes gloves after patient care. What should happen next?',a:['Begin care of the next patient','Perform hand hygiene','Reuse the gloves if they look clean','Clean hands only after the shift'],correct:1,why:'Hand hygiene is needed after glove removal because hands may become contaminated.',source:'https://www.cdc.gov/clean-hands/hcp/clinical-safety/index.html'},
+ {q:'For most routine clinical care when hands are not visibly soiled, which method does CDC prefer?',a:['Water alone','A dry paper towel','Alcohol-based hand sanitizer','Gloves instead of hand hygiene'],correct:2,why:'Alcohol-based hand sanitizer is preferred in most clinical situations when hands are not visibly soiled.',source:'https://www.cdc.gov/clean-hands/hcp/clinical-safety/index.html'},
+ {q:'Which patients require Standard Precautions?',a:['Only patients with a positive culture','Only patients in isolation','Only hospitalized patients','All patients in all care settings'],correct:3,why:'Standard Precautions apply regardless of known infection status.',source:'https://www.cdc.gov/infection-control/hcp/core-practices/index.html'},
+ {q:'A nurse expects blood to splash during a procedure. What protection should be included for the eyes, nose, and mouth?',a:['Gloves alone','Eye protection and a mask, or a face shield','A gown alone','No PPE if infection is unconfirmed'],correct:1,why:'Select face protection when splashes could expose mucous membranes.',source:'https://www.cdc.gov/infection-control/hcp/core-practices/index.html'},
+ {q:'A syringe was used for one patient. Is changing the needle enough to use that syringe for another patient?',a:['Yes, if the needle is sterile','Yes, if no blood is visible','No; use a new syringe and needle','Yes, if both patients have the same diagnosis'],correct:2,why:'Needles and syringes are for one patient only.',source:'https://www.cdc.gov/infection-control/hcp/core-practices/index.html'},
+ {q:'A reusable blood-pressure cuff will be used on another patient. What should the nurse do?',a:['Clean and disinfect it according to its instructions','Wipe it with a dry cloth only','Wait until the end of the shift','Assume it is clean if no dirt is visible'],correct:0,why:'Reusable equipment needs appropriate reprocessing between patients.',source:'https://www.cdc.gov/infection-control/hcp/core-practices/index.html'}
 ];
 function showBonus() {
- const item=BONUS[(stats.wins-1+BONUS.length)%BONUS.length];$('bonusQuestion').textContent=item.q;$('bonusAnswers').innerHTML='';$('bonusFeedback').textContent='';
- item.a.forEach((answer,i)=>{const b=document.createElement('button');b.type='button';b.className='secondary-btn';b.textContent=answer;b.onclick=()=>{$('bonusFeedback').textContent=(i===item.correct?'Correct. ':'Try again. ')+item.why;};$('bonusAnswers').append(b);});
+ const item=BONUS[(stats.wins-1+BONUS.length)%BONUS.length];
+ $('bonusQuestion').textContent=item.q;$('bonusAnswers').innerHTML='';$('bonusFeedback').textContent='';
+ $('bonusFeedback').className='';$('shareStatus').textContent='';$('bonusSource').href=item.source;
+ $('bonusSource').textContent='Read the CDC rationale';
+ const choices=item.a.map((answer,i)=>({answer,i}));
+ for(let i=choices.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[choices[i],choices[j]]=[choices[j],choices[i]];}
+ let answered=false;
+ choices.forEach(({answer,i})=>{
+   const button=document.createElement('button');button.type='button';button.className='secondary-btn bonus-answer';button.textContent=answer;
+   button.onclick=()=>{
+     if(answered)return;answered=true;
+     [...$('bonusAnswers').children].forEach(b=>{b.disabled=true;if(+b.dataset.choice===item.correct)b.classList.add('answer-correct');});
+     button.classList.add(i===item.correct?'answer-selected':'answer-wrong');
+     $('bonusFeedback').className=i===item.correct?'feedback-correct':'feedback-review';
+     $('bonusFeedback').textContent=(i===item.correct?'Correct. ':'Review: '+item.a[item.correct]+'. ')+item.why;
+   };
+   button.dataset.choice=i;$('bonusAnswers').append(button);
+ });
 }
-if(finished)showBonus();
+
+if(finished&&!lost)showBonus();
 
 function practicePuzzle(difficulty,seed) {
- const pool=PUZZLE_BANK[difficulty]||PUZZLE_BANK.medium;
+ const bank=$('boardSize').value==='10'?LARGE_PUZZLE_BANK:PUZZLE_BANK;
+ const pool=bank[difficulty]||bank.medium;
  const base=copy(pool[(seed>>>0)%pool.length]);
  // Reflect/rotate each puzzle without altering its logical rating or uniqueness.
  let regions=base.regions;
@@ -373,7 +414,7 @@ function practicePuzzle(difficulty,seed) {
 function updatePuzzleInfo() {
  const rating=analyzePuzzle(puzzle());
  const descriptions={easy:'Direct deductions',medium:'Care-zone elimination',hard:'Deeper reasoning'};
- $('puzzleInfo').textContent=gameKind==='journey'?`Training ${level+1} of ${LEVELS.length} · ${completedShifts.length} completed`:`${rating.difficulty[0].toUpperCase()+rating.difficulty.slice(1)} · ${descriptions[rating.difficulty]} · ${size()}×${size()}${gameKind==='daily'?' · '+dailyDate:''}`;
+ $('puzzleInfo').textContent=gameKind==='journey'?`Training ${level+1} of ${LEVELS.length} · ${size()}×${size()} · ${rating.difficulty} · ${completedShifts.length} completed`:`${rating.difficulty[0].toUpperCase()+rating.difficulty.slice(1)} · ${descriptions[rating.difficulty]} · ${size()}×${size()}${gameKind==='daily'?' · '+dailyDate:''}`;
  $('milestone').textContent=stats.wins>=25?'Milestone: 25 shifts completed':stats.wins>=10?'Milestone: 10 shifts completed':stats.wins>=1?'Milestone: first shift completed':'';
 }
 function openArchive() {
@@ -397,3 +438,6 @@ $('shareBtn').addEventListener('click',async()=>{
  catch {$('shareStatus').textContent=text;}
 });
 if('serviceWorker' in navigator && location.protocol==='https:')navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(()=>{});
+
+$('retryBtn').addEventListener('click',()=>{$('lossDialog').close();reset();});
+$('newAfterLossBtn').addEventListener('click',()=>{$('lossDialog').close();reset(true);});

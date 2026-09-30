@@ -14,9 +14,9 @@ Place one RN in every row, column, and colored care zone. RNs cannot touch, even
 
 ## Completed roadmap
 
-- [x] Guided 44-shift learning journey; first 4×4 board has a single-cell care zone
+- [x] Guided 56-shift learning journey; first 4×4 board has a single-cell care zone
 - [x] Daily puzzle, seeded by the device’s local calendar date
-- [x] 72 unique 6×6 practice puzzles with Easy/Medium/Hard ratings based on logical deductions
+- [x] 144 unique 6×6 and 10×10 practice puzzles with Easy/Medium/Hard ratings based on logical deductions
 - [x] Connected-region generator with exhaustive uniqueness checks
 - [x] Daily streak, total wins, and best completion time
 - [x] Hints, undo, reset, automatic completion, next shift
@@ -27,7 +27,7 @@ Place one RN in every row, column, and colored care zone. RNs cannot touch, even
 - [x] X pop, RN bounce and sparkle, care-zone feedback, win confetti; reduced-motion support
 - [x] Saved progress and themes; timer pauses when the page is hidden
 
-Progress and statistics are saved on this browser/device. Difficulty uses an automated deduction heuristic; human calibration remains future work. The bonus bank currently contains three original hand-hygiene questions. Generation uses bounded attempts and a verified starter fallback if a unique board cannot be produced.
+Progress and statistics are saved on this browser/device. Difficulty uses an automated deduction heuristic; human calibration remains future work. The bonus bank currently contains seven original infection-prevention questions. Generation uses bounded attempts and a verified starter fallback if a unique board cannot be produced.
 
 ## Run locally
 
@@ -44,3 +44,5 @@ Verified the original eight learning boards, all 72 rated practice boards, and 3
 ## Current roadmap
 
 See [ROADMAP.md](ROADMAP.md) for delivered Phase 1 features and the next phase. General/Pediatrics/Emergency are color palettes, not specialty gameplay modes. Offline caching is scoped to NurseDoku.
+
+Current rules: three conflicting RN placements end a shift. Invalid placements are rejected; Undo does not restore strikes. Training advances from Easy through Medium to Hard. The palette selector only changes colors. Accounts are pending a Supabase connection; see accounts/README.md.

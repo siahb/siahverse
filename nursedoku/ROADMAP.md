@@ -5,8 +5,11 @@
 - [x] More compact mobile shift-station layout and an original teal visual identity
 - [x] Drag interpolation, RN protection, whole-stroke undo, canceled-touch handling
 - [x] Double-tap tolerance and timer resume fix
-- [x] 72 unique practice boards rated by deductions, independently of board size
-- [x] 44 training shifts, saved completion, resume first unfinished shift
+- [x] 144 unique practice boards rated by deductions, independently of board size
+- [x] 56 training shifts, saved completion, resume first unfinished shift
+- [x] 10×10 board selection and difficulty-ordered training
+- [x] Three strikes per shift with retry and saved strike count
+- [x] Seven source-reviewed optional bonus questions with answer locking and rationales
 - [x] Win milestones
 - [x] Daily archive from September 29, 2026, completed-date records, copyable results
 - [x] Home-screen manifest, local icon, scoped offline cache
@@ -26,7 +29,7 @@ Difficulty is an automated heuristic: Easy resolves with row/column/zone singles
 
 ## Optional future work
 
-- [ ] Account-based cloud saves across devices
+- [ ] Account-based cloud saves across devices — Supabase connection pending; preparatory SQL and plan in accounts/
 - [ ] Public mobile-store release only if requested
 
 Cloud saves need a backend and an account/privacy design. Current progress remains on the browser/device. No account is required.

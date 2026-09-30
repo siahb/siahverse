@@ -48,7 +48,7 @@ export async function accountApi(context,path) {
       return reply({},200,[cookie(ACCESS,'',0),cookie(REFRESH,'',0)]);
     }
     if(path==='password'){
-      if(typeof body.password!=='string'||body.password.length<12||body.password.length>1024)return reply({error:'Use 12 to 1024 characters.'},400);
+      if(typeof body.password!=='string'||body.password.length<10||body.password.length>1024)return reply({error:'Use 10 to 1024 characters.'},400);
       const state=await accountSession(request);if(!state.session)return reply({error:'Sign in first.'},401);
       const response=await fetch(URL+'/auth/v1/user',{method:'PUT',headers:{apikey:KEY,Authorization:'Bearer '+state.session.access_token,'Content-Type':'application/json'},body:JSON.stringify({password:body.password})});
       return reply(response.ok?{user:state.session.user}:{error:'Password could not be updated.'},response.ok?200:400,state.set);
@@ -65,7 +65,7 @@ export async function accountApi(context,path) {
     if(!['signin','signup','recover'].includes(path))return reply({error:'Not found'},404);
     if(typeof body.email!=='string'||body.email.length>254||!body.email.includes('@'))return reply({error:'Enter a valid email address.'},400);
     if(path!=='recover'&&(typeof body.password!=='string'||body.password.length>1024||!body.password))return reply({error:'Enter your password.'},400);
-    if(path==='signup'&&body.password.length<12)return reply({error:'Use at least 12 characters.'},400);
+    if(path==='signup'&&body.password.length<10)return reply({error:'Use at least 10 characters.'},400);
     const redirect='https://siahverse.cc/account/';
     const target=path==='signin'?'token?grant_type=password':path==='signup'?'signup?redirect_to='+encodeURIComponent(redirect):'recover?redirect_to='+encodeURIComponent(redirect);
     const result=await auth(target,{email:body.email.trim(),...(path!=='recover'?{password:body.password}:{})});

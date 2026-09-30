@@ -17,6 +17,7 @@ globalThis.fetch=async(input,init={})=>{
   const url=new URL(input),path=url.pathname,body=init.body?JSON.parse(init.body):{},token=new Headers(init.headers).get('Authorization')?.slice(7);
   if(path.endsWith('/user'))return token?.startsWith('access-')&&!revoked.has(token)?Response.json(user(token.slice(7))):Response.json({error:'expired'},{status:401});
   if(path.endsWith('/logout')){revoked.add(token);return Response.json({});}
+  if(path.endsWith('/signup'))return Response.json({user:user(body.email.split('@')[0])});
   if(path.endsWith('/token')){
     const id=url.searchParams.get('grant_type')==='password'?body.email.split('@')[0]:body.refresh_token?.slice(8);
     if(!id)return Response.json({error:'invalid'},{status:400});
@@ -35,6 +36,10 @@ async function api(path,body,origin='https://siahverse.cc'){
 assert.equal((await api('session')).status,200);
 assert.equal((await api('signin',{email:'a@example.test',password:'correct'},'https://evil.example')).status,403);
 assert.equal((await api('signin',{email:'a@example.test',password:'correct'})).status,200);
+assert.equal((await api('signup',{email:'new@example.test',password:'123456789'})).status,400);
+assert.equal((await api('signup',{email:'new@example.test',password:'1234567890'})).status,200);
+assert.equal((await api('password',{password:'123456789'})).status,400);
+assert.equal((await api('password',{password:'1234567890'})).status,200);
 for(const host of ['siahverse.cc','todo.siahverse.cc','nextset.siahverse.cc'])assert.equal((await accountSession(new Request('https://'+host,{headers:{Cookie:cookieHeader()}}))).session.user.id,'a');
 assert.equal((await api('callback',{access_token:'access-a',refresh_token:'refresh-b'})).status,401);
 jar.set('sv_account_access','expired');const renewed=await api('session');assert.equal((await renewed.json()).session.user.id,'a');assert.equal(jar.get('sv_account_access'),'access-a');

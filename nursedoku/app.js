@@ -294,13 +294,31 @@ board.addEventListener('lostpointercapture',e=>endPointer(e,true));
 board.addEventListener('contextmenu',e=>e.preventDefault());
 board.addEventListener('click',e=>{if(e.detail===0 && e.target.closest('.cell')){const cell=e.target.closest('.cell');toggle(+cell.dataset.row,+cell.dataset.col,'x');}});
 $('undoBtn').addEventListener('click',()=>{flushTap();if(finished||!history.length)return;state=history.pop();sound('undo');afterMove();});
+// Deduction hints use the visible RNs, never the player's Xs as proof.
+function explainHint(p,marks) {
+ const n=p.regions.length,cells=Array.from({length:n*n},(_,i)=>({r:Math.floor(i/n),c:i%n,z:p.regions[Math.floor(i/n)][i%n]}));
+ const placed=cells.filter(x=>marks[x.r][x.c]==='rn');
+ const wrong=placed.find(x=>p.solution[x.r]!==x.c);
+ if(wrong)return {...wrong,kind:'review',text:`Review the RN at row ${wrong.r+1}, column ${wrong.c+1}. It does not fit this board's complete solution.`};
+ const candidates=cells.filter(x=>!placed.some(y=>x.r===y.r||x.c===y.c||x.z===y.z||(Math.abs(x.r-y.r)<=1&&Math.abs(x.c-y.c)<=1)));
+ const label=(type,k)=>type==='r'?`row ${k+1}`:type==='c'?`column ${k+1}`:`care zone ${k+1}`;
+ const groups=[];
+ for(const type of ['z','r','c'])for(let k=0;k<n;k++)if(!placed.some(x=>x[type]===k))groups.push({type,k,ids:candidates.filter(x=>x[type]===k)});
+ for(const g of groups)if(g.ids.length===1){const x=g.ids[0];return {...x,kind:'rn',text:`Only row ${x.r+1}, column ${x.c+1} can staff ${label(g.type,g.k)}. The other squares are ruled out by placed RNs in their row, column, care zone, or neighboring cells. ${marks[x.r][x.c]==='x'?'Erase that X, then double-tap':'Double-tap'} the outlined square to place an RN.`};}
+ for(const g of groups)if(g.ids.length)for(const type of ['r','c','z']){
+  if(type===g.type||new Set(g.ids.map(x=>x[type])).size!==1)continue;
+  const k=g.ids[0][type],x=candidates.find(x=>x[type]===k&&x[g.type]!==g.k&&marks[x.r][x.c]==='');
+  if(x)return {...x,kind:'x',text:`Every possible RN in ${label(g.type,g.k)} lies in ${label(type,k)}. That ${label(type,k)} can have only one RN, so row ${x.r+1}, column ${x.c+1} outside ${label(g.type,g.k)} must be X. Tap the outlined square once.`};
+ }
+ const r=p.solution.findIndex((c,r)=>marks[r][c]!=='rn');
+ if(r<0)return null;
+ const c=p.solution[r];return {r,c,kind:'reveal',text:`Solution reveal: row ${r+1}, column ${c+1} contains an RN. This position needs deeper reasoning than the current deduction hints can explain. ${marks[r][c]==='x'?'Erase that X, then double-tap':'Double-tap'} the outlined square.`};
+}
 $('hintBtn').addEventListener('click',()=>{
-  flushTap();if(finished)return;sound('hint');
-  const wrong=positions().find(([r,c])=>puzzle().solution[r]!==c);
-  if(wrong) {hintCell=wrong.join(',');paint();tell('Reconsider this RN. It blocks the solution.','error');return;}
-  const r=puzzle().solution.findIndex((c,r)=>state[r][c]!=='rn');
-  if(r>=0){hintCell=`${r},${puzzle().solution[r]}`;paint();tell('Double-tap the outlined square to place an RN.');}
+ flushTap();if(finished)return;const hint=explainHint(puzzle(),state);if(!hint)return;
+ sound('hint');hintCell=`${hint.r},${hint.c}`;paint();tell(hint.text,hint.kind==='review'?'error':'');
 });
+
 function reset(next=false) {
   if(requireNursingAnswer())return;
   clearTap();clearTimeout(winTimeout);winSequence++;if(next) {
@@ -442,10 +460,34 @@ function updatePuzzleInfo() {
  $('puzzleInfo').textContent=gameKind==='journey'?`Training ${level+1} of ${LEVELS.length} · ${size()}×${size()} · ${rating.difficulty} · ${completedShifts.length} completed`:`${rating.difficulty[0].toUpperCase()+rating.difficulty.slice(1)} · ${descriptions[rating.difficulty]} · ${size()}×${size()}${gameKind==='daily'?' · '+dailyDate:''}`;
  $('milestone').textContent=stats.wins>=25?'Milestone: 25 shifts completed':stats.wins>=10?'Milestone: 10 shifts completed':stats.wins>=1?'Milestone: first shift completed':'';
 }
+let archiveMonth=localDate().slice(0,7);
+function calendarDays(month,today,completed,selected) {
+ const [year,m]=month.split('-').map(Number),first=new Date(year,m-1,1),count=new Date(year,m,0).getDate();
+ return {offset:first.getDay(),days:Array.from({length:count},(_,i)=>{
+  const date=month+'-'+String(i+1).padStart(2,'0');return {date,day:i+1,disabled:date<'2026-09-29'||date>today,completed:completed.includes(date),selected:date===selected,today:date===today};
+ })};
+}
+function renderCalendar(){
+ const model=calendarDays(archiveMonth,localDate(),stats.dailyDates,$('archiveDate').value);
+ const [year,m]=archiveMonth.split('-').map(Number);
+ $('archiveMonthLabel').textContent=new Date(year,m-1,1).toLocaleDateString(undefined,{month:'long',year:'numeric'});
+ $('archivePrevBtn').disabled=archiveMonth<='2026-09';$('archiveNextBtn').disabled=archiveMonth>=localDate().slice(0,7);
+ $('archiveCalendar').innerHTML='';
+ for(let i=0;i<model.offset;i++){const gap=document.createElement('span');gap.setAttribute('aria-hidden','true');$('archiveCalendar').append(gap);}
+ for(const day of model.days){const button=document.createElement('button');button.type='button';button.className='calendar-day'+(day.completed?' completed':'')+(day.selected?' selected':'');button.disabled=day.disabled;button.textContent=day.day+(day.completed?' ✓':'');button.setAttribute('aria-label',day.date+(day.completed?', completed':day.disabled?', unavailable':', not completed'));button.setAttribute('aria-pressed',String(day.selected));if(day.today)button.setAttribute('aria-current','date');button.onclick=()=>{$('archiveDate').value=day.date;renderCalendar();};$('archiveCalendar').append(button);}
+ const selected=$('archiveDate').value;
+ $('archiveStatus').textContent=`${stats.dailyDates.length} daily puzzles completed. ${selected}: ${stats.dailyDates.includes(selected)?'completed — replay anytime':'not completed'}.`;
+}
+for(const [id,step] of [['archivePrevBtn',-1],['archiveNextBtn',1]])$(id).addEventListener('click',()=>{
+ const [y,m]=archiveMonth.split('-').map(Number),next=localDate(new Date(y,m-1+step,1)).slice(0,7);
+ if(next<'2026-09'||next>localDate().slice(0,7))return;archiveMonth=next;renderCalendar();
+});
+$('archiveDate').addEventListener('change',()=>{const date=$('archiveDate').value;if(/^\d{4}-\d{2}-\d{2}$/.test(date)&&date>='2026-09-29'&&date<=localDate()){archiveMonth=date.slice(0,7);renderCalendar();}});
+$('menuArchiveBtn').addEventListener('click',()=>openArchive());
 function openArchive() {
  if(requireNursingAnswer())return;
  $('archiveDate').max=localDate();$('archiveDate').value=localDate();
- $('archiveStatus').textContent=`${stats.dailyDates.length} daily puzzles completed. Choose today or an earlier date.`;
+ archiveMonth=localDate().slice(0,7);renderCalendar();
  pause();$('archiveDialog').showModal();
 }
 $('archiveBtn').addEventListener('click',openArchive);
@@ -549,7 +591,7 @@ $('menuBtn').addEventListener('click',returnToMenu);
 for(const [id,kind] of [['menuLearnBtn','journey'],['menuDailyBtn','daily'],['menuPracticeBtn','practice']])$(id).addEventListener('click',()=>{if(switchGame(kind)!==false)enterGame();});
 $('winDialog').addEventListener('cancel',event=>{if(!bonusSubmitted)event.preventDefault();});
 $('menuPreferences').append(document.querySelector('.preferences'));
-const UPDATE_VERSION='2026-09-29-menu-and-flow';
+const UPDATE_VERSION='2026-09-29-hints-calendar';
 let changelogShown=false;
 function markChangelogSeen(){try{localStorage.setItem('nursedoku-changelog',UPDATE_VERSION);}catch{}changelogShown=true;}
 function openChangelog(){pause();$('changelogDialog').showModal();}

@@ -8,7 +8,7 @@ vm.createContext(context);vm.runInContext(fs.readFileSync(require('path').join(_
 function run(code){return vm.runInContext(code,context);}
 assert.equal(run('inGame'),false);assert.equal(run('runningSince'),null);assert.equal(get('gameView').hidden,undefined);
 get('closeChangelogBtn').events.click[0]();get('changelogDialog').events.close[0]();
-assert.equal(storage['nursedoku-changelog'],'2026-09-29-menu-and-flow');
+assert.equal(storage['nursedoku-changelog'],'2026-09-29-hints-calendar');
 get('continueBtn').events.click[0]();assert.equal(run('inGame'),true);assert.notEqual(run('runningSince'),null);
 const evt={pointerId:1,isPrimary:true,button:0,clientX:10,clientY:10,preventDefault(){}};
 hit=get('board').children[1];hit.closest=()=>hit;
@@ -99,3 +99,20 @@ assert.equal(vm.runInContext('bonusSubmitted',reloaded),true);assert.equal(reloa
 assert(reloadedGet('resultShareX').href.includes('intent/tweet?text='));
 assert(reloadedGet('resultShareWhatsapp').href.includes('wa.me/?text='));
 console.log('PASS: completed-save reload stays on menu; submitted quiz persists; changelog is not repeated; social links include results.');
+// Check hints against the unique solutions, including arbitrary player X marks.
+for(const bank of ['PUZZLE_BANK','LARGE_PUZZLE_BANK'])for(const difficulty of ['easy','medium','hard']){
+ const count=run(`${bank}.${difficulty}.length`);
+ for(let i=0;i<count;i++)for(const filled of [0,1,3]){
+  const result=run(`(()=>{const p=${bank}.${difficulty}[${i}],n=p.regions.length,marks=Array.from({length:n},(_,r)=>Array.from({length:n},(_,c)=>(r+c)%3===0?'x':''));for(let r=0;r<${filled};r++)marks[r][p.solution[r]]='rn';const h=explainHint(p,marks);return {h,correct:p.solution[h.r]===h.c};})()`);
+  assert.equal(result.correct,result.h.kind!=='x','A deduction must agree with the independently verified unique solution');
+ }
+}
+run("gameKind='journey';level=0;state=blank();finished=false;strikes=0;");
+get('hintBtn').events.click[0]();assert(get('message').textContent.includes('Only row 1, column 2'));
+assert(get('message').textContent.includes('care zone 1'));
+let calendar=run("calendarDays('2026-09','2026-09-30',['2026-09-29'],'2026-09-29')");
+assert.equal(calendar.offset,2);assert.equal(calendar.days.length,30);assert(calendar.days[27].disabled);assert(calendar.days[28].completed);assert(calendar.days[28].selected);assert(calendar.days[29].today);
+calendar=run("calendarDays('2028-02','2028-02-14',[],'2028-02-14')");assert.equal(calendar.days.length,29);assert(!calendar.days[13].disabled);assert(calendar.days[14].disabled);
+run("stats.dailyDates=['2026-09-29'];openArchive()");assert(get('archiveCalendar').children.length>=30);assert.equal(get('archivePrevBtn').disabled,true);
+get('archiveCalendar').children.find(b=>b.attributes?.['aria-label']==='2026-09-29, completed').onclick();assert.equal(get('archiveDate').value,'2026-09-29');assert(get('archiveStatus').textContent.includes('completed — replay'));
+console.log('PASS: deduction hints agree with unique 6×6/10×10 solutions despite arbitrary Xs; daily calendar marks completion, selection, launch bounds, future dates, and leap years.');

@@ -9,7 +9,7 @@
 - [x] 56 training shifts, saved completion, resume first unfinished shift
 - [x] 10×10 board selection and difficulty-ordered training
 - [x] Three strikes per shift for any incorrect RN square, with retry and saved strike count
-- [x] Seven source-reviewed optional bonus questions with answer locking and rationales
+- [x] Seven source-reviewed nursing questions with answer locking and rationales
 - [x] Win milestones
 - [x] Daily archive from September 29, 2026, completed-date records, copyable results
 - [x] Home-screen manifest, local icon, scoped offline cache
@@ -32,11 +32,11 @@ Difficulty is an automated heuristic: Easy resolves with row/column/zone singles
 ## Phase 2 — next
 
 - [ ] Test gestures and sound on physical iPhones, including VoiceOver
-- [ ] Explain each hint with the deduction that supports it
+- [x] Explain direct deductions and care-zone elimination hints; label deeper solution reveals honestly
 - [ ] Expand original, source-reviewed nursing questions by specialty
 - [ ] Specialty modes with actual question/content differences
 - [ ] Progression map and unlockable palettes
-- [ ] Daily calendar with visual completed-day markers
+- [x] Daily calendar with completed-day markers, date selection, and month navigation
 - [ ] Improved statistics by difficulty, hints used, and puzzle identity
 
 ## Optional future work
@@ -46,4 +46,12 @@ Difficulty is an automated heuristic: Easy resolves with row/column/zone singles
 - [ ] Account deletion/export and dedicated privacy page
 - [ ] Public mobile-store release only if requested
 
-Cloud saves need a backend and an account/privacy design. Current progress remains on the browser/device. No account is required.
+Guest progress stays on the browser/device. The private cloud-save backend is implemented; public signup is waiting for Resend domain verification and SMTP delivery tests. No account is required for guest play.
+
+## September 29 guidance update — delivered
+
+- [x] Copy and social sharing icons with accessible labels
+- [x] Hints explain row/column/zone singles and confined-zone elimination
+- [x] Incorrect Xs never become false evidence in a hint
+- [x] Daily calendar accessible from the main menu and the game
+- [x] First-open changelog includes the new guidance and calendar

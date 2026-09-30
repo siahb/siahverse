@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#f8f3ef">
   <meta name="description" content="Colorful logic puzzles with a nursing question after every shift. Play NurseDoku free.">
-  <meta property="og:title" content="NurseDoku · A little logic. A little nursing.">
+  <meta property="og:title" content="NurseDoku · Nursing logic puzzles">
   <meta property="og:description" content="Staff every row, column, and care zone. A colorful puzzle break with a nursing question after every shift.">
   <meta property="og:url" content="https://siahverse.cc/nursedoku/">
   <meta property="og:type" content="website">
   <title>NurseDoku</title>
-  <link rel="stylesheet" href="assets/styles.b258fc1988.css">
+  <link rel="stylesheet" href="assets/styles.61c697cf26.css">
   <link rel="icon" href="icon.svg">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -21,7 +21,7 @@
       <div>
         <a class="eyebrow brand-link" href="https://siahverse.cc/nursing/">Siahverse Nursing</a>
         <h1>NurseDoku</h1>
-        <p class="subtitle">Staff every row, column, and care zone — safely.</p>
+        <p class="subtitle">One RN per row, column, and care zone.</p>
       </div>
       <div class="top-actions"><button id="soundBtn" class="ghost-btn volume-btn" type="button" aria-pressed="true" aria-label="Mute game sounds" title="Mute game sounds"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path class="volume-waves" d="M15 8a6 6 0 0 1 0 8M18 5a10 10 0 0 1 0 14"/><path class="volume-muted" d="m16 9 5 6m0-6-5 6"/></svg></button><button id="menuBtn" class="ghost-btn" type="button" hidden>Menu</button><button id="accountBtn" class="ghost-btn" type="button">Sign in</button><button id="howToBtn" class="ghost-btn" type="button">How to play</button></div>
     </header>
@@ -30,9 +30,9 @@
     <section id="mainMenu" class="main-menu" aria-labelledby="menuHeading">
       <div class="menu-hero">
         <div class="menu-emblem" aria-hidden="true"><span>×</span><span></span><span>RN</span><span>RN</span><span>×</span><span></span><span></span><span>RN</span><span>×</span></div>
-        <p class="eyebrow">Your next little victory</p>
-        <h2 id="menuHeading">A little logic.<br>A little nursing.</h2>
-        <p>Colorful care zones, one RN in each. Take a puzzle break, then put your nursing knowledge to work.</p>
+        <p class="eyebrow">Nursing logic puzzles</p>
+        <h2 id="menuHeading">NurseDoku</h2>
+        <p>Place one RN in every row, column, and care zone. RNs can’t touch, even diagonally.</p>
         <button id="continueBtn" class="primary-btn full" type="button">Start your shift</button>
         <p id="menuStats" class="stats-line"></p>
       </div>
@@ -41,11 +41,11 @@
         <p id="dailyTipText"></p><a id="dailyTipSource" target="_blank" rel="noopener noreferrer">Read source</a>
       </aside>
       <div class="menu-modes">
-        <button id="menuLearnBtn" class="mode-card" type="button"><span class="mode-symbol">01</span><span><strong>Learn &amp; progress</strong><small>56 shifts · easy to hard</small></span><span aria-hidden="true">→</span></button>
-        <button id="menuDailyBtn" class="mode-card" type="button"><span class="mode-symbol">D</span><span><strong>Daily shift</strong><small>A fresh challenge every day</small></span><span aria-hidden="true">→</span></button>
+        <button id="menuLearnBtn" class="mode-card" type="button"><span class="mode-symbol">01</span><span><strong>Training</strong><small>56 shifts · easy to hard</small></span><span aria-hidden="true">→</span></button>
+        <button id="menuDailyBtn" class="mode-card" type="button"><span class="mode-symbol">D</span><span><strong>Daily shift</strong><small>One new puzzle each day</small></span><span aria-hidden="true">→</span></button>
       </div>
-      <button id="menuArchiveBtn" class="secondary-btn full" type="button">Daily calendar · Your completed shifts</button><section class="menu-practice" aria-label="Custom practice"><p class="eyebrow">Choose your setup</p><div id="menuPreferences"></div><button id="menuPracticeBtn" class="mode-card" type="button"><span class="mode-symbol">×</span><span><strong>Practice your way</strong><small>Play with your chosen settings</small></span><span aria-hidden="true">→</span></button></section>
-      <section class="menu-share"><h3>Pass the puzzle along</h3><p>A little break for your study group.</p><div class="social-actions"><button id="menuShareBtn" class="secondary-btn" type="button">Share…</button><button id="menuCopyBtn" class="ghost-btn icon-action" type="button" aria-label="Copy link" title="Copy link"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="8" y="8" width="12" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button><a id="menuShareFacebook" class="social-link icon-action" aria-label="Share on Facebook" title="Share on Facebook" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 22v-9h3l.5-3H14V8c0-.9.3-1.5 1.6-1.5H18V3.8c-.4-.1-1.8-.3-3.3-.3-3.3 0-5.2 1.8-5.2 5V10H7v3h2.5v9H14Z"/></svg></a><button id="menuShareInstagram" class="ghost-btn icon-action" type="button" aria-label="Share image to Instagram" title="Share image to Instagram"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg></button><a id="menuShareX" class="social-link icon-action" aria-label="Share on X" title="Share on X" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3L12 14.6 5.5 22H2.3l7.2-8.3L1.8 2h6.5l4.5 6.8L18.9 2ZM17.8 20h1.7L7.3 3.9H5.5L17.8 20Z"/></svg></a><a id="menuShareWhatsapp" class="social-link icon-action" aria-label="Share on WhatsApp" title="Share on WhatsApp" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M20.5 11.6a8.6 8.6 0 0 1-12.8 7.5L3 20.5l1.4-4.6A8.6 8.6 0 1 1 20.5 11.6Z"/><path fill="currentColor" d="M8.2 6.6c-.3 0-.6.2-.8.5-.5.6-.6 1.2-.4 2 .4 2.2 3.4 5.2 5.8 6 .8.3 1.8.3 2.4-.3.4-.4.7-1 .6-1.3-.1-.2-1.8-1.1-2.1-1.1-.2 0-.6.6-.9.9-.2.2-.4.2-.7.1-1.2-.5-2.3-1.5-2.9-2.6-.2-.3-.2-.4 0-.6l.5-.7c.2-.2.1-.4 0-.6L9 7c-.2-.4-.4-.4-.8-.4Z"/></svg></a></div><p id="menuShareStatus" class="share-status" role="status"></p></section>
+      <button id="menuArchiveBtn" class="secondary-btn full" type="button">Daily calendar · Your completed shifts</button><section class="menu-practice" aria-label="Custom practice"><p class="eyebrow">Choose your setup</p><div id="menuPreferences"></div><button id="menuPracticeBtn" class="mode-card" type="button"><span class="mode-symbol">×</span><span><strong>Practice</strong><small>Play with your chosen settings</small></span><span aria-hidden="true">→</span></button></section>
+      <section class="menu-share"><h3>Share NurseDoku</h3><p>Send the game to a friend or your study group.</p><div class="social-actions"><button id="menuShareBtn" class="secondary-btn" type="button">Share…</button><button id="menuCopyBtn" class="ghost-btn icon-action" type="button" aria-label="Copy link" title="Copy link"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="8" y="8" width="12" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button><a id="menuShareFacebook" class="social-link icon-action" aria-label="Share on Facebook" title="Share on Facebook" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 22v-9h3l.5-3H14V8c0-.9.3-1.5 1.6-1.5H18V3.8c-.4-.1-1.8-.3-3.3-.3-3.3 0-5.2 1.8-5.2 5V10H7v3h2.5v9H14Z"/></svg></a><button id="menuShareInstagram" class="ghost-btn icon-action" type="button" aria-label="Share image to Instagram" title="Share image to Instagram"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg></button><a id="menuShareX" class="social-link icon-action" aria-label="Share on X" title="Share on X" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3L12 14.6 5.5 22H2.3l7.2-8.3L1.8 2h6.5l4.5 6.8L18.9 2ZM17.8 20h1.7L7.3 3.9H5.5L17.8 20Z"/></svg></a><a id="menuShareWhatsapp" class="social-link icon-action" aria-label="Share on WhatsApp" title="Share on WhatsApp" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M20.5 11.6a8.6 8.6 0 0 1-12.8 7.5L3 20.5l1.4-4.6A8.6 8.6 0 1 1 20.5 11.6Z"/><path fill="currentColor" d="M8.2 6.6c-.3 0-.6.2-.8.5-.5.6-.6 1.2-.4 2 .4 2.2 3.4 5.2 5.8 6 .8.3 1.8.3 2.4-.3.4-.4.7-1 .6-1.3-.1-.2-1.8-1.1-2.1-1.1-.2 0-.6.6-.9.9-.2.2-.4.2-.7.1-1.2-.5-2.3-1.5-2.9-2.6-.2-.3-.2-.4 0-.6l.5-.7c.2-.2.1-.4 0-.6L9 7c-.2-.4-.4-.4-.8-.4Z"/></svg></a></div><p id="menuShareStatus" class="share-status" role="status"></p></section>
       <button id="changelogBtn" class="ghost-btn" type="button">What’s new</button>
     </section>
     <div id="gameView" hidden>
@@ -93,19 +93,19 @@
         <li>RNs cannot touch, including diagonally.</li>
       </ul>
     </section>
-    <p class="install-tip">Keep your shift close: on iPhone, use Safari’s Share menu → Add to Home Screen. Offline play becomes available after your first online visit.</p>
+    <p class="install-tip">On iPhone, use Safari’s Share menu → Add to Home Screen. Offline play becomes available after your first online visit.</p>
     </div>
   <footer class="app-version"><time datetime="2026-09-29">September 29, 2026</time><span>Version 1.1.0</span></footer>
   </main>
 
   <dialog id="changelogDialog"><div class="dialog-body changelog-body">
-    <p class="eyebrow">September 29, 2026 · New update</p><h2>A little more guidance.</h2><p>Here’s what’s new in NurseDoku:</p>
-    <ul class="changelog-list"><li><strong>Better 10×10 shifts.</strong> Ten distinct colors, connected care zones, and one free starter square per board.</li><li><strong>Quicker taps.</strong> Xs appear immediately; double-tap still places an RN.</li><li><strong>Care zone cleared!</strong> A little celebration when you place the RN and mark the remaining squares X.</li><li><strong>A cleaner menu.</strong> Practice settings sit above the practice button. Facebook and Instagram join results sharing.</li><li><strong>A little learning, every day.</strong> A short nursing tip on the main menu, with a source link. Dismiss it for today and get straight to your shift.</li><li><strong>Fresh questions first.</strong> Correct answers stay retired. Missed questions can return for review; keep playing when you’re caught up.</li><li><strong>Practice for NCLEX.</strong> Clinical scenarios, prioritization, medication safety, pediatrics, and dosage calculations replace the hand-hygiene question set.</li><li><strong>Hints with a reason.</strong> Learn why a square needs an RN or an X. Deeper hints are clearly labeled as solution reveals.</li><li><strong>Your daily calendar.</strong> Browse dates and see which daily puzzles you’ve completed.</li><li><strong>Cleaner sharing.</strong> Copy icons and social logos replace text labels.</li><li><strong>A proper welcome.</strong> Choose your shift from a new main menu; your timer starts when you play.</li><li><strong>Swipe both ways.</strong> Start on an empty cell to add Xs, or on an X to erase several at once.</li><li><strong>Savor your win.</strong> Enjoy your finished board and confetti for two seconds before the result screen.</li><li><strong>Practice after your shift.</strong> Select an answer, then confirm it to see the explanation.</li><li><strong>Share your little victory.</strong> Sharing buttons on the main menu and results screen.</li><li><strong>Bigger challenges.</strong> 10×10 puzzles, 56 training shifts, and three strikes per attempt.</li><li><strong>Account beta.</strong> Private cloud saves are built; public registration is awaiting email setup.</li></ul>
-    <button id="closeChangelogBtn" class="primary-btn full" type="button">Let’s play</button>
+    <p class="eyebrow">September 29, 2026 · New update</p><h2>What’s new</h2><p>Here’s what’s new in NurseDoku:</p>
+    <ul class="changelog-list"><li><strong>Better 10×10 shifts.</strong> Ten distinct colors, connected care zones, and one free starter square per board.</li><li><strong>Quicker taps.</strong> Xs appear immediately; double-tap still places an RN.</li><li><strong>Care zone cleared!</strong> Feedback when you place the RN and mark the remaining squares X.</li><li><strong>A cleaner menu.</strong> Practice settings sit above the practice button. Facebook and Instagram join results sharing.</li><li><strong>Daily nursing tips.</strong> A short nursing tip on the main menu, with a source link. Dismiss it for today and get straight to your shift.</li><li><strong>Fresh questions first.</strong> Correct answers stay retired. Missed questions can return for review; keep playing when you’re caught up.</li><li><strong>Practice for NCLEX.</strong> Clinical scenarios, prioritization, medication safety, pediatrics, and dosage calculations replace the hand-hygiene question set.</li><li><strong>Hints with a reason.</strong> Learn why a square needs an RN or an X. Deeper hints are clearly labeled as solution reveals.</li><li><strong>Your daily calendar.</strong> Browse dates and see which daily puzzles you’ve completed.</li><li><strong>Cleaner sharing.</strong> Copy icons and social logos replace text labels.</li><li><strong>Main menu.</strong> Choose your shift from a new main menu; your timer starts when you play.</li><li><strong>Swipe both ways.</strong> Start on an empty cell to add Xs, or on an X to erase several at once.</li><li><strong>Completed board.</strong> Enjoy your finished board and confetti for two seconds before the result screen.</li><li><strong>Practice after your shift.</strong> Select an answer, then confirm it to see the explanation.</li><li><strong>Share results.</strong> Sharing buttons on the main menu and results screen.</li><li><strong>Bigger challenges.</strong> 10×10 puzzles, 56 training shifts, and three strikes per attempt.</li><li><strong>Account beta.</strong> Private cloud saves are built; public registration is awaiting email setup.</li></ul>
+    <button id="closeChangelogBtn" class="primary-btn full" type="button">Play</button>
   </div></dialog>
 
   <dialog id="accountDialog"><div class="dialog-body">
-    <div class="dialog-header"><div><p class="eyebrow">Your shifts, anywhere</p><h2>Account &amp; cloud saves</h2></div><button id="closeAccountBtn" class="icon-btn" type="button" aria-label="Close account">×</button></div>
+    <div class="dialog-header"><div><p class="eyebrow">Saved progress</p><h2>Account &amp; cloud saves</h2></div><button id="closeAccountBtn" class="icon-btn" type="button" aria-label="Close account">×</button></div>
     <p class="account-note">An account saves your puzzle, completed shifts, and daily progress with Supabase. Guest play stays available. Each account has its own save on this device.</p>
     <p id="registrationNote" class="account-note" hidden>Accounts are in beta. New registration is waiting for verification email setup. Guest play and device saves are available now.</p>
     <form id="authForm">
@@ -126,7 +126,7 @@
   </div></dialog>
 
   <dialog id="lossDialog"><div class="dialog-body win-body">
-    <p class="eyebrow">Shift ended</p><h2>Three strikes.</h2><p>An incorrect RN placement costs one strike. Take a breath and try the shift again.</p>
+    <p class="eyebrow">Shift ended</p><h2>Three strikes.</h2><p>An incorrect RN placement costs one strike. Try the puzzle again.</p>
     <button id="retryBtn" class="primary-btn full" type="button">Retry this shift</button>
     <button id="newAfterLossBtn" class="secondary-btn full" type="button">Try another shift</button>
   </div></dialog>
@@ -152,7 +152,7 @@
     <div class="dialog-body win-body">
       <div class="win-mark">RN</div>
       <p class="eyebrow">Shift complete</p>
-      <h2>Safe staffing achieved.</h2>
+      <h2>Puzzle solved.</h2>
       <p>You solved NurseDoku in <strong id="finalTime">00:00</strong>.</p>
       <p class="bonus-intro">One more challenge before your next shift.</p><section class="bonus-card" aria-labelledby="bonusHeading"><h3 id="bonusHeading">NCLEX question</h3><p id="bonusTopic" class="eyebrow"></p><p id="bonusQuestion"></p><div id="bonusAnswers"></div><button id="confirmBonusBtn" class="primary-btn full" type="button" disabled>Confirm answer</button><p id="bonusFeedback" aria-live="polite"></p><a id="bonusSource" class="bonus-source" hidden target="_blank" rel="noopener">Read clinical source</a></section>
       <div class="social-actions result-share"><button id="shareBtn" class="secondary-btn icon-action" type="button" aria-label="Share result" title="Share result"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 16V3m-4 4 4-4 4 4M6 11H4v10h16V11h-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button id="copyResultBtn" class="ghost-btn icon-action" type="button" aria-label="Copy result" title="Copy result"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="8" y="8" width="12" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button><a id="resultShareFacebook" class="social-link icon-action" aria-label="Share on Facebook" title="Share on Facebook" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 22v-9h3l.5-3H14V8c0-.9.3-1.5 1.6-1.5H18V3.8c-.4-.1-1.8-.3-3.3-.3-3.3 0-5.2 1.8-5.2 5V10H7v3h2.5v9H14Z"/></svg></a><button id="resultShareInstagram" class="ghost-btn icon-action" type="button" aria-label="Share image to Instagram" title="Share image to Instagram"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg></button><a id="resultShareX" class="social-link icon-action" aria-label="Share on X" title="Share on X" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3L12 14.6 5.5 22H2.3l7.2-8.3L1.8 2h6.5l4.5 6.8L18.9 2ZM17.8 20h1.7L7.3 3.9H5.5L17.8 20Z"/></svg></a><a id="resultShareWhatsapp" class="social-link icon-action" aria-label="Share on WhatsApp" title="Share on WhatsApp" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M20.5 11.6a8.6 8.6 0 0 1-12.8 7.5L3 20.5l1.4-4.6A8.6 8.6 0 1 1 20.5 11.6Z"/><path fill="currentColor" d="M8.2 6.6c-.3 0-.6.2-.8.5-.5.6-.6 1.2-.4 2 .4 2.2 3.4 5.2 5.8 6 .8.3 1.8.3 2.4-.3.4-.4.7-1 .6-1.3-.1-.2-1.8-1.1-2.1-1.1-.2 0-.6.6-.9.9-.2.2-.4.2-.7.1-1.2-.5-2.3-1.5-2.9-2.6-.2-.3-.2-.4 0-.6l.5-.7c.2-.2.1-.4 0-.6L9 7c-.2-.4-.4-.4-.8-.4Z"/></svg></a></div><p id="shareStatus" aria-live="polite"></p>
@@ -160,10 +160,10 @@
     </div>
   </dialog>
 
-  <script src="assets/account-config.acc6cc855d.js"></script>
-  <script src="assets/large-puzzles.b5dbb536ca.js"></script>
-  <script src="assets/puzzles.ad028b6d5f.js"></script>
-  <script src="assets/app.909e78524b.js"></script>
-  <script src="assets/accounts.c4a1e22e7b.js"></script>
+  <script src="assets/account-config.31855201b0.js"></script>
+  <script src="assets/large-puzzles.e8d0d5e480.js"></script>
+  <script src="assets/puzzles.f65a8e5e36.js"></script>
+  <script src="assets/app.ce8fd00d05.js"></script>
+  <script src="assets/accounts.53f7ab93a2.js"></script>
 </body>
 </html>

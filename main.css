@@ -128,3 +128,20 @@ a.portal-card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,va
   *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
   body{opacity:1;transform:none}
 }
+.game-feature{display:flex;align-items:center;gap:32px;padding:30px;margin-bottom:24px;border:1px solid var(--border);border-radius:24px;background:linear-gradient(120deg,color-mix(in srgb,var(--accent) 13%,var(--panel)),var(--panel));box-shadow:var(--shadow)}
+.game-art{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;width:170px;flex:0 0 170px;transform:rotate(-4deg)}
+.game-art span{aspect-ratio:1;display:grid;place-items:center;border-radius:8px;background:color-mix(in srgb,var(--accent) 16%,var(--panel-solid));color:var(--muted);font-weight:800;font-size:14px}
+.game-art span:nth-child(4n+2),.game-art span:nth-child(4n+3){background:color-mix(in srgb,var(--accent2) 23%,var(--panel-solid))}
+.game-copy h2{font-size:clamp(1.7rem,4vw,2.4rem);letter-spacing:-.03em;margin:0 0 10px}
+.game-copy p{color:var(--muted);line-height:1.65;max-width:650px;margin:0}
+.game-play{display:inline-flex;align-items:center;min-height:44px;padding:11px 18px;margin-top:18px;border-radius:12px;background:var(--accent);color:var(--bg)!important;text-decoration:none;font-weight:850}
+.game-play:hover{filter:brightness(1.1)}
+.productivity-tools{display:grid;gap:10px;margin-top:18px}
+.productivity-tools a,.tool-preview{padding:12px;border:1px solid var(--border);border-radius:12px;background:var(--panel-solid);text-decoration:none}
+.productivity-tools a:hover{border-color:var(--accent)}
+.productivity-tools strong,.productivity-tools span{display:block}
+.productivity-tools span{color:var(--muted);font-size:13px;line-height:1.5;margin-top:5px}
+.tool-preview small{display:inline-block;color:var(--muted);font-size:11px;font-weight:600;margin-left:6px}
+a:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+@media(max-width:720px){.game-feature{gap:22px;padding:22px;align-items:flex-start}.game-art{width:110px;flex-basis:110px}.game-art span{font-size:11px;border-radius:5px}}
+@media(max-width:440px){.game-feature{flex-direction:column}.game-art{width:112px;flex-basis:auto}.game-copy .eyebrow{font-size:10px}}

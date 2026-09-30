@@ -4,19 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light dark">
-  <meta name="description" content="Siahverse — Josiah's portal for nursing resources, cloud tools, productivity, and homelab services.">
+  <meta name="description" content="Siahverse — nursing study tools and games, productivity apps, cloud services, and homelab access.">
   <meta name="author" content="Josiah Borja">
   <meta property="og:title" content="Siahverse">
-  <meta property="og:description" content="Nursing, cloud, productivity, and homelab tools in one place.">
+  <meta property="og:description" content="Nursing study tools and games, productivity, and cloud tools in one place.">
   <meta property="og:image" content="https://siahverse.cc/assets/preview.png">
   <meta property="og:url" content="https://siahverse.cc">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Siahverse">
-  <meta name="twitter:description" content="Nursing, cloud, productivity, and homelab tools in one place.">
+  <meta name="twitter:description" content="Nursing study tools and games, productivity, and cloud tools in one place.">
   <meta name="twitter:image" content="https://siahverse.cc/assets/preview.png">
   <title>Siahverse</title>
-  <link rel="stylesheet" href="/main.css?v=20260928-3">
+  <link rel="stylesheet" href="/main.css?v=20260930-1">
   <link rel="icon" href="/favicon.svg">
   <link rel="manifest" href="/manifest.json">
   <script defer src="/toggle-theme.js"></script>
@@ -31,7 +31,7 @@
         <span class="brand-mark">S</span>
         <span>
           <strong>Siahverse</strong>
-          <small>Personal portal</small>
+          <small>Tools & apps</small>
         </span>
       </a>
 
@@ -42,9 +42,19 @@
     </header>
 
     <section class="hero">
-      <div class="eyebrow">Welcome to the Siahverse</div>
-      <h1>Everything has its own space.</h1>
-      <p>Study tools, cloud services, productivity apps, and homelab controls — organized without turning the homepage into a wall of buttons.</p>
+      <div class="eyebrow">Siahverse</div>
+      <h1>What do you want to do?</h1>
+      <p>Nursing practice, games, tasks, and workouts. Pick an app below.</p>
+    </section>
+
+    <section class="game-feature" aria-labelledby="nursedoku-title">
+      <div class="game-art" aria-hidden="true"><span>×</span><span>RN</span><span>×</span><span>×</span><span>×</span><span>×</span><span>×</span><span>RN</span><span>RN</span><span>×</span><span>×</span><span>×</span><span>×</span><span>×</span><span>RN</span><span>×</span></div>
+      <div class="game-copy">
+        <div class="eyebrow">Featured · Nursing games</div>
+        <h2 id="nursedoku-title">NurseDoku</h2>
+        <p>Place one RN in each row, column, and care zone. Finish the puzzle, then answer a nursing question.</p>
+        <a class="game-play route-link" href="/nursedoku/">Play NurseDoku →</a>
+      </div>
     </section>
 
     <section class="portal-grid" aria-label="Siahverse sections">
@@ -52,8 +62,8 @@
         <div class="card-icon">🩺</div>
         <div class="card-copy">
           <div class="card-kicker">Study</div>
-          <h2>Nursing Resources</h2>
-          <p>Practice exams, study tools, skills, DDC, and future nursing resources.</p>
+          <h2>Nursing</h2>
+          <p>Practice exams, study tools, and nursing games like NurseDoku.</p>
           <span class="card-action">Open Nursing →</span>
         </div>
       </a>
@@ -63,20 +73,23 @@
         <div class="card-copy">
           <div class="card-kicker">Cloud</div>
           <h2>SiahCloud</h2>
-          <p>Your personal cloud and file access portal.</p>
+          <p>Open your saved files.</p>
           <span class="card-action">Open SiahCloud ↗</span>
         </div>
       </a>
 
-      <a class="portal-card" href="https://todo.siahverse.cc">
-        <div class="card-icon">✅</div>
+      <article class="portal-card services-card">
+        <div class="card-icon" aria-hidden="true">✅</div>
         <div class="card-copy">
-          <div class="card-kicker">Productivity</div>
-          <h2>SiahDo</h2>
-          <p>Tasks, routines, priorities, and personal planning.</p>
-          <span class="card-action">Open SiahDo ↗</span>
+          <div class="card-kicker">Tasks & workouts</div>
+          <h2>Productivity</h2>
+          <p>A to-do list and a workout tracker.</p>
+          <div class="productivity-tools">
+            <a href="https://todo.siahverse.cc"><strong>Tasks ↗</strong><span>Add tasks, due dates, and priorities.</span></a>
+            <div class="tool-preview"><strong>NextSet <small>Coming soon</small></strong><span>Workout planning and progress tracking.</span></div>
+          </div>
         </div>
-      </a>
+      </article>
 
       <article class="portal-card services-card">
         <div class="card-icon">🖥️</div>
@@ -158,10 +171,10 @@ window.addEventListener("DOMContentLoaded", () => {
   if (siahbot) {
     siahbot.addEventListener("click", () => {
       const messages = [
-        "👋 Hi! I'm Siahbot, guardian of portals.",
-        "🌌 Pick a universe and jump in.",
+        "👋 Need a study break? Try NurseDoku.",
+        "🩺 Nursing has practice exams and games.",
         "💡 Hint: Try the Konami Code 😉",
-        "🛰️ All systems nominal."
+        "✅ Your to-do list is under Productivity."
       ];
 
       if (botMessageTimer) clearTimeout(botMessageTimer);

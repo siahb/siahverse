@@ -453,14 +453,14 @@ input{width:100%;min-height:50px;border:1px solid var(--b);border-radius:12px;ba
 button{font:inherit;font-weight:850;cursor:pointer}.show{min-width:66px;border:1px solid var(--b);border-radius:12px;background:var(--p2);color:var(--t);padding:0 12px}.unlock{width:100%;min-height:50px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--a),var(--a2));color:#fff;margin-top:8px}
 .error{min-height:27px;padding-top:7px;color:var(--bad);font-size:13px;font-weight:800}.note{margin:16px 0 0;color:var(--m);font-size:12px;line-height:1.5}.request{margin-top:20px;padding-top:18px;border-top:1px solid var(--b)}.request summary{cursor:pointer;font-weight:850;color:#cfd8ef}.request form{margin-top:14px}.request input{margin-bottom:8px}.request button{width:100%;min-height:46px;border:1px solid var(--b);border-radius:12px;background:var(--p2);color:var(--t)}.forgot{border:1px solid var(--b);border-radius:18px;padding:24px;background:var(--p);color:var(--t);width:min(390px,calc(100% - 32px));box-shadow:0 24px 80px rgba(0,0,0,.55)}.forgot::backdrop{background:rgba(0,0,0,.7)}.forgot h2{margin:0 0 10px}.forgot p{color:var(--m);line-height:1.5}.forgot .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}.forgot .actions button{min-height:44px;border:1px solid var(--b);border-radius:10px;background:var(--p2);color:var(--t);padding:0 14px}.forgot .actions .primary{border:0;background:linear-gradient(135deg,var(--a),var(--a2))}
 </style></head><body><main class="card">
-<a class="back-home" href="/">← Back</a><br><a class="home-brand" href="/" aria-label="Siahverse home"><div class="logo">S</div><div class="k">Siahverse</div></a><h1>${safe.startsWith("/pharm1")?"Unlock Pharmacology Exam 1":safe.startsWith("/medsurg1")?"Unlock Med-Surg Exam 1":safe.startsWith("/admin")?"Admin access":"Nursing Resources"}</h1>
+<a class="back-home" href="/">← Back</a><br><a class="home-brand" href="/" aria-label="Siahverse home"><div class="logo">S</div><div class="k">Siahverse</div></a><h1>${safe.startsWith("/pharm1")?"Sign in to Pharmacology":safe.startsWith("/medsurg1")?"Sign in to Med-Surg":safe.startsWith("/admin")?"Admin access":"Nursing"}</h1>
 <p class="sub">Enter the access password to continue.</p>
 <form method="post" action="/api/nursing-login">
 <input type="hidden" name="next" value="${esc(safe)}">
 <label for="password">Access password</label><div class="row">
 <input id="password" name="password" type="password" autocomplete="current-password" autofocus required>
 <button class="show" type="button" id="show">Show</button></div>
-<div class="error" role="status">${esc(error)}</div><button class="unlock" type="submit">Unlock</button>
+<div class="error" role="status">${esc(error)}</div><button class="unlock" type="submit">Sign in</button>
 </form><p class="note">Do not share your password.</p>
 <details class="request" id="request"><summary>Need access or a password reset?</summary>
 <form method="post" action="/api/access-request">
@@ -476,7 +476,7 @@ button{font:inherit;font-weight:850;cursor:pointer}.show{min-width:66px;border:1
 function forbiddenPage() {
   return htmlResponse(`<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin access required</title>
 <style>body{font-family:system-ui;background:#080b12;color:#f4f7ff;display:grid;place-items:center;min-height:100vh;margin:0}.c{max-width:500px;padding:28px;border:1px solid #2c3955;border-radius:20px;background:#111827}.brand{display:inline-flex;align-items:center;gap:10px;color:#f4f7ff;text-decoration:none;font-weight:900}.logo{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(135deg,#7c9cff,#9a7cff)}a{color:#9eb4ff}.links{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}</style></head>
-<body><div class="c"><a class="brand" href="/" aria-label="Siahverse home"><span class="logo">S</span><span>Siahverse</span></a><h1>Admin access required</h1><p>This Siahverse page is limited to an administrator account.</p><div class="links"><a href="/">← Back</a><a href="/nursing/">Nursing Resources</a></div></div></body></html>`,403);
+<body><div class="c"><a class="brand" href="/" aria-label="Siahverse home"><span class="logo">S</span><span>Siahverse</span></a><h1>Admin access required</h1><p>This Siahverse page is limited to an administrator account.</p><div class="links"><a href="/">← Back</a><a href="/nursing/">Nursing</a></div></div></body></html>`,403);
 }
 
 async function handleLogin(context) {

@@ -1146,7 +1146,7 @@ async function addNewTodo() {
       body: JSON.stringify(payload)
     });
     if (!addRes.ok) {
-      if (addRes.status === 401) return alert("❌ Unlock SiahDo before adding tasks.");
+      if (addRes.status === 401) return alert("❌ Enable editing before adding tasks.");
       throw new Error(`HTTP ${addRes.status}`);
     }
 

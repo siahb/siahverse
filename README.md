@@ -8,11 +8,11 @@ Josiah Borja's personal portal for nursing study tools, productivity, cloud serv
 
 | Area | Purpose |
 | --- | --- |
-| [Nursing Resources](https://siahverse.cc/nursing/) | Hub for nursing practice apps and study tools |
+| [Nursing](https://siahverse.cc/nursing/) | Hub for nursing practice apps and study tools |
 | [Pharmacology Exam 1](https://siahverse.cc/pharm1/) | Practice and exam modes, MC/SATA/DDC questions, hints, review, and saved sessions |
 | [Med-Surg Exam 1](https://siahverse.cc/medsurg1/) | App shell; question bank awaiting course materials |
 | [NurseDoku](https://siahverse.cc/nursedoku/) | Colorful nursing logic puzzles with a question after each completed shift |
-| [SiahDo](https://todo.siahverse.cc) | Tasks, routines, priorities, and planning |
+| [Tasks](https://todo.siahverse.cc) | Tasks, routines, priorities, and planning |
 | [SiahCloud](https://vault.siahverse.cc) | Personal cloud portal |
 
 The homepage also links to Proxmox, Home Assistant, and system status services.

@@ -8,7 +8,7 @@
 - [x] 144 unique practice boards rated by deductions, independently of board size
 - [x] 56 training shifts, saved completion, resume first unfinished shift
 - [x] 10×10 board selection and difficulty-ordered training
-- [x] Three strikes per shift with retry and saved strike count
+- [x] Three strikes per shift for any incorrect RN square, with retry and saved strike count
 - [x] Seven source-reviewed optional bonus questions with answer locking and rationales
 - [x] Win milestones
 - [x] Daily archive from September 29, 2026, completed-date records, copyable results

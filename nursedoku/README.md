@@ -47,4 +47,4 @@ Verified the original eight learning boards, all 72 rated practice boards, and 3
 
 See [ROADMAP.md](ROADMAP.md) for delivered Phase 1 features and the next phase. General/Pediatrics/Emergency are color palettes, not specialty gameplay modes. Offline caching is scoped to NurseDoku.
 
-Current rules: three conflicting RN placements end a shift. Invalid placements are rejected; Undo does not restore strikes. Training advances from Easy through Medium to Hard. The palette selector only changes colors. Supabase private cloud saves and account UI are implemented. Public registration remains disabled until nursing@siahverse.cc is verified with an email provider and SMTP is configured; see accounts/README.md.
+Current rules: three incorrect RN placements end a shift. Invalid placements are rejected; Undo does not restore strikes. Training advances from Easy through Medium to Hard. The palette selector only changes colors. Supabase private cloud saves and account UI are implemented. Public registration remains disabled until nursing@siahverse.cc is verified with an email provider and SMTP is configured; see accounts/README.md.

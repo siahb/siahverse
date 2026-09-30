@@ -11,13 +11,13 @@ get('closeChangelogBtn').events.click[0]();get('changelogDialog').events.close[0
 assert.equal(storage['nursedoku-changelog'],'2026-09-29-menu-and-flow');
 get('continueBtn').events.click[0]();assert.equal(run('inGame'),true);assert.notEqual(run('runningSince'),null);
 const evt={pointerId:1,isPrimary:true,button:0,clientX:10,clientY:10,preventDefault(){}};
-hit=get('board').children[0];hit.closest=()=>hit;
+hit=get('board').children[1];hit.closest=()=>hit;
 function emit(n,e=evt){get('board').events[n].forEach(f=>f(e));}
-emit('pointerdown');emit('pointerup');run('flushTap()');assert.equal(run('state[0][0]'),'x');
-emit('pointerdown');emit('pointerup');emit('pointerdown');emit('pointerup');assert.equal(run('state[0][0]'),'rn');
+emit('pointerdown');emit('pointerup');run('flushTap()');assert.equal(run('state[0][1]'),'x');
+emit('pointerdown');emit('pointerup');emit('pointerdown');emit('pointerup');assert.equal(run('state[0][1]'),'rn');
 // RN survives a drag; other cells become X; one Undo reverses the stroke.
-run('history=[]');emit('pointerdown');hit=get('board').children[1];hit.closest=()=>hit;emit('pointermove',{...evt,clientX:80});emit('pointerup');assert.equal(run('state[0][0]'),'rn');assert.equal(run('state[0][1]'),'x');assert.equal(run('history.length'),1);
-get('undoBtn').events.click[0]();assert.equal(run('state[0][1]'),'');assert.equal(run('state[0][0]'),'rn');
+run('history=[]');emit('pointerdown');hit=get('board').children[2];hit.closest=()=>hit;emit('pointermove',{...evt,clientX:80});emit('pointerup');assert.equal(run('state[0][1]'),'rn');assert.equal(run('state[0][2]'),'x');assert.equal(run('history.length'),1);
+get('undoBtn').events.click[0]();assert.equal(run('state[0][2]'),'');assert.equal(run('state[0][1]'),'rn');
 run('state=blank();puzzle().solution.forEach((c,r)=>state[r][c]="rn");afterMove()');assert.equal(run('finished'),true);assert.equal(get('winDialog').open,false);assert.equal(run('stats.wins'),1);
 const winDelay=[...timers.values()].find(t=>t.ms===2000);assert(winDelay);winDelay.f();assert.equal(get('winDialog').open,true);
 get('bonusAnswers').children[0].onclick();assert.equal(get('playAgainBtn').disabled,true);get('confirmBonusBtn').onclick();assert.equal(get('playAgainBtn').disabled,false);
@@ -47,6 +47,13 @@ get('undoBtn').events.click[0]();assert.equal(run('strikes'),1);
 run('toggle(0,1,"rn");toggle(0,0,"rn");toggle(0,0,"rn")');assert.equal(run('strikes'),3);assert.equal(run('lost'),true);assert.equal(run('finished'),true);assert(get('lossDialog').open);
 const save=JSON.parse(storage['nursedoku-v2']);assert.equal(save.strikes,3);assert.equal(save.lost,true);
 get('retryBtn').events.click[0]();assert.equal(run('strikes'),0);assert.equal(run('finished'),false);
+// An incorrect RN must cost a strike even on an otherwise empty board.
+run('toggle(0,0,"x");const beforeHistory=history.length;toggle(0,0,"rn")');
+assert.equal(run('strikes'),1);assert.equal(run('state[0][0]'),'x');assert.equal(run('positions().length'),0);assert.equal(run('history.length===beforeHistory'),true);
+run('toggle(0,0,"x");toggle(0,1,"rn");toggle(0,1,"rn")');assert.equal(run('strikes'),1);assert.equal(run('state[0][1]'),'');
+run('toggle(0,0,"rn");toggle(0,0,"rn")');assert.equal(run('strikes'),3);assert.equal(run('lost'),true);
+get('retryBtn').events.click[0]();
+console.log('PASS: wrong nonconflicting RN costs one strike; rejected RN preserves X and history; Xs and correct RN removal are penalty-free.');
 run('showBonus()');const choices=get('bonusAnswers').children;choices[0].onclick();assert(!choices[0].disabled);assert.equal(get('playAgainBtn').disabled,true);choices[1].onclick();assert.equal(get('bonusFeedback').textContent,'Ready? Confirm your answer to see the explanation.');get('confirmBonusBtn').onclick();assert(choices.every(b=>b.disabled));assert(get('bonusFeedback').textContent.length>20);
 get('boardSize').value='10';for(const d of ['easy','medium','hard']){const p=run(`practicePuzzle('${d}',12)`);assert.equal(p.regions.length,10);assert.equal(p.rating.difficulty,d);}
 console.log('PASS: invalid RN placement rejected; strikes survive undo and saving; third strike ends shift; retry resets; bonus answers lock; 10×10 difficulty selection.');

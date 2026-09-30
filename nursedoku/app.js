@@ -221,13 +221,13 @@ function toggle(r,c,mark) {
   if(finished)return;
   const previous=state[r][c];
   remember();state[r][c]=previous===mark?'':mark;
-  if(state[r][c]==='rn' && conflicts().size) {
+  if(state[r][c]==='rn' && (puzzle().solution[r]!==c || conflicts().size)) {
     state[r][c]=previous;history.pop();strikes++;sound('strike');hintCell=null;
     if(strikes>=3) {
       lost=true;finished=true;elapsed=time();runningSince=null;
       $('lossDialog').showModal();
     }
-    paint();tell(lost?'Three strikes. This shift is over.':`Strike ${strikes}/3. That RN breaks a staffing rule.`,'error');persist();return;
+    paint();tell(lost?'Three strikes. This shift is over.':`Strike ${strikes}/3. That RN belongs in a different square.`,'error');persist();return;
   }
   sound(state[r][c]==='rn'?'rn':state[r][c]==='x'?'x':'erase');afterMove();
 }

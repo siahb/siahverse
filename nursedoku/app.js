@@ -1,4 +1,5 @@
 const LEVELS = [{"regions": [[2, 0, 1, 1], [2, 2, 1, 1], [2, 2, 1, 1], [3, 3, 3, 3]], "solution": [1, 3, 0, 2]}, {"regions": [[0, 0, 0, 0], [2, 0, 0, 1], [2, 0, 3, 3], [2, 2, 3, 3]], "solution": [1, 3, 0, 2]}, {"regions": [[0, 0, 0, 0, 2], [1, 1, 0, 0, 2], [1, 3, 0, 0, 2], [1, 3, 3, 3, 4], [3, 3, 3, 4, 4]], "solution": [2, 0, 4, 1, 3]}, {"regions": [[2, 0, 0, 1, 1], [2, 2, 2, 1, 1], [2, 2, 2, 1, 1], [2, 2, 3, 3, 3], [2, 2, 3, 3, 4]], "solution": [1, 3, 0, 2, 4]}, {"regions": [[3, 0, 1, 1, 1, 1], [3, 3, 2, 1, 1, 1], [3, 3, 2, 2, 1, 1], [3, 3, 2, 2, 1, 1], [3, 3, 2, 4, 4, 4], [3, 3, 4, 4, 4, 5]], "solution": [1, 4, 2, 0, 3, 5]}, {"regions": [[2, 0, 0, 0, 1, 1], [2, 0, 1, 1, 1, 1], [2, 2, 2, 1, 3, 1], [2, 2, 2, 1, 3, 5], [4, 4, 4, 4, 4, 5], [4, 4, 4, 4, 5, 5]], "solution": [1, 3, 0, 4, 2, 5]}, {"regions": [[1, 1, 1, 0, 0, 0], [1, 1, 1, 0, 0, 0], [1, 1, 1, 1, 1, 2], [3, 3, 3, 4, 1, 2], [3, 3, 3, 4, 1, 2], [5, 3, 4, 4, 4, 4]], "solution": [4, 2, 5, 1, 3, 0]}, {"regions": [[2, 2, 0, 0, 0, 1], [2, 2, 3, 3, 3, 1], [2, 2, 2, 2, 3, 3], [5, 5, 2, 2, 3, 3], [5, 4, 4, 3, 3, 3], [5, 5, 5, 3, 3, 3]], "solution": [3, 5, 1, 4, 2, 0]}];
+LEVELS.push(...PUZZLE_BANK.easy.slice(0,12),...PUZZLE_BANK.medium.slice(0,12),...PUZZLE_BANK.hard.slice(0,12));
 // Seeded generation: each accepted board has connected zones and exactly one solution.
 function generatePuzzle(n,seed) {
   let randomState=seed>>>0;
@@ -103,6 +104,8 @@ updateSoundButton();
 let gameKind='journey', customPuzzle=null, dailyDate=null;
 let stats={wins:0,best:null,dailyDates:[]};
 try { const x=JSON.parse(localStorage.getItem('nursedoku-stats'));if(x&&Number.isInteger(x.wins)&&x.wins>=0&&Array.isArray(x.dailyDates))stats=x; } catch {}
+let completedShifts=[];
+try {const x=JSON.parse(localStorage.getItem('nursedoku-journey'));if(Array.isArray(x))completedShifts=x.filter(v=>Number.isInteger(v)&&v>=0&&v<LEVELS.length);}catch{}
 let level = 0, state, history = [], elapsed = 0, runningSince = null, finished = false;
 let gesture = null, lastTap = null, pendingTap = null, hintCell = null;
 const puzzle = () => customPuzzle || LEVELS[level];
@@ -115,7 +118,7 @@ function persist() {
   try { localStorage.setItem(SAVE_KEY, JSON.stringify({level,state,elapsed:time(),finished,gameKind,customPuzzle,dailyDate})); } catch {}
 }
 function pause() { elapsed = time(); runningSince = null; persist(); }
-function resume() { if (!finished && !document.hidden) runningSince = Date.now(); }
+function resume() { if (!finished && !document.hidden && runningSince===null) runningSince = Date.now(); }
 function positions() { return state.flatMap((row,r) => row.flatMap((v,c) => v === 'rn' ? [[r,c]] : [])); }
 function conflicts() {
   const ps = positions(), bad = new Set(), zones = puzzle().regions;
@@ -153,7 +156,7 @@ function render() {
   if(!progress) {progress=document.createElement('div');progress.id='zoneProgress';progress.className='zone-progress';board.before(progress);}
   progress.innerHTML='';
   for(let z=0;z<size();z++) { const dot=document.createElement('span');dot.className='zone-dot';dot.style.background=`var(--r${z})`;dot.dataset.zone=z;progress.append(dot); }
-  paint();
+  updatePuzzleInfo();paint();
 }
 function paint() {
   const bad=conflicts();
@@ -243,16 +246,19 @@ function endPointer(e,canceled=false) {
   if(board.hasPointerCapture(e.pointerId))board.releasePointerCapture(e.pointerId);
   if(g.drag) { afterMove();return; }
   if(canceled)return;
+  const release=cellAt(e.clientX,e.clientY);
+  if(!release||release[0]!==g.start[0]||release[1]!==g.start[1])return;
   const [r,c]=g.start;
-  if(lastTap&&lastTap.r===r&&lastTap.c===c&&Date.now()-lastTap.at<330) {
+  if(lastTap&&lastTap.r===r&&lastTap.c===c&&Date.now()-lastTap.at<360) {
     clearTap();toggle(r,c,'rn');
   } else {
     flushTap();lastTap={r,c,at:Date.now()};
-    pendingTap=setTimeout(flushTap,330);
+    pendingTap=setTimeout(flushTap,360);
   }
 }
 board.addEventListener('pointerup',e=>endPointer(e));
 board.addEventListener('pointercancel',e=>endPointer(e,true));
+board.addEventListener('lostpointercapture',e=>endPointer(e,true));
 board.addEventListener('contextmenu',e=>e.preventDefault());
 board.addEventListener('click',e=>{if(e.detail===0 && e.target.closest('.cell')){const cell=e.target.closest('.cell');toggle(+cell.dataset.row,+cell.dataset.col,'x');}});
 $('undoBtn').addEventListener('click',()=>{flushTap();if(finished||!history.length)return;state=history.pop();sound('undo');afterMove();});
@@ -265,8 +271,8 @@ $('hintBtn').addEventListener('click',()=>{
 });
 function reset(next=false) {
   clearTap();if(next) {
-    if(gameKind==='daily') {gameKind='practice';dailyDate=null;customPuzzle=generatePuzzle(6,Date.now());}
-    else if(gameKind==='practice')customPuzzle=generatePuzzle(+$('difficulty').value,Date.now());
+    if(gameKind==='daily') {gameKind='practice';dailyDate=null;customPuzzle=practicePuzzle($('difficulty').value,Date.now());}
+    else if(gameKind==='practice')customPuzzle=practicePuzzle($('difficulty').value,Date.now());
     else level=(level+1)%LEVELS.length;
   }
   state=blank();history=[];finished=false;hintCell=null;elapsed=0;runningSince=null;
@@ -315,18 +321,19 @@ function updateStats() {
   $('statsLine').textContent=`${stats.wins} shifts solved · ${streak} day daily streak${stats.best!==null?' · Best '+format(stats.best):''}`;
 }
 function recordWin() {
+  if(gameKind==='journey'&&!completedShifts.includes(level)){completedShifts.push(level);try{localStorage.setItem('nursedoku-journey',JSON.stringify(completedShifts));}catch{}}
   stats.wins++;stats.best=stats.best===null?elapsed:Math.min(stats.best,elapsed);
   if(gameKind==='daily'&&dailyDate&&!stats.dailyDates.includes(dailyDate))stats.dailyDates.push(dailyDate);
   try {localStorage.setItem('nursedoku-stats',JSON.stringify(stats));}catch {}
-  updateStats();
+  updateStats();updatePuzzleInfo();
 }
 function switchGame(kind) {
   flushTap();
   if(!finished&&state.flat().some(Boolean)&&!confirm('Start a new puzzle? Your current placements will be cleared.'))return;
   gameKind=kind;dailyDate=kind==='daily'?localDate():null;
   let seed=Date.now();if(dailyDate)seed=Number(dailyDate.replaceAll('-',''));
-  customPuzzle=kind==='journey'?null:generatePuzzle(kind==='daily'?6:+$('difficulty').value,seed);
-  if(kind==='journey')level=0;
+  customPuzzle=kind==='journey'?null:kind==='daily'?generatePuzzle(6,seed):practicePuzzle($('difficulty').value,seed);
+  if(kind==='journey'){level=Array.from({length:LEVELS.length},(_,i)=>i).find(i=>!completedShifts.includes(i))??0;}
   reset();
 }
 $('dailyBtn').addEventListener('click',()=>switchGame('daily'));
@@ -346,3 +353,47 @@ function showBonus() {
  item.a.forEach((answer,i)=>{const b=document.createElement('button');b.type='button';b.className='secondary-btn';b.textContent=answer;b.onclick=()=>{$('bonusFeedback').textContent=(i===item.correct?'Correct. ':'Try again. ')+item.why;};$('bonusAnswers').append(b);});
 }
 if(finished)showBonus();
+
+function practicePuzzle(difficulty,seed) {
+ const pool=PUZZLE_BANK[difficulty]||PUZZLE_BANK.medium;
+ const base=copy(pool[(seed>>>0)%pool.length]);
+ // Reflect/rotate each puzzle without altering its logical rating or uniqueness.
+ let regions=base.regions;
+ for(let turn=0;turn<((seed>>>4)%4);turn++)regions=regions[0].map((_,c)=>regions.map(row=>row[c]).reverse());
+ if((seed>>>6)%2)regions=regions.map(row=>[...row].reverse());
+ const solution=Array(regions.length);
+ for(let r=0;r<base.regions.length;r++){
+  let rr=r,cc=base.solution[r];
+  for(let turn=0;turn<((seed>>>4)%4);turn++){[rr,cc]=[cc,regions.length-1-rr];}
+  if((seed>>>6)%2)cc=regions.length-1-cc;
+  solution[rr]=cc;
+ }
+ return {regions,solution,rating:analyzePuzzle({regions})};
+}
+function updatePuzzleInfo() {
+ const rating=analyzePuzzle(puzzle());
+ const descriptions={easy:'Direct deductions',medium:'Care-zone elimination',hard:'Deeper reasoning'};
+ $('puzzleInfo').textContent=gameKind==='journey'?`Training ${level+1} of ${LEVELS.length} · ${completedShifts.length} completed`:`${rating.difficulty[0].toUpperCase()+rating.difficulty.slice(1)} · ${descriptions[rating.difficulty]} · ${size()}×${size()}${gameKind==='daily'?' · '+dailyDate:''}`;
+ $('milestone').textContent=stats.wins>=25?'Milestone: 25 shifts completed':stats.wins>=10?'Milestone: 10 shifts completed':stats.wins>=1?'Milestone: first shift completed':'';
+}
+function openArchive() {
+ $('archiveDate').max=localDate();$('archiveDate').value=localDate();
+ $('archiveStatus').textContent=`${stats.dailyDates.length} daily puzzles completed. Choose today or an earlier date.`;
+ pause();$('archiveDialog').showModal();
+}
+$('archiveBtn').addEventListener('click',openArchive);
+$('closeArchiveBtn').addEventListener('click',()=>$('archiveDialog').close());
+$('archiveDialog').addEventListener('close',resume);
+$('loadArchiveBtn').addEventListener('click',()=>{
+ const date=$('archiveDate').value;
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||date>localDate()||date<'2026-09-29'){ $('archiveStatus').textContent='Choose a date between September 29, 2026 and today.';return; }
+ flushTap();if(!finished&&state.flat().some(Boolean)&&!confirm('Open this daily puzzle and clear your current placements?'))return;
+ gameKind='daily';dailyDate=date;customPuzzle=generatePuzzle(6,Number(date.replaceAll('-','')));
+ $('archiveDialog').close();reset();
+});
+$('shareBtn').addEventListener('click',async()=>{
+ const text=`NurseDoku ${gameKind==='daily'?dailyDate:gameKind==='journey'?'Shift '+(level+1):'Practice'}\nSolved in ${format(elapsed)} · ${size()}×${size()}\nhttps://siahverse.cc/nursedoku/`;
+ try {await navigator.clipboard.writeText(text);$('shareStatus').textContent='Result copied. Paste it anywhere.';}
+ catch {$('shareStatus').textContent=text;}
+});
+if('serviceWorker' in navigator && location.protocol==='https:')navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(()=>{});

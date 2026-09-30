@@ -1,0 +1,4 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');const path=require('path');const ctx={};vm.createContext(ctx);vm.runInContext(fs.readFileSync(path.join(__dirname,'../puzzles.js'),'utf8')+'\nthis.bank=PUZZLE_BANK;this.rate=analyzePuzzle;',ctx);
+function verify(p){const n=p.regions.length;let count=0;function search(cols,zones){const r=cols.length;if(r===n){count++;return;}for(let c=0;c<n;c++){const z=p.regions[r][c];if(!cols.includes(c)&&(!r||Math.abs(cols.at(-1)-c)>1)&&!zones.includes(z))search([...cols,c],[...zones,z]);}}search([],[]);assert.equal(count,1);}
+for(const [category,puzzles]of Object.entries(ctx.bank)){assert.equal(puzzles.length,24);for(const p of puzzles){verify(p);assert.equal(ctx.rate(p).difficulty,category);}}
+console.log('PASS: 72 practice puzzles have one solution and match their logical difficulty.');

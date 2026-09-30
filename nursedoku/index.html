@@ -6,8 +6,10 @@
   <meta name="theme-color" content="#f8f3ef">
   <meta name="description" content="NurseDoku — a nursing-themed logic puzzle.">
   <title>NurseDoku</title>
-  <link rel="stylesheet" href="styles.css?v=bb705f9706">
-  <link rel="icon" href="https://siahverse.cc/favicon.svg">
+  <link rel="stylesheet" href="styles.css?v=e62dff006a">
+  <link rel="icon" href="icon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
 </head>
 <body>
   <main class="app-shell">
@@ -26,10 +28,12 @@
       <button id="practiceBtn" class="primary-btn" type="button">New puzzle</button>
     </nav>
     <div class="preferences">
-      <label>Difficulty <select id="difficulty"><option value="4">Easy · 4×4</option><option value="6" selected>Medium · 6×6</option><option value="8">Hard · 8×8</option></select></label>
-      <label>Care team <select id="theme"><option value="general">General</option><option value="peds">Pediatrics</option><option value="ed">Emergency</option></select></label>
+      <label>Difficulty <select id="difficulty"><option value="easy">Easy · direct deductions</option><option value="medium" selected>Medium · zone elimination</option><option value="hard">Hard · deeper reasoning</option></select></label>
+      <label>Palette <select id="theme"><option value="general">General</option><option value="peds">Pediatrics</option><option value="ed">Emergency</option></select></label>
     </div>
     <p id="statsLine" class="stats-line"></p>
+    <div class="shift-info"><p id="puzzleInfo"></p><button id="archiveBtn" class="ghost-btn" type="button">Daily archive</button></div>
+    <p id="milestone" class="milestone"></p>
     <section class="status-card" aria-label="Game status">
       <div><span class="status-label">Puzzle</span><strong id="levelLabel">Shift 001</strong></div>
       <div><span class="status-label">Time</span><strong id="timer">00:00</strong></div>
@@ -57,8 +61,14 @@
         <li>RNs cannot touch, including diagonally.</li>
       </ul>
     </section>
+    <p class="install-tip">Keep your shift close: on iPhone, use Safari’s Share menu → Add to Home Screen. Offline play becomes available after your first online visit.</p>
   </main>
 
+  <dialog id="archiveDialog"><div class="dialog-body">
+    <div class="dialog-header"><h2>Daily archive</h2><button id="closeArchiveBtn" class="icon-btn" aria-label="Close daily archive" type="button">×</button></div>
+    <label>Choose a date <input id="archiveDate" type="date" min="2026-09-29"></label><p id="archiveStatus" aria-live="polite"></p>
+    <button id="loadArchiveBtn" class="primary-btn full" type="button">Open daily shift</button>
+  </div></dialog>
   <dialog id="howToDialog">
     <div class="dialog-body">
       <div class="dialog-header">
@@ -79,11 +89,13 @@
       <h2>Safe staffing achieved.</h2>
       <p>You solved NurseDoku in <strong id="finalTime">00:00</strong>.</p>
       <div class="bonus-card"><p class="eyebrow">Nursing bonus · Optional</p><p id="bonusQuestion"></p><div id="bonusAnswers"></div><p id="bonusFeedback" aria-live="polite"></p><a class="bonus-source" href="https://www.cdc.gov/clean-hands/hcp/clinical-safety/index.html" target="_blank" rel="noopener">Rationale source: CDC hand hygiene</a></div>
+      <button id="shareBtn" class="secondary-btn full" type="button">Copy result</button><p id="shareStatus" aria-live="polite"></p>
       <button id="playAgainBtn" class="primary-btn full" type="button">Next shift</button>
     </div>
   </dialog>
 
-  <script src="app.js?v=816a87636f"></script>
+  <script src="puzzles.js?v=ad028b6d5f"></script>
+  <script src="app.js?v=63f1422039"></script>
 </body>
 </html>
 

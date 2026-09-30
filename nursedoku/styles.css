@@ -409,3 +409,22 @@ select { min-height:36px; width:100%; border:1px solid #eadbd3; border-radius:10
 .confetti-piece { position:absolute; top:-14px; width:8px; height:13px; border-radius:2px; animation:confetti-fall 1.4s ease-out both; }
 @keyframes confetti-fall { to { transform:translate(var(--drift),550px) rotate(var(--turn)); opacity:0; } }
 @media(prefers-reduced-motion:reduce) { .rn-sparkles,.celebration { display:none; } .x-marker,.rn-marker,.zone-dot { animation:none!important; } }
+
+/* NurseDoku’s own shift-station identity: crisp teal controls and ward tiles. */
+:root { --bg:#eef6f5; --text:#234c50; --muted:#607f83; --surface-soft:#e2eeeb; --accent:#247d77; }
+body { background:linear-gradient(160deg,#f1f8f7,#e9f2f0); }
+.app-shell { padding-top:calc(14px + env(safe-area-inset-top)); }
+.topbar { margin-bottom:12px; }
+.top-actions { gap:7px; }
+.status-card { border-radius:12px; border-left:4px solid var(--accent); }
+.game-card { border-radius:16px; box-shadow:0 8px 24px #244c5010; }
+.board { border-radius:8px; }
+.cell { border-radius:4px; }
+.shift-info { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.shift-info p { margin:0; font-size:.73rem; color:var(--muted); }
+.shift-info button { font-size:.72rem; padding:6px 0; }
+.milestone { color:var(--accent); font-size:.7rem; margin:0 0 8px; min-height:0; }
+.install-tip { font-size:.72rem; line-height:1.5; color:var(--muted); margin:16px 4px 0; }
+#archiveDate { display:block; width:100%; min-height:44px; border:1px solid #bdd4d1; padding:10px; border-radius:10px; font:inherit; color:var(--text); margin:12px 0; }
+#shareBtn { margin:0 0 8px; } #shareStatus { font-size:.75rem; white-space:pre-line; }
+@media(max-width:430px) { .subtitle {display:none;} .topbar {align-items:flex-start;} .preferences select {font-size:.72rem;} .status-card>div {padding:9px 5px;} .stats-line {margin:8px 0;} .gesture-guide {margin:10px 0 8px;font-size:.75rem;} .rules-card {margin-top:10px;} }

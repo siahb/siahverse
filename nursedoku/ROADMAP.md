@@ -82,3 +82,5 @@ Guest question history belongs to the browser/device. Account history travels wi
 
 - [x] Five numbered steps with a solved example, RN and X practice, and plain explanations of every placement rule
 - [x] Independent practice board, keyboard controls, light/dark support, and replay from How to play
+
+- [x] Next tip control cycles the sourced nursing tip bank and keeps the source link matched to the displayed tip

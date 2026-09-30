@@ -173,3 +173,10 @@ run('dismissedTipDate="2026-10-01";renderDailyTip("2026-10-01")');assert.equal(g
 run('renderDailyTip("2026-10-02")');assert.equal(get('dailyTipCard').hidden,false);assert(get('dailyTipSource').href.startsWith('https://'));
 console.log('PASS: immediate X taps, transactional double-tap RN/undo, zone clear requires RN and Xs, restore suppresses celebrations, daily tip rotates and dismissal expires.');
 
+
+run('dismissedTipDate="";renderDailyTip()');const firstTip=get('dailyTipText').textContent;
+get('nextTipBtn').events.click[0]();assert.notEqual(get('dailyTipText').textContent,firstTip);assert.equal(get('dailyTipSource').href,run('tipForDate(localDate(),1).source'));
+run('renderDailyTip()');assert.equal(get('dailyTipText').textContent,run('tipForDate(localDate(),1).text'));
+for(let i=1;i<run('DAILY_TIPS.length');i++)get('nextTipBtn').events.click[0]();assert.equal(get('dailyTipText').textContent,firstTip);
+get('nextTipBtn').events.click[0]();run('renderDailyTip("2026-12-15")');assert.equal(run('tipOffset'),0);assert.equal(get('dailyTipText').textContent,run('tipForDate("2026-12-15").text'));
+console.log('PASS: Next tip updates text and source, survives menu redraw, wraps, and resets on a new day.');

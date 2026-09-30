@@ -99,6 +99,7 @@ a.portal-card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,va
 .card-copy h2{margin:0 0 9px;font-size:1.45rem}
 .card-copy p{margin:0;color:var(--muted);line-height:1.55;flex:1}
 .card-action{display:inline-block;margin-top:23px;font-weight:850;color:color-mix(in srgb,var(--accent) 80%,var(--text))}
+.unavailable-card .card-action{font:inherit;font-weight:850;border:0;padding:0;background:transparent;color:var(--muted);opacity:.65;cursor:not-allowed}
 .service-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:19px}
 .service-links a{
   text-decoration:none;border:1px solid var(--border);background:var(--panel-solid);

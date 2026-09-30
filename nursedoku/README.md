@@ -52,3 +52,9 @@ Current rules: three incorrect RN placements end a shift. Invalid placements are
 Hints now explain direct deductions or confined-zone elimination from placed RNs, independently of player X marks. If those techniques cannot explain a move, the hint explicitly says it is a solution reveal. The daily archive includes a month calendar with completed-day markers and blocks future dates and dates before launch.
 
 The required post-shift question bank contains 12 original NCLEX-style single-answer items covering prioritization, adult health, pediatrics, medication safety, mental health, oncology, and dosage calculations. Clinical items link to primary health sources; calculations explain the order supplied in the question. They are independently authored practice items. Saved answers from the previous question bank reset when that bank changes.
+
+### Question history
+
+Questions have permanent IDs. Each progress owner stores `stats.questionHistory` (`seen`, `missed`, or `correct`), included in the cloud progress snapshot. Unseen items are offered first, then previously missed items. Correct items are retired. An exhausted bank allows continued play with a caught-up message. Reloading the same shift preserves its selected question and answer. Current submitted answers migrate into history; older answers without recorded correctness cannot be reconstructed. Guest history is device-local and resets when site storage is cleared.
+
+The scheduled bank expansion targets up to 100 original source-checked questions per day, stopping at 5,000. Preserve existing IDs and append questions; do not reorder old answer choices or change their correct indices.

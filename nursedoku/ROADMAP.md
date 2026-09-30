@@ -9,7 +9,7 @@
 - [x] 56 training shifts, saved completion, resume first unfinished shift
 - [x] 10×10 board selection and difficulty-ordered training
 - [x] Three strikes per shift for any incorrect RN square, with retry and saved strike count
-- [x] Seven source-reviewed nursing questions with answer locking and rationales
+- [x] Original NCLEX-style nursing questions with answer locking and rationales
 - [x] Win milestones
 - [x] Daily archive from September 29, 2026, completed-date records, copyable results
 - [x] Home-screen manifest, local icon, scoped offline cache
@@ -55,3 +55,13 @@ Guest progress stays on the browser/device. The private cloud-save backend is im
 - [x] Incorrect Xs never become false evidence in a hint
 - [x] Daily calendar accessible from the main menu and the game
 - [x] First-open changelog includes the new guidance and calendar
+
+## Question bank growth — scheduled
+
+- [x] Stable question IDs; per-user history included in local and cloud progress
+- [x] Unseen questions first; correctly answered questions never repeat; missed questions may return until answered correctly
+- [x] Show a caught-up state instead of recycling correct answers when the bank is exhausted
+- [x] Daily task scheduled for 50 runs starting September 30, 2026, to add up to 100 source-checked original questions per run, capped at 5,000
+- [ ] Reach 5,000 original reviewed questions (currently 12; daily publishing is subject to successful verification and task execution)
+
+Guest question history belongs to the browser/device. Account history travels with cloud progress. Clearing guest storage resets its history. Saved questions can be reopened to review the same completed shift. No historical correctness is inferred for questions answered before tracking existed.

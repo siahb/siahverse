@@ -119,6 +119,7 @@ const progressStorage={
 let gameKind='journey', customPuzzle=null, dailyDate=null;
 let stats={wins:0,best:null,dailyDates:[]};
 try { const x=JSON.parse(progressStorage.getItem('nursedoku-stats'));if(x&&Number.isInteger(x.wins)&&x.wins>=0&&Array.isArray(x.dailyDates))stats=x; } catch {}
+stats.questionHistory=normalizeQuestionHistory(stats.questionHistory);
 let completedShifts=[];
 try {const current=progressStorage.getItem('nursedoku-journey-v2');const x=JSON.parse(current||progressStorage.getItem('nursedoku-journey'));if(Array.isArray(x))completedShifts=[...new Set(x.filter(v=>Number.isInteger(v)&&v>=0&&v<LEVELS.length).map(v=>current?v:migrateLevel(v)))];}catch{}
 let level = 0, state, history = [], elapsed = 0, runningSince = null, finished = false, strikes=0, lost=false;
@@ -206,7 +207,7 @@ function afterMove() {
   if(finished){persist();return;}
   if(positions().length===size() && !conflicts().size) {
     finished=true; elapsed=time();runningSince=null;
-    recordWin();bonusIndex=(stats.wins-1+BONUS.length)%BONUS.length;bonusChoice=null;bonusSubmitted=false;showBonus();
+    recordWin();bonusIndex=chooseQuestion();bonusChoice=null;bonusSubmitted=false;showBonus();
     $('timer').textContent=format(elapsed);$('finalTime').textContent=format(elapsed);
     tell('Shift complete. Every care zone is staffed!','success');
     $('playAgainBtn').textContent=gameKind==='daily'?'Play a practice shift':gameKind==='practice'?'New practice shift':level===LEVELS.length-1?'Replay from shift 001':'Next shift';
@@ -400,7 +401,8 @@ try {theme(localStorage.getItem('nursedoku-theme'));}catch{}
 // Original NCLEX-style practice items; clinical sources reviewed September 29, 2026.
 const BONUS=[
  {
-  "topic": "Adult health · Take action",
+
+  "id": "nclex-00001",  "topic": "Adult health · Take action",
   "q": "An adult client who takes insulin is shaky and diaphoretic. Blood glucose is 54 mg/dL. The client is alert and can swallow safely. Which action should the nurse take first?",
   "a": [
    "Give 15–20 g of fast-acting carbohydrate",
@@ -414,7 +416,8 @@ const BONUS=[
   "sourceLabel": "Read clinical source"
  },
  {
-  "topic": "Adult health · Evaluate outcomes",
+
+  "id": "nclex-00002",  "topic": "Adult health · Evaluate outcomes",
   "q": "A client received glucose tablets for hypoglycemia 15 minutes ago. Repeat blood glucose is 62 mg/dL, and the client remains alert and can swallow. What is the best next action?",
   "a": [
    "Document that treatment was successful",
@@ -428,7 +431,8 @@ const BONUS=[
   "sourceLabel": "Read clinical source"
  },
  {
-  "topic": "Emergency · Prioritize care",
+
+  "id": "nclex-00003",  "topic": "Emergency · Prioritize care",
   "q": "The triage nurse receives four clients. Which client needs immediate evaluation?",
   "a": [
    "A client with a healed incision requesting dressing supplies",
@@ -442,7 +446,8 @@ const BONUS=[
   "sourceLabel": "Read clinical source"
  },
  {
-  "topic": "Pharmacology · Recognize cues",
+
+  "id": "nclex-00004",  "topic": "Pharmacology · Recognize cues",
   "q": "A client who received an opioid is difficult to awaken and has slow, shallow breathing. Which complication should the nurse suspect?",
   "a": [
    "Expected pain relief without a safety concern",
@@ -456,7 +461,8 @@ const BONUS=[
   "sourceLabel": "Read clinical source"
  },
  {
-  "topic": "Pharmacology · Antidotes",
+
+  "id": "nclex-00005",  "topic": "Pharmacology · Antidotes",
   "q": "Emergency help has been activated for a client with suspected opioid overdose. Which medication should the nurse anticipate administering per protocol to reverse opioid effects?",
   "a": [
    "Insulin",
@@ -470,7 +476,8 @@ const BONUS=[
   "sourceLabel": "Read clinical source"
  },
  {
-  "topic": "Pediatrics · Prioritize care",
+
+  "id": "nclex-00006",  "topic": "Pediatrics · Prioritize care",
   "q": "A child with asthma continues to have severe breathing difficulty after the prescribed reliever medicine. What should the nurse advise the caregiver to do?",
   "a": [
    "Wait until the next routine appointment",
@@ -484,7 +491,8 @@ const BONUS=[
   "sourceLabel": "Read clinical source"
  },
  {
-  "topic": "Pediatrics · Teaching",
+
+  "id": "nclex-00007",  "topic": "Pediatrics · Teaching",
   "q": "A toddler with diarrhea from food poisoning is alert and has been prescribed oral rehydration. Which caregiver statement shows understanding?",
   "a": [
    "I will use the oral rehydration solution as directed",
@@ -498,7 +506,8 @@ const BONUS=[
   "sourceLabel": "Read clinical source"
  },
  {
-  "topic": "Mental health · Assess safety",
+
+  "id": "nclex-00008",  "topic": "Mental health · Assess safety",
   "q": "A client says, “Everyone would be better off without me.” Which response best begins a suicide-risk assessment?",
   "a": [
    "You should not feel that way",
@@ -512,7 +521,8 @@ const BONUS=[
   "sourceLabel": "Read clinical source"
  },
  {
-  "topic": "Oncology · Recognize risk",
+
+  "id": "nclex-00009",  "topic": "Oncology · Recognize risk",
   "q": "A client receiving chemotherapy calls with a temperature of 101°F (38.3°C). Which instruction is most appropriate?",
   "a": [
    "Wait until the next clinic visit",
@@ -526,7 +536,8 @@ const BONUS=[
   "sourceLabel": "Read clinical source"
  },
  {
-  "topic": "Emergency · Teaching",
+
+  "id": "nclex-00010",  "topic": "Emergency · Teaching",
   "q": "During a follow-up call, a client reports new chest pressure, shortness of breath, and sweating at rest. Which instruction should the nurse give first?",
   "a": [
    "Drive to the clinic tomorrow",
@@ -540,7 +551,8 @@ const BONUS=[
   "sourceLabel": "Read clinical source"
  },
  {
-  "topic": "Dosage calculation · IV fluids",
+
+  "id": "nclex-00011",  "topic": "Dosage calculation · IV fluids",
   "q": "The prescription is to infuse 1,000 mL of IV fluid over 8 hours. At what rate should the nurse set the infusion pump?",
   "a": [
    "80 mL/hr",
@@ -554,7 +566,8 @@ const BONUS=[
   "sourceLabel": "Read clinical source"
  },
  {
-  "topic": "Pediatrics · Dosage calculation",
+
+  "id": "nclex-00012",  "topic": "Pediatrics · Dosage calculation",
   "q": "A child weighs 20 kg. The prescription is acetaminophen 15 mg/kg PO for one dose. The bottle contains 160 mg/5 mL. How many mL should the nurse give? Round only the final answer to the nearest tenth.",
   "a": [
    "3.0 mL",
@@ -568,10 +581,37 @@ const BONUS=[
   "sourceLabel": "Read clinical source"
  }
 ];
+function normalizeQuestionHistory(value){
+ const result={};
+ if(value&&typeof value==='object'&&!Array.isArray(value))for(const [id,status] of Object.entries(value)){
+  if(/^nclex-\d{5}$/.test(id)&&['seen','missed','correct'].includes(status))result[id]=status;
+ }
+ return result;
+}
+function saveQuestionHistory(){
+ progressStorage.setItem('nursedoku-stats',JSON.stringify(stats));persist();
+}
+function chooseQuestion(){
+ const unseen=BONUS.findIndex(item=>!stats.questionHistory[item.id]);
+ if(unseen>=0)return unseen;
+ const missed=BONUS.map((item,index)=>({item,index})).filter(({item})=>stats.questionHistory[item.id]==='missed');
+ return missed.length?missed[Math.floor(Math.random()*missed.length)].index:-1;
+}
 function showBonus() {
- const index=Number.isInteger(bonusIndex)&&bonusIndex>=0&&bonusIndex<BONUS.length?bonusIndex:(stats.wins-1+BONUS.length)%BONUS.length;
- bonusIndex=index;const item=BONUS[index];
+ const index=Number.isInteger(bonusIndex)&&bonusIndex>=0&&bonusIndex<BONUS.length?bonusIndex:chooseQuestion();
+ bonusIndex=index;
+ if(index<0){
+  bonusChoice=null;bonusSubmitted=true;
+  $('bonusTopic').textContent='Question bank complete';$('bonusQuestion').textContent='You’re caught up!';
+  $('bonusAnswers').innerHTML='';$('bonusSource').hidden=true;$('bonusFeedback').className='feedback-correct';
+  $('bonusFeedback').textContent='You have no new questions or missed questions to review. New questions will appear here as the bank grows.';
+  $('confirmBonusBtn').hidden=true;$('playAgainBtn').disabled=false;updateResultLinks();persist();return;
+ }
+ $('confirmBonusBtn').hidden=false;
+ const item=BONUS[index];
+ if(!stats.questionHistory[item.id]){stats.questionHistory[item.id]='seen';saveQuestionHistory();}
  if(!Number.isInteger(bonusChoice)||bonusChoice<0||bonusChoice>=item.a.length){bonusChoice=null;bonusSubmitted=false;}
+ if(bonusSubmitted&&stats.questionHistory[item.id]!=='correct'){stats.questionHistory[item.id]=bonusChoice===item.correct?'correct':'missed';saveQuestionHistory();}
  $('bonusTopic').textContent=item.topic;$('bonusQuestion').textContent=item.q;$('bonusAnswers').innerHTML='';$('bonusFeedback').textContent='';
  $('bonusFeedback').className='';$('shareStatus').textContent='';$('bonusSource').href=item.source;
  $('bonusSource').hidden=!bonusSubmitted||!item.source;$('bonusSource').textContent=item.sourceLabel||'Read clinical source';
@@ -595,7 +635,7 @@ function showBonus() {
   button.onclick=()=>{if(bonusSubmitted)return;bonusChoice=i;updateSelection();$('bonusFeedback').textContent='Ready? Confirm your answer to see the explanation.';persist();};
   $('bonusAnswers').append(button);
  });
- $('confirmBonusBtn').onclick=()=>{if(bonusChoice===null||bonusSubmitted)return;bonusSubmitted=true;updateSelection();feedback();persist();};
+ $('confirmBonusBtn').onclick=()=>{if(bonusChoice===null||bonusSubmitted)return;bonusSubmitted=true;stats.questionHistory[item.id]=bonusChoice===item.correct?'correct':'missed';updateSelection();feedback();saveQuestionHistory();};
  updateSelection();if(bonusSubmitted)feedback();updateResultLinks();
 }
 
@@ -718,7 +758,7 @@ window.NurseDokuProgress={
   history=[];hintCell=null;
   completedShifts=Array.isArray(v.completed)?[...new Set(v.completed.filter(i=>Number.isInteger(i)&&i>=0&&i<LEVELS.length))]:[];
   const st=v.stats||{};
-  stats={wins:Number.isInteger(st.wins)&&st.wins>=0?st.wins:0,best:Number.isFinite(st.best)&&st.best>=0?st.best:null,dailyDates:Array.isArray(st.dailyDates)?[...new Set(st.dailyDates.filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)))]:[]};
+  stats={questionHistory:normalizeQuestionHistory(st.questionHistory),wins:Number.isInteger(st.wins)&&st.wins>=0?st.wins:0,best:Number.isFinite(st.best)&&st.best>=0?st.best:null,dailyDates:Array.isArray(st.dailyDates)?[...new Set(st.dailyDates.filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)))]:[]};
   for(const id of ['winDialog','lossDialog'])if($(id).open)$(id).close();
   progressStorage.setItem('nursedoku-stats',JSON.stringify(stats));
   progressStorage.setItem('nursedoku-journey-v2',JSON.stringify(completedShifts));
@@ -756,7 +796,7 @@ $('menuBtn').addEventListener('click',returnToMenu);
 for(const [id,kind] of [['menuLearnBtn','journey'],['menuDailyBtn','daily'],['menuPracticeBtn','practice']])$(id).addEventListener('click',()=>{if(switchGame(kind)!==false)enterGame();});
 $('winDialog').addEventListener('cancel',event=>{if(!bonusSubmitted)event.preventDefault();});
 $('menuPreferences').append(document.querySelector('.preferences'));
-const UPDATE_VERSION='2026-09-29-nclex-guidance';
+const UPDATE_VERSION='2026-09-29-question-history';
 let changelogShown=false;
 function markChangelogSeen(){try{localStorage.setItem('nursedoku-changelog',UPDATE_VERSION);}catch{}changelogShown=true;}
 function openChangelog(){pause();$('changelogDialog').showModal();}

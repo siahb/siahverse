@@ -8,7 +8,7 @@ vm.createContext(context);vm.runInContext(fs.readFileSync(require('path').join(_
 function run(code){return vm.runInContext(code,context);}
 assert.equal(run('inGame'),false);assert.equal(run('runningSince'),null);assert.equal(get('gameView').hidden,undefined);
 get('closeChangelogBtn').events.click[0]();get('changelogDialog').events.close[0]();
-assert.equal(storage['nursedoku-changelog'],'2026-09-29-nclex-guidance');
+assert.equal(storage['nursedoku-changelog'],'2026-09-29-question-history');
 get('continueBtn').events.click[0]();assert.equal(run('inGame'),true);assert.notEqual(run('runningSince'),null);
 const evt={pointerId:1,isPrimary:true,button:0,clientX:10,clientY:10,preventDefault(){}};
 hit=get('board').children[1];hit.closest=()=>hit;
@@ -128,3 +128,21 @@ for(let i=0;i<12;i++){
 }
 const legacyQuiz=context.window.NurseDokuProgress.snapshot();delete legacyQuiz.game.bonusVersion;legacyQuiz.game.bonusChoice=0;legacyQuiz.game.bonusSubmitted=true;context.window.NurseDokuProgress.apply(legacyQuiz,null);assert.equal(run('bonusSubmitted'),false);assert.equal(run('bonusChoice'),null);
 console.log('PASS: all 12 NCLEX-style items support choice/confirmation, topic/rationale/source display, calculation sources stay hidden, and old-bank answers cannot apply to new questions.');
+// Never recycle correct questions; reserve seen items and revisit only misses.
+run('stats.questionHistory={};bonusIndex=null;bonusChoice=null;bonusSubmitted=false;showBonus()');
+assert.equal(run('bonusIndex'),0);assert.equal(run('stats.questionHistory[BONUS[0].id]'),'seen');
+assert.equal(run('chooseQuestion()'),1);
+get('bonusAnswers').children.find(b=>+b.dataset.choice===run('BONUS[0].correct')).onclick();get('confirmBonusBtn').onclick();
+assert.equal(run('stats.questionHistory[BONUS[0].id]'),'correct');
+assert.equal(JSON.parse(storage['nursedoku-stats']).questionHistory['nclex-00001'],'correct');
+run("stats.questionHistory=Object.fromEntries(BONUS.map(q=>[q.id,'correct']));stats.questionHistory[BONUS[3].id]='missed'");
+assert.equal(run('chooseQuestion()'),3);
+run('bonusIndex=chooseQuestion();bonusChoice=null;bonusSubmitted=false;showBonus()');
+get('bonusAnswers').children.find(b=>+b.dataset.choice===run('BONUS[3].correct')).onclick();get('confirmBonusBtn').onclick();
+assert.equal(run('chooseQuestion()'),-1);
+run('bonusIndex=null;bonusSubmitted=false;showBonus()');assert.equal(get('bonusAnswers').children.length,0);assert.equal(get('playAgainBtn').disabled,false);assert(get('confirmBonusBtn').hidden);
+const mastered=context.window.NurseDokuProgress.snapshot();context.window.NurseDokuProgress.apply(mastered,'quiz-owner');assert.equal(run('chooseQuestion()'),-1);
+context.window.NurseDokuProgress.apply({stats:{wins:0,dailyDates:[]},completed:[]},null);assert.equal(run('chooseQuestion()'),0);
+assert.equal(Object.keys(run("normalizeQuestionHistory({'nclex-00001':'correct','bad':'correct','nclex-00002':'junk'})")).length,1);
+assert.equal(new Set(run('BONUS.map(q=>q.id)')).size,12);
+console.log('PASS: unseen-first selection, missed-only review, mastery retirement, caught-up state, stable IDs, guest/account/cloud history isolation.');

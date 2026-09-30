@@ -29,7 +29,7 @@ Start from the main menu; loading the app leaves the timer paused. The changelog
 - [x] X pop, RN bounce and sparkle, care-zone feedback, win confetti; reduced-motion support
 - [x] Saved progress and themes; timer pauses when the page is hidden
 
-Progress and statistics are saved on this browser/device. Difficulty uses an automated deduction heuristic; human calibration remains future work. The bonus bank currently contains seven original infection-prevention questions. Generation uses bounded attempts and a verified starter fallback if a unique board cannot be produced.
+Progress and statistics are saved on this browser/device. Difficulty uses an automated deduction heuristic; human calibration remains future work. The NCLEX question bank currently contains 12 original questions. Generation uses bounded attempts and a verified starter fallback if a unique board cannot be produced.
 
 ## Run locally
 
@@ -47,7 +47,7 @@ Verified the original eight learning boards, all 72 rated practice boards, and 3
 
 See [ROADMAP.md](ROADMAP.md) for delivered Phase 1 features and the next phase. General/Pediatrics/Emergency are color palettes, not specialty gameplay modes. Offline caching is scoped to NurseDoku.
 
-Current rules: three incorrect RN placements end a shift. Invalid placements are rejected; Undo does not restore strikes. Training advances from Easy through Medium to Hard. The palette selector only changes colors. Supabase private cloud saves and account UI are implemented. Public registration remains disabled until nursing@siahverse.cc is verified with an email provider and SMTP is configured; see accounts/README.md.
+Current rules: three incorrect RN placements end a shift. Invalid placements are rejected; Undo does not restore strikes. Training advances from Easy through Medium to Hard. The palette selector only changes colors. Supabase private cloud saves and account UI are implemented. Custom SMTP is configured, but public registration remains disabled while Resend DKIM verification is pending. The September 30 signup test reached Resend and was rejected for an unverified domain; see accounts/README.md for checked activation status.
 
 Hints now explain direct deductions or confined-zone elimination from placed RNs, independently of player X marks. If those techniques cannot explain a move, the hint explicitly says it is a solution reveal. The daily archive includes a month calendar with completed-day markers and blocks future dates and dates before launch.
 

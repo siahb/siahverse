@@ -46,7 +46,7 @@ Difficulty is an automated heuristic: Easy resolves with row/column/zone singles
 - [ ] Account deletion/export and dedicated privacy page
 - [ ] Public mobile-store release only if requested
 
-Guest progress stays on the browser/device. The private cloud-save backend is implemented; public signup is waiting for Resend domain verification and SMTP delivery tests. No account is required for guest play.
+Guest progress stays on the browser/device. The private cloud-save backend is implemented. As checked September 30, custom SMTP is saved and reaches Resend, but signup email is rejected because domain verification is pending. Live database isolation and stale-write checks pass; signup confirmation, recovery, and cross-device restore still require successful email delivery. No account is required for guest play.
 
 ## September 29 guidance update — delivered
 

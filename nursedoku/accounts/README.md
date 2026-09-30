@@ -17,11 +17,21 @@ Implemented:
 ## Remaining activation steps
 Registration is disabled in account-config.js until these checks pass:
 1. Authentication URL configuration: completed and verified; Site URL and allowed redirect are https://siahverse.cc/nursedoku/.
-2. Custom SMTP for public verification and recovery emails, sent from nursing@siahverse.cc. Supabase default SMTP only sends to organization team members.
+2. Resend must finish verifying the sending domain. Custom SMTP is already saved and enabled for nursing@siahverse.cc; the live signup test reached Resend but was rejected because the domain is not verified.
 3. End-to-end signup, verification, sign-in, recovery, and cross-device restore with two disposable accounts.
 4. Set registrationEnabled to true, rebuild hashes/cache, republish.
 
-Dashboard is signed in and redirects have been configured. Resend is connected and siahverse.cc has been added as a sending domain. DNS verification and SMTP credentials remain outstanding; public registration stays disabled until delivery is tested.
+Dashboard redirects and SMTP are configured. Resend still reports DKIM pending; public registration stays disabled until successful signup and recovery delivery are tested.
+
+## Activation check — September 30, 2026
+
+- Supabase custom SMTP remains enabled after reloading the dashboard: smtp.resend.com, port 465, sender name NurseDoku. A dedicated NurseDoku Supabase SMTP key exists in Resend.
+- An authorized signup test to nursing@siahverse.cc reached Resend through the saved SMTP connection. Supabase returned HTTP 500, and its auth log recorded SMTP 550: `The siahverse.cc domain is not verified`. Resend recorded the corresponding HTTP 403 SMTP request. No email was delivered and no account was retained.
+- Cloudflare's published DKIM TXT value exactly matches Resend's required value. Both 1.1.1.1 and 8.8.8.8 resolve it correctly. Resend verification was restarted; DKIM remains pending, while the sending MX, SPF TXT, and CNAME records are verified. Preserve the existing Zoho receiving records.
+- Live rollback-only database checks passed: owner restore, stale-write rejection, ownership reassignment denial, second-user isolation, and guest denial. Fixtures were rolled back. Supabase security advisors returned no findings.
+- Existing account, gameplay/state, NCLEX question history, and offline checks passed. Browser signup confirmation, password recovery, and cross-device account restore remain unverified because sending is blocked.
+
+Next: check Resend's domain status, then repeat signup and recovery with nursing@siahverse.cc. Enable registration only after email confirmation, password update, and cross-device restore succeed. If domain verification remains pending despite the matching public record, use Resend support; do not replace the working DNS records or switch off confirmation to bypass the failure.
 
 ## Data and behavior
 One row per user stores active game, completed shift IDs and statistics. Each save has a revision; stale updates change zero rows. The UI never imports guest data automatically. Sign-out restores guest progress.
@@ -31,7 +41,7 @@ Account deletion/export tooling and a full privacy page remain follow-up work.
 
 ## Resend domain verification
 
-Add these records to the DNS zone for siahverse.cc (TTL Auto). Receiving mail is disabled; these records configure outgoing account emails only.
+These records are already published in the DNS zone for siahverse.cc (TTL Auto). Resend receiving is disabled; these records configure outgoing account emails only. Existing Zoho mail receiving remains in place.
 
 | Type | Name | Value | Priority |
 | --- | --- | --- | --- |
@@ -40,4 +50,4 @@ Add these records to the DNS zone for siahverse.cc (TTL Auto). Receiving mail is
 | TXT | send | v=spf1 include:amazonses.com ~all | — |
 | CNAME | rsend | send.forge.rmta.net | — |
 
-After domain verification, configure Supabase custom SMTP with smtp.resend.com, port 465, username resend, and a domain-restricted sending API key as its password. Keep the key out of the static site. Sender: nursing@siahverse.cc; name: NurseDoku. Test signup confirmation and password recovery before enabling registration.
+Supabase custom SMTP is saved with smtp.resend.com, port 465, and the dedicated sending credential. Keep its password out of the static site. Sender: nursing@siahverse.cc; name: NurseDoku. Domain verification and successful signup confirmation/password recovery tests are still required before enabling registration.

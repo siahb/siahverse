@@ -1,6 +1,19 @@
   // Global variable to track what we're about to delete
   let pendingDeletion = null;
   let repeatUndos = [];
+function escapeTaskHTML(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+}
+
+// Replace only visible positions so filtering never drops hidden tasks.
+function reorderedTasks(snapshot, visibleIndices) {
+  const indices=visibleIndices.filter(index=>Number.isInteger(index)&&snapshot[index]&&!snapshot[index].done);
+  if(new Set(indices).size!==indices.length)throw Error('Invalid task order.');
+  const positions=[...indices].sort((a,b)=>a-b);
+  const result=[...snapshot];
+  positions.forEach((position,i)=>result[position]=snapshot[indices[i]]);
+  return result;
+}
   const todoInput = document.getElementById('todo-input');
   const todoList = document.getElementById('todo-list');
   const doneList = document.getElementById('done-list');
@@ -550,26 +563,7 @@ async function loadTodosFromServer() {
     if(!Array.isArray(loaded))throw Error();
     todosData = loaded;
 
-    // Normalize any overdue repeating tasks client-side
-    let changed = false;
-    for (let i = 0; i < todosData.length; i++) {
-      const t = todosData[i];
-      if (t && t.repeat) {
-        if (rollForwardIfMissed(t)) {
-          // persist normalization
-          changed = true;
-          if (!window.canEditTasks()) continue;
-          await fetch(`/todos/${i}`, {
-            method: 'PATCH',
-            headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY) || ''}`
-        },
-            body: JSON.stringify({ due: t.due, nextDue: t.nextDue })
-          });
-        }
-      }
-    }
+    // Loading a list is read-only. Repeats advance when explicitly completed.
 
     renderTodos();
     renderDone();
@@ -828,7 +822,7 @@ function weekdayBoxes(selected = []) {
     const overduePill = isOverdue(todo) ? `<span class="pill overdue">Overdue</span>` : '';
     
     // Create repeat pill
-    const repeatPill = todo.repeat ? `<span class="pill repeat">${repeatLabel(todo)}</span>` : '';
+    const repeatPill = todo.repeat ? `<span class="pill repeat">${escapeTaskHTML(repeatLabel(todo))}</span>` : '';
     
     // Create due pills (today, tomorrow, or regular)
     const duePill = isDueToday(todo) 
@@ -836,7 +830,7 @@ function weekdayBoxes(selected = []) {
       : (isDueTomorrow(todo)
           ? `<span class="pill due" style="border:1px solid #3b82f6; color:#3b82f6; background:rgba(59,130,246,.15);">Due Tomorrow</span>`
           : (todo.due 
-              ? `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${toISO(todo.due)}</span>` 
+              ? `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${escapeTaskHTML(toISO(todo.due))}</span>`
               : ''));
 
     // Map priority to !, !!, !!! with colors
@@ -856,12 +850,12 @@ function weekdayBoxes(selected = []) {
     const prioPill = todo.priority ? `<span class="pill ${prioClass}">${prioSymbol}</span>` : '';
     const tagPills = (todo.tags || []).map(t => {
   const emoji = getTagEmoji(t);
-  return `<span class="pill">${emoji || t}</span>`;
+  return `<span class="pill">${escapeTaskHTML(emoji || t)}</span>`;
 }).join(' ');
 
     li.innerHTML = `
       <input type="checkbox" class="select-todo" data-trueindex="${i}" />
-      <span class="todo-text">${todo.text}</span>
+      <span class="todo-text">${escapeTaskHTML(todo.text)}</span>
       <div class="todo-meta">
         ${repeatPill}
         ${duePill}
@@ -899,19 +893,19 @@ const renderDone = () => {
 
     li.innerHTML = `
       <input type="checkbox" class="select-todo" data-trueindex="${i}" />
-      <span class="todo-text">${todo.text}</span>
+      <span class="todo-text">${escapeTaskHTML(todo.text)}</span>
       <div class="todo-meta">
-        ${todo.repeat ? `<span class="pill pill-repeat">${repeatLabel(todo)}</span>` : ''}
+        ${todo.repeat ? `<span class="pill pill-repeat">${escapeTaskHTML(repeatLabel(todo))}</span>` : ''}
         ${todo.due 
           ? (isDueToday(todo)
               ? `<span class="pill due" style="border:1px solid #a855f7; color:#a855f7; background:rgba(168,85,247,.12);">Due Today!</span>`
               : (isDueTomorrow(todo)
                   ? `<span class="pill due" style="border:1px solid #3b82f6; color:#3b82f6; background:rgba(59,130,246,.15);">Due Tomorrow</span>`
-                  : `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${toISO(todo.due)}</span>`))
+                  : `<span class="pill due" style="border:1px solid #f97316; color:#f97316; background:rgba(249,115,22,.12);">Due: ${escapeTaskHTML(toISO(todo.due))}</span>`))
           : ''}
         ${(todo.tags || []).map(t => {
   const emoji = getTagEmoji(t);
-  return `<span class="pill pill-tag">${emoji || t}</span>`;
+  return `<span class="pill pill-tag">${escapeTaskHTML(emoji || t)}</span>`;
 }).join(' ')}
       </div>
       <div>
@@ -957,10 +951,10 @@ window.editTodo = function(index) {
   // 🔻 build editor UI
   li.innerHTML = `
     <div class="edit-container">
-      <input type="text" class="edit-text" value="${text}" />
+      <input type="text" class="edit-text" value="${escapeTaskHTML(text)}" />
 
       <label>Due:
-        <input type="date" class="edit-due" value="${due}">
+        <input type="date" class="edit-due" value="${escapeTaskHTML(due)}">
       </label>
       <button type="button" class="mini-btn btn-today">Today</button>
 
@@ -974,7 +968,7 @@ window.editTodo = function(index) {
 
       <label class="edit-interval-wrap" style="${freq?'':'display:none;'}">
         Every
-        <input type="number" class="edit-interval" min="1" value="${interval}" style="width:4rem;">
+        <input type="number" class="edit-interval" min="1" value="${escapeTaskHTML(interval)}" style="width:4rem;">
         <span class="edit-interval-unit">${freq==='weekly'?'week(s)':'day(s)'}</span>
       </label>
 
@@ -984,7 +978,7 @@ window.editTodo = function(index) {
       </div>
 
       <label>Tags:
-        <input type="text" class="edit-tags" placeholder="chores, projects, etc..." value="${tagsCSV}">
+        <input type="text" class="edit-tags" placeholder="chores, projects, etc..." value="${escapeTaskHTML(tagsCSV)}">
       </label>
 
       <label>Priority:
@@ -1052,7 +1046,8 @@ window.editTodo = function(index) {
     if (repeat) {
       patch.repeat = repeat;
       const temp = { ...todo, repeat, due: newDue || (todo.due || todayISO()) };
-      patch.nextDue = computeNextDue(temp, temp.due);
+      patch.due = temp.due;
+      patch.nextDue = temp.due;
     } else {
       patch.repeat = null;
       patch.nextDue = null;
@@ -1122,7 +1117,7 @@ async function addNewTodo() {
   };
 
   if (repeat) {
-    payload.nextDue = computeNextDue(payload, payload.due);
+    payload.nextDue = payload.due;
     payload.due = payload.due || payload.nextDue;
   }
 
@@ -1212,17 +1207,17 @@ window.markAsDone = async (index) => {
   const nowISO = todayISO();
 
   // 🔹 Save previous state for UNDO
-  repeatUndos.push({
+  const undoAdvance={
     index: Number(index),
     prevDue: task.due ?? null,
     prevNextDue: task.nextDue ?? null,
     prevLastDone: task.lastDone ?? null
-  });
+  };
 
   const updates = { lastDone: nowISO };
     
     // Use the current due date as the starting point, or today if no due date
-    const currentDue = toISO(task.nextDue || task.due || nowISO);
+    const currentDue = toISO(task.due || task.nextDue || nowISO);
     
     // Compute the next occurrence from the current due date
     let nextDue = computeNextDue(task, currentDue);
@@ -1244,7 +1239,7 @@ window.markAsDone = async (index) => {
     
     // Safety check: prevent infinite loops by limiting iterations
     let iterations = 0;
-    const maxIterations = 100; // Safety limit
+    const maxIterations = 10000; // Safety limit for old schedules
     
     // If the next due date is still in the past (timezone issues), advance it
     while (nextDue <= nowISO && iterations < maxIterations) {
@@ -1296,7 +1291,8 @@ window.markAsDone = async (index) => {
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
-      
+      undoAdvance.after=JSON.stringify((await response.json()).todo);
+      repeatUndos.push(undoAdvance);
       await loadTodosFromServer();
     } catch (error) {
       console.error("Failed to advance repeating task:", error);
@@ -1357,9 +1353,11 @@ undoBtn.addEventListener('click', async () => {
 
   // 🔹 First: try to undo a repeating-task advance
   if (repeatUndos.length) {
-    const u = repeatUndos.pop();
+    const u = repeatUndos[repeatUndos.length-1];
     try {
-      await fetch(`/todos/${u.index}`, {
+      const currentIndex=todosData.findIndex(task=>JSON.stringify(task)===u.after);
+      if(currentIndex<0)throw Error('The repeating task changed. Reload before undoing.');
+      const response = await fetch(`/todos/${currentIndex}`, {
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',
@@ -1371,6 +1369,8 @@ undoBtn.addEventListener('click', async () => {
           lastDone: u.prevLastDone
         })
       });
+      if(!response.ok)throw Error('Undo could not be saved.');
+      repeatUndos.pop();
       await loadTodosFromServer();
       return; // done—don’t also try deletion undo
     } catch (e) {
@@ -1382,11 +1382,10 @@ undoBtn.addEventListener('click', async () => {
   
  if (!deletedTodos.length) return;
 
-  const restoring = [...deletedTodos];
-  deletedTodos = [];
-
-  for (const obj of restoring) {
-    await fetch('/todos', {
+  try {
+  while (deletedTodos.length) {
+    const obj=deletedTodos[0];
+    const response=await fetch('/todos', {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
@@ -1394,9 +1393,11 @@ undoBtn.addEventListener('click', async () => {
       },
       body: JSON.stringify(obj)
     });
+    if(!response.ok)throw Error('Undo could not be saved.');
+    deletedTodos.shift();
   }
-
-  loadTodosFromServer();
+  }catch{alert('Undo could not be saved. Try again.');}
+  await loadTodosFromServer();
 });
 
  window.deleteSelected = function() {
@@ -1454,17 +1455,7 @@ document.getElementById('save-order')?.addEventListener('click', async () => {
   // Rebuild todosData from the current DOM order (not relying on previous state)
   const listItems = document.querySelectorAll('#todo-list li');
   const snapshot = [...todosData]; // snapshot BEFORE we mutate
-  const newOrder = [];
-
-  listItems.forEach(li => {
-    const trueIndex = parseInt(li.getAttribute('data-trueindex'), 10);
-    const item = snapshot[trueIndex];
-    if (item && !item.done) newOrder.push(item);
-  });
-
-  // Keep done items at the end (unchanged)
-  const doneItems = snapshot.filter(t => t.done);
-  todosData = [...newOrder, ...doneItems];
+  const newOrder = reorderedTasks(snapshot,[...listItems].map(li=>Number(li.getAttribute('data-trueindex'))));
 
   try {
     const res = await fetch('/todos/reorder', {
@@ -1473,7 +1464,7 @@ document.getElementById('save-order')?.addEventListener('click', async () => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY)}`
       },
-      body: JSON.stringify(todosData) // 👈 if your API wants IDs only, see note below
+      body: JSON.stringify(newOrder)
     });
 
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -1488,6 +1479,7 @@ document.getElementById('save-order')?.addEventListener('click', async () => {
   } catch (err) {
     alert('⚠️ Failed to save order.');
     console.error(err);
+    await loadTodosFromServer();
   }
 });
 
@@ -1510,35 +1502,26 @@ function enableDrag() {
 
     onEnd: async () => {
       const listItems = document.querySelectorAll('#todo-list li');
-      const newOrder = [];
-
-      listItems.forEach(li => {
-        const trueIndex = parseInt(li.getAttribute('data-trueindex'));
-        const originalItem = todosData[trueIndex];
-        if (originalItem && !originalItem.done) newOrder.push(originalItem);
-      });
-
-      const doneItems = todosData.filter(todo => todo.done);
-      todosData = [...newOrder, ...doneItems];
+      const newOrder=reorderedTasks(todosData,[...listItems].map(li=>Number(li.getAttribute('data-trueindex'))));
 
       // 🔁 Save reordered list to server
       try {
-        await fetch('/todos/reorder', {
+        const response=await fetch('/todos/reorder', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${localStorage.getItem(ADMIN_PASSWORD_KEY)}`
           },
-          body: JSON.stringify(todosData)
+          body: JSON.stringify(newOrder)
         });
+        if(!response.ok)throw Error('Order could not be saved.');
       } catch (err) {
         alert('⚠️ Failed to save new order to server.');
       }
 
       // lock sort to custom and re-render
       forceCustomSort();
-      renderTodos();
-      renderDone();
+      await loadTodosFromServer();
     }
   });
 }
@@ -1554,7 +1537,10 @@ function disableDrag() {
     todosData=[];deletedTodos=[];repeatUndos=[];pendingDeletion=null;selectMode=false;
     todoInput.value='';searchInput.value='';
     document.querySelectorAll('.modal').forEach(modal=>modal.style.display='none');
-    disableDrag();renderTodos();renderDone();updateAdminUI();
+    disableDrag();dragEnabled=false;toggleDragBtn.textContent='↕ Reorder';
+    document.body.classList.remove('select-mode-active','dragging-active');
+    selectModeBtn.textContent='☐ Select';
+    document.body.style.overflow='';renderTodos();renderDone();updateAdminUI();
     void loadTodosFromServer();
   };
   toggleDragBtn.textContent = '↕️Reorder';
@@ -1661,12 +1647,12 @@ function showDeleteConfirmation(index, taskText = null) {
   document.getElementById('delete-message').textContent = 'Are you sure you want to delete this task?';
   document.getElementById('delete-preview').innerHTML = `
     <div class="delete-task-item">
-      <span class="delete-task-text">${task.text}</span>
+      <span class="delete-task-text">${escapeTaskHTML(task.text)}</span>
       ${task.tags && task.tags.length ? 
-        `<div class="delete-task-tags">${task.tags.map(tag => `<span class="pill">${tag}</span>`).join(' ')}</div>` 
+        `<div class="delete-task-tags">${task.tags.map(tag => `<span class="pill">${escapeTaskHTML(tag)}</span>`).join(' ')}</div>`
         : ''}
       ${task.priority ? 
-        `<span class="pill priority-${task.priority.toLowerCase()}">${task.priority === 'H' ? '!!! High' : task.priority === 'M' ? '!! Medium' : '! Low'}</span>` 
+        `<span class="pill priority-${escapeTaskHTML(task.priority.toLowerCase())}">${task.priority === 'H' ? '!!! High' : task.priority === 'M' ? '!! Medium' : '! Low'}</span>`
         : ''}
     </div>
   `;
@@ -1714,9 +1700,9 @@ function showBulkDeleteConfirmation() {
     if (!task) return '';
     return `
       <div class="delete-task-item">
-        <span class="delete-task-text">${task.text}</span>
+        <span class="delete-task-text">${escapeTaskHTML(task.text)}</span>
         ${task.tags && task.tags.length ? 
-          `<div class="delete-task-tags">${task.tags.map(tag => `<span class="pill">${tag}</span>`).join(' ')}</div>` 
+          `<div class="delete-task-tags">${task.tags.map(tag => `<span class="pill">${escapeTaskHTML(tag)}</span>`).join(' ')}</div>`
           : ''}
       </div>
     `;
@@ -1754,7 +1740,6 @@ async function confirmDelete() {
     if (pendingDeletion.type === 'single') {
       // Delete single task
       const index = pendingDeletion.index;
-      deletedTodos.push(todosData[index]); // for undo
       
       const response = await fetch(`/todos/${index}`, {
         method: 'DELETE',
@@ -1773,6 +1758,7 @@ async function confirmDelete() {
           return; // Don't close modal, let user retry
         }
       }
+      if(response.ok)deletedTodos.push(...(await response.json()).removed);
       
     } else if (pendingDeletion.type === 'bulk') {
       // Delete multiple tasks (in reverse order to maintain indices)
@@ -1780,7 +1766,6 @@ async function confirmDelete() {
       let failedCount = 0;
       
       for (const index of indices) {
-        deletedTodos.push(todosData[index]); // for undo
         
         const response = await fetch(`/todos/${index}`, {
           method: 'DELETE',
@@ -1794,6 +1779,7 @@ async function confirmDelete() {
           failedCount++;
           console.warn(`Failed to delete task ${index}: HTTP ${response.status}`);
         }
+        if(response.ok)deletedTodos.push(...(await response.json()).removed);
       }
       
       // Show error only if some deletions actually failed

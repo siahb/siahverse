@@ -1,5 +1,6 @@
 import {accountApi} from '../server/account-api.js';
 import {accountTasks} from '../server/account-tasks.js';
+import {validTask} from '../server/task-validation.js';
 const COOKIE_NAME = "sv_nursing_session";
 const DEVICE_COOKIE_NAME = "sv_nursing_device";
 const DEVICE_TTL_SECONDS = 60 * 60 * 24 * 365;
@@ -257,6 +258,7 @@ async function handleSiahDoApi(context,path) {
       if (!text) return jsonResponse({error:"Missing text"},400);
       const {text:_ignored,...rest}=body || {};
       const task={text,done:false,...rest};
+      if(!validTask(task))return jsonResponse({error:"Invalid task fields."},400);
       const row=await env.DB.prepare("SELECT COALESCE(MAX(sort_order),-1)+1 AS n FROM siahdo_tasks").first();
       await env.DB.prepare(
         "INSERT INTO siahdo_tasks (sort_order,data) VALUES (?,?)"
@@ -304,9 +306,11 @@ async function handleSiahDoApi(context,path) {
     if (request.method==="PATCH") {
       let patch;
       try { patch=await request.json(); } catch { return jsonResponse({error:"Invalid JSON"},400); }
+      if(!patch||typeof patch!=="object"||Array.isArray(patch))return jsonResponse({error:"Invalid task."},400);
       let current={};
       try { current=JSON.parse(row.data); } catch {}
       const task={...current,...(patch || {})};
+      if(!validTask(task))return jsonResponse({error:"Invalid task fields."},400);
       await env.DB.prepare(
         "UPDATE siahdo_tasks SET data=?,updated_at=CURRENT_TIMESTAMP WHERE id=?"
       ).bind(JSON.stringify(task),row.id).run();

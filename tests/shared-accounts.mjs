@@ -51,6 +51,9 @@ async function tasks(method,path='/account-todos',body,revision,origin='https://
 }
 assert.deepEqual(await (await tasks('GET')).json(),[]);
 assert.equal((await tasks('POST','/account-todos',{text:'Private A'},0)).status,200);
+assert.equal((await tasks('PATCH','/account-todos/0',{tags:'invalid'},1)).status,400);
+assert.equal((await tasks('PATCH','/account-todos/0',{due:'2026-02-30'},1)).status,400);
+assert.equal((await tasks('POST','/account-todos',{text:'Bad',repeat:{freq:'daily',interval:0}},1)).status,400);
 assert.equal((await tasks('PATCH','/account-todos/0',{done:true},0)).status,409);
 assert.equal((await tasks('POST','/account-todos',{text:'CSRF'},1,'https://evil.example')).status,403);
 assert.equal((await tasks('POST','/account-todos/reorder',[],1)).status,409);

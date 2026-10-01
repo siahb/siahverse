@@ -1,4 +1,5 @@
 import {accountSession} from './account-api.js';
+import {validTask} from './task-validation.js';
 
 // The original task table stays intact. Every new list belongs to a verified account.
 export async function accountTasks({request,env},path){
@@ -32,7 +33,9 @@ export async function accountTasks({request,env},path){
       tasks.push(...results.map(r=>JSON.parse(r.data)));result={status:'imported',count:tasks.length};
     }else if(path==='/account-todos'&&request.method==='POST'){
       if(typeof body?.text!=='string'||!body.text.trim()||body.text.length>10000)return reply({error:'Enter a task.'},400);
-      const task={...body,text:body.text.trim(),done:!!body.done};tasks.push(task);result={status:'added',todo:task};
+      const task={done:false,...body,text:body.text.trim()};
+      if(!validTask(task))return reply({error:'Invalid task fields.'},400);
+      tasks.push(task);result={status:'added',todo:task};
     }else if(path==='/account-todos/reorder'&&request.method==='POST'){
       if(!Array.isArray(body)||body.length!==tasks.length)return reply({error:'Reload before reordering.'},409);
       const remaining=tasks.map(t=>JSON.stringify(t));
@@ -43,7 +46,9 @@ export async function accountTasks({request,env},path){
       if(index<0||index>=tasks.length)return reply({error:'Task not found.'},404);
       if(request.method==='PATCH'){
         if(!body||typeof body!=='object'||Array.isArray(body))return reply({error:'Invalid task.'},400);
-        tasks[index]={...tasks[index],...body};result={status:'updated',todo:tasks[index]};
+        const task={...tasks[index],...body};
+        if(!validTask(task))return reply({error:'Invalid task fields.'},400);
+        tasks[index]=task;result={status:'updated',todo:task};
       }else if(request.method==='DELETE')result={status:'deleted',removed:tasks.splice(index,1)};
       else return reply({error:'Method not allowed.'},405);
     }

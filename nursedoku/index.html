@@ -48,6 +48,7 @@
       </div>
       <button id="menuArchiveBtn" class="secondary-btn full" type="button">Daily calendar · Your completed shifts</button><section class="menu-practice" aria-label="Custom practice"><p class="eyebrow">Choose your setup</p><div id="menuPreferences"></div><button id="menuPracticeBtn" class="mode-card" type="button"><span class="mode-symbol">×</span><span><strong>Practice</strong><small>Play with your chosen settings</small></span><span aria-hidden="true">→</span></button></section>
       <section class="menu-share"><h3>Share NurseDoku</h3><p>Send the game to a friend or your study group.</p><div class="social-actions"><button id="menuShareBtn" class="secondary-btn" type="button">Share…</button><button id="menuCopyBtn" class="ghost-btn icon-action" type="button" aria-label="Copy link" title="Copy link"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="8" y="8" width="12" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button><a id="menuShareFacebook" class="social-link icon-action" aria-label="Share on Facebook" title="Share on Facebook" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 22v-9h3l.5-3H14V8c0-.9.3-1.5 1.6-1.5H18V3.8c-.4-.1-1.8-.3-3.3-.3-3.3 0-5.2 1.8-5.2 5V10H7v3h2.5v9H14Z"/></svg></a><button id="menuShareInstagram" class="ghost-btn icon-action" type="button" aria-label="Share image to Instagram" title="Share image to Instagram"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg></button><a id="menuShareX" class="social-link icon-action" aria-label="Share on X" title="Share on X" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3L12 14.6 5.5 22H2.3l7.2-8.3L1.8 2h6.5l4.5 6.8L18.9 2ZM17.8 20h1.7L7.3 3.9H5.5L17.8 20Z"/></svg></a><a id="menuShareWhatsapp" class="social-link icon-action" aria-label="Share on WhatsApp" title="Share on WhatsApp" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M20.5 11.6a8.6 8.6 0 0 1-12.8 7.5L3 20.5l1.4-4.6A8.6 8.6 0 1 1 20.5 11.6Z"/><path fill="currentColor" d="M8.2 6.6c-.3 0-.6.2-.8.5-.5.6-.6 1.2-.4 2 .4 2.2 3.4 5.2 5.8 6 .8.3 1.8.3 2.4-.3.4-.4.7-1 .6-1.3-.1-.2-1.8-1.1-2.1-1.1-.2 0-.6.6-.9.9-.2.2-.4.2-.7.1-1.2-.5-2.3-1.5-2.9-2.6-.2-.3-.2-.4 0-.6l.5-.7c.2-.2.1-.4 0-.6L9 7c-.2-.4-.4-.4-.8-.4Z"/></svg></a></div><p id="menuShareStatus" class="share-status" role="status"></p></section>
+      <button id="shift000Btn" class="ghost-btn" type="button">Shift 000 · Guided tutorial</button>
       <button id="changelogBtn" class="ghost-btn" type="button">What’s new</button>
     </section>
     <div id="gameView" hidden>
@@ -137,6 +138,15 @@
     <div class="calendar-nav"><button id="archivePrevBtn" class="icon-btn" type="button" aria-label="Previous month">‹</button><h3 id="archiveMonthLabel"></h3><button id="archiveNextBtn" class="icon-btn" type="button" aria-label="Next month">›</button></div><div class="calendar-weekdays" aria-hidden="true"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div><div id="archiveCalendar" class="daily-calendar" role="group" aria-label="Daily puzzle dates"></div><p class="calendar-key">✓ Completed · Outlined date is selected</p><label>Choose a date <input id="archiveDate" type="date" min="2026-09-29"></label><p id="archiveStatus" aria-live="polite"></p>
     <button id="loadArchiveBtn" class="primary-btn full" type="button">Open daily shift</button>
   </div></dialog>
+
+  <dialog id="shift000Dialog" aria-labelledby="shift000Heading"><div class="dialog-body tutorial-body">
+    <div class="dialog-header"><div><p class="eyebrow">Guided training</p><h2 id="shift000Heading">Shift 000</h2></div><button id="closeShift000" class="icon-btn" type="button" aria-label="Close Shift 000">×</button></div>
+    <p id="shift000Progress" class="eyebrow"></p><h3 id="shift000Title" tabindex="-1"></h3><p id="shift000Copy"></p>
+    <div id="shift000Board" class="tutorial-board" role="group" aria-label="Shift 000 board: four rows and four columns"></div>
+    <p id="shift000Control" class="tutorial-caption"></p><p id="shift000Feedback" class="tutorial-feedback" role="status"></p>
+    <button id="shift000Finish" class="primary-btn full" type="button" hidden>Continue to training</button>
+  </div></dialog>
+
   <dialog id="howToDialog" aria-labelledby="tutorialHeading">
     <div class="dialog-body tutorial-body">
       <div class="dialog-header"><div><p class="eyebrow">No puzzle experience needed</p><h2 id="tutorialHeading">How to play</h2></div><button id="closeHowToBtn" class="icon-btn" type="button" aria-label="Close tutorial">×</button></div>
@@ -166,8 +176,9 @@
   <script src="assets/account-config.cc916e79c2.js"></script>
   <script src="assets/large-puzzles.b5dbb536ca.js"></script>
   <script src="assets/puzzles.ad028b6d5f.js"></script>
-  <script src="assets/app.63763709eb.js"></script>
-  <script src="assets/accounts.7f3e1d83e4.js"></script>
+  <script src="assets/app.4b5437321a.js"></script>
+  <script src="assets/accounts.e30083ce27.js"></script>
   <script src="assets/tutorial.d3a29e2f49.js"></script>
+  <script src="assets/shift000.58ff5b0f2f.js"></script>
 </body>
 </html>

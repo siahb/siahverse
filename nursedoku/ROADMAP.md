@@ -84,3 +84,8 @@ Guest question history belongs to the browser/device. Account history travels wi
 - [x] Independent practice board, keyboard controls, light/dark support, and replay from How to play
 
 - [x] Next tip control cycles the sourced nursing tip bank and keeps the source link matched to the displayed tip
+
+## Shift 000 — delivered
+
+- [x] Guided RN/X board before Shift 001 for new players; replay from menu
+- [x] Explain every placement and exclusion; preserve existing progress, wins, and numbering

@@ -80,3 +80,5 @@ Use the moon/sun icon in the header to switch appearance. NurseDoku follows the 
 The How to play tutorial has five numbered steps, a solved 4×4 example, and separate RN/X practice squares. It explains rows, columns, care zones, diagonal spacing, and the required NCLEX question without assuming prior puzzle experience. Tutorial practice does not change saved progress or strikes.
 
 Select Next tip on the nursing tip card to browse the existing sourced tips. Browsing wraps at the end and resets to the daily tip on a new day or page reload.
+
+Shift 000 is a guided 4×4 tutorial before the first unsolved training shift for new players. Sixteen coached moves explain RN placement and Xs for rows, columns, and touching corners. It has no timer, strikes, quiz, or counted win. Completion is stored per progress owner in stats and included in cloud snapshots. Existing shift numbers and completion IDs stay unchanged. Replay it from the menu. Closing midway leaves the current shift intact and restarts the lesson next time.

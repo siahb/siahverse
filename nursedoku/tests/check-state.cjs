@@ -180,3 +180,18 @@ run('renderDailyTip()');assert.equal(get('dailyTipText').textContent,run('tipFor
 for(let i=1;i<run('DAILY_TIPS.length');i++)get('nextTipBtn').events.click[0]();assert.equal(get('dailyTipText').textContent,firstTip);
 get('nextTipBtn').events.click[0]();run('renderDailyTip("2026-12-15")');assert.equal(run('tipOffset'),0);assert.equal(get('dailyTipText').textContent,run('tipForDate("2026-12-15").text'));
 console.log('PASS: Next tip updates text and source, survives menu redraw, wraps, and resets on a new day.');
+
+// Exercise Shift 000 through the real game bridge and lesson controller.
+El.prototype.replaceChildren=function(){this.children=[];};
+run('returnToMenu();window.NurseDokuProgress.apply({stats:{},completed:[],game:{level:0,gameKind:"journey"}},null)');
+vm.runInContext(fs.readFileSync(require('path').join(__dirname,'../shift000.js'),'utf8'),context);
+assert.equal(get('continueBtn').textContent,'Start Shift 000');get('continueBtn').events.click[0]();assert(get('shift000Dialog').open);assert.equal(run('inGame'),false);assert.equal(run('runningSince'),null);
+const original=run('JSON.stringify(state)'),originalWins=run('stats.wins');
+get('shift000Board').children[0].events.click[0]();assert(get('shift000Feedback').textContent.includes('outlined'));assert.equal(get('shift000Progress').textContent,'Move 1 of 16');
+get('shift000Board').children[1].events.click[0]();get('shift000Board').children[1].events.click[0]();assert.equal(get('shift000Progress').textContent,'Move 2 of 16');
+const guidedMoves=[[0,'x'],[2,'x'],[3,'x'],[5,'x'],[9,'x'],[13,'x'],[4,'x'],[6,'x'],[8,'rn'],[10,'x'],[11,'x'],[12,'x'],[7,'rn'],[15,'x'],[14,'rn']];
+for(const [i,kind] of guidedMoves){const c=get('shift000Board').children[i];if(kind==='rn')c.events.keydown[0]({key:'r',preventDefault(){}});else {c.events.click[0]();const prompt=get('shift000Progress').textContent;c.events.click[0]();assert.equal(get('shift000Progress').textContent,prompt,'A stale second tap cannot skip the next move');}}
+assert.equal(get('shift000Progress').textContent,'Tutorial complete');assert.equal(get('shift000Board').children.filter(c=>c.textContent==='RN').length,4);assert.equal(get('shift000Board').children.filter(c=>c.textContent==='X').length,12);assert.equal(run('stats.shift000Complete'),true);assert.equal(run('stats.wins'),originalWins);assert.equal(run('completedShifts.length'),0);assert.equal(run('JSON.stringify(state)'),original);assert.equal(run('strikes'),0);assert.equal(run('window.NurseDokuProgress.snapshot().stats.shift000Complete'),true);
+get('shift000Finish').events.click[0]();get('shift000Dialog').events.close[0]();assert.equal(run('inGame'),true);assert.equal(get('levelLabel').textContent,'Shift 001');assert(!get('shift000Dialog').open);
+run('window.NurseDokuProgress.apply({stats:{shift000Complete:true}},"lesson-owner")');assert.equal(run('stats.shift000Complete'),true);assert.equal(run('needsShift000()'),false);run('window.NurseDokuProgress.apply({stats:{}},null)');assert.equal(run('stats.shift000Complete'),false);
+console.log('PASS: Shift 000 auto-entry, full RN/X lesson, harmless mistakes, timer pause, completion/owner restore, unchanged wins and shift IDs, and Shift 001 handoff.');

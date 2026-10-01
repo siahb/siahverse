@@ -1,7 +1,7 @@
 const fs=require('fs'),path=require('path'),assert=require('assert');
 const root=path.resolve(__dirname,'..');
 const app=fs.readFileSync(path.join(root,'app.js'),'utf8');
-const questions=JSON.parse(app.split('const BONUS=')[1].split(';\nfunction normalizeQuestionHistory')[0]);
+const questions=JSON.parse(app.split('const BONUS=')[1].split('function normalizeQuestionHistory')[0].trim().replace(/;$/, ''));
 const original=JSON.parse(fs.readFileSync(path.join(__dirname,'fixtures/original-questions.json'),'utf8'));
 assert.deepStrictEqual(questions.slice(0,original.length),original,'Existing IDs, indices and answers must stay unchanged');
 const previous=JSON.parse(fs.readFileSync(path.join(__dirname,'fixtures/questions-through-2026-09-30.json'),'utf8'));

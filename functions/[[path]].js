@@ -245,6 +245,8 @@ async function handleSiahDoApi(context,path) {
 
   if (path==="/todos" || path==="/todos/") {
     if (request.method==="GET") {
+      const denied=await requireSiahDoAdmin(context);
+      if (denied) return denied;
       const rows=await loadSiahDoRows(env.DB);
       return jsonResponse(rows.map(r=>r.task));
     }

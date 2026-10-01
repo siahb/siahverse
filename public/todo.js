@@ -553,12 +553,15 @@ function updateAdminUI() {
     passwordInput.value = '';
     adminModal.style.display = 'none';
     updateAdminUI();
+    await loadTodosFromServer();
   }
 });
 
   logoutBtn.addEventListener('click', async () => {
     if(!window.SiahverseLegacyTasks){const {error}=await window.SiahverseAccount.auth.signOut();if(error)alert(error.message);return;}
     localStorage.removeItem(ADMIN_PASSWORD_KEY);
+    todosData = []; deletedTodos = []; repeatUndos = []; pendingDeletion = null;
+    renderTodos(); renderDone();
     alert("Logged out.");
     updateAdminUI();
   });

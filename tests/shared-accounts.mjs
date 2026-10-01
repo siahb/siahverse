@@ -10,9 +10,10 @@ const sqlite=new DatabaseSync(':memory:');
 const DB={prepare(sql){let values=[];return {bind(...v){values=v;return this;},async run(){const r=sqlite.prepare(sql).run(...values);return {meta:{changes:Number(r.changes)}};},async first(){return sqlite.prepare(sql).get(...values)||null;},async all(){return {results:sqlite.prepare(sql).all(...values)};}};}};
 sqlite.exec('CREATE TABLE siahdo_tasks (id INTEGER PRIMARY KEY, sort_order INTEGER, data TEXT)');
 sqlite.prepare('INSERT INTO siahdo_tasks VALUES (1,0,?)').run(JSON.stringify({text:'Original task',done:false}));
-let outage=false;const revoked=new Set();
+let outage=false,rateLimited=false;const revoked=new Set();
 const user=id=>({id,email:id+'@example.test',email_confirmed_at:'2026-09-30'});
 globalThis.fetch=async(input,init={})=>{
+  if(rateLimited)return Response.json({error:'rate limited'},{status:429});
   if(outage)return Response.json({error:'unavailable'},{status:503});
   const url=new URL(input),path=url.pathname,body=init.body?JSON.parse(init.body):{},token=new Headers(init.headers).get('Authorization')?.slice(7);
   if(path.endsWith('/user'))return token?.startsWith('access-')&&!revoked.has(token)?Response.json(user(token.slice(7))):Response.json({error:'expired'},{status:401});
@@ -44,6 +45,7 @@ for(const host of ['siahverse.cc','todo.siahverse.cc','nextset.siahverse.cc'])as
 assert.equal((await api('callback',{access_token:'access-a',refresh_token:'refresh-b'})).status,401);
 jar.set('sv_account_access','expired');const renewed=await api('session');assert.equal((await renewed.json()).session.user.id,'a');assert.equal(jar.get('sv_account_access'),'access-a');
 outage=true;assert.equal((await api('session')).status,503);assert.equal(jar.get('sv_account_refresh'),'refresh-a');outage=false;
+rateLimited=true;assert.equal((await api('session')).status,503);assert.equal(jar.get('sv_account_refresh'),'refresh-a');jar.set('sv_account_access','expired');assert.equal((await api('session')).status,503);assert.equal(jar.get('sv_account_refresh'),'refresh-a');rateLimited=false;
 
 async function tasks(method,path='/account-todos',body,revision,origin='https://todo.siahverse.cc'){
   const headers={Cookie:cookieHeader(),Origin:origin,'X-Siahverse-Account':'1','Content-Type':'application/json'};if(revision!==undefined)headers['X-Task-Revision']=String(revision);
@@ -63,6 +65,12 @@ assert.equal((await tasks('POST','/account-todos/import',{password:'wrong'},0)).
 assert.equal((await tasks('POST','/account-todos/import',{password:'old-password'},0)).status,200);
 assert.equal((await tasks('POST','/account-todos/import',{password:'old-password'},1)).status,409);
 assert.equal(sqlite.prepare('SELECT COUNT(*) AS n FROM siahdo_tasks').get().n,1);
+for(const host of ['siahverse.cc','todo.siahverse.cc']){
+ const request=new Request('https://'+host+'/todos');
+ assert.equal((await onRequest({request,env:{DB,SIAHDO_ADMIN_PASSWORD:'old-password'}})).status,401);
+ const authenticated=new Request(request,{headers:{Authorization:'Bearer old-password'}});
+ assert.equal((await onRequest({request:authenticated,env:{DB,SIAHDO_ADMIN_PASSWORD:'old-password'}})).status,200);
+}
 await api('signin',{email:'a@example.test',password:'correct'});
 assert.equal((await (await tasks('GET')).json())[0].text,'Private A');
 assert.equal((await tasks('DELETE','/account-todos/0',undefined,1)).status,200);

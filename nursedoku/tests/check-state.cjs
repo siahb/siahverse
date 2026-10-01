@@ -3,7 +3,7 @@ class El {constructor(){this.children=[];this.dataset={};this.style={setProperty
 const els={};const get=id=>els[id]??=new El();get('difficulty').value='6';
 const storage={};let hit=null,timerId=0;const timers=new Map();
 const doc={getElementById:get,createElement:()=>new El(),querySelector:()=>new El(),querySelectorAll:()=>[],addEventListener(){},hidden:false,documentElement:new El(),elementFromPoint:()=>hit};
-const context={document:doc,window:{addEventListener(){}},localStorage:{getItem:k=>storage[k]||null,setItem:(k,v)=>storage[k]=v,removeItem:k=>delete storage[k]},setInterval(){},setTimeout(f,ms){timers.set(++timerId,{f,ms});return timerId;},clearTimeout(id){timers.delete(id)},confirm:()=>true,Date,console,navigator:{},location:{protocol:'file:'}};
+const context={document:doc,window:{addEventListener(){}},localStorage:{getItem:k=>storage[k]||null,setItem:(k,v)=>storage[k]=v,removeItem:k=>delete storage[k]},setInterval(){},setTimeout(f,ms){timers.set(++timerId,{f,ms});return timerId;},clearTimeout(id){timers.delete(id)},confirm:()=>true,Date:class extends Date {constructor(...a){super(...(a.length?a:["2026-09-30T12:00:00"]))}},console,navigator:{},location:{protocol:'file:'}};
 vm.createContext(context);vm.runInContext(fs.readFileSync(require('path').join(__dirname,'../large-puzzles.js'),'utf8')+'\n'+fs.readFileSync(require('path').join(__dirname,'../puzzles.js'),'utf8')+'\n'+fs.readFileSync(require('path').join(__dirname,'../app.js'),'utf8'),context);
 function run(code){return vm.runInContext(code,context);}
 assert.equal(run('inGame'),false);assert.equal(run('runningSince'),null);assert.equal(get('gameView').hidden,undefined);

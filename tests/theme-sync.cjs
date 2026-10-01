@@ -10,6 +10,7 @@ function page(host,id,legacy='light'){
  return {root,window,events,timer,control,toggle(){if(control.type==='checkbox'){control.checked=!control.checked;listeners.change()}else listeners.click()}};
 }
 const home=page('siahverse.cc','toggle-theme');assert.equal(home.root.dataset.theme,'light');home.toggle();assert.equal(cookie,'sv_theme=dark');
+const nextset=page('nextset.siahverse.cc','none');assert.equal(nextset.root.dataset.theme,'dark');nextset.window.SiahverseTheme.set('light');home.events.focus();assert.equal(home.root.dataset.theme,'light');nextset.window.SiahverseTheme.set('dark');
 const task=page('todo.siahverse.cc','toggle-theme-checkbox','light');assert.equal(task.root.dataset.theme,'dark');task.toggle();assert.equal(cookie,'sv_theme=light');home.events.focus();assert.equal(home.root.dataset.theme,'light');
 const game=page('siahverse.cc','appearanceBtn','dark');assert.equal(game.root.dataset.appearance,'light');game.toggle();assert.equal(cookie,'sv_theme=dark');task.timer[0]();assert.equal(task.root.dataset.theme,'dark');
 const pharm=page('siahverse.cc','themeToggle','light');assert.equal(pharm.root.dataset.theme,'dark');pharm.toggle();home.events.pageshow();assert.equal(home.root.dataset.theme,'light');assert.equal(page('nursing.siahverse.cc','sharedThemeToggle','dark').root.dataset.theme,'light');

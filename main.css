@@ -45,7 +45,7 @@ a,a:visited,a:active{color:inherit}
 canvas#stars{
   position:fixed;
   inset:0;
-  width:100vw!important;
+  width:100%!important;
   height:100vh!important;
   z-index:-1;
   pointer-events:none;

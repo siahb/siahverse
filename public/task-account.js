@@ -2,12 +2,23 @@
 const legacy=new URLSearchParams(location.search).get('legacy')==='1';
 window.SiahverseLegacyTasks=legacy;
 window.canEditTasks=()=>legacy?!!localStorage.getItem('adminPassword'):!!window.SiahverseTaskUser;
-if(legacy){document.addEventListener('DOMContentLoaded',()=>{
-  document.getElementById('task-account-status').textContent='Original task list · uses the original editing password.';
+if(legacy){
+const originalFetch=window.fetch.bind(window);
+window.fetch=(input,init={})=>{
+ if(input==='/todos'&&(init.method||'GET')==='GET'){
+  const password=localStorage.getItem('adminPassword');
+  if(!password)return Promise.resolve(new Response('[]',{headers:{'Content-Type':'application/json'}}));
+  const headers=new Headers(init.headers);headers.set('Authorization','Bearer '+password);
+  return originalFetch(input,{...init,headers,cache:'no-store'});
+ }
+ return originalFetch(input,init);
+};
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('task-account-status').textContent='Original task list · unlock to view or edit.';
   document.getElementById('import-original-tasks').hidden=true;
   document.getElementById('enter-password').textContent='Unlock original list';
   document.getElementById('admin-title').textContent='Unlock original list';
-  document.getElementById('admin-title').nextElementSibling.textContent='Enter the original password to edit this list.';
+  document.getElementById('admin-title').nextElementSibling.textContent='Enter the original password to view or edit this list.';
   document.getElementById('login-btn').textContent='Unlock';
 });return;}
 const nativeFetch=window.fetch.bind(window);let revision=null,queue=Promise.resolve(),generation=0;

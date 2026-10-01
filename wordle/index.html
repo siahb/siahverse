@@ -106,6 +106,7 @@
 
   let currentRow = 0;
   let currentGuess = "";
+  let finished = false;
 
   const createBoard = () => {
     for (let i = 0; i < 30; i++) {
@@ -133,6 +134,7 @@
   };
 
   const handleKey = (key) => {
+    if (finished) return;
     if (key === "DEL") {
       currentGuess = currentGuess.slice(0, -1);
       updateBoard();
@@ -181,8 +183,10 @@
     });
 
     if (guess === word) {
+      finished = true;
       setTimeout(() => alert("🎉 You guessed it!"), 100);
     } else if (++currentRow === 6) {
+      finished = true;
       setTimeout(() => alert("❌ Out of tries! Word was: " + word), 100);
     }
 

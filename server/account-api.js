@@ -21,11 +21,11 @@ export async function accountSession(request) {
   const saved=cookies(request);let access=saved[ACCESS],refresh=saved[REFRESH],renewed=null;
   if(!access&&!refresh)return {session:null,set:[]};
   let result=access?await auth('user',null,access):null;
-  if(result?.response.status>=500)throw Error('Account verification is temporarily unavailable.');
+  if(result&&!result.response.ok&&![401,403].includes(result.response.status))throw Error('Account verification is temporarily unavailable.');
   if(!result?.response.ok&&refresh){
     const renewal=await auth('token?grant_type=refresh_token',{refresh_token:refresh});
-    if(renewal.response.status>=500)throw Error('Account verification is temporarily unavailable.');
-    if(renewal.response.ok){renewed=renewal.data;access=renewed.access_token;refresh=renewed.refresh_token;result=await auth('user',null,access);}
+    if(!renewal.response.ok&&![400,401,403].includes(renewal.response.status))throw Error('Account verification is temporarily unavailable.');
+    if(renewal.response.ok){renewed=renewal.data;access=renewed.access_token;refresh=renewed.refresh_token;result=await auth('user',null,access);if(!result.response.ok&&![401,403].includes(result.response.status))throw Error('Account verification is temporarily unavailable.');}
   }
   if(!result?.response.ok||!result.data.id||!result.data.email_confirmed_at)return {session:null,set:[cookie(ACCESS,'',0),cookie(REFRESH,'',0)]};
   return {session:{access_token:access,user:{id:result.data.id,email:result.data.email},expires_at:renewed?.expires_at},set:renewed?[cookie(ACCESS,access,3600),cookie(REFRESH,refresh,60*60*24*30)]:[]};

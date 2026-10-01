@@ -1,6 +1,6 @@
 const fs=require('fs'),vm=require('vm'),assert=require('assert'),path=require('path');
 (async()=>{
-class El {constructor(){this.events={};this.value='';this.hidden=false;this.disabled=false;}addEventListener(n,f){this.events[n]=f;}showModal(){this.open=true;}close(){this.open=false;}reportValidity(){return true;}remove(){}focus(){this.focused=true;}setAttribute(k,v){this[k]=v;}}
+class El {constructor(){this.events={};this.value='';this.hidden=false;this.disabled=false;}addEventListener(n,f){this.events[n]=f;}showModal(){this.open=true;if(this===get("accountSaveConfirmDialog")){confirmCalls++;queueMicrotask(()=>get(confirmChoice?"confirmSaveChange":"cancelSaveChange").events.click());}}close(){this.open=false;}reportValidity(){return true;}remove(){}focus(){this.focused=true;}setAttribute(k,v){this[k]=v;}}
 const els={},get=id=>els[id]??=new El();get('authMode').value='signin';
 const storage={},timers=[];
 let owner=null,save={version:2,completed:[],stats:{wins:0,dailyDates:[]},game:{level:0}},cloud=null,nextUser=null,authCallback,conflictOnce=false,writes=0,failRead=false,confirmChoice=true,confirmCalls=0;
@@ -23,9 +23,9 @@ await get('accountBtn').events.click();
 assert.equal(owner,'a');assert.equal(writes,0,'Guest data must not upload on login');
 await get('syncNowBtn').events.click();assert.equal(writes,1,'Manual sync creates the first account save');assert.equal(cloud.progress.stats.wins,0,'Guest progress is not silently imported');
 
-confirmChoice=false;const preImport=JSON.stringify(save);get('importGuestBtn').events.click();assert.equal(JSON.stringify(save),preImport);confirmChoice=true;
+confirmChoice=false;const preImport=JSON.stringify(save);await get('importGuestBtn').events.click();assert.equal(JSON.stringify(save),preImport);confirmChoice=true;
 save.stats.questionHistory={'nclex-00002':'correct','nclex-00003':'seen'};
-get('importGuestBtn').events.click();await get('syncNowBtn').events.click();await new Promise(r=>setImmediate(r));
+await get('importGuestBtn').events.click();await get('syncNowBtn').events.click();await new Promise(r=>setImmediate(r));
 assert.equal(cloud.progress.stats.questionHistory['nclex-00001'],'correct');assert.equal(cloud.progress.stats.questionHistory['nclex-00002'],'correct');assert.equal(cloud.progress.stats.questionHistory['nclex-00003'],'seen');
 assert.equal(cloud.progress.stats.wins,3);assert.equal(cloud.progress.game.level,2);
 assert(get('accountStatus').textContent.includes('saved in the cloud'));

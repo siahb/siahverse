@@ -15,7 +15,6 @@ window.fetch=(input,init={})=>{
 };
 document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('task-account-status').textContent='Original task list · unlock to view or edit.';
-  document.getElementById('import-original-tasks').hidden=true;
   document.getElementById('enter-password').textContent='Unlock original list';
   document.getElementById('admin-title').textContent='Unlock original list';
   document.getElementById('admin-title').nextElementSibling.textContent='Enter the original password to view or edit this list.';
@@ -53,10 +52,6 @@ window.SiahverseAccount.auth.onAuthStateChange((event,session)=>{
 document.addEventListener('DOMContentLoaded',()=>{
   const status=document.getElementById('task-account-status');
   if(window.SiahverseTaskUser!==undefined)status.textContent=window.SiahverseTaskUser?'Signed in as '+window.SiahverseTaskUser.email:'Sign in with your Siahverse account to use your private task list.';
-  document.getElementById('import-original-tasks').onclick=()=>{
-    if(!window.SiahverseTaskUser)return location.assign('https://siahverse.cc/account/?app=tasks');
-    document.getElementById('admin-modal').style.display='block';
-  };
 });
 window.importOriginalTasks=async password=>{
   await window.fetch('/todos');

@@ -338,7 +338,7 @@ function toggleSelectMode() {
     selectModeBtn.textContent = '☑️ Exit Select';
     document.body.classList.add('select-mode-active');
   } else {
-    selectModeBtn.textContent = '☐ Select';
+    selectModeBtn.textContent = 'Select';
     document.body.classList.remove('select-mode-active');
     
     // Clear all selections when exiting select mode
@@ -794,15 +794,15 @@ function repeatLabel(task) {
       const days = byWeekday.map(d => dayMap[d]).join(',');
       
       if (interval === 1) {
-        return `📅 ${days}`;
+        return `${days}`;
       } else {
-        return `📅 ${days} (${interval}w)`;
+        return `${days} (${interval}w)`;
       }
     }
     
     // Generic weekly
-    if (interval === 1) return '📅 Weekly';
-    return `📅 ${interval}w`;
+    if (interval === 1) return 'Weekly';
+    return `${interval}w`;
   }
   
   return '';
@@ -927,7 +927,7 @@ const renderDone = () => {
 }).join(' ')}
       </div>
       <div>
-        <button aria-label="Reopen task" onclick="unmarkDone(${i})">↩️</button>
+        <button aria-label="Reopen task" onclick="unmarkDone(${i})"></button>
         <button aria-label="Delete task" onclick="removeTodo(${i})">❌</button>
       </div>
     `;
@@ -1457,11 +1457,11 @@ toggleDragBtn.addEventListener('click', () => {
   dragEnabled = !dragEnabled;
 
   if (dragEnabled) {
-    toggleDragBtn.textContent = '↕️ Reordering...';
+    toggleDragBtn.textContent = 'Reordering...';
     document.body.classList.add('dragging-active');
     enableDrag();
   } else {
-    toggleDragBtn.textContent = '↕️ Reorder';
+    toggleDragBtn.textContent = 'Reorder';
     document.body.classList.remove('dragging-active');
     disableDrag();
   }
@@ -1495,7 +1495,7 @@ document.getElementById('save-order')?.addEventListener('click', async () => {
     // Reload to confirm server-side order is now authoritative
     await loadTodosFromServer();
   } catch (err) {
-    alert('⚠️ Failed to save order.');
+    alert('Failed to save order.');
     console.error(err);
     await loadTodosFromServer();
   }
@@ -1534,7 +1534,7 @@ function enableDrag() {
         });
         if(!response.ok)throw Error('Order could not be saved.');
       } catch (err) {
-        alert('⚠️ Failed to save new order to server.');
+        alert('Failed to save new order to server.');
       }
 
       // lock sort to custom and re-render
@@ -1555,13 +1555,13 @@ function disableDrag() {
     todosData=[];deletedTodos=[];repeatUndos=[];pendingDeletion=null;selectMode=false;
     todoInput.value='';searchInput.value='';
     document.querySelectorAll('.modal').forEach(modal=>modal.style.display='none');
-    disableDrag();dragEnabled=false;toggleDragBtn.textContent='↕ Reorder';
+    disableDrag();dragEnabled=false;toggleDragBtn.textContent='Reorder';
     document.body.classList.remove('select-mode-active','dragging-active');
-    selectModeBtn.textContent='☐ Select';
+    selectModeBtn.textContent='Select';
     document.body.style.overflow='';renderTodos();renderDone();updateAdminUI();
     void loadTodosFromServer();
   };
-  toggleDragBtn.textContent = '↕️Reorder';
+  toggleDragBtn.textContent = 'Reorder';
   updateViewTitle();
   loadTodosFromServer();
 
@@ -1806,7 +1806,7 @@ async function confirmDelete() {
           alert(`❌ Failed to delete ${failedCount} task${failedCount > 1 ? 's' : ''}. Please check your authentication and try again.`);
           return; // Don't close modal, let user retry
         } else {
-          alert(`⚠️ ${failedCount} out of ${indices.length} tasks failed to delete. The rest were deleted successfully.`);
+          alert(`${failedCount} out of ${indices.length} tasks failed to delete. The rest were deleted successfully.`);
           // Continue to close modal and refresh since some succeeded
         }
       }

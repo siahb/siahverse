@@ -1052,3 +1052,5 @@ button{-webkit-tap-highlight-color:transparent}
   .overview-card{gap:8px}
   .overview-card small{font-size:10px}
 }
+
+.ui-icon{width:20px;height:20px;flex-shrink:0;vertical-align:middle}.overview-icon .ui-icon{width:22px;height:22px}.hero-badge .ui-icon{width:54px;height:54px}.modal-icon .ui-icon{width:32px;height:32px}

@@ -26,7 +26,7 @@
       if (!control) continue;
       control.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
       if (control.type === 'checkbox') control.checked = dark;
-      else { control.setAttribute('aria-pressed', String(dark)); if (id !== 'appearanceBtn') control.textContent = dark ? '☀️ Light' : '🌙 Dark'; }
+      else { control.setAttribute('aria-pressed', String(dark)); if (id !== 'appearanceBtn') control.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="vertical-align:middle;margin-right:6px">' + (dark ? '<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/>' : '<path d="M20.5 14A9 9 0 0 1 10 3.5 9 9 0 1 0 20.5 14Z"/>') + '</svg>' + (dark ? 'Light' : 'Dark'); }
     }
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.content = dark ? '#090d17' : '#f4f7fb';

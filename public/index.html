@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script src="/theme.js?v=20260930-sync"></script>
+  <script src="/theme.js?v=20261001-icons"></script>
   <script src="/account-client.js?v=20260930-account"></script>
   <script src="/task-account.js?v=20261001-import-complete"></script>
   <meta charset="UTF-8">
@@ -10,7 +10,7 @@
   <meta name="theme-color" content="#090d17">
   <meta name="description" content="A to-do list with due dates, priorities, and repeating tasks.">
   <title>Tasks • Siahverse</title>
-  <link rel="stylesheet" href="todo.css?v=20261001-qa3">
+  <link rel="stylesheet" href="todo.css?v=20261001-icons">
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
 </head>
 <body>
@@ -19,7 +19,7 @@
   <main class="app-shell">
     <header class="app-header">
       <div class="header-left">
-        <a class="back-home" href="https://siahverse.cc/" aria-label="Back to Siahverse">← Back</a>
+        <a class="back-home" href="https://siahverse.cc/" aria-label="Back to Siahverse"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 12H5m6-6-6 6 6 6"/></svg> Back</a>
         <a class="brand" href="https://siahverse.cc/" aria-label="Siahverse home">
           <span class="brand-mark">S</span>
           <span class="brand-copy">
@@ -32,7 +32,7 @@
       <div class="header-actions">
         <button id="enter-password" class="ghost-btn" type="button">Sign in</button>
         <button id="logout" class="ghost-btn" type="button">Sign out</button>
-        <button id="help-btn" class="icon-btn" type="button" aria-label="Help" title="Help">?</button>
+        <button id="help-btn" class="icon-btn" type="button" aria-label="Help" title="Help"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M9 9a3 3 0 1 1 5 2c-2 1-2 2-2 3m0 3h.01"/></svg></button>
         <button id="toggle-theme" class="ghost-btn" type="button" aria-label="Toggle color theme">Theme</button>
       </div>
     </header>
@@ -46,26 +46,26 @@
       </div>
 
       <div class="hero-badge" aria-hidden="true">
-        <span>✓</span>
+        <span><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m5 12 4 4L19 6"/></svg></span>
         <small>Tasks</small>
       </div>
     </section>
 
     <section class="overview-grid" aria-label="Task overview">
       <button class="overview-card view-card active" type="button" data-task-view="all">
-        <span class="overview-icon">◎</span>
+        <span class="overview-icon"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg></span>
         <span><b id="stat-open">0</b><small>Open</small></span>
       </button>
       <button class="overview-card view-card" type="button" data-task-view="today">
-        <span class="overview-icon">◷</span>
+        <span class="overview-icon"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
         <span><b id="stat-today">0</b><small>Due today</small></span>
       </button>
       <button class="overview-card view-card danger-card" type="button" data-task-view="overdue">
-        <span class="overview-icon">!</span>
+        <span class="overview-icon"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 3 10 18H2Z"/><path d="M12 9v4m0 4h.01"/></svg></span>
         <span><b id="stat-overdue">0</b><small>Overdue</small></span>
       </button>
       <button class="overview-card view-card" type="button" data-task-view="upcoming">
-        <span class="overview-icon">→</span>
+        <span class="overview-icon"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
         <span><b id="stat-upcoming">0</b><small>Upcoming</small></span>
       </button>
     </section>
@@ -79,7 +79,7 @@
 
         <div class="workspace-head-actions">
           <div class="search-wrapper">
-            <button id="search-toggle" type="button" class="search-icon" aria-label="Search tasks" title="Search tasks">⌕</button>
+            <button id="search-toggle" type="button" class="search-icon" aria-label="Search tasks" title="Search tasks"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></button>
             <input id="search-input" type="text" placeholder="Search tasks…">
           </div>
 
@@ -88,8 +88,8 @@
             <option value="priority">Priority</option>
             <option value="dueAsc">Due soonest</option>
             <option value="dueDesc">Due latest</option>
-            <option value="alpha">A → Z</option>
-            <option value="tagsAZ">Tags A → Z</option>
+            <option value="alpha">A to Z</option>
+            <option value="tagsAZ">Tags A to Z</option>
             <option value="created">Newest first</option>
           </select>
         </div>
@@ -103,7 +103,7 @@
                 <div class="composer-label">Quick add</div>
                 <h3>New task</h3>
               </div>
-              <span class="enter-hint">↵ Enter</span>
+              <span class="enter-hint">Press Enter</span>
             </div>
 
             <div class="task-entry-row">
@@ -178,12 +178,12 @@
 
         <div class="task-column">
           <div class="controls">
-            <button id="select-mode-btn" type="button">☐ Select</button>
+            <button id="select-mode-btn" type="button">Select</button>
             <input type="checkbox" id="select-all" title="Select/deselect all tasks">
             <label for="select-all">Select all</label>
             <button id="delete-btn" type="button" onclick="deleteSelected()">Delete selected</button>
-            <button id="undo-btn" type="button">↩ Undo</button>
-            <button id="toggle-drag" type="button">↕ Reorder</button>
+            <button id="undo-btn" type="button">Undo</button>
+            <button id="toggle-drag" type="button">Reorder</button>
             <button id="save-order" type="button">Save order</button>
           </div>
 
@@ -212,14 +212,14 @@
     </section>
 
     <footer class="app-footer">
-      <a href="https://siahverse.cc/" class="back-button">← Back to Siahverse</a>
+      <a href="https://siahverse.cc/" class="back-button"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 12H5m6-6-6 6 6 6"/></svg> Back to Siahverse</a>
       <span>Made with Siahverse</span>
     </footer>
   </main>
 
   <div id="admin-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="admin-title">
     <div class="modal-content auth-modal">
-      <div class="modal-icon">🔐</div>
+      <div class="modal-icon"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div>
       <div class="modal-kicker">Editing</div>
       <h2 id="admin-title">Original task password</h2>
       <p>Enter the original task password to copy that list into your empty account list. The original list stays intact.</p>
@@ -238,7 +238,7 @@
           <div class="modal-kicker">Quick guide</div>
           <h2 id="help-title">How to use Tasks</h2>
         </div>
-        <button class="close-help" type="button" aria-label="Close help">×</button>
+        <button class="close-help" type="button" aria-label="Close help"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 6 12 12M6 18 18 6"/></svg></button>
       </div>
 
       <div class="modal-body">
@@ -284,6 +284,6 @@
     </div>
   </div>
 
-  <script src="todo.js?v=20261001-qa3"></script>
+  <script src="todo.js?v=20261001-icons"></script>
 </body>
 </html>

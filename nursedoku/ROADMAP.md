@@ -99,3 +99,5 @@ Guest question history belongs to the browser/device. Account history travels wi
 - [x] Manual cloud sync checks newer saves and gives visible saving, up-to-date, offline, and conflict feedback
 
 - [x] Confirm account puzzle replacement, guest import and shared sign-out; disable unavailable import and serialize conflict resolution
+
+- [x] Animated pointing-hand tutorial, tap/double-tap cues, RN reason highlights, progress meters and required practice steps; reduced-motion fallback

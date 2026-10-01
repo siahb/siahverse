@@ -113,7 +113,7 @@ assert(get('message').textContent.includes('care zone 1'));
 let calendar=run("calendarDays('2026-09','2026-09-30',['2026-09-29'],'2026-09-29')");
 assert.equal(calendar.offset,2);assert.equal(calendar.days.length,30);assert(calendar.days[27].disabled);assert(calendar.days[28].completed);assert(calendar.days[28].selected);assert(calendar.days[29].today);
 calendar=run("calendarDays('2028-02','2028-02-14',[],'2028-02-14')");assert.equal(calendar.days.length,29);assert(!calendar.days[13].disabled);assert(calendar.days[14].disabled);
-run("stats.dailyDates=['2026-09-29'];openArchive()");assert(get('archiveCalendar').children.length>=30);assert.equal(get('archivePrevBtn').disabled,true);
+run("stats.dailyDates=['2026-09-29'];openArchive();archiveMonth='2026-09';renderCalendar()");assert(get('archiveCalendar').children.length>=30);assert.equal(get('archivePrevBtn').disabled,true);
 get('archiveCalendar').children.find(b=>b.attributes?.['aria-label']==='2026-09-29, completed').onclick();assert.equal(get('archiveDate').value,'2026-09-29');assert(get('archiveStatus').textContent.includes('completed — replay'));
 console.log('PASS: deduction hints agree with unique 6×6/10×10 solutions despite arbitrary Xs; daily calendar marks completion, selection, launch bounds, future dates, and leap years.');
 const questionCount=run('BONUS.length');assert(questionCount>=12&&questionCount<=5000);
@@ -204,3 +204,4 @@ for(let q=0;q<10;q++){opts=get('bonusAnswers').children;opts.find(b=>+b.dataset.
 assert.equal(run('questionsComplete()'),true);assert.equal(run('bonusCursor'),9);assert.equal(run('Object.values(stats.questionHistory).filter(x=>x==="correct").length'),10);assert.equal(get('strikeHearts').attributes['aria-label'],'3 of 3 hearts remaining');run('strikes=2;paint()');assert.equal(get('strikeHearts').attributes['aria-label'],'1 of 3 hearts remaining');
 run('stats.questionHistory=Object.fromEntries(BONUS.map((q,i)=>[q.id,i===0?"missed":"correct"]));startQuestions();showBonus()');assert.equal(run('bonusQueue.length'),1);assert.equal(get('questionProgress').textContent,'Question 1 of 1');
 console.log('PASS: ten unique questions, native choice changes before confirmation, menu exit/restore without bypass, locked submitted answers, per-question rationales, final unlock, limited-bank fallback and remaining EKG hearts.');
+

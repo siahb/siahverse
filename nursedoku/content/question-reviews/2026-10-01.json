@@ -1,0 +1,150 @@
+{
+  "date": "2026-10-01",
+  "before": 34,
+  "added": 20,
+  "total": 54,
+  "review": "Source and arithmetic verification by the authoring assistant; not an independent clinician review or official NCLEX content.",
+  "questions": [
+    {
+      "id": "nclex-00035",
+      "topic": "Infection prevention · C. difficile",
+      "source": "https://www.cdc.gov/clean-hands/hcp/clinical-safety/index.html",
+      "checkedOn": "2026-10-01",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 34 existing stems."
+    },
+    {
+      "id": "nclex-00036",
+      "topic": "Infection prevention · Urinary catheters",
+      "source": "https://www.cdc.gov/uti/hcp/clinical-safety/index.html",
+      "checkedOn": "2026-10-01",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 34 existing stems."
+    },
+    {
+      "id": "nclex-00037",
+      "topic": "Infection prevention · Airborne precautions",
+      "source": "https://www.cdc.gov/infection-control/hcp/basics/transmission-based-precautions.html",
+      "checkedOn": "2026-10-01",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 34 existing stems."
+    },
+    {
+      "id": "nclex-00038",
+      "topic": "Diabetes · Foot care teaching",
+      "source": "https://www.niddk.nih.gov/health-information/diabetes/overview/preventing-problems/foot-problems",
+      "checkedOn": "2026-10-01",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 34 existing stems."
+    },
+    {
+      "id": "nclex-00039",
+      "topic": "Respiratory · Asthma medications",
+      "source": "https://www.nhlbi.nih.gov/health/asthma/treatment-action-plan",
+      "checkedOn": "2026-10-01",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 34 existing stems."
+    },
+    {
+      "id": "nclex-00040",
+      "topic": "Gastrointestinal · GERD teaching",
+      "source": "https://www.niddk.nih.gov/health-information/digestive-diseases/acid-reflux-ger-gerd-adults/eating-diet-nutrition",
+      "checkedOn": "2026-10-01",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 34 existing stems."
+    },
+    {
+      "id": "nclex-00041",
+      "topic": "Liver disease · Recognize complications",
+      "source": "https://www.niddk.nih.gov/health-information/liver-disease/cirrhosis/treatment",
+      "checkedOn": "2026-10-01",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 34 existing stems."
+    },
+    {
+      "id": "nclex-00042",
+      "topic": "Postpartum care · Urgent warning signs",
+      "source": "https://www.cdc.gov/hearher/maternal-warning-signs/index.html",
+      "checkedOn": "2026-10-01",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 34 existing stems."
+    },
+    {
+      "id": "nclex-00043",
+      "topic": "Pediatrics · Developmental milestones",
+      "source": "https://www.cdc.gov/act-early/milestones/2-months.html",
+      "checkedOn": "2026-10-01",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 34 existing stems."
+    },
+    {
+      "id": "nclex-00044",
+      "topic": "Medication teaching · Antibiotic stewardship",
+      "source": "https://www.cdc.gov/antibiotic-use/about/index.html",
+      "checkedOn": "2026-10-01",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 34 existing stems."
+    },
+    {
+      "id": "nclex-00045",
+      "topic": "Medication safety · Warfarin monitoring",
+      "source": "https://www.fda.gov/medical-devices/warfarin-inr-test-meters/tips-patients-and-caregivers-using-inr-test-meters-home",
+      "checkedOn": "2026-10-01",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 34 existing stems."
+    },
+    {
+      "id": "nclex-00046",
+      "topic": "Neurologic care · Stroke response",
+      "source": "https://www.ninds.nih.gov/health-information/stroke/signs-and-symptoms",
+      "checkedOn": "2026-10-01",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 34 existing stems."
+    },
+    {
+      "id": "nclex-00047",
+      "topic": "Hematology · Nutrition teaching",
+      "source": "https://www.nhlbi.nih.gov/health/anemia/iron-deficiency-anemia",
+      "checkedOn": "2026-10-01",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 34 existing stems."
+    },
+    {
+      "id": "nclex-00048",
+      "topic": "Renal health · Individualized nutrition",
+      "source": "https://www.niddk.nih.gov/health-information/kidney-disease/chronic-kidney-disease-ckd/healthy-eating-adults-chronic-kidney-disease",
+      "checkedOn": "2026-10-01",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 34 existing stems."
+    },
+    {
+      "id": "nclex-00049",
+      "topic": "Hematology · Sickle cell disease",
+      "source": "https://www.nhlbi.nih.gov/health/sickle-cell-disease",
+      "checkedOn": "2026-10-01",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 34 existing stems."
+    },
+    {
+      "id": "nclex-00050",
+      "topic": "Dosage calculation · Oral liquid",
+      "source": null,
+      "checkedOn": "2026-10-01",
+      "method": "Prescription and parameters supplied in the stem; arithmetic independently checked using exact decimal or rational calculations."
+    },
+    {
+      "id": "nclex-00051",
+      "topic": "Dosage calculation · Pediatric single dose",
+      "source": null,
+      "checkedOn": "2026-10-01",
+      "method": "Prescription and parameters supplied in the stem; arithmetic independently checked using exact decimal or rational calculations."
+    },
+    {
+      "id": "nclex-00052",
+      "topic": "Dosage calculation · Gravity infusion",
+      "source": null,
+      "checkedOn": "2026-10-01",
+      "method": "Prescription and parameters supplied in the stem; arithmetic independently checked using exact decimal or rational calculations."
+    },
+    {
+      "id": "nclex-00053",
+      "topic": "Dosage calculation · Safe-dose range",
+      "source": null,
+      "checkedOn": "2026-10-01",
+      "method": "Prescription and parameters supplied in the stem; arithmetic independently checked using exact decimal or rational calculations."
+    },
+    {
+      "id": "nclex-00054",
+      "topic": "Dosage calculation · Continuous infusion",
+      "source": null,
+      "checkedOn": "2026-10-01",
+      "method": "Prescription and parameters supplied in the stem; arithmetic independently checked using exact decimal or rational calculations."
+    }
+  ]
+}
+

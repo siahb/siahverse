@@ -1,0 +1,513 @@
+[
+  {
+    "id": "nclex-00001",
+    "topic": "Adult health · Take action",
+    "q": "An adult client who takes insulin is shaky and diaphoretic. Blood glucose is 54 mg/dL. The client is alert and can swallow safely. Which action should the nurse take first?",
+    "a": [
+      "Give 15–20 g of fast-acting carbohydrate",
+      "Administer the scheduled rapid-acting insulin",
+      "Wait for the next meal tray",
+      "Give a protein-only snack"
+    ],
+    "correct": 0,
+    "why": "Treat confirmed hypoglycemia promptly with fast-acting carbohydrate when swallowing is safe. Insulin would lower glucose further; waiting delays treatment, and protein alone does not raise glucose quickly.",
+    "source": "https://www.niddk.nih.gov/health-information/diabetes/overview/preventing-problems/low-blood-glucose-hypoglycemia",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00002",
+    "topic": "Adult health · Evaluate outcomes",
+    "q": "A client received glucose tablets for hypoglycemia 15 minutes ago. Repeat blood glucose is 62 mg/dL, and the client remains alert and can swallow. What is the best next action?",
+    "a": [
+      "Document that treatment was successful",
+      "Give another 15–20 g of fast-acting carbohydrate and recheck in 15 minutes",
+      "Give the next insulin dose early",
+      "Wait one hour before repeating the glucose test"
+    ],
+    "correct": 1,
+    "why": "A glucose of 62 mg/dL remains low. Repeat the fast-acting carbohydrate treatment and reassess after 15 minutes. The first treatment did not yet correct the low glucose.",
+    "source": "https://www.niddk.nih.gov/health-information/diabetes/overview/preventing-problems/low-blood-glucose-hypoglycemia",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00003",
+    "topic": "Emergency · Prioritize care",
+    "q": "The triage nurse receives four clients. Which client needs immediate evaluation?",
+    "a": [
+      "A client with a healed incision requesting dressing supplies",
+      "A client with unchanged knee pain for three months",
+      "A client with sudden facial droop and difficulty speaking that began 20 minutes ago",
+      "A client requesting a routine prescription renewal"
+    ],
+    "correct": 2,
+    "why": "Sudden facial weakness and speech changes suggest a stroke, a time-sensitive emergency. Activate the facility stroke response. The other presentations described do not show an acute threat.",
+    "source": "https://www.nhlbi.nih.gov/health/stroke",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00004",
+    "topic": "Pharmacology · Recognize cues",
+    "q": "A client who received an opioid is difficult to awaken and has slow, shallow breathing. Which complication should the nurse suspect?",
+    "a": [
+      "Expected pain relief without a safety concern",
+      "Opioid-related respiratory depression",
+      "A harmless medication taste change",
+      "A therapeutic increase in alertness"
+    ],
+    "correct": 1,
+    "why": "Reduced responsiveness and slow breathing raise concern for opioid toxicity. The nurse should urgently assess and support breathing and activate emergency assistance rather than dismissing these findings.",
+    "source": "https://www.fda.gov/drugs/drug-safety-communications/fda-recommends-health-care-professionals-discuss-naloxone-all-patients-when-prescribing-opioid-pain",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00005",
+    "topic": "Pharmacology · Antidotes",
+    "q": "Emergency help has been activated for a client with suspected opioid overdose. Which medication should the nurse anticipate administering per protocol to reverse opioid effects?",
+    "a": [
+      "Insulin",
+      "Naloxone",
+      "Acetaminophen",
+      "Furosemide"
+    ],
+    "correct": 1,
+    "why": "Naloxone reverses opioid overdose. It supports emergency treatment; emergency assistance and monitoring are still needed. The other listed medications do not reverse opioid effects.",
+    "source": "https://www.fda.gov/consumers/consumer-updates/access-naloxone-can-save-life-during-opioid-overdose",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00006",
+    "topic": "Pediatrics · Prioritize care",
+    "q": "A child with asthma continues to have severe breathing difficulty after the prescribed reliever medicine. What should the nurse advise the caregiver to do?",
+    "a": [
+      "Wait until the next routine appointment",
+      "Stop all asthma medicines permanently",
+      "Seek emergency care now",
+      "Give cough syrup and reassess tomorrow"
+    ],
+    "correct": 2,
+    "why": "Severe symptoms or symptoms that persist after reliever treatment require urgent medical care. Waiting or substituting cough medicine delays assessment and treatment of compromised breathing.",
+    "source": "https://www.nhlbi.nih.gov/health/asthma/attacks",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00007",
+    "topic": "Pediatrics · Teaching",
+    "q": "A toddler with diarrhea from food poisoning is alert and has been prescribed oral rehydration. Which caregiver statement shows understanding?",
+    "a": [
+      "I will use the oral rehydration solution as directed",
+      "I will withhold all liquids until diarrhea stops",
+      "I will start an adult antidiarrheal without asking the clinician",
+      "I will replace all fluids with soda"
+    ],
+    "correct": 0,
+    "why": "Oral rehydration solution helps replace fluid and electrolytes. Withholding fluids increases dehydration risk. Over-the-counter antidiarrheals can be unsafe for young children and require clinician guidance.",
+    "source": "https://www.niddk.nih.gov/health-information/digestive-diseases/food-poisoning/treatment",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00008",
+    "topic": "Mental health · Assess safety",
+    "q": "A client says, “Everyone would be better off without me.” Which response best begins a suicide-risk assessment?",
+    "a": [
+      "You should not feel that way",
+      "Are you thinking about killing yourself?",
+      "Let us talk about something happier",
+      "You would never actually do that, right?"
+    ],
+    "correct": 1,
+    "why": "Ask directly and nonjudgmentally about suicide. Direct questioning helps identify risk and does not increase suicidal thoughts. Reassurance, changing the subject, or a leading question can prevent disclosure.",
+    "source": "https://www.nimh.nih.gov/health/publications/suicide-faq",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00009",
+    "topic": "Oncology · Recognize risk",
+    "q": "A client receiving chemotherapy calls with a temperature of 101°F (38.3°C). Which instruction is most appropriate?",
+    "a": [
+      "Wait until the next clinic visit",
+      "Take a fever reducer and do not report it",
+      "Contact the oncology team immediately for urgent evaluation",
+      "Assume this is expected and continue usual activities"
+    ],
+    "correct": 2,
+    "why": "Fever during chemotherapy can signal an infection, especially when neutrophils are low. The client needs prompt evaluation. Suppressing or ignoring fever can delay identification of a serious infection.",
+    "source": "https://www.cancer.gov/about-cancer/treatment/side-effects/infection",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00010",
+    "topic": "Emergency · Teaching",
+    "q": "During a follow-up call, a client reports new chest pressure, shortness of breath, and sweating at rest. Which instruction should the nurse give first?",
+    "a": [
+      "Drive to the clinic tomorrow",
+      "Call 911 now for emergency medical care",
+      "Wait to see whether symptoms resolve overnight",
+      "Schedule a routine laboratory appointment"
+    ],
+    "correct": 1,
+    "why": "This symptom combination can indicate a heart attack. Emergency medical services can begin evaluation and treatment. Do not delay care or advise the symptomatic client to drive.",
+    "source": "https://www.nhlbi.nih.gov/health/heart-attack/symptoms",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00011",
+    "topic": "Dosage calculation · IV fluids",
+    "q": "The prescription is to infuse 1,000 mL of IV fluid over 8 hours. At what rate should the nurse set the infusion pump?",
+    "a": [
+      "80 mL/hr",
+      "100 mL/hr",
+      "125 mL/hr",
+      "250 mL/hr"
+    ],
+    "correct": 2,
+    "why": "Rate = volume ÷ time: 1,000 mL ÷ 8 hr = 125 mL/hr. Check that the pump unit is mL/hr.",
+    "source": null,
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00012",
+    "topic": "Pediatrics · Dosage calculation",
+    "q": "A child weighs 20 kg. The prescription is acetaminophen 15 mg/kg PO for one dose. The bottle contains 160 mg/5 mL. How many mL should the nurse give? Round only the final answer to the nearest tenth.",
+    "a": [
+      "3.0 mL",
+      "6.3 mL",
+      "9.4 mL",
+      "15.0 mL"
+    ],
+    "correct": 2,
+    "why": "Ordered dose: 20 kg × 15 mg/kg = 300 mg. Volume: 300 mg × 5 mL ÷ 160 mg = 9.375 mL. Rounded to the nearest tenth: 9.4 mL. The dose is supplied by this question’s prescription.",
+    "source": null,
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00013",
+    "topic": "Adult health · Fluid balance",
+    "q": "A client with heart failure reports new ankle swelling and weight gain over several days. Which interpretation should guide the nurse's follow-up assessment?",
+    "a": [
+      "The findings may indicate increasing fluid retention",
+      "The findings confirm that heart failure has resolved",
+      "Weight gain excludes worsening heart failure",
+      "Ankle swelling is unrelated to the client's condition"
+    ],
+    "correct": 0,
+    "why": "Weight gain with new ankle swelling can signal fluid buildup and worsening heart failure. Assess symptom changes and contact the care team according to the client's plan; these findings do not establish a diagnosis on their own.",
+    "source": "https://www.nhlbi.nih.gov/health/heart-failure/living-with",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00014",
+    "topic": "Renal health · Nutrition teaching",
+    "q": "A client with recurrent calcium oxalate stones plans to eliminate all calcium-containing foods. Which teaching is most appropriate?",
+    "a": [
+      "Avoid all dietary calcium permanently",
+      "Replace all meals with high-dose calcium supplements",
+      "Discuss an appropriate dietary calcium intake with the clinician or dietitian",
+      "Only the calcium content of drinking water matters"
+    ],
+    "correct": 2,
+    "why": "Calcium stones do not mean that all dietary calcium should be avoided. Appropriate calcium from foods can help bind stone-forming substances in the digestive tract. Intake and food choices should be individualized; supplements are not automatically interchangeable with dietary calcium.",
+    "source": "https://www.niddk.nih.gov/health-information/urologic-diseases/kidney-stones/eating-diet-nutrition",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00015",
+    "topic": "Nutrition · Select a meal",
+    "q": "A client with confirmed celiac disease asks which meal fits a gluten-free diet. All ingredients are plain, with no additives, and prepared without cross-contact. Which meal should the nurse recommend?",
+    "a": [
+      "Barley soup with rye crackers",
+      "Grilled fish with rice and steamed vegetables",
+      "Wheat pasta with vegetables",
+      "A sandwich on whole-wheat bread"
+    ],
+    "correct": 1,
+    "why": "Plain fish, rice, and vegetables are naturally gluten-free. Wheat, barley, and rye contain gluten. Preparation matters because contact with gluten-containing foods can make an otherwise gluten-free meal unsafe.",
+    "source": "https://www.niddk.nih.gov/health-information/digestive-diseases/celiac-disease/eating-diet-nutrition",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00016",
+    "topic": "Adult health · Prepare for testing",
+    "q": "A client awaiting evaluation for possible celiac disease says, 'I will stop eating gluten today so my test will be more accurate.' What should the nurse explain?",
+    "a": [
+      "Avoiding gluten always improves the accuracy of testing",
+      "Testing is unnecessary once symptoms improve",
+      "Eating gluten-free foods confirms celiac disease",
+      "Changing to a gluten-free diet before testing may make the results inaccurate"
+    ],
+    "correct": 3,
+    "why": "The client should discuss testing with the clinician before removing gluten. Avoiding gluten before the evaluation may affect test accuracy. Symptom improvement alone does not confirm the diagnosis.",
+    "source": "https://www.niddk.nih.gov/health-information/digestive-diseases/celiac-disease/eating-diet-nutrition",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00017",
+    "topic": "Maternal health · Recognize cues",
+    "q": "A client at 32 weeks of pregnancy reports a severe headache, blurred vision, and right upper abdominal pain. Which action is most appropriate?",
+    "a": [
+      "Arrange immediate assessment for a potentially serious pregnancy complication",
+      "Reassure the client that these are routine symptoms",
+      "Recommend waiting until the next scheduled prenatal visit",
+      "Advise limiting activity without further assessment"
+    ],
+    "correct": 0,
+    "why": "Headache, visual changes, and right upper abdominal pain can occur with preeclampsia and related serious complications. These findings require prompt assessment rather than reassurance or delayed follow-up; symptoms alone do not confirm the diagnosis.",
+    "source": "https://www.nichd.nih.gov/health/topics/preeclampsia/conditioninfo/symptoms",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00018",
+    "topic": "Newborn care · Safe sleep",
+    "q": "The parent of a 2-month-old with reflux says the infant should sleep on the stomach to prevent choking. Which instruction should the nurse provide?",
+    "a": [
+      "Use side sleeping for every nap",
+      "Place the infant on the back for every sleep, including naps",
+      "Raise one end of the crib mattress",
+      "Use stomach sleeping only after feeding"
+    ],
+    "correct": 1,
+    "why": "Back sleeping is recommended for infants, including those with reflux. Side sleeping is unstable, and elevating the mattress can create breathing hazards. Reflux does not routinely justify stomach sleeping.",
+    "source": "https://safetosleep.nichd.nih.gov/reduce-risk/back-sleeping",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00019",
+    "topic": "Pediatrics · Development teaching",
+    "q": "A caregiver asks how tummy time differs from sleep positioning. Which response is correct?",
+    "a": [
+      "Tummy time means placing the baby on the stomach for overnight sleep",
+      "Tummy time should occur only when no adult is nearby",
+      "Place the baby on the stomach while awake and directly supervised",
+      "Tummy time replaces the need for safe sleep practices"
+    ],
+    "correct": 2,
+    "why": "Tummy time is an awake, supervised activity that supports neck, shoulder, and arm strength and motor development. It is different from sleep positioning and does not replace back sleeping for naps or nighttime sleep.",
+    "source": "https://safetosleep.nichd.nih.gov/reduce-risk/tummy-time",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00020",
+    "topic": "Medication safety · Duplicate ingredients",
+    "q": "A client takes acetaminophen for pain and wants to add an over-the-counter cold medicine that also contains acetaminophen. Which instruction is best?",
+    "a": [
+      "Take both because the brand names are different",
+      "Double the cold medicine dose if fever persists",
+      "Count only prescription medicines when checking total intake",
+      "Check the active ingredients and avoid using multiple acetaminophen products together without clinician guidance"
+    ],
+    "correct": 3,
+    "why": "Different brands and combination products can contain the same acetaminophen ingredient. Taking overlapping products can lead to an overdose and liver injury. Review labels and consult the clinician or pharmacist rather than adding the product automatically.",
+    "source": "https://www.fda.gov/drugs/safe-use-over-counter-pain-relievers-and-fever-reducers/acetaminophen",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00021",
+    "topic": "Renal health · Medication risk",
+    "q": "A client with chronic kidney disease has vomiting, diarrhea, and poor fluid intake and asks about taking ibuprofen. Which concern should the nurse explain?",
+    "a": [
+      "NSAIDs can increase the risk of kidney injury during dehydration",
+      "Ibuprofen prevents dehydration-related kidney injury",
+      "Over-the-counter status means a medicine cannot harm the kidneys",
+      "Kidney disease removes the need to check pain medicines"
+    ],
+    "correct": 0,
+    "why": "Ibuprofen is an NSAID. NSAIDs can cause kidney injury, especially during dehydration or low blood pressure. The client should discuss a safe symptom-management plan with the care team rather than assuming an over-the-counter medicine is safe.",
+    "source": "https://www.niddk.nih.gov/health-information/kidney-disease/keeping-kidneys-safe",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00022",
+    "topic": "Care coordination · Medication review",
+    "q": "An older adult with kidney disease sees several clinicians and takes prescriptions, vitamins, and a nonprescription sleep product. Which plan best supports a complete medication review?",
+    "a": [
+      "List only medicines prescribed by the newest clinician",
+      "Bring an updated list or bottles of all medicines and supplements to each visit",
+      "Exclude vitamins because they cannot interact with medicines",
+      "Omit products purchased without a prescription"
+    ],
+    "correct": 1,
+    "why": "A complete list includes prescriptions, over-the-counter products, vitamins, and supplements. Sharing it at visits helps clinicians and pharmacists identify interactions and kidney-related risks. Leaving out products makes the review incomplete.",
+    "source": "https://www.niddk.nih.gov/health-information/kidney-disease/keeping-kidneys-safe",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00023",
+    "topic": "Mental health · Recognize mood changes",
+    "q": "A client with bipolar disorder sleeps two hours nightly without feeling tired, speaks rapidly, and reports racing thoughts. Which mood change should the nurse assess for?",
+    "a": [
+      "A normal response that never requires assessment",
+      "A confirmed diagnosis of dementia",
+      "A manic or hypomanic episode",
+      "Only a medication allergy"
+    ],
+    "correct": 2,
+    "why": "A decreased need for sleep, rapid speech, and racing thoughts are cues associated with mania or hypomania. Assess severity, duration, function, and safety; this brief description alone does not distinguish the two or establish a diagnosis.",
+    "source": "https://www.nimh.nih.gov/health/publications/bipolar-disorder",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00024",
+    "topic": "Mental health · Treatment teaching",
+    "q": "A client newly referred for cognitive behavioral therapy for panic disorder asks what the therapy addresses. Which explanation is accurate?",
+    "a": [
+      "It requires avoiding every situation associated with anxiety forever",
+      "It works only if all medicines are stopped",
+      "It guarantees that physical symptoms never recur",
+      "It teaches ways to change thoughts and responses to panic-related sensations and fears"
+    ],
+    "correct": 3,
+    "why": "CBT helps people respond differently to anxiety-related thoughts, feelings, and physical sensations. It is an evidence-supported treatment for panic disorder. It does not promise an immediate cure or require blanket avoidance or unplanned medication discontinuation.",
+    "source": "https://www.nimh.nih.gov/health/publications/panic-disorder-when-fear-overwhelms",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00025",
+    "topic": "Oncology · Bleeding precautions",
+    "q": "A client receiving chemotherapy has a low platelet count and asks about daily grooming. Which choice best reduces the risk of cuts?",
+    "a": [
+      "Use an electric shaver instead of a blade razor",
+      "Use a blade razor and shave more frequently",
+      "Brush with a stiff-bristled toothbrush",
+      "Ignore small cuts unless they become painful"
+    ],
+    "correct": 0,
+    "why": "Low platelets increase bleeding risk. An electric shaver helps reduce skin cuts; a very soft toothbrush is also recommended. Stiff bristles and blade razors can cause injury, and bleeding should not be dismissed.",
+    "source": "https://www.cancer.gov/about-cancer/treatment/side-effects/bleeding-bruising",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00026",
+    "topic": "Oncology · Interpret laboratory findings",
+    "q": "A client receiving chemotherapy has new easy bruising and tiny red spots on the skin. Which blood component is most directly related to the nurse's concern about bleeding?",
+    "a": [
+      "Hemoglobin alone",
+      "Platelets",
+      "Sodium",
+      "Serum glucose"
+    ],
+    "correct": 1,
+    "why": "Platelets help blood clot. Cancer treatment can lower the platelet count, producing easy bruising, bleeding, and small red or purple spots. Hemoglobin relates to oxygen transport; sodium and glucose are not the blood components responsible for forming a platelet plug.",
+    "source": "https://www.cancer.gov/about-cancer/treatment/side-effects/bleeding-bruising",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00027",
+    "topic": "Neurologic care · Seizure safety",
+    "q": "A person has a generalized convulsive seizure on the floor. Another bystander tries to hold the person's arms down. What should the nurse tell the bystander?",
+    "a": [
+      "Hold the arms more firmly to stop the seizure",
+      "Insert an object between the teeth",
+      "Do not restrain the movements; clear nearby hazards and protect the head",
+      "Offer water while the person is convulsing"
+    ],
+    "correct": 2,
+    "why": "Do not restrain seizure movements or place objects in the mouth. Move hazards away and cushion the head to reduce injury. Food and fluids should wait until the person is fully alert; time the seizure and seek emergency help when indicated.",
+    "source": "https://www.cdc.gov/epilepsy/first-aid-for-seizures/index.html",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00028",
+    "topic": "Emergency · Recognize complications",
+    "q": "A hospitalized client being treated for a leg deep vein thrombosis develops sudden shortness of breath and pain with breathing. Which complication should the nurse urgently assess for?",
+    "a": [
+      "An expected sign that the clot has dissolved",
+      "A routine medication taste change",
+      "A healed leg injury",
+      "Pulmonary embolism"
+    ],
+    "correct": 3,
+    "why": "New shortness of breath and pain with breathing in a client with DVT raise concern for pulmonary embolism. Escalate urgently and assess breathing and circulation. Symptoms require evaluation; they do not prove that the clot has dissolved.",
+    "source": "https://www.nhlbi.nih.gov/health/venous-thromboembolism/symptoms",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00029",
+    "topic": "Endocrine health · Recognize cues",
+    "q": "Which symptom cluster is most consistent with hypothyroidism and warrants further assessment?",
+    "a": [
+      "Fatigue, cold intolerance, and a slowed heart rate",
+      "Racing thoughts with a decreased need for sleep",
+      "Sudden unilateral facial droop and speech difficulty",
+      "New sharp chest pain with breathing"
+    ],
+    "correct": 0,
+    "why": "Hypothyroidism can cause fatigue, difficulty tolerating cold, and a slowed heart rate as body functions slow. Symptoms alone are not diagnostic; history, examination, and thyroid testing help confirm the cause. The other clusters suggest different concerns.",
+    "source": "https://www.niddk.nih.gov/health-information/endocrine-diseases/hypothyroidism",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00030",
+    "topic": "Pharmacology · Thyroid replacement",
+    "q": "A client taking prescribed levothyroxine says, 'I feel better, so I can stop it without calling my clinician.' Which response is best?",
+    "a": [
+      "Feeling better means the thyroid has definitely recovered",
+      "Continue the prescribed medicine and discuss any changes with the clinician",
+      "Stop it now and restart only if symptoms become severe",
+      "Replace it with a high-dose iodine supplement"
+    ],
+    "correct": 1,
+    "why": "Thyroid hormone replacement can control hypothyroidism while it is taken as prescribed. Improvement does not establish that the medicine is no longer needed. The client should not stop or substitute treatment without consulting the clinician.",
+    "source": "https://www.niddk.nih.gov/health-information/endocrine-diseases/hypothyroidism",
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00031",
+    "topic": "Dosage calculation · Oral tablets",
+    "q": "A prescription calls for 0.75 g of an oral medication for one dose. Each tablet contains 250 mg. How many tablets are required?",
+    "a": [
+      "0.3 tablet",
+      "1 tablet",
+      "3 tablets",
+      "30 tablets"
+    ],
+    "correct": 2,
+    "why": "Convert 0.75 g to 750 mg. Then 750 mg ÷ 250 mg/tablet = 3 tablets. The prescription and tablet strength are supplied for this arithmetic exercise; this does not establish a recommended dose.",
+    "source": null,
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00032",
+    "topic": "Dosage calculation · Gravity infusion",
+    "q": "The prescription is 600 mL of IV fluid over 5 hours using tubing with a drop factor of 15 gtt/mL. What gravity drip rate is required?",
+    "a": [
+      "2 gtt/min",
+      "15 gtt/min",
+      "120 gtt/min",
+      "30 gtt/min"
+    ],
+    "correct": 3,
+    "why": "Convert 5 hours to 300 minutes. Drip rate = (600 mL × 15 gtt/mL) ÷ 300 min = 30 gtt/min. The tubing factor is essential; mL/hr and gtt/min are different units.",
+    "source": null,
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00033",
+    "topic": "Dosage calculation · Weight-based infusion",
+    "q": "For this calculation, an infusion is prescribed at 0.05 mcg/kg/min for a client weighing 80 kg. The prepared solution contains 4 mg in a total volume of 250 mL. What pump rate in mL/hr delivers the prescription?",
+    "a": [
+      "15 mL/hr",
+      "0.25 mL/hr",
+      "4 mL/hr",
+      "60 mL/hr"
+    ],
+    "correct": 0,
+    "why": "Dose rate: 0.05 mcg/kg/min × 80 kg = 4 mcg/min = 240 mcg/hr. Concentration: 4 mg = 4,000 mcg; 4,000 mcg ÷ 250 mL = 16 mcg/mL. Pump rate: 240 mcg/hr ÷ 16 mcg/mL = 15 mL/hr. The order and concentration are supplied, not a clinical dosing recommendation.",
+    "source": null,
+    "sourceLabel": "Read clinical source"
+  },
+  {
+    "id": "nclex-00034",
+    "topic": "Pediatrics · Dosage calculation: divided daily dose",
+    "q": "For this calculation, a child weighs 18 kg and has a prescription for 30 mg/kg/day divided into three equal doses. The suspension contains 180 mg/5 mL. How many mL are required per dose?",
+    "a": [
+      "15 mL",
+      "5 mL",
+      "10 mL",
+      "1.5 mL"
+    ],
+    "correct": 1,
+    "why": "Daily amount: 18 kg × 30 mg/kg/day = 540 mg/day. Divide into three doses: 540 ÷ 3 = 180 mg per dose. Volume per dose: 180 mg × 5 mL ÷ 180 mg = 5 mL. Do not give the entire daily amount as one dose; the prescription is supplied for calculation only.",
+    "source": null,
+    "sourceLabel": "Read clinical source"
+  }
+]
+

@@ -29,7 +29,7 @@ Start from the main menu; loading the app leaves the timer paused. The changelog
 - [x] X pop, RN bounce and sparkle, care-zone feedback, win confetti; reduced-motion support
 - [x] Saved progress and themes; timer pauses when the page is hidden
 
-Progress and statistics are saved on this browser/device. Difficulty uses an automated deduction heuristic; human calibration remains future work. The NCLEX question bank currently contains 12 original questions. Generation uses bounded attempts and a verified starter fallback if a unique board cannot be produced.
+Progress and statistics are saved on this browser/device. Difficulty uses an automated deduction heuristic; human calibration remains future work. The NCLEX question bank currently contains 54 original questions. Generation uses bounded attempts and a verified starter fallback if a unique board cannot be produced.
 
 ## Run locally
 
@@ -51,7 +51,11 @@ Current rules: three incorrect RN placements end a shift. Invalid placements are
 
 Hints now explain direct deductions or confined-zone elimination from placed RNs, independently of player X marks. If those techniques cannot explain a move, the hint explicitly says it is a solution reveal. The daily archive includes a month calendar with completed-day markers and blocks future dates and dates before launch.
 
-The required post-shift question bank contains 12 original NCLEX-style single-answer items covering prioritization, adult health, pediatrics, medication safety, mental health, oncology, and dosage calculations. Clinical items link to primary health sources; calculations explain the order supplied in the question. They are independently authored practice items. Saved answers from the previous question bank reset when that bank changes.
+The required post-shift question bank contains 54 original NCLEX single-answer items covering prioritization, adult health, pediatrics, medication safety, mental health, oncology, infection prevention, and dosage calculations. Clinical items link to authoritative government health sources; calculations explain the order supplied in the question. They are independently authored practice items. Append-only NCLEX bank expansions preserve saved answers and history.
+
+### Question expansion — October 1, 2026
+
+Added 20 original questions (15 clinical and five calculation), bringing the bank to 54. Existing questions, IDs, answer order, correct indices, and `QUIZ_VERSION` remain unchanged. The current review records are in `content/question-reviews/`.
 
 ### Question history
 

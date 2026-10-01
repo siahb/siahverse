@@ -1049,7 +1049,6 @@ button{-webkit-tap-highlight-color:transparent}
 
 @media(max-width:420px){
   .brand-kicker{display:none}
-  .header-actions #help-btn{display:none}
   .overview-card{gap:8px}
   .overview-card small{font-size:10px}
 }

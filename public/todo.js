@@ -225,9 +225,13 @@ viewButtons.forEach(btn => {
   });
 });
 
+  function visibleTaskCheckboxes() {
+    return [...document.querySelectorAll('#todo-list .select-todo'),
+      ...(doneList.classList.contains('collapsed')?[]:document.querySelectorAll('#done-list .select-todo'))];
+  }
   function updateSelectAllState() {
-    const all = document.querySelectorAll('.select-todo');
-    const checked = document.querySelectorAll('.select-todo:checked');
+    const all = visibleTaskCheckboxes();
+    const checked = all.filter(checkbox=>checkbox.checked);
     if (selectAll) {
       selectAll.checked = all.length > 0 && checked.length === all.length;
     }
@@ -250,9 +254,16 @@ document.addEventListener("DOMContentLoaded", () => {
     doneHeader.classList.add("collapsed");
     doneList.classList.add("collapsed");
 
-    doneHeading.addEventListener("click", () => {
+    const toggleCompleted=() => {
       doneHeader.classList.toggle("collapsed");
       doneList.classList.toggle("collapsed");
+      if(doneList.classList.contains('collapsed'))doneList.querySelectorAll('.select-todo').forEach(checkbox=>checkbox.checked=false);
+      doneHeading.setAttribute('aria-expanded',String(!doneList.classList.contains('collapsed')));
+      updateSelectAllState();
+    };
+    doneHeading.addEventListener("click",toggleCompleted);
+    doneHeading.addEventListener('keydown',event=>{
+      if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCompleted();}
     });
   }
 });
@@ -556,10 +567,13 @@ function updateAdminUI() {
 }
 
   // Load Todos from server
+let taskLoadGeneration=0;
 async function loadTodosFromServer() {
+  const generation=++taskLoadGeneration;
   try {
     const res = await fetch('/todos');
     const loaded = await res.json();
+    if(generation!==taskLoadGeneration)return;
     if(!Array.isArray(loaded))throw Error();
     todosData = loaded;
 
@@ -569,6 +583,7 @@ async function loadTodosFromServer() {
     renderDone();
     updateButtonVisibility();
   } catch {
+    if(generation!==taskLoadGeneration)return;
     alert("Tasks could not load. Check your connection and try again.");
   }
 }
@@ -862,9 +877,9 @@ function weekdayBoxes(selected = []) {
         ${overduePill} ${prioPill} ${tagPills}
       </div>
       <div>
-        <button onclick="markAsDone(this.closest('li').getAttribute('data-trueindex'))">✅</button>
-        <button onclick="editTodo(this.closest('li').getAttribute('data-trueindex'))">✏️</button>
-        <button onclick="removeTodo(this.closest('li').getAttribute('data-trueindex'))">❌</button>
+        <button aria-label="Complete task" onclick="markAsDone(this.closest('li').getAttribute('data-trueindex'))">✅</button>
+        <button aria-label="Edit task" onclick="editTodo(this.closest('li').getAttribute('data-trueindex'))">✏️</button>
+        <button aria-label="Delete task" onclick="removeTodo(this.closest('li').getAttribute('data-trueindex'))">❌</button>
       </div>`;
     
     todoList.appendChild(li);
@@ -909,8 +924,8 @@ const renderDone = () => {
 }).join(' ')}
       </div>
       <div>
-        <button onclick="unmarkDone(${i})">↩️</button>
-        <button onclick="removeTodo(${i})">❌</button>
+        <button aria-label="Reopen task" onclick="unmarkDone(${i})">↩️</button>
+        <button aria-label="Delete task" onclick="removeTodo(${i})">❌</button>
       </div>
     `;
 
@@ -923,7 +938,7 @@ const renderDone = () => {
 };
 
 selectAll?.addEventListener('change', (e) => {
-  const boxes = document.querySelectorAll('#todo-list .select-todo, #done-list .select-todo');
+  const boxes = visibleTaskCheckboxes();
   boxes.forEach(cb => { cb.checked = e.target.checked; });
   updateSelectAllState();
 });
@@ -1672,7 +1687,7 @@ function showBulkDeleteConfirmation() {
     return;
   }
   
-  const selected = [...document.querySelectorAll('.select-todo:checked')]
+  const selected = visibleTaskCheckboxes().filter(checkbox=>checkbox.checked)
     .map(cb => parseInt(cb.dataset.trueindex, 10));
     
   if (selected.length === 0) {

@@ -33,12 +33,7 @@
         <button id="enter-password" class="ghost-btn" type="button">Sign in</button>
         <button id="logout" class="ghost-btn" type="button">Sign out</button>
         <button id="help-btn" class="icon-btn" type="button" aria-label="Help" title="Help">?</button>
-        <div id="toggle-theme">
-          <label class="theme-switch" aria-label="Toggle color theme">
-            <input type="checkbox" id="toggle-theme-checkbox">
-            <span class="slider"></span>
-          </label>
-        </div>
+        <button id="toggle-theme" class="ghost-btn" type="button" aria-label="Toggle color theme">Theme</button>
       </div>
     </header>
 
@@ -204,7 +199,7 @@
           </section>
 
           <section class="done-section">
-            <div class="done-heading">
+            <div class="done-heading" role="button" tabindex="0" aria-controls="done-list" aria-expanded="false">
               <div>
                 <div class="section-kicker">Archive</div>
                 <h2>Completed</h2>
@@ -290,6 +285,6 @@
     </div>
   </div>
 
-  <script src="todo.js?v=20261001-qa1"></script>
+  <script src="todo.js?v=20261001-qa2"></script>
 </body>
 </html>

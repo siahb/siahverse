@@ -3,12 +3,12 @@ const fs=require('fs'),vm=require('vm'),assert=require('assert'),path=require('p
 class El {constructor(){this.events={};this.value='';this.hidden=false;this.disabled=false;}addEventListener(n,f){this.events[n]=f;}showModal(){this.open=true;}close(){this.open=false;}reportValidity(){return true;}remove(){}setAttribute(k,v){this[k]=v;}}
 const els={},get=id=>els[id]??=new El();get('authMode').value='signin';
 const storage={},timers=[];
-let owner=null,save={version:2,completed:[],stats:{wins:0,dailyDates:[]},game:{level:0}},cloud=null,nextUser=null,authCallback,conflictOnce=false,writes=0;
+let owner=null,save={version:2,completed:[],stats:{wins:0,dailyDates:[]},game:{level:0}},cloud=null,nextUser=null,authCallback,conflictOnce=false,writes=0,failRead=false;
 const bridge={owner:()=>owner,snapshot:()=>JSON.parse(JSON.stringify(save)),readOwner:id=>id?{version:2,stats:{wins:0},completed:[]}:{version:2,stats:{wins:3,dailyDates:['2026-09-29'],questionHistory:{'nclex-00001':'correct','nclex-00002':'missed'}},completed:[1],game:{level:2}},pause(){},resume(){},apply(v,id){save=JSON.parse(JSON.stringify(v));owner=id;}};
 const client={
  auth:{onAuthStateChange(f){authCallback=f;},getSession:async()=>({data:{session:nextUser?{user:nextUser}:null}}),signInWithPassword:async()=>({data:{user:nextUser}}),signOut:async()=>({}),signUp:async()=>({data:{session:null}})},
  from(){let op='read',values,revision;
- const q={select(){return q;},eq(k,v){if(k==='revision')revision=v;return q;},maybeSingle:async()=>({data:cloud}),insert(v){op='insert';values=v;return q;},update(v){op='update';values=v;return q;},
+ const q={select(){return q;},eq(k,v){if(k==='revision')revision=v;return q;},maybeSingle:async()=>failRead?{error:{message:"Temporary cloud connection failure"}}:{data:cloud},insert(v){op='insert';values=v;return q;},update(v){op='update';values=v;return q;},
  then(resolve,reject){return Promise.resolve().then(()=>{
   if(conflictOnce){conflictOnce=false;cloud={progress:{version:2,completed:[4],stats:{wins:4,dailyDates:[]}},revision:9};return {data:[]};}
   if(op==='update'&&cloud.revision!==revision)return {data:[]};
@@ -40,5 +40,12 @@ assert.equal(cloud.revision,10);assert(cloud.progress.completed.includes(4));ass
 context.navigator.onLine=false;context.window.NurseDokuCloud.changed();const before=writes;await get('syncNowBtn').events.click();await new Promise(r=>setImmediate(r));assert.equal(writes,before);assert(get('accountStatus').textContent.includes('offline'));assert(JSON.parse(storage['nursedoku-sync-a']).dirty);
 await get('signOutBtn').events.click();assert.equal(owner,null);assert.equal(save.stats.wins,3);
 assert.equal(get('syncNowBtn').disabled,false);assert.equal(get('syncNowBtn').textContent,'Sync now');
+nextUser={id:'b',email:'b@example.invalid'};failRead=true;context.navigator.onLine=true;
+await get('accountBtn').events.click();
+assert.equal(get('accountStatus').textContent,'Temporary cloud connection failure');
+assert.equal(get('syncNowBtn').disabled,false,'Failed initial fetch must allow manual retry');
+assert.equal(get('syncNowBtn').textContent,'Sync now');
+failRead=false;await get('syncNowBtn').events.click();assert(get('accountStatus').textContent.includes('Latest cloud progress'));
+console.log('PASS: failed initial cloud connection keeps manual retry available.');
 console.log('PASS: explicit first save, clean-cloud fetch/restore, up-to-date feedback, conflict and offline messages; login never imports guest automatically; explicit import; revisions; conflict resolution; offline queue; sign-out restores guest.');
 })().catch(e=>{console.error(e);process.exit(1);});

@@ -94,3 +94,5 @@ Sync now reports its result inside Account. It uploads pending device changes, c
 Account save choices and guest import require confirmation before replacing an active puzzle. Sign-out also confirms its effect on shared Siahverse sessions. During conflicts, guest import is disabled and Resolve save conflict focuses the available choices. Account feedback appears above the controls.
 
 Tutorial interaction: an animated pointing hand demonstrates one tap for X and two taps for RN on the highlighted square. Shift 000 highlights the RN behind an exclusion and celebrates each correct move; both tutorials show progress meters. How to play practice steps require the learner to make the move before continuing. Reduced motion keeps a stationary hand and outline; keyboard controls and harmless practice remain available.
+
+How to play keeps Back/Next outside the scrolling lesson. Compact phone spacing and board sizing leave navigation visible; short screens and larger text can scroll the lesson separately.

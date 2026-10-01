@@ -12,7 +12,7 @@ Place one RN in every row, column, and colored care zone. RNs cannot touch, even
 - Keyboard: Enter/Space toggles X; R toggles RN; arrow keys move focus.
 - Hints highlight a suggested placement or a mistaken RN.
 
-Start from the main menu; loading the app leaves the timer paused. The changelog appears once per update. A solved board celebrates for two seconds before opening the required nursing question. You can change your answer before confirming it, then share the result or continue.
+Start from the main menu; loading the app leaves the timer paused. The changelog appears once per update. A solved board celebrates briefly (650 ms) before opening the required nursing question. You can change your answer before confirming it, then share the result or continue.
 
 ## Completed roadmap
 
@@ -82,3 +82,5 @@ The How to play tutorial has five numbered steps, a solved 4×4 example, and sep
 Select Next tip on the nursing tip card to browse the existing sourced tips. Browsing wraps at the end and resets to the daily tip on a new day or page reload.
 
 Shift 000 is a guided 4×4 tutorial before the first unsolved training shift for new players. Sixteen coached moves explain RN placement and Xs for rows, columns, and touching corners. It has no timer, strikes, quiz, or counted win. Completion is stored per progress owner in stats and included in cloud snapshots. Existing shift numbers and completion IDs stay unchanged. Replay it from the menu. Closing midway leaves the current shift intact and restarts the lesson next time.
+
+Post-shift flow: choose 1–10 NCLEX questions in the menu (default 1). The selected set is saved with the solved shift and must be confirmed before another puzzle; closing the results returns to the menu without skipping questions. Read each rationale, then select Next question. If fewer eligible unseen/missed questions remain, only those are offered. Native radio choices remain editable until confirmation. Three EKG hearts show remaining strikes. The completed-board pause is 650 ms.

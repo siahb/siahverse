@@ -11,7 +11,7 @@
   <meta property="og:type" content="website">
   <title>NurseDoku</title>
   <script src="assets/appearance.11c5f6c987.js"></script>
-  <link rel="stylesheet" href="assets/styles.cbadb94a2b.css">
+  <link rel="stylesheet" href="assets/styles.3e4e4ac9b1.css">
   <link rel="icon" href="icon.svg">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -62,6 +62,7 @@
       <label>Difficulty <select id="difficulty"><option value="easy" selected>Easy · direct deductions</option><option value="medium">Medium · zone elimination</option><option value="hard">Hard · deeper reasoning</option></select></label>
       <label>Board <select id="boardSize"><option value="6">6×6</option><option value="10">10×10</option></select></label>
       <label>Palette <select id="theme"><option value="general">General</option><option value="peds">Pediatrics</option><option value="ed">Emergency</option></select></label>
+      <label>NCLEX questions <select id="questionCount"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label>
     </div>
     <p id="statsLine" class="stats-line"></p>
     <div class="shift-info"><p id="puzzleInfo"></p><button id="archiveBtn" class="ghost-btn" type="button">Daily archive</button></div>
@@ -69,7 +70,7 @@
     <section class="status-card" aria-label="Game status">
       <div><span class="status-label">Puzzle</span><strong id="levelLabel">Shift 001</strong></div>
       <div><span class="status-label">Time</span><strong id="timer">00:00</strong></div>
-      <div><span class="status-label">Strikes</span><strong><span id="strikeCount">0</span>/3</strong></div>
+      <div><span class="status-label">Hearts</span><strong id="strikeHearts" role="img" aria-label="3 of 3 hearts remaining"></strong><span id="strikeCount" class="sr-only">0</span></div>
       <div><span class="status-label">RNs</span><strong><span id="rnCount">0</span>/<span id="targetCount">4</span></strong></div>
     </section>
 
@@ -103,7 +104,7 @@
 
   <dialog id="changelogDialog"><div class="dialog-body changelog-body">
     <p class="eyebrow">September 29, 2026 · New update</p><h2>What’s new</h2><p>Here’s what’s new in NurseDoku:</p>
-    <ul class="changelog-list"><li><strong>Better 10×10 shifts.</strong> Ten distinct colors, connected care zones, and one free starter square per board.</li><li><strong>Quicker taps.</strong> Xs appear immediately; double-tap still places an RN.</li><li><strong>Care zone cleared!</strong> Feedback when you place the RN and mark the remaining squares X.</li><li><strong>A cleaner menu.</strong> Practice settings sit above the practice button. Facebook and Instagram join results sharing.</li><li><strong>Daily nursing tips.</strong> A short nursing tip on the main menu, with a source link. Dismiss it for today and get straight to your shift.</li><li><strong>Fresh questions first.</strong> Correct answers stay retired. Missed questions can return for review; keep playing when you’re caught up.</li><li><strong>Practice for NCLEX.</strong> Clinical scenarios, prioritization, medication safety, pediatrics, and dosage calculations replace the hand-hygiene question set.</li><li><strong>Hints with a reason.</strong> Learn why a square needs an RN or an X. Deeper hints are clearly labeled as solution reveals.</li><li><strong>Your daily calendar.</strong> Browse dates and see which daily puzzles you’ve completed.</li><li><strong>Cleaner sharing.</strong> Copy icons and social logos replace text labels.</li><li><strong>Main menu.</strong> Choose your shift from a new main menu; your timer starts when you play.</li><li><strong>Swipe both ways.</strong> Start on an empty cell to add Xs, or on an X to erase several at once.</li><li><strong>Completed board.</strong> Enjoy your finished board and confetti for two seconds before the result screen.</li><li><strong>Practice after your shift.</strong> Select an answer, then confirm it to see the explanation.</li><li><strong>Share results.</strong> Sharing buttons on the main menu and results screen.</li><li><strong>Bigger challenges.</strong> 10×10 puzzles, 56 training shifts, and three strikes per attempt.</li><li><strong>Account beta.</strong> Sign in with your Siahverse account for private cloud saves.</li></ul>
+    <ul class="changelog-list"><li><strong>Better 10×10 shifts.</strong> Ten distinct colors, connected care zones, and one free starter square per board.</li><li><strong>Quicker taps.</strong> Xs appear immediately; double-tap still places an RN.</li><li><strong>Care zone cleared!</strong> Feedback when you place the RN and mark the remaining squares X.</li><li><strong>A cleaner menu.</strong> Practice settings sit above the practice button. Facebook and Instagram join results sharing.</li><li><strong>Daily nursing tips.</strong> A short nursing tip on the main menu, with a source link. Dismiss it for today and get straight to your shift.</li><li><strong>Fresh questions first.</strong> Correct answers stay retired. Missed questions can return for review; keep playing when you’re caught up.</li><li><strong>Practice for NCLEX.</strong> Clinical scenarios, prioritization, medication safety, pediatrics, and dosage calculations replace the hand-hygiene question set.</li><li><strong>Hints with a reason.</strong> Learn why a square needs an RN or an X. Deeper hints are clearly labeled as solution reveals.</li><li><strong>Your daily calendar.</strong> Browse dates and see which daily puzzles you’ve completed.</li><li><strong>Cleaner sharing.</strong> Copy icons and social logos replace text labels.</li><li><strong>Main menu.</strong> Choose your shift from a new main menu; your timer starts when you play.</li><li><strong>Swipe both ways.</strong> Start on an empty cell to add Xs, or on an X to erase several at once.</li><li><strong>Completed board.</strong> Enjoy your finished board and a brief celebration before the result screen.</li><li><strong>Practice after your shift.</strong> Select an answer, then confirm it to see the explanation.</li><li><strong>Share results.</strong> Sharing buttons on the main menu and results screen.</li><li><strong>Bigger challenges.</strong> 10×10 puzzles, 56 training shifts, and three strikes per attempt.</li><li><strong>Account beta.</strong> Sign in with your Siahverse account for private cloud saves.</li></ul>
     <button id="closeChangelogBtn" class="primary-btn full" type="button">Play</button>
   </div></dialog>
 
@@ -129,7 +130,7 @@
   </div></dialog>
 
   <dialog id="lossDialog"><div class="dialog-body win-body">
-    <p class="eyebrow">Shift ended</p><h2>Three strikes.</h2><p>An incorrect RN placement costs one strike. Try the puzzle again.</p>
+    <p class="eyebrow">Shift ended</p><h2>No hearts left.</h2><p>An incorrect RN placement costs one heart. Try the puzzle again.</p>
     <button id="retryBtn" class="primary-btn full" type="button">Retry this shift</button>
     <button id="newAfterLossBtn" class="secondary-btn full" type="button">Try another shift</button>
   </div></dialog>
@@ -163,11 +164,12 @@
   <dialog id="winDialog">
     <div id="celebration" class="celebration" aria-hidden="true"></div>
     <div class="dialog-body win-body">
+      <div class="question-close-row"><button id="closeQuestionBtn" class="icon-btn" type="button" aria-label="Return to main menu">×</button></div>
       <div class="win-mark">RN</div>
       <p class="eyebrow">Shift complete</p>
       <h2>Puzzle solved.</h2>
       <p>You solved NurseDoku in <strong id="finalTime">00:00</strong>.</p>
-      <p class="bonus-intro">One more challenge before your next shift.</p><section class="bonus-card" aria-labelledby="bonusHeading"><h3 id="bonusHeading">NCLEX question</h3><p id="bonusTopic" class="eyebrow"></p><p id="bonusQuestion"></p><div id="bonusAnswers"></div><button id="confirmBonusBtn" class="primary-btn full" type="button" disabled>Confirm answer</button><p id="bonusFeedback" aria-live="polite"></p><a id="bonusSource" class="bonus-source" hidden target="_blank" rel="noopener">Read clinical source</a></section>
+      <p class="bonus-intro">Answer your selected NCLEX questions before the next shift.</p><section class="bonus-card" aria-labelledby="bonusHeading"><h3 id="bonusHeading" tabindex="-1">NCLEX question</h3><p id="questionProgress" class="eyebrow"></p><p id="bonusTopic" class="eyebrow"></p><p id="bonusQuestion"></p><div id="bonusAnswers" role="radiogroup" aria-labelledby="bonusQuestion"></div><button id="confirmBonusBtn" class="primary-btn full" type="button" disabled>Confirm answer</button><button id="nextQuestionBtn" class="primary-btn full" type="button" hidden>Next question</button><p id="bonusFeedback" aria-live="polite"></p><a id="bonusSource" class="bonus-source" hidden target="_blank" rel="noopener">Read clinical source</a></section>
       <div class="social-actions result-share"><button id="shareBtn" class="secondary-btn icon-action" type="button" aria-label="Share result" title="Share result"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 16V3m-4 4 4-4 4 4M6 11H4v10h16V11h-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button id="copyResultBtn" class="ghost-btn icon-action" type="button" aria-label="Copy result" title="Copy result"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="8" y="8" width="12" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button><a id="resultShareFacebook" class="social-link icon-action" aria-label="Share on Facebook" title="Share on Facebook" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 22v-9h3l.5-3H14V8c0-.9.3-1.5 1.6-1.5H18V3.8c-.4-.1-1.8-.3-3.3-.3-3.3 0-5.2 1.8-5.2 5V10H7v3h2.5v9H14Z"/></svg></a><button id="resultShareInstagram" class="ghost-btn icon-action" type="button" aria-label="Share image to Instagram" title="Share image to Instagram"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg></button><a id="resultShareX" class="social-link icon-action" aria-label="Share on X" title="Share on X" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3L12 14.6 5.5 22H2.3l7.2-8.3L1.8 2h6.5l4.5 6.8L18.9 2ZM17.8 20h1.7L7.3 3.9H5.5L17.8 20Z"/></svg></a><a id="resultShareWhatsapp" class="social-link icon-action" aria-label="Share on WhatsApp" title="Share on WhatsApp" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M20.5 11.6a8.6 8.6 0 0 1-12.8 7.5L3 20.5l1.4-4.6A8.6 8.6 0 1 1 20.5 11.6Z"/><path fill="currentColor" d="M8.2 6.6c-.3 0-.6.2-.8.5-.5.6-.6 1.2-.4 2 .4 2.2 3.4 5.2 5.8 6 .8.3 1.8.3 2.4-.3.4-.4.7-1 .6-1.3-.1-.2-1.8-1.1-2.1-1.1-.2 0-.6.6-.9.9-.2.2-.4.2-.7.1-1.2-.5-2.3-1.5-2.9-2.6-.2-.3-.2-.4 0-.6l.5-.7c.2-.2.1-.4 0-.6L9 7c-.2-.4-.4-.4-.8-.4Z"/></svg></a></div><p id="shareStatus" aria-live="polite"></p>
       <button id="playAgainBtn" class="primary-btn full" type="button" disabled>Next shift</button>
     </div>
@@ -176,7 +178,7 @@
   <script src="assets/account-config.cc916e79c2.js"></script>
   <script src="assets/large-puzzles.b5dbb536ca.js"></script>
   <script src="assets/puzzles.ad028b6d5f.js"></script>
-  <script src="assets/app.4b5437321a.js"></script>
+  <script src="assets/app.ce566c5b51.js"></script>
   <script src="assets/accounts.e30083ce27.js"></script>
   <script src="assets/tutorial.d3a29e2f49.js"></script>
   <script src="assets/shift000.58ff5b0f2f.js"></script>

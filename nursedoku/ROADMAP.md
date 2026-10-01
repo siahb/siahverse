@@ -89,3 +89,9 @@ Guest question history belongs to the browser/device. Account history travels wi
 
 - [x] Guided RN/X board before Shift 001 for new players; replay from menu
 - [x] Explain every placement and exclusion; preserve existing progress, wins, and numbering
+
+## Post-shift improvements — delivered
+
+- [x] Return to menu from questions without bypassing required answers
+- [x] Choose 1–10 saved NCLEX questions per shift; rationale before advancing
+- [x] Native radio answer selection, three EKG hearts, and 650 ms win pause

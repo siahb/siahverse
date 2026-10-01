@@ -1,5 +1,5 @@
-const CACHE='nursedoku-3e4466a248';
-const ASSETS=["./","index.html","manifest.webmanifest","icon.svg","assets/app.4b5437321a.js","assets/styles.cbadb94a2b.css","assets/puzzles.ad028b6d5f.js","assets/large-puzzles.b5dbb536ca.js","assets/account-config.cc916e79c2.js","assets/accounts.e30083ce27.js","assets/appearance.11c5f6c987.js","assets/shared-account.a2d49a535c.js","assets/tutorial.d3a29e2f49.js","assets/shift000.58ff5b0f2f.js"];
+const CACHE='nursedoku-785d756964';
+const ASSETS=["./","index.html","manifest.webmanifest","icon.svg","assets/app.ce566c5b51.js","assets/styles.3e4e4ac9b1.css","assets/puzzles.ad028b6d5f.js","assets/large-puzzles.b5dbb536ca.js","assets/account-config.cc916e79c2.js","assets/accounts.e30083ce27.js","assets/appearance.11c5f6c987.js","assets/shared-account.a2d49a535c.js","assets/tutorial.d3a29e2f49.js","assets/shift000.58ff5b0f2f.js"];
 
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS))));
 // Activate on the next visit, keeping an in-progress board on a consistent version.

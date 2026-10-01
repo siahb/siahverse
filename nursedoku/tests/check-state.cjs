@@ -19,7 +19,7 @@ emit('pointerdown');emit('pointerup');emit('pointerdown');emit('pointerup');asse
 run('history=[]');emit('pointerdown');hit=get('board').children[2];hit.closest=()=>hit;emit('pointermove',{...evt,clientX:80});emit('pointerup');assert.equal(run('state[0][1]'),'rn');assert.equal(run('state[0][2]'),'x');assert.equal(run('history.length'),1);
 get('undoBtn').events.click[0]();assert.equal(run('state[0][2]'),'');assert.equal(run('state[0][1]'),'rn');
 run('state=blank();puzzle().solution.forEach((c,r)=>state[r][c]="rn");afterMove()');assert.equal(run('finished'),true);assert.equal(get('winDialog').open,false);assert.equal(run('stats.wins'),1);
-const winDelay=[...timers.values()].find(t=>t.ms===2000);assert(winDelay);winDelay.f();assert.equal(get('winDialog').open,true);
+const winDelay=[...timers.values()].find(t=>t.ms===650);assert(winDelay);winDelay.f();assert.equal(get('winDialog').open,true);
 get('bonusAnswers').children[0].onclick();assert.equal(get('playAgainBtn').disabled,true);get('confirmBonusBtn').onclick();assert.equal(get('playAgainBtn').disabled,false);
 assert.equal(JSON.parse(storage['nursedoku-v2']).finished,true);
 let notes=0;
@@ -85,7 +85,7 @@ get('confirmBonusBtn').onclick();assert.equal(run('bonusSubmitted'),false,'Empty
 const button=get('bonusAnswers').children[0];button.onclick();assert.equal(run('bonusSubmitted'),false);
 get('confirmBonusBtn').onclick();assert.equal(run('bonusSubmitted'),true);assert.equal(JSON.parse(storage['nursedoku-v2']).bonusSubmitted,true);
 const restored=context.window.NurseDokuProgress.snapshot();context.window.NurseDokuProgress.apply(restored,null);assert.equal(get('playAgainBtn').disabled,false);
-console.log('PASS: startup/menu timer pause; changelog acknowledgment; 2-second win delay; swipe erase + whole stroke undo; required answer selection/confirmation/persistence.');
+console.log('PASS: startup/menu timer pause; changelog acknowledgment; 650 ms win delay; swipe erase + whole stroke undo; required answer selection/confirmation/persistence.');
 
 
 const reloadedEls={},reloadedGet=id=>reloadedEls[id]??=new El();
@@ -195,3 +195,12 @@ assert.equal(get('shift000Progress').textContent,'Tutorial complete');assert.equ
 get('shift000Finish').events.click[0]();get('shift000Dialog').events.close[0]();assert.equal(run('inGame'),true);assert.equal(get('levelLabel').textContent,'Shift 001');assert(!get('shift000Dialog').open);
 run('window.NurseDokuProgress.apply({stats:{shift000Complete:true}},"lesson-owner")');assert.equal(run('stats.shift000Complete'),true);assert.equal(run('needsShift000()'),false);run('window.NurseDokuProgress.apply({stats:{}},null)');assert.equal(run('stats.shift000Complete'),false);
 console.log('PASS: Shift 000 auto-entry, full RN/X lesson, harmless mistakes, timer pause, completion/owner restore, unchanged wins and shift IDs, and Shift 001 handoff.');
+
+// A multi-question set remains required across menu exits and restores.
+run('returnToMenu();window.NurseDokuProgress.apply({stats:{},game:{level:0,gameKind:"journey"}},null);stats.shift000Complete=true;finished=false;bonusSubmitted=false;bonusQueue=[]');get('questionCount').value='10';run('enterGame();state=blank();puzzle().solution.forEach((c,r)=>state[r][c]="rn");afterMove()');assert.equal(run('bonusQueue.length'),10);assert.equal(run('new Set(bonusQueue).size'),10);assert.equal(get('questionProgress').textContent,'Question 1 of 10');
+let opts=get('bonusAnswers').children;opts[0].children[0].onchange();const choice0=run('bonusChoice');opts[1].children[0].onchange();assert.notEqual(run('bonusChoice'),choice0);assert(opts.every(b=>!b.children[0].disabled));
+get('closeQuestionBtn').events.click[0]();assert.equal(run('inGame'),false);assert.equal(get('winDialog').open,false);assert.equal(get('continueBtn').textContent,'Finish NCLEX questions');assert.equal(run('questionsComplete()'),false);const quizSave=run('window.NurseDokuProgress.snapshot()');run('window.NurseDokuProgress.apply('+JSON.stringify(quizSave)+',null)');assert.equal(run('bonusQueue.length'),10);assert.equal(run('bonusChoice'),quizSave.game.bonusChoice);assert.equal(run("switchGame('practice')"),false);
+for(let q=0;q<10;q++){opts=get('bonusAnswers').children;opts.find(b=>+b.dataset.choice===run('BONUS[bonusIndex].correct')).children[0].onchange();get('confirmBonusBtn').onclick();assert(opts.every(b=>b.children[0].disabled));if(q<9){assert(get('playAgainBtn').disabled);assert(!get('nextQuestionBtn').hidden);get('nextQuestionBtn').onclick();assert.equal(get('questionProgress').textContent,'Question '+(q+2)+' of 10');assert.equal(run('bonusChoice'),null);}else{assert(!get('playAgainBtn').disabled);assert(get('nextQuestionBtn').hidden);}}
+assert.equal(run('questionsComplete()'),true);assert.equal(run('bonusCursor'),9);assert.equal(run('Object.values(stats.questionHistory).filter(x=>x==="correct").length'),10);assert.equal(get('strikeHearts').attributes['aria-label'],'3 of 3 hearts remaining');run('strikes=2;paint()');assert.equal(get('strikeHearts').attributes['aria-label'],'1 of 3 hearts remaining');
+run('stats.questionHistory=Object.fromEntries(BONUS.map((q,i)=>[q.id,i===0?"missed":"correct"]));startQuestions();showBonus()');assert.equal(run('bonusQueue.length'),1);assert.equal(get('questionProgress').textContent,'Question 1 of 1');
+console.log('PASS: ten unique questions, native choice changes before confirmation, menu exit/restore without bypass, locked submitted answers, per-question rationales, final unlock, limited-bank fallback and remaining EKG hearts.');

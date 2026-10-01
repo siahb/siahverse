@@ -95,3 +95,5 @@ Guest question history belongs to the browser/device. Account history travels wi
 - [x] Return to menu from questions without bypassing required answers
 - [x] Choose 1–10 saved NCLEX questions per shift; rationale before advancing
 - [x] Native radio answer selection, three EKG hearts, and 650 ms win pause
+
+- [x] Manual cloud sync checks newer saves and gives visible saving, up-to-date, offline, and conflict feedback

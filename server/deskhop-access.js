@@ -2,7 +2,7 @@ import {accountSession} from './account-api.js';
 import {gatewayUrl} from '../deskhop/config.js';
 import {validateGatewayUrl} from '../deskhop/gateway-url.mjs';
 // Verified account IDs only. Empty means nobody is authorized.
-export const DESKHOP_OWNER_IDS = [];
+export const DESKHOP_OWNER_IDS = ['d4d39f95-96de-4c89-8f8e-80c494509b41'];
 const headers = {'Cache-Control':'private, no-store, max-age=0','Vary':'Cookie','X-Robots-Tag':'noindex, nofollow','Referrer-Policy':'no-referrer'};
 function page(title,message,status,set=[]){
   const h=new Headers({...headers,'Content-Type':'text/html; charset=utf-8'});

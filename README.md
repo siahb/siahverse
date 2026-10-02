@@ -114,3 +114,20 @@ the page shows setup needed and keeps the connection button disabled. Hosting
 this page alone does not provide remote desktop access. Gateway configuration
 and the Windows setup guide live in the standalone DeskHop repository; keep
 credentials there in backend secrets, never in this site's browser files.
+
+### DeskHop private access
+
+All `/deskhop` and `/deskhop/*` requests are checked on the server before static
+assets or the launch redirect are served. Supabase verifies the account using
+Siahverse's HttpOnly session cookies. Only verified user IDs in the server's
+`DESKHOP_OWNER_IDS` list (or the `DESKHOP_OWNER_IDS` runtime variable) are allowed.
+The default empty list denies everyone; registration does not grant DeskHop
+access. Unauthorized visitors get a dedicated sign-in form or a 403 response.
+Private responses are never publicly cached. `/deskhop/connect` verifies the
+account again, validates the HTTPS gateway URL, and redirects only the owner.
+
+This protects the Siahverse launcher, not the external gateway itself. Guacamole
+must independently require its own restricted account and MFA. Signing out of
+Siahverse does not sign out of Guacamole or terminate an existing remote session.
+Keep the gateway unconfigured until those protections are verified. Run
+`node --test tests/deskhop-access.mjs` to check the authorization boundaries.

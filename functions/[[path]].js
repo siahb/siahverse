@@ -1,3 +1,4 @@
+import {deskhopAccess} from '../server/deskhop-access.js';
 import {accountApi} from '../server/account-api.js';
 import {accountTasks} from '../server/account-tasks.js';
 import {validTask} from '../server/task-validation.js';
@@ -774,6 +775,7 @@ async function adminAction(context,session) {
 export async function onRequest(context) {
   const {request,env}=context;
   const url=new URL(request.url), path=url.pathname;
+  if(path==='/deskhop'||path.startsWith('/deskhop/'))return deskhopAccess(context);
   if(path.startsWith('/api/account/'))return accountApi(context,path.slice('/api/account/'.length));
   if(path==='/account-todos'||path.startsWith('/account-todos/'))return accountTasks(context,path);
 

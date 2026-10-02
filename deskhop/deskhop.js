@@ -7,7 +7,7 @@ try {
   if (url) {
     status.textContent = 'Gateway configured · PC availability checked after sign-in';
     button.disabled = false;
-    button.addEventListener('click', () => window.open(url, '_blank', 'noopener,noreferrer'));
+    button.addEventListener('click', () => window.open('/deskhop/connect', '_blank', 'noopener,noreferrer'));
   } else {
     status.textContent = 'Setup needed · Gateway not configured';
   }

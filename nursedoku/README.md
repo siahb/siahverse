@@ -96,3 +96,5 @@ Account save choices and guest import require confirmation before replacing an a
 Tutorial interaction: an animated pointing hand demonstrates one tap for X and two taps for RN on the highlighted square. Shift 000 highlights the RN behind an exclusion and celebrates each correct move; both tutorials show progress meters. How to play practice steps require the learner to make the move before continuing. Reduced motion keeps a stationary hand and outline; keyboard controls and harmless practice remain available.
 
 How to play keeps Back/Next outside the scrolling lesson. Compact phone spacing and board sizing leave navigation visible; short screens and larger text can scroll the lesson separately.
+
+Shift 000 uses a compact board and a separately scrolling lesson, keeping Continue to training visible on short phone screens.

@@ -2,11 +2,11 @@
   const root = document.querySelector('#featured-apps');
   if (!root) return;
   const slides = [
-    {name:'NurseDoku', category:'Nursing games', description:'Place one RN in each row, column, and care zone. Finish the puzzle, then answer a nursing question.', action:'Play NurseDoku', href:'/nursedoku/', symbol:'RN', tiles:['×','RN','×','×','×','×','×','RN','RN','×','×','×','×','×','RN','×']},
-    {name:'Tasks', category:'Productivity', description:'Make room for what matters. Organize your to-do list with due dates, priorities, and routines.', action:'Open Tasks', href:'https://todo.siahverse.cc', symbol:'✓', tiles:['✓','○','✓','○','○','✓','○','✓','✓','○','✓','○','○','✓','○','✓']},
-    {name:'NextSet', category:'Workouts', description:'Your next workout starts here. Follow PPL workouts, log your sets, and track your progress.', action:'Open NextSet', href:'https://nextset.siahverse.cc', symbol:'↗', tiles:['P','P','L','↗','3','×','10','✓','P','P','L','↗','5','×','5','✓']},
-    {name:'Nursing', category:'Study', description:'Find your nursing practice exams, study tools, and games together in one place.', action:'Open Nursing', href:'/nursing/', symbol:'+', tiles:['RN','+','RN','+','+','RN','+','RN','RN','+','RN','+','+','RN','+','RN']},
-    {name:'DeskHop', category:'Remote desktop', description:'Your desktop, one hop away. Start setting up browser access to your personal Windows computer.', action:'Open DeskHop', href:'/deskhop/', symbol:'↗', tiles:['▣','↗','▣','↗','↗','▣','↗','▣','▣','↗','▣','↗','↗','▣','↗','▣']}
+    {name:'NurseDoku', icon:'/nursedoku/icon.svg', category:'Nursing games', description:'Place one RN in each row, column, and care zone. Finish the puzzle, then answer a nursing question.', action:'Play NurseDoku', href:'/nursedoku/'},
+    {name:'ToDo', icon:'/icons/todo.svg', category:'Productivity', description:'Tasks, due dates, priorities, and repeating routines.', action:'Open ToDo', href:'https://todo.siahverse.cc'},
+    {name:'NextSet', icon:'/icons/nextset.svg', category:'Workouts', description:'Follow PPL workouts, log your sets, and track your progress.', action:'Open NextSet', href:'https://nextset.siahverse.cc'},
+    {name:'Nursing', icon:'/icons/nursing.svg', category:'Study', description:'Find your nursing practice exams, study tools, and games together in one place.', action:'Open Nursing', href:'/nursing/'},
+    {name:'DeskHop', icon:'/deskhop/favicon.svg', category:'Remote desktop', description:'Your desktop, one hop away. Start setting up browser access to your personal Windows computer.', action:'Open DeskHop', href:'/deskhop/'}
   ];
   const title=root.querySelector('h2'), category=root.querySelector('.eyebrow'), description=root.querySelector('.featured-description'), link=root.querySelector('.game-play'), art=root.querySelector('.game-art'), dots=root.querySelector('.featured-dots'), status=root.querySelector('.featured-status');
   let current=0;
@@ -24,7 +24,7 @@
     category.textContent=`Featured · ${slide.category}`;
     description.textContent=slide.description;
     link.textContent=`${slide.action} →`; link.href=slide.href;
-    art.replaceChildren(...slide.tiles.map(text=>{const tile=document.createElement('span');tile.textContent=text;return tile;}));
+    const image=document.createElement('img'); image.src=slide.icon; image.alt=''; image.width=170; image.height=170; art.replaceChildren(image); art.dataset.app=slide.name;
     controls.forEach((button,i)=>button.setAttribute('aria-current',i===current?'true':'false'));
     status.textContent=`Featured app ${current+1} of ${slides.length}: ${slide.name}`;
   }

@@ -1,0 +1,150 @@
+{
+  "date": "2026-10-02",
+  "before": 54,
+  "added": 20,
+  "total": 74,
+  "review": "Source and arithmetic verification by the authoring assistant; not an independent clinician review or official NCLEX content.",
+  "questions": [
+    {
+      "id": "nclex-00055",
+      "topic": "Emergency care · Recognize sepsis",
+      "source": "https://www.cdc.gov/sepsis/about/index.html",
+      "checkedOn": "2026-10-02",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 54 existing stems."
+    },
+    {
+      "id": "nclex-00056",
+      "topic": "Maternal health · Immunization teaching",
+      "source": "https://www.cdc.gov/pertussis/vaccines/tdap-vaccination-during-pregnancy.html",
+      "checkedOn": "2026-10-02",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 54 existing stems."
+    },
+    {
+      "id": "nclex-00057",
+      "topic": "Newborn care · Safe sleep environment",
+      "source": "https://safetosleep.nichd.nih.gov/reduce-risk/safe-sleep-environment",
+      "checkedOn": "2026-10-02",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 54 existing stems."
+    },
+    {
+      "id": "nclex-00058",
+      "topic": "Pediatrics · Recognize dehydration",
+      "source": "https://www.niddk.nih.gov/health-information/digestive-diseases/chronic-diarrhea-children/symptoms-causes",
+      "checkedOn": "2026-10-02",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 54 existing stems."
+    },
+    {
+      "id": "nclex-00059",
+      "topic": "Emergency care · Anaphylaxis",
+      "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10185359/",
+      "checkedOn": "2026-10-02",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 54 existing stems."
+    },
+    {
+      "id": "nclex-00060",
+      "topic": "Cardiovascular · Recognize heart attack",
+      "source": "https://www.nhlbi.nih.gov/health/heart-attack/symptoms",
+      "checkedOn": "2026-10-02",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 54 existing stems."
+    },
+    {
+      "id": "nclex-00061",
+      "topic": "Cardiovascular · Medication teaching",
+      "source": "https://www.nhlbi.nih.gov/health/high-blood-pressure/treatment",
+      "checkedOn": "2026-10-02",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 54 existing stems."
+    },
+    {
+      "id": "nclex-00062",
+      "topic": "Maternal health · Preconception teaching",
+      "source": "https://www.cdc.gov/folic-acid/about/index.html",
+      "checkedOn": "2026-10-02",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 54 existing stems."
+    },
+    {
+      "id": "nclex-00063",
+      "topic": "Mental health pharmacology · Lithium safety",
+      "source": "https://dailymed.nlm.nih.gov/dailymed/fda/fdaDrugXsl.cfm?setid=93705a7e-c7c7-4a4c-8d53-52a0c154adc9&type=display",
+      "checkedOn": "2026-10-02",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 54 existing stems."
+    },
+    {
+      "id": "nclex-00064",
+      "topic": "Infection prevention · Disseminated shingles",
+      "source": "https://www.cdc.gov/surv-manual/php/table-of-contents/chapter-17-varicella.html",
+      "checkedOn": "2026-10-02",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 54 existing stems."
+    },
+    {
+      "id": "nclex-00065",
+      "topic": "Hematology · Sickle cell emergency",
+      "source": "https://www.nhlbi.nih.gov/health/sickle-cell-disease/symptoms",
+      "checkedOn": "2026-10-02",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 54 existing stems."
+    },
+    {
+      "id": "nclex-00066",
+      "topic": "Maternal mental health · Assess safety",
+      "source": "https://www.nimh.nih.gov/health/publications/perinatal-depression",
+      "checkedOn": "2026-10-02",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 54 existing stems."
+    },
+    {
+      "id": "nclex-00067",
+      "topic": "Diabetes · Insulin storage",
+      "source": "https://www.fda.gov/drugs/emergency-preparedness-drugs/information-regarding-insulin-storage-and-switching-between-products-emergency",
+      "checkedOn": "2026-10-02",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 54 existing stems."
+    },
+    {
+      "id": "nclex-00068",
+      "topic": "Infection prevention · Peripheral IV care",
+      "source": "https://www.cdc.gov/infection-control/hcp/intravascular-catheter-related-infections/summary-recommendations.html",
+      "checkedOn": "2026-10-02",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 54 existing stems."
+    },
+    {
+      "id": "nclex-00069",
+      "topic": "Urinary care · Recognize an emergency",
+      "source": "https://www.niddk.nih.gov/health-information/urologic-diseases/urinary-retention/definition-facts",
+      "checkedOn": "2026-10-02",
+      "method": "Original scenario and keyed rationale checked against the linked authoritative source; distinct objective reviewed against all 54 existing stems."
+    },
+    {
+      "id": "nclex-00070",
+      "topic": "Dosage calculation · IV pump",
+      "source": null,
+      "checkedOn": "2026-10-02",
+      "method": "Prescription and parameters supplied in the stem; arithmetic independently checked using exact decimal or rational calculations."
+    },
+    {
+      "id": "nclex-00071",
+      "topic": "Dosage calculation · Reconstituted medication",
+      "source": null,
+      "checkedOn": "2026-10-02",
+      "method": "Prescription and parameters supplied in the stem; arithmetic independently checked using exact decimal or rational calculations."
+    },
+    {
+      "id": "nclex-00072",
+      "topic": "Dosage calculation · Units per hour",
+      "source": null,
+      "checkedOn": "2026-10-02",
+      "method": "Prescription and parameters supplied in the stem; arithmetic independently checked using exact decimal or rational calculations."
+    },
+    {
+      "id": "nclex-00073",
+      "topic": "Pediatrics · Dosage calculation: divided dose",
+      "source": null,
+      "checkedOn": "2026-10-02",
+      "method": "Prescription and parameters supplied in the stem; arithmetic independently checked using exact decimal or rational calculations."
+    },
+    {
+      "id": "nclex-00074",
+      "topic": "Dosage calculation · Oral tablets",
+      "source": null,
+      "checkedOn": "2026-10-02",
+      "method": "Prescription and parameters supplied in the stem; arithmetic independently checked using exact decimal or rational calculations."
+    }
+  ]
+}
+

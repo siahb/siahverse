@@ -1,5 +1,5 @@
-const CACHE='nursedoku-9949685515';
-const ASSETS=["./","index.html","manifest.webmanifest","icon.svg","assets/app.fc1b89d265.js","assets/styles.2f5244526d.css","assets/puzzles.ad028b6d5f.js","assets/large-puzzles.b5dbb536ca.js","assets/account-config.cc916e79c2.js","assets/accounts.51697813a2.js","assets/appearance.422e48f2d5.js","assets/shared-account.a2d49a535c.js","assets/tutorial.febc11ad7b.js","assets/shift000.a34003cabf.js"];
+const CACHE='nursedoku-7fa01bcb54';
+const ASSETS=["./","index.html","manifest.webmanifest","icon.svg","assets/app.915d2c347d.js","assets/styles.5a5e6372c6.css","assets/puzzles.7928824603.js","assets/large-puzzles.f94920ef9e.js","assets/account-config.c74a142027.js","assets/accounts.ccbf11f82b.js","assets/appearance.596787ee5e.js","assets/shared-account.4a263cd0a4.js","assets/tutorial.eb4797bace.js","assets/shift000.98c6180a8e.js"];
 
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS))));
 // Activate on the next visit, keeping an in-progress board on a consistent version.
@@ -10,4 +10,5 @@ self.addEventListener('fetch',event=>{
  if(event.request.mode==='navigate')event.respondWith(fetch(event.request).catch(()=>caches.open(CACHE).then(cache=>cache.match('index.html'))));
  else event.respondWith(caches.open(CACHE).then(async cache=>(await cache.match(event.request))||fetch(event.request)));
 });
+
 

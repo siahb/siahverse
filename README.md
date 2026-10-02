@@ -12,6 +12,7 @@ Josiah Borja's personal portal for nursing study tools, productivity, cloud serv
 | [Pharmacology Exam 1](https://siahverse.cc/pharm1/) | Practice and exam modes, MC/SATA/DDC questions, hints, review, and saved sessions |
 | [Med-Surg Exam 1](https://siahverse.cc/medsurg1/) | App shell; question bank awaiting course materials |
 | [NurseDoku](https://siahverse.cc/nursedoku/) | Colorful nursing logic puzzles with a question after each completed shift |
+| [DeskHop](/deskhop/) | Browser launcher for your personal Windows desktop; gateway setup required |
 | [Tasks](https://todo.siahverse.cc) | Tasks, routines, priorities, and planning |
 | [NextSet](https://nextset.siahverse.cc) | PPL at Home workouts, set logging, rest timer, and plate calculator; also accessible through `/nextset` |
 | [SiahCloud](https://vault.siahverse.cc) | Personal cloud portal |
@@ -103,3 +104,13 @@ Made with Siahverse by Josiah Borja.
 All Siahverse pages use `sv_theme`, a one-year, Secure, SameSite=Lax cookie scoped to `siahverse.cc` and `/`. Every explicit toggle replaces that value; navigation never writes a preference. Old per-app local storage is ignored. Pages apply it before rendering and refresh on return, focus, visibility, and once per second while visible. Without a choice, the device theme is used. Outside the Siahverse domain, local previews use origin-local storage. Unrelated external services do not share this cookie.
 
 `toggle-theme.js`, `public/theme.js`, and `nursedoku/appearance.js` must contain the same controller; the copies support Tasks subdomain routing and NurseDoku offline assets. Run `node tests/theme-sync.cjs` after changes, then rebuild NurseDoku immutable assets.
+
+## DeskHop
+
+`deskhop/` contains the browser launcher from [siahb/deskhop](https://github.com/siahb/deskhop).
+The homepage links to `/deskhop/`. Configure `deskhop/config.js` with an HTTPS
+Guacamole gateway URL after securing and testing that gateway. Until configured,
+the page shows setup needed and keeps the connection button disabled. Hosting
+this page alone does not provide remote desktop access. Gateway configuration
+and the Windows setup guide live in the standalone DeskHop repository; keep
+credentials there in backend secrets, never in this site's browser files.

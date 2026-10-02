@@ -146,3 +146,16 @@ a.portal-card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,va
 a:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
 @media(max-width:720px){.game-feature{gap:22px;padding:22px;align-items:flex-start}.game-art{width:110px;flex-basis:110px}.game-art span{font-size:11px;border-radius:5px}}
 @media(max-width:440px){.game-feature{flex-direction:column}.game-art{width:112px;flex-basis:auto}.game-copy .eyebrow{font-size:10px}}
+
+/* Featured app navigation: manual slides keep reading and focus predictable. */
+.game-copy{flex:1;min-width:0}
+.featured-controls{display:flex;align-items:center;gap:14px;margin-top:20px}
+.featured-dots{display:flex;align-items:center;gap:2px}
+.featured-dot{display:grid;place-items:center;width:30px;height:36px;padding:0;border:0;background:transparent;cursor:pointer}
+.featured-dot::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--muted);opacity:.45}
+.featured-dot[aria-current="true"]::after{width:22px;border-radius:6px;background:var(--accent);opacity:1}
+.featured-arrow{width:38px;height:38px;border:1px solid var(--border);border-radius:50%;background:var(--panel-solid);color:var(--text);font-size:18px;cursor:pointer}
+.featured-arrow:hover{border-color:var(--accent)}
+.featured-arrow:focus-visible,.featured-dot:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.featured-status{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.game-copy .featured-description{min-height:3.3em}

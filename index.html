@@ -16,10 +16,11 @@
   <meta name="twitter:description" content="Nursing study tools and games, productivity, and cloud tools in one place.">
   <meta name="twitter:image" content="https://siahverse.cc/assets/preview.png">
   <title>Siahverse</title>
-  <link rel="stylesheet" href="/main.css?v=20261001-icons">
+  <link rel="stylesheet" href="/main.css?v=20261002-featured">
   <link rel="icon" href="/favicon.svg">
   <link rel="manifest" href="/manifest.json">
   <script src="/toggle-theme.js?v=20261001-icons"></script>
+  <script src="/featured-carousel.js?v=20261002" defer></script>
 </head>
 <body>
   <canvas id="stars" aria-hidden="true"></canvas>
@@ -48,13 +49,19 @@
       <p>Nursing practice, games, tasks, and workouts. Pick an app below.</p>
     </section>
 
-    <section class="game-feature" aria-labelledby="nursedoku-title">
+    <section class="game-feature" id="featured-apps" aria-roledescription="carousel" aria-label="Featured apps">
       <div class="game-art" aria-hidden="true"><span>×</span><span>RN</span><span>×</span><span>×</span><span>×</span><span>×</span><span>×</span><span>RN</span><span>RN</span><span>×</span><span>×</span><span>×</span><span>×</span><span>×</span><span>RN</span><span>×</span></div>
       <div class="game-copy">
         <div class="eyebrow">Featured · Nursing games</div>
-        <h2 id="nursedoku-title">NurseDoku</h2>
-        <p>Place one RN in each row, column, and care zone. Finish the puzzle, then answer a nursing question.</p>
+        <h2 id="featured-title">NurseDoku</h2>
+        <p class="featured-description">Place one RN in each row, column, and care zone. Finish the puzzle, then answer a nursing question.</p>
         <a class="game-play route-link" href="/nursedoku/">Play NurseDoku →</a>
+        <div class="featured-controls" aria-label="Featured app controls">
+          <button type="button" class="featured-arrow" data-featured="previous" aria-label="Previous featured app">←</button>
+          <div class="featured-dots" role="group" aria-label="Choose a featured app"></div>
+          <button type="button" class="featured-arrow" data-featured="next" aria-label="Next featured app">→</button>
+        </div>
+        <span class="featured-status" role="status" aria-live="polite"></span>
       </div>
     </section>
 

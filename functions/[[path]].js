@@ -1,3 +1,4 @@
+import {isClassExamPath,classExamAccess} from '../server/qbanco-class-access.mjs';
 import {deskhopAccess} from '../server/deskhop-access.js';
 import {accountApi} from '../server/account-api.js';
 import {accountTasks} from '../server/account-tasks.js';
@@ -816,6 +817,12 @@ export async function onRequest(context) {
   if (path==="/api/access-request") {
     if (request.method!=="POST") return new Response("Method Not Allowed",{status:405});
     return handleAccessRequest(context);
+  }
+
+  if(isClassExamPath(path)){
+    const nursingSession=await getSession(env.DB,request);
+    if(!nursingSession)return loginPage(path+url.search,'',200);
+    return classExamAccess(context,nursingSession);
   }
 
   const protectedPath =

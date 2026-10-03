@@ -24,7 +24,7 @@
 </head>
 <body>
   <canvas id="stars" aria-hidden="true"></canvas>
-  <div id="siahbot" title="Need help navigating the Siahverse?" aria-label="Siahbot">🤖</div>
+  <button type="button" id="siahbot" title="Mr. Robot" aria-label="Show another Mr. Robot saying">🤖</button>
 
   <main class="shell">
     <header class="topbar">
@@ -189,32 +189,75 @@ window.addEventListener("DOMContentLoaded", () => {
   let activeBotMessage = null;
   let botMessageTimer = null;
   if (siahbot) {
+    const messages = [
+      "Need a study break? Try NurseDoku.",
+      "Your to-do list lives in ToDo.",
+      "NextSet keeps track of sets so you don’t have to.",
+      "QBanco keeps your practice history on this device.",
+      "Three featured apps. A fresh lineup each week.",
+      "Looking for an update? Check Release history.",
+      "One account for your Siahverse apps. Exam access is separate.",
+      "Your theme choice follows you between apps.",
+      "NimbusVault is still under construction.",
+      "DeskHop is private. The logo isn’t.",
+      "NurseDoku rule one: one RN per row.",
+      "Diagonal neighbors count in NurseDoku, too.",
+      "You can mark an X without spending a strike.",
+      "Missed a question? QBanco has a review section.",
+      "Bookmarks are for the questions you want to revisit.",
+      "A short practice session still counts.",
+      "Save the set. Drink the water.",
+      "Rest between sets. I’ll wait.",
+      "The best list is the one you actually use.",
+      "Tiny update, fewer bugs. That’s the plan.",
+      "No need to open every app at once.",
+      "I have one job: stand in this corner and say things.",
+      "Corner office. Excellent view.",
+      "You clicked the robot. The robot noticed.",
+      "Still here. Still mostly decorative.",
+      "My workout routine is moving three pixels on hover.",
+      "I do not accept coffee. Siah does.",
+      "Please don’t water the robot.",
+      "I’m not judging your unfinished tasks.",
+      "Another click, another line.",
+      "The question mark was a broken image. We fixed it.",
+      "Dark mode or light mode? Your call.",
+      "All apps are below. No scavenger hunt required.",
+      "Your browser is not a backup. Keep important files elsewhere.",
+      "NCLEXapro is the Discord bot; QBanco is the practice page.",
+      "If an app says Coming soon, it means Coming soon.",
+      "Small tools. Useful jobs.",
+      "Taking a break is also an option.",
+      "I would high-five you, but the screen is in the way.",
+      "You’ve reached the unofficial robot help desk."
+];
+    const key='siahverse-robot-sayings-v1';
+    let remaining=[], last=-1;
+    try { const saved=JSON.parse(sessionStorage.getItem(key)||'null'); if(saved&&Array.isArray(saved.remaining)&&saved.remaining.every(i=>Number.isInteger(i)&&i>=0&&i<messages.length)&&new Set(saved.remaining).size===saved.remaining.length){remaining=saved.remaining;last=Number.isInteger(saved.last)?saved.last:-1;} } catch {}
+    function nextSaying(){
+      if(!remaining.length){
+        remaining=messages.map((_,i)=>i);
+        for(let i=remaining.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[remaining[i],remaining[j]]=[remaining[j],remaining[i]];}
+        if(remaining[remaining.length-1]===last)[remaining[0],remaining[remaining.length-1]]=[remaining[remaining.length-1],remaining[0]];
+      }
+      last=remaining.pop();
+      try{sessionStorage.setItem(key,JSON.stringify({remaining,last}));}catch{}
+      return messages[last];
+    }
     siahbot.addEventListener("click", () => {
-      const messages = [
-        "👋 Need a study break? Try NurseDoku.",
-        "🩺 Nursing has practice exams and games.",
-        "💡 Hint: Try the Konami Code 😉",
-        "✅ Your to-do list is under Productivity."
-      ];
-
       if (botMessageTimer) clearTimeout(botMessageTimer);
       if (activeBotMessage) activeBotMessage.remove();
-
       const box = document.createElement("div");
       box.className = "bot-message";
-      box.textContent = messages[Math.floor(Math.random() * messages.length)];
+      box.setAttribute('role','status');
+      box.textContent = nextSaying();
       document.body.appendChild(box);
       activeBotMessage = box;
-
-      requestAnimationFrame(() => box.classList.add("show"));
-
+      requestAnimationFrame(() => {if(box.isConnected)box.classList.add("show");});
       botMessageTimer = setTimeout(() => {
         box.classList.remove("show");
-        setTimeout(() => {
-          if (activeBotMessage === box) activeBotMessage = null;
-          box.remove();
-        }, 250);
-      }, 2600);
+        setTimeout(() => {if(activeBotMessage===box)activeBotMessage=null;box.remove();},250);
+      }, 5000);
     });
   }
 

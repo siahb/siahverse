@@ -7,3 +7,7 @@ Entries distinguish published changes, documented baselines, planned apps, and s
 ## 2026-10-02
 - Added release history for all apps and links to individual sections.
 - Published weekly app rotation, anonymous attribution, Ko-fi support link, and corrected public DeskHop logo.
+
+### Mr. Robot sayings
+- Added 40 sayings with shuffled, non-repeating cycles that continue within the browser session.
+- Keyboard-accessible control and a longer reading time.

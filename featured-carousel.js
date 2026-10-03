@@ -1,13 +1,20 @@
 (() => {
   const root = document.querySelector('#featured-apps');
   if (!root) return;
-  const slides = [
-    {name:'NurseDoku', icon:'/nursedoku/icon.svg', category:'Nursing games', description:'Place one RN in each row, column, and care zone. Finish the puzzle, then answer a nursing question.', action:'Play NurseDoku', href:'/nursedoku/'},
+  const apps = [
+    {name:'NurseDoku', icon:'/nursedoku/icon.svg', category:'Nursing games', description:'Place RNs, solve the puzzle, then answer a nursing question.', action:'Play NurseDoku', href:'/nursedoku/'},
     {name:'ToDo', icon:'/icons/todo.svg', category:'Productivity', description:'Tasks, due dates, priorities, and repeating routines.', action:'Open ToDo', href:'https://todo.siahverse.cc'},
     {name:'NextSet', icon:'/icons/nextset.svg', category:'Workouts', description:'Follow PPL workouts, log your sets, and track your progress.', action:'Open NextSet', href:'https://nextset.siahverse.cc'},
-    {name:'Nursing', icon:'/icons/nursing.svg', category:'Study', description:'Find your nursing practice exams, study tools, and games together in one place.', action:'Open Nursing', href:'/nursing/'},
-    {name:'DeskHop', icon:'/deskhop/favicon.svg', category:'Remote desktop', description:'Your desktop, one hop away. Start setting up browser access to your personal Windows computer.', action:'Open DeskHop', href:'/deskhop/'}
+    {name:'NimbusVault', icon:'/icons/vault.svg', category:'Cloud storage', description:'Personal cloud storage. This app is still planned.', href:null},
+    {name:'NCLEXapro', icon:'/icons/nclexapro.svg', category:'Discord study bot', description:'Daily nursing practice for Discord study groups. Bot setup is in progress.', action:'About NCLEXapro', href:'/nclexapro/'},
+    {name:'QBanco', icon:'/icons/qbanco.svg', category:'Question bank', description:'Practice original NCLEX-style questions, review mistakes, and save bookmarks.', action:'Open QBanco', href:'/qbanco/'},
+    {name:'DeskHop', icon:'/deskhop/favicon.svg', category:'Remote desktop', description:'Open your personal desktop from a browser. Gateway setup is required.', action:'Open DeskHop', href:'/deskhop/'},
+    {name:'Siahverse', icon:'/favicon.svg', category:'App hub', description:'Browse the apps and nursing resources in Siahverse.', action:'Explore apps', href:'#app-directory'}
   ];
+  // A shared Monday-to-Monday UTC schedule: three apps, stable throughout the week.
+  const week=Math.floor((Date.now()-Date.UTC(2026,9,5))/(7*24*60*60*1000));
+  const start=((week*3)%apps.length+apps.length)%apps.length;
+  const slides=Array.from({length:3},(_,i)=>apps[(start+i)%apps.length]);
   const title=root.querySelector('h2'), category=root.querySelector('.eyebrow'), description=root.querySelector('.featured-description'), link=root.querySelector('.game-play'), art=root.querySelector('.game-art'), dots=root.querySelector('.featured-dots'), status=root.querySelector('.featured-status');
   let current=0;
   const controls=slides.map((slide,index)=>{
@@ -21,9 +28,9 @@
     current=(index+slides.length)%slides.length;
     const slide=slides[current];
     title.textContent=slide.name;
-    category.textContent=`Featured · ${slide.category}`;
+    category.textContent=`This week · ${slide.category}`;
     description.textContent=slide.description;
-    link.textContent=`${slide.action} →`; link.href=slide.href;
+    link.hidden=!slide.href; if(slide.href){link.textContent=slide.action; link.href=slide.href;} root.querySelector('.featured-unavailable').hidden=!!slide.href;
     const image=document.createElement('img'); image.src=slide.icon; image.alt=''; image.width=170; image.height=170; art.replaceChildren(image); art.dataset.app=slide.name;
     controls.forEach((button,i)=>button.setAttribute('aria-current',i===current?'true':'false'));
     status.textContent=`Featured app ${current+1} of ${slides.length}: ${slide.name}`;

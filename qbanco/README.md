@@ -1,4 +1,4 @@
-# QBanco by NCLEXapro
+# QBanco
 
 Static mobile practice app at `/qbanco/`. Created by Siah. No build or new backend.
 

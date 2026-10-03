@@ -1,0 +1,367 @@
+[
+  {
+    "id": "siahverse",
+    "name": "Siahverse",
+    "repo": "siahverse",
+    "file": "CHANGELOG.md",
+    "entries": [
+      {
+        "date": "2025-06-09",
+        "text": "First website files added to GitHub.",
+        "url": "https://github.com/siahb/siahverse/commit/37499384a712a18af388d57c57f1ef92f11f0113"
+      },
+      {
+        "date": "2026-09-30",
+        "text": "Shared light and dark appearance across apps.",
+        "url": "https://github.com/siahb/siahverse/commit/4167f28b3cbc0dd6d43f11945cf120e5db8bc694"
+      },
+      {
+        "date": "2026-09-30",
+        "text": "Shared email accounts for NurseDoku, ToDo, and NextSet.",
+        "url": "https://github.com/siahb/siahverse/commit/50516d33a67a91b0e7f2e44aa91fcd6844097627"
+      },
+      {
+        "date": "2026-10-02",
+        "text": "Three weekly featured apps and a complete app directory.",
+        "url": "https://github.com/siahb/siahverse/commit/95d5dc620d82245bcbfedaafc0d7d19b8f6622ea"
+      },
+      {
+        "date": "2026-10-02",
+        "text": "Fixed the featured DeskHop logo.",
+        "url": "https://github.com/siahb/siahverse/commit/cb6f0a95b578472dade59c6a886797a5a21ada4f"
+      },
+      {
+        "date": "2026-10-02",
+        "text": "Added 40 Mr. Robot sayings with non-repeating rotation and keyboard support.",
+        "url": "https://github.com/siahb/siahverse/commit/e82fb25b0d1c90c9f653358eb971a3e5ec1c01ea"
+      }
+    ]
+  },
+  {
+    "id": "nursedoku",
+    "name": "NurseDoku",
+    "repo": "nursedoku",
+    "file": "nursedoku/CHANGELOG.md",
+    "entries": [
+      {
+        "date": "2026-09-29",
+        "text": "Initial game interface added.",
+        "url": "https://github.com/siahb/nursedoku/commit/c8984cee84d1613e267c84434f96a9568c0dd02d"
+      },
+      {
+        "date": "2026-09-29",
+        "text": "Puzzle logic added.",
+        "url": "https://github.com/siahb/nursedoku/commit/8c37bf17a5273847a438b629d77e6093506b0f7e"
+      },
+      {
+        "date": "2026-09-29",
+        "text": "Version 1.1.0: rebuilt boards, immediate taps, zone celebrations, and sharing.",
+        "url": "https://github.com/siahb/siahverse/commit/3c18596e020cf73f3fb24ab0a3c682a9aed77d79"
+      },
+      {
+        "date": "2026-09-30",
+        "text": "Added guided RN and X training.",
+        "url": "https://github.com/siahb/siahverse/commit/a1e0d9d7607b356bc206f1ab97214e40af175b3f"
+      },
+      {
+        "date": "2026-10-02",
+        "text": "Improved guided training on small phone screens.",
+        "url": "https://github.com/siahb/nursedoku/commit/e666bcd6c2b9893be24a4ffd4126838bce886ad8"
+      },
+      {
+        "date": "2026-10-02",
+        "text": "Added 20 reviewed NCLEX practice questions.",
+        "url": "https://github.com/siahb/nursedoku/commit/ef05e40192fc362a80249e49a04b59927e745b15"
+      }
+    ]
+  },
+  {
+    "id": "todo",
+    "name": "ToDo",
+    "repo": "todo",
+    "file": "public/CHANGELOG.md",
+    "note": "The original app repository and the current Siahverse implementation both contribute to this history.",
+    "entries": [
+      {
+        "date": "2025-07-21",
+        "text": "First ToDo page added to the Siahverse repository.",
+        "url": "https://github.com/siahb/siahverse/commit/f4392c78f6553e28b8c6ad63bba65b3138f4c43d"
+      },
+      {
+        "date": "2025-08-25",
+        "text": "Standalone ToDo interface added to its app repository.",
+        "url": "https://github.com/siahb/todo/commit/dc3cd8bd7ff8f998a401a31a01ff8a11fd1905d5"
+      },
+      {
+        "date": "2025-08-25",
+        "text": "Organized the standalone frontend files.",
+        "url": "https://github.com/siahb/todo/commit/2ee7c333b33c011166174ccc7ee9d1c06c31ee8e"
+      },
+      {
+        "date": "2026-09-30",
+        "text": "Fixed startup around daylight saving changes and protected existing tasks.",
+        "url": "https://github.com/siahb/siahverse/commit/3309635996b586db01d2ea35267ec18f084e035c"
+      },
+      {
+        "date": "2026-09-30",
+        "text": "Added shared Siahverse email accounts.",
+        "url": "https://github.com/siahb/siahverse/commit/50516d33a67a91b0e7f2e44aa91fcd6844097627"
+      },
+      {
+        "date": "2026-10-01",
+        "text": "Fixed recurrence, text rendering, reordering, and undo.",
+        "url": "https://github.com/siahb/siahverse/commit/03118c24e511831918bbc60752dee77d2b351392"
+      },
+      {
+        "date": "2026-10-01",
+        "text": "Replaced interface text symbols with SVG icons.",
+        "url": "https://github.com/siahb/siahverse/commit/121b0d2ad86f6f1ed2532c385cdc4e95d5a57e3f"
+      },
+      {
+        "date": "2026-10-01",
+        "text": "Standardized the ToDo name.",
+        "url": "https://github.com/siahb/siahverse/commit/0856e497393dbe10795d9ed2e9b1ff1783a2ca8d"
+      }
+    ]
+  },
+  {
+    "id": "nextset",
+    "name": "NextSet",
+    "repo": "nextset",
+    "file": null,
+    "entries": [
+      {
+        "date": "2026-09-30",
+        "text": "Initial workout app with home PPL, ongoing weeks, and workout tools.",
+        "url": "https://github.com/siahb/nextset/commit/a4788de919fa8e064f42df131223f8e9b61137b7"
+      },
+      {
+        "date": "2026-09-30",
+        "text": "Added beginner programs and commitment review.",
+        "url": "https://github.com/siahb/nextset/commit/92383f6ee3f6bcff87cc61e540bdb49166ac15f4"
+      },
+      {
+        "date": "2026-09-30",
+        "text": "Added a private program builder and Recommended Routine.",
+        "url": "https://github.com/siahb/nextset/commit/c698e74a4c0211c40296f1c536b0911908846ad6"
+      },
+      {
+        "date": "2026-10-01",
+        "text": "Moved the app source to Cloudflare Workers with a dedicated database.",
+        "url": "https://github.com/siahb/nextset/commit/85631ffeb3d07b063c18d3bdebfe78adef333eae"
+      },
+      {
+        "date": "2026-10-01",
+        "text": "Connected appearance to the shared Siahverse theme.",
+        "url": "https://github.com/siahb/nextset/commit/ce862ad2831d6636553f7f70e39d54bcabb94222"
+      },
+      {
+        "date": "2026-10-01",
+        "text": "Added a full-body bodyweight and pull-up bar program.",
+        "url": "https://github.com/siahb/nextset/commit/c8de95ca282f309d3a31b1ba5a3200665972fc04"
+      },
+      {
+        "date": "2026-10-01",
+        "text": "Fixed overlapping mobile program links.",
+        "url": "https://github.com/siahb/nextset/commit/fc72a9be0af554fa14039d80cea4e46fe5be8818"
+      }
+    ]
+  },
+  {
+    "id": "nimbusvault",
+    "name": "NimbusVault",
+    "repo": "vault",
+    "file": null,
+    "note": "Planning documentation only; these commits do not represent a working cloud-storage release.",
+    "entries": [
+      {
+        "date": "2026-10-01",
+        "text": "Added planned scope and repository status.",
+        "url": "https://github.com/siahb/vault/commit/6cf3c35870b2564855097ff0d57c781d3143fd37"
+      }
+    ]
+  },
+  {
+    "id": "nclexapro",
+    "name": "NCLEXapro",
+    "repo": "nclexapro",
+    "file": "nclexapro/CHANGELOG.md",
+    "entries": [
+      {
+        "date": "2026-10-01",
+        "text": "Added the daily Discord bot, configuration, and documentation.",
+        "url": "https://github.com/siahb/nclexapro/commit/f3580d022e0b7fbc103abd739d410df11efb6d49"
+      },
+      {
+        "date": "2026-10-01",
+        "text": "Added website overview, terms, and privacy pages.",
+        "url": "https://github.com/siahb/siahverse/commit/805e46d667b95476799ad25e569fbad4a2affde2"
+      },
+      {
+        "date": "2026-10-02",
+        "text": "Added opt-in reaction subscriptions and daily role alerts.",
+        "url": "https://github.com/siahb/nclexapro/commit/202de7a905f23eb0693ceff71cdcba5e62de83c6"
+      },
+      {
+        "date": "2026-10-02",
+        "text": "Added daily dated question threads with an opt-in role notification.",
+        "url": "https://github.com/siahb/nclexapro/commit/e76684a3a65fa7cdc7cf268332ccbc3385c1e4df"
+      },
+      {
+        "date": "2026-10-02",
+        "text": "Added a weekly topic poll without alert pings.",
+        "url": "https://github.com/siahb/nclexapro/commit/f5ad0c9831aa673b87aa31d11622fc6419d1c466"
+      },
+      {
+        "date": "2026-10-02",
+        "text": "Added inline answer controls and private feedback.",
+        "url": "https://github.com/siahb/nclexapro/commit/5aa48752b1e8b073b1a3c973b91cac4046492199"
+      },
+      {
+        "date": "2026-10-03",
+        "text": "Added private quiz scores and persistent first-answer locking.",
+        "url": "https://github.com/siahb/nclexapro/commit/8e48462c60303446bdf2de996eeedd5055528a72"
+      }
+    ]
+  },
+  {
+    "id": "qbanco",
+    "name": "QBanco",
+    "repo": "siahverse",
+    "path": "qbanco",
+    "file": "qbanco/CHANGELOG.md",
+    "entries": [
+      {
+        "date": "2026-10-02",
+        "text": "Added daily sets, topic practice, missed-question review, and bookmarks.",
+        "url": "https://github.com/siahb/siahverse/commit/09e815cc211580e05a6babc0128cc429f6ec5fa9"
+      },
+      {
+        "date": "2026-10-02",
+        "text": "Removed personal attribution from public copy.",
+        "url": "https://github.com/siahb/siahverse/commit/8473006c380d433e58b508e4ee91aa796cfbf730"
+      },
+      {
+        "date": "2026-10-02",
+        "text": "Added a release-history link.",
+        "url": "https://github.com/siahb/siahverse/commit/623290ae4eb95d75d21a77becd0586f9b7214478"
+      }
+    ]
+  },
+  {
+    "id": "deskhop",
+    "name": "DeskHop",
+    "repo": "siahverse",
+    "path": "deskhop",
+    "file": "deskhop/CHANGELOG.md",
+    "entries": [
+      {
+        "date": "2026-10-01",
+        "text": "Added the remote desktop launcher.",
+        "url": "https://github.com/siahb/siahverse/commit/b74a2135e3721069367c5776c5cea15c95b2028d"
+      },
+      {
+        "date": "2026-10-01",
+        "text": "Improved light and dark appearance support.",
+        "url": "https://github.com/siahb/siahverse/commit/be1f74bb7031e77698d7716de27b7082da143eee"
+      },
+      {
+        "date": "2026-10-01",
+        "text": "Required verified owner access for pages and gateway launch.",
+        "url": "https://github.com/siahb/siahverse/commit/b197ae8776df12b62064af1a4724a112a090499d"
+      },
+      {
+        "date": "2026-10-02",
+        "text": "Moved the featured logo to a public asset path.",
+        "url": "https://github.com/siahb/siahverse/commit/cb6f0a95b578472dade59c6a886797a5a21ada4f"
+      }
+    ]
+  },
+  {
+    "id": "pharm1",
+    "name": "Pharmacology",
+    "repo": "siahverse",
+    "path": "pharm1",
+    "file": null,
+    "entries": [
+      {
+        "date": "2026-09-27",
+        "text": "Version 7.5: first app files tracked in this repository.",
+        "url": "https://github.com/siahb/siahverse/commit/160829485ee5ff0f6f831168282a67b48a614d48"
+      },
+      {
+        "date": "2026-09-27",
+        "text": "Version 8.0: expanded to 100 questions and added light and dark appearance.",
+        "url": "https://github.com/siahb/siahverse/commit/d94603b20daaa5f36fc73493b3503844d6a059f5"
+      },
+      {
+        "date": "2026-09-28",
+        "text": "Updated home and back navigation.",
+        "url": "https://github.com/siahb/siahverse/commit/4db3a7b485a861c895f12c4f6e539cf9449e00a3"
+      },
+      {
+        "date": "2026-09-29",
+        "text": "Fixed the exam clock dropdown.",
+        "url": "https://github.com/siahb/siahverse/commit/e8a57742e54ab560a5201618086bca15635aaebc"
+      },
+      {
+        "date": "2026-09-29",
+        "text": "Made elapsed-time tracking automatic in exam mode.",
+        "url": "https://github.com/siahb/siahverse/commit/57b7c2bba16f7c3df557ee6eec3702c7c5dd57ff"
+      }
+    ]
+  },
+  {
+    "id": "medsurg1",
+    "name": "Med-Surg",
+    "repo": "siahverse",
+    "path": "medsurg1",
+    "file": "medsurg1/CHANGELOG.md",
+    "note": "The tracked app is a work-in-progress shell.",
+    "entries": [
+      {
+        "date": "2026-09-28",
+        "text": "Added the work-in-progress study page.",
+        "url": "https://github.com/siahb/siahverse/commit/a655373813ab7f2b691a63c28e96823c364d3178"
+      },
+      {
+        "date": "2026-09-28",
+        "text": "Connected the brand link to the Siahverse homepage.",
+        "url": "https://github.com/siahb/siahverse/commit/f9fe19ce05ac9996deb9b26c6e579c767eab5c37"
+      },
+      {
+        "date": "2026-09-30",
+        "text": "Added the shared appearance preference.",
+        "url": "https://github.com/siahb/siahverse/commit/4167f28b3cbc0dd6d43f11945cf120e5db8bc694"
+      }
+    ]
+  },
+  {
+    "id": "wordle",
+    "name": "Wordle",
+    "repo": "wordle-game",
+    "file": "wordle/CHANGELOG.md",
+    "entries": [
+      {
+        "date": "2025-07-29",
+        "text": "Added the game page.",
+        "url": "https://github.com/siahb/wordle-game/commit/0f7011ac86fa21eff29a010a454af91ddf2e0bad"
+      },
+      {
+        "date": "2025-07-29",
+        "text": "Added the word list.",
+        "url": "https://github.com/siahb/wordle-game/commit/a214795ba6d518a4d02d8782ad2d72b2b51920ff"
+      },
+      {
+        "date": "2026-09-30",
+        "text": "Connected the Siahverse copy to shared light and dark appearance.",
+        "url": "https://github.com/siahb/siahverse/commit/4167f28b3cbc0dd6d43f11945cf120e5db8bc694"
+      },
+      {
+        "date": "2026-10-02",
+        "text": "Added a release-history link.",
+        "url": "https://github.com/siahb/siahverse/commit/623290ae4eb95d75d21a77becd0586f9b7214478"
+      }
+    ]
+  }
+]

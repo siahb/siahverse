@@ -434,7 +434,7 @@ async function handleAccessRequest(context) {
 .card{width:min(430px,100%);padding:28px;border:1px solid var(--b);border-radius:22px;background:linear-gradient(180deg,var(--p2),var(--p));box-shadow:0 24px 80px rgba(0,0,0,.45)}
 .logo{width:54px;height:54px;display:grid;place-items:center;border-radius:17px;background:linear-gradient(135deg,var(--a),var(--a2));font-size:24px;font-weight:950}.home-logo{display:inline-block;text-decoration:none;color:inherit;margin-bottom:18px}h1{margin:0 0 10px}.sub{color:var(--m);line-height:1.55}.btn{display:block;text-align:center;text-decoration:none;margin-top:22px;padding:13px;border-radius:12px;background:linear-gradient(135deg,var(--a),var(--a2));color:#fff;font-weight:850}
 </style></head><body><main class="card"><a class="home-logo" href="/" aria-label="Siahverse home"><div class="logo">S</div></a><h1>Request sent</h1>
-<p class="sub">Your access request was submitted. Check with Josiah for approval and your password.</p>
+<p class="sub">Your access request was submitted. Check with Siah for approval and your password.</p>
 <a class="btn" href="/nursing/">Back to sign in</a></main></body></html>`);
 }
 
@@ -478,7 +478,7 @@ button{font:inherit;font-weight:850;cursor:pointer}.show{min-width:66px;border:1
 <input id="request-name" name="name" type="text" autocomplete="name" maxlength="100" required>
 <button type="submit">Submit request</button>
 </form></details></main>
-<dialog class="forgot" id="forgot" aria-labelledby="forgot-title"><h2 id="forgot-title">Forgot your password?</h2><p>${safe.startsWith("/admin")?"The access-request form cannot recover your admin account. Use your saved admin password or arrange a manual recovery.":"You can request a new password. Josiah will verify your identity and send it to you."}</p><div class="actions">${safe.startsWith("/admin")?"":'<button type="button" class="primary" id="request-reset">Request a new password</button>'}<button type="button" id="close-forgot">Try again</button></div></dialog>
+<dialog class="forgot" id="forgot" aria-labelledby="forgot-title"><h2 id="forgot-title">Forgot your password?</h2><p>${safe.startsWith("/admin")?"The access-request form cannot recover your admin account. Use your saved admin password or arrange a manual recovery.":"You can request a new password. Siah will verify your identity and send it to you."}</p><div class="actions">${safe.startsWith("/admin")?"":'<button type="button" class="primary" id="request-reset">Request a new password</button>'}<button type="button" id="close-forgot">Try again</button></div></dialog>
 <script>const p=document.getElementById("password"),s=document.getElementById("show"),modal=document.getElementById("forgot");s.addEventListener("click",()=>{const v=p.type==="text";p.type=v?"password":"text";s.textContent=v?"Show":"Hide";p.focus()});document.getElementById("close-forgot").addEventListener("click",()=>modal.close());const reset=document.getElementById("request-reset");if(reset)reset.addEventListener("click",()=>{modal.close();const details=document.getElementById("request");details.open=true;document.getElementById("request-name").focus()});try{const key="sv_nursing_failed_logins";let count=Number(sessionStorage.getItem(key))||0;if(${status===401}){count=Math.min(count+1,3);sessionStorage.setItem(key,String(count));if(count>=3)modal.showModal()}else if(${status===200})sessionStorage.removeItem(key)}catch{}</script>
 </body></html>`,status);
 }

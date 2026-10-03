@@ -8,8 +8,7 @@
     {name:'NimbusVault', icon:'/icons/vault.svg', category:'Cloud storage', description:'Personal cloud storage. This app is still planned.', href:null},
     {name:'NCLEXapro', icon:'/icons/nclexapro.svg', category:'Discord study bot', description:'Daily nursing practice for Discord study groups. Bot setup is in progress.', action:'About NCLEXapro', href:'/nclexapro/'},
     {name:'QBanco', icon:'/icons/qbanco.svg', category:'Question bank', description:'Practice original NCLEX-style questions, review mistakes, and save bookmarks.', action:'Open QBanco', href:'/qbanco/'},
-    {name:'DeskHop', icon:'/deskhop/favicon.svg', category:'Remote desktop', description:'Open your personal desktop from a browser. Gateway setup is required.', action:'Open DeskHop', href:'/deskhop/'},
-    {name:'Siahverse', icon:'/favicon.svg', category:'App hub', description:'Browse the apps and nursing resources in Siahverse.', action:'Explore apps', href:'#app-directory'}
+    {name:'DeskHop', icon:'/deskhop/favicon.svg', category:'Remote desktop', description:'Open your personal desktop from a browser. Gateway setup is required.', action:'Open DeskHop', href:'/deskhop/'}
   ];
   // A shared Monday-to-Monday UTC schedule: three apps, stable throughout the week.
   const week=Math.floor((Date.now()-Date.UTC(2026,9,5))/(7*24*60*60*1000));

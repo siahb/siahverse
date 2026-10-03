@@ -1,6 +1,6 @@
 # Siahverse
 
-Josiah Borja's personal portal for nursing study tools, productivity, cloud services, and homelab access.
+Siah's personal portal for nursing study tools, productivity, cloud services, and homelab access.
 
 **Website:** [siahverse.cc](https://siahverse.cc)
 
@@ -97,7 +97,7 @@ Keep service credentials in backend environment secrets. NurseDoku's public Supa
 
 Check the relevant app's README before editing its assets, storage format, or deployment configuration.
 
-Made with Siahverse by Josiah Borja.
+Made with Siahverse by Siah.
 
 ## Shared appearance
 

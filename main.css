@@ -162,3 +162,5 @@ a:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
 
 /* Each featured app uses its own SVG artwork, never a shared puzzle board. */
 .game-art{display:block;transform:none}.game-art img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:contain;border-radius:24px}
+
+.footer .support-link{display:inline-flex;align-items:center;gap:8px;color:var(--text);text-decoration:none;margin:12px 0 0;padding:8px 12px;border:1px solid var(--border);border-radius:10px;min-height:44px}.footer>span{display:block}.footer .support-link:hover{border-color:var(--accent)}

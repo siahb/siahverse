@@ -1,0 +1,258 @@
+{
+  "date": "2026-10-03",
+  "before": 74,
+  "added": 24,
+  "total": 98,
+  "review": "Source and arithmetic verification by the authoring assistant; not an independent clinician review or official NCLEX content.",
+  "duplicateReview": "All existing 74 stems and learning objectives were compared with this batch. New items target distinct decisions or concepts; calculation items use four objectives absent from the previous bank rather than changing numbers in existing dosage items.",
+  "questions": [
+    {
+      "id": "nclex-00075",
+      "topic": "Respiratory care · COPD nutrition",
+      "source": "https://www.nhlbi.nih.gov/health/copd/living-with",
+      "checkedOn": "2026-10-03",
+      "objective": "COPD fatigue during meals and nutritional planning",
+      "method": "Opened authoritative source and checked the keyed answer and rationale; authored original scenario and distractors.",
+      "support": "NHLBI living-with section recommends smaller meals more often and resting before eating when COPD symptoms interfere with adequate intake.",
+      "retrievalRef": "turn58view0"
+    },
+    {
+      "id": "nclex-00076",
+      "topic": "Respiratory care · Home oxygen safety",
+      "source": "https://www.nhlbi.nih.gov/health/copd/treatment",
+      "checkedOn": "2026-10-03",
+      "objective": "Home oxygen smoking fire risk",
+      "method": "Opened authoritative source and checked the keyed answer and rationale; authored original scenario and distractors.",
+      "support": "NHLBI treatment section identifies oxygen fire risk and says not to smoke or use flammable materials during oxygen use.",
+      "retrievalRef": "turn58view1"
+    },
+    {
+      "id": "nclex-00077",
+      "topic": "Musculoskeletal care · Osteoporosis and falls",
+      "source": "https://www.niams.nih.gov/health-topics/osteoporosis/diagnosis-treatment-and-steps-to-take",
+      "checkedOn": "2026-10-03",
+      "objective": "Osteoporosis home hazard mitigation",
+      "method": "Opened authoritative source and checked the keyed answer and rationale; authored original scenario and distractors.",
+      "support": "NIAMS living-with section recommends better lighting and securing rugs to prevent falls and fractures.",
+      "retrievalRef": "turn59view8"
+    },
+    {
+      "id": "nclex-00078",
+      "topic": "Musculoskeletal care · Rheumatoid arthritis activity",
+      "source": "https://www.niams.nih.gov/health-topics/rheumatoid-arthritis/diagnosis-treatment-and-steps-to-take",
+      "checkedOn": "2026-10-03",
+      "objective": "RA flare rest/activity balance",
+      "method": "Opened authoritative source and checked the keyed answer and rationale; authored original scenario and distractors.",
+      "support": "NIAMS recommends balancing exercise/rest, more rest during active RA, and short breaks rather than prolonged bed rest.",
+      "retrievalRef": "turn59view9"
+    },
+    {
+      "id": "nclex-00079",
+      "topic": "Musculoskeletal care · Gout nutrition",
+      "source": "https://www.niams.nih.gov/health-topics/gout/diagnosis-treatment-and-steps-to-take",
+      "checkedOn": "2026-10-03",
+      "objective": "Gout purine and alcohol dietary risk",
+      "method": "Opened authoritative source and checked the keyed answer and rationale; authored original scenario and distractors.",
+      "support": "NIAMS recommends reducing alcohol and organ meats as dietary changes for gout.",
+      "retrievalRef": "turn63view3"
+    },
+    {
+      "id": "nclex-00080",
+      "topic": "Autoimmune care · Lupus sun protection",
+      "source": "https://www.niams.nih.gov/health-topics/lupus/diagnosis-treatment-and-steps-to-take",
+      "checkedOn": "2026-10-03",
+      "objective": "Lupus photosensitivity and sun protection",
+      "method": "Opened authoritative source and checked the keyed answer and rationale; authored original scenario and distractors.",
+      "support": "NIAMS identifies sun exposure as a potential flare trigger and recommends sunscreen and protective clothing.",
+      "retrievalRef": "turn59view11"
+    },
+    {
+      "id": "nclex-00081",
+      "topic": "Endocrine care · Recognize hyperthyroidism",
+      "source": "https://www.niddk.nih.gov/health-information/endocrine-diseases/hyperthyroidism",
+      "checkedOn": "2026-10-03",
+      "objective": "Hyperthyroid symptom pattern",
+      "method": "Opened authoritative source and checked the keyed answer and rationale; authored original scenario and distractors.",
+      "support": "NIDDK lists weight loss despite appetite, fast heartbeat, and heat intolerance as hyperthyroid symptoms.",
+      "retrievalRef": "turn60view1"
+    },
+    {
+      "id": "nclex-00082",
+      "topic": "Medication safety · Antithyroid adverse effects",
+      "source": "https://www.niddk.nih.gov/health-information/endocrine-diseases/hyperthyroidism",
+      "checkedOn": "2026-10-03",
+      "objective": "Methimazole infection warning and prompt evaluation",
+      "method": "Opened authoritative source and checked the keyed answer and rationale; authored original scenario and distractors.",
+      "support": "NIDDK identifies lower white cell counts as an antithyroid adverse effect and fever/sore throat as reasons to call immediately.",
+      "retrievalRef": "turn59view12"
+    },
+    {
+      "id": "nclex-00083",
+      "topic": "Endocrine care · Adrenal insufficiency during illness",
+      "source": "https://www.niddk.nih.gov/health-information/endocrine-diseases/adrenal-insufficiency-addisons-disease/treatment",
+      "checkedOn": "2026-10-03",
+      "objective": "Adrenal replacement cannot be retained during illness",
+      "method": "Opened authoritative source and checked the keyed answer and rationale; authored original scenario and distractors.",
+      "support": "NIDDK advises immediate attention when vomiting prevents retention of replacement corticosteroids because adrenal crisis can follow.",
+      "retrievalRef": "turn62view0"
+    },
+    {
+      "id": "nclex-00084",
+      "topic": "Endocrine pharmacology · Mineralocorticoid replacement",
+      "source": "https://www.niddk.nih.gov/health-information/endocrine-diseases/adrenal-insufficiency-addisons-disease/treatment",
+      "checkedOn": "2026-10-03",
+      "objective": "Fludrocortisone mineralocorticoid replacement role",
+      "method": "Opened authoritative source and checked the keyed answer and rationale; authored original scenario and distractors.",
+      "support": "NIDDK explains fludrocortisone replacement for inadequate aldosterone to support sodium/fluid balance.",
+      "retrievalRef": "turn61view0"
+    },
+    {
+      "id": "nclex-00085",
+      "topic": "Diabetes care · Sick-day monitoring",
+      "source": "https://www.cdc.gov/diabetes/living-with/managing-sick-days.html",
+      "checkedOn": "2026-10-03",
+      "objective": "Diabetes illness hormones and glucose monitoring",
+      "method": "Opened authoritative source and checked the keyed answer and rationale; authored original scenario and distractors.",
+      "support": "CDC explains illness hormones can raise glucose and insulin needs can change; sick-day monitoring is reinforced.",
+      "retrievalRef": "turn61view5"
+    },
+    {
+      "id": "nclex-00086",
+      "topic": "Maternal health · Gestational diabetes records",
+      "source": "https://www.niddk.nih.gov/health-information/diabetes/overview/what-is-diabetes/gestational/management-treatment",
+      "checkedOn": "2026-10-03",
+      "objective": "Gestational diabetes complete glucose records",
+      "method": "Opened authoritative source and checked the keyed answer and rationale; authored original scenario and distractors.",
+      "support": "NIDDK recommends recording every glucose result and bringing the tracker to the care team.",
+      "retrievalRef": "turn62view1"
+    },
+    {
+      "id": "nclex-00087",
+      "topic": "Maternal emergency care · Ectopic pregnancy warning signs",
+      "source": "https://medlineplus.gov/ectopicpregnancy.html",
+      "checkedOn": "2026-10-03",
+      "objective": "Possible ectopic rupture warning signs",
+      "method": "Opened authoritative source and checked the keyed answer and rationale; authored original scenario and distractors.",
+      "support": "MedlinePlus identifies abdominal/shoulder pain, bleeding, and faintness as urgent ectopic warning signs and rupture as a bleeding emergency.",
+      "retrievalRef": "turn63view0"
+    },
+    {
+      "id": "nclex-00088",
+      "topic": "Newborn care · Vitamin K teaching",
+      "source": "https://www.cdc.gov/vitamin-k-deficiency/about/index.html",
+      "checkedOn": "2026-10-03",
+      "objective": "Newborn vitamin K bleeding prevention",
+      "method": "Opened authoritative source and checked the keyed answer and rationale; authored original scenario and distractors.",
+      "support": "CDC explains low newborn vitamin K stores and intramuscular prophylaxis against deficiency bleeding.",
+      "retrievalRef": "turn63view1"
+    },
+    {
+      "id": "nclex-00089",
+      "topic": "Pediatrics · Infant pertussis presentation",
+      "source": "https://www.cdc.gov/pertussis/signs-symptoms/index.html",
+      "checkedOn": "2026-10-03",
+      "objective": "Infant pertussis apnea without prominent cough",
+      "method": "Opened authoritative source and checked the keyed answer and rationale; authored original scenario and distractors.",
+      "support": "CDC says infants can have apnea/cyanosis with little or no cough and need immediate care for breathing difficulty.",
+      "retrievalRef": "turn60view6"
+    },
+    {
+      "id": "nclex-00090",
+      "topic": "Pediatrics · ADHD treatment support",
+      "source": "https://www.fda.gov/consumers/consumer-updates/treating-and-dealing-adhd",
+      "checkedOn": "2026-10-03",
+      "objective": "ADHD multimodal and school support",
+      "method": "Opened authoritative source and checked the keyed answer and rationale; authored original scenario and distractors.",
+      "support": "FDA describes behavioral therapy in addition to medication and involvement of school and community supports.",
+      "retrievalRef": "turn62view2"
+    },
+    {
+      "id": "nclex-00091",
+      "topic": "Mental health · Anorexia and medical instability",
+      "source": "https://www.nimh.nih.gov/health/publications/eating-disorders",
+      "checkedOn": "2026-10-03",
+      "objective": "Anorexia cardiovascular medical complications",
+      "method": "Opened authoritative source and checked the keyed answer and rationale; authored original scenario and distractors.",
+      "support": "NIMH lists slowed pulse, low BP, and heart damage among anorexia complications.",
+      "retrievalRef": "turn60view7"
+    },
+    {
+      "id": "nclex-00092",
+      "topic": "Mental health · Obsessions and compulsions",
+      "source": "https://www.nimh.nih.gov/health/publications/obsessive-compulsive-disorder-when-unwanted-thoughts-or-repetitive-behaviors-take-over",
+      "checkedOn": "2026-10-03",
+      "objective": "OCD obsession versus compulsion",
+      "method": "Opened authoritative source and checked the keyed answer and rationale; authored original scenario and distractors.",
+      "support": "NIMH distinguishes intrusive obsessions from repetitive compulsions, including checking.",
+      "retrievalRef": "turn62view6"
+    },
+    {
+      "id": "nclex-00093",
+      "topic": "Medication safety · Serotonin syndrome",
+      "source": "https://www.fda.gov/media/96472/download",
+      "checkedOn": "2026-10-03",
+      "objective": "Serotonergic opioid interaction syndrome",
+      "method": "Opened authoritative source and checked the keyed answer and rationale; authored original scenario and distractors.",
+      "support": "FDA communication identifies tramadol risk with serotonergic drugs and agitation/fever/sweating/muscle activity as urgent warning signs.",
+      "retrievalRef": "turn63view2"
+    },
+    {
+      "id": "nclex-00094",
+      "topic": "Oncology care · Oral mucositis nutrition",
+      "source": "https://www.cancer.gov/about-cancer/treatment/side-effects/mouth-throat",
+      "checkedOn": "2026-10-03",
+      "objective": "Mucositis suitable food texture",
+      "method": "Opened authoritative source and checked the keyed answer and rationale; authored original scenario and distractors.",
+      "support": "NCI recommends soft wet foods and avoiding crunchy/spicy foods and alcohol when mouth sores interfere with intake.",
+      "retrievalRef": "turn60view9"
+    },
+    {
+      "id": "nclex-00095",
+      "topic": "Nursing calculation · Urine output by weight",
+      "source": null,
+      "checkedOn": "2026-10-03",
+      "objective": "Urine volume normalized to weight and elapsed hours",
+      "method": "Supplied scenario parameters; separately checked with Python Fraction and JavaScript arithmetic.",
+      "calculation": {
+        "expression": "108 / (18 * 4)",
+        "expected": "1.5 mL/kg/hr"
+      }
+    },
+    {
+      "id": "nclex-00096",
+      "topic": "Nursing calculation · Recorded fluid balance",
+      "source": null,
+      "checkedOn": "2026-10-03",
+      "objective": "Recorded intake minus output including medication and drain",
+      "method": "Supplied scenario parameters; separately checked with Python Fraction and JavaScript arithmetic.",
+      "calculation": {
+        "expression": "(600 + 800 + 100) - (950 + 150)",
+        "expected": "+400 mL"
+      }
+    },
+    {
+      "id": "nclex-00097",
+      "topic": "Pediatrics · Calculation using a supplied maintenance formula",
+      "source": null,
+      "checkedOn": "2026-10-03",
+      "objective": "Tiered pediatric daily volume from a supplied formula",
+      "method": "Supplied scenario parameters; separately checked with Python Fraction and JavaScript arithmetic.",
+      "calculation": {
+        "expression": "10 * 100 + 10 * 50 + (26 - 20) * 20",
+        "expected": "1,620 mL/day"
+      }
+    },
+    {
+      "id": "nclex-00098",
+      "topic": "Nursing calculation · Infusion completion time",
+      "source": null,
+      "checkedOn": "2026-10-03",
+      "objective": "Convert infusion duration to a clock completion time",
+      "method": "Supplied scenario parameters; separately checked with Python Fraction and JavaScript arithmetic.",
+      "calculation": {
+        "expression": "(300 / 80) * 60 = 225 minutes; 14:10 + 225 minutes",
+        "expected": "17:55"
+      }
+    }
+  ]
+}

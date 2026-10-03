@@ -29,7 +29,7 @@ Start from the main menu; loading the app leaves the timer paused. The changelog
 - [x] X pop, RN bounce and sparkle, care-zone feedback, win confetti; reduced-motion support
 - [x] Saved progress and themes; timer pauses when the page is hidden
 
-Progress and statistics are saved on this browser/device. Difficulty uses an automated deduction heuristic; human calibration remains future work. The NCLEX question bank currently contains 74 original questions. Generation uses bounded attempts and a verified starter fallback if a unique board cannot be produced.
+Progress and statistics are saved on this browser/device. Difficulty uses an automated deduction heuristic; human calibration remains future work. The NCLEX question bank currently contains 98 original questions. Generation uses bounded attempts and a verified starter fallback if a unique board cannot be produced.
 
 ## Run locally
 
@@ -51,7 +51,7 @@ Current rules: three incorrect RN placements end a shift. Invalid placements are
 
 Hints now explain direct deductions or confined-zone elimination from placed RNs, independently of player X marks. If those techniques cannot explain a move, the hint explicitly says it is a solution reveal. The daily archive includes a month calendar with completed-day markers and blocks future dates and dates before launch.
 
-The required post-shift question bank contains 74 original NCLEX single-answer items covering prioritization, adult health, pediatrics, medication safety, mental health, oncology, infection prevention, and dosage calculations. Clinical items link to authoritative government health sources; calculations explain the order supplied in the question. They are independently authored practice items. Append-only NCLEX bank expansions preserve saved answers and history.
+The required post-shift question bank contains 98 original NCLEX single-answer items covering prioritization, adult health, pediatrics, medication safety, mental health, oncology, infection prevention, and dosage calculations. Clinical items link to authoritative government health sources; calculations explain the order supplied in the question. They are independently authored practice items. Append-only NCLEX bank expansions preserve saved answers and history.
 
 ### Question expansion — October 1, 2026
 
@@ -102,3 +102,11 @@ Tutorial interaction: an animated pointing hand demonstrates one tap for X and t
 How to play keeps Back/Next outside the scrolling lesson. Compact phone spacing and board sizing leave navigation visible; short screens and larger text can scroll the lesson separately.
 
 Shift 000 uses a compact board and a separately scrolling lesson, keeping Continue to training visible on short phone screens.
+
+## Question expansion — October 3, 2026
+
+Added 24 original questions (20 clinical, four calculation), bringing the bank to 98. New objectives cover COPD nutrition and oxygen safety, osteoporosis fall prevention, rheumatoid arthritis, gout, lupus, hyperthyroidism, antithyroid adverse effects, adrenal replacement, sick-day diabetes monitoring, gestational diabetes records, ectopic pregnancy warning signs, newborn vitamin K, infant pertussis, ADHD support, anorexia complications, OCD, serotonin syndrome, oral mucositis, and four distinct nursing calculations. Existing question IDs, order, answer choices, correct indices, and `QUIZ_VERSION` remain unchanged.
+
+Clinical answers and rationales were checked against accessible NIH, CDC, and FDA sources on October 3, 2026; the [batch review](content/question-reviews/2026-10-03.json) records each learning objective and supporting source fact. This is author source verification, not independent clinician review or official exam content. Urine output by weight, recorded fluid balance, tiered pediatric daily volume using a supplied formula, and infusion completion time were separately verified using Python rational arithmetic and JavaScript.
+
+Question validation locks all 74 previously published items and audits every dated batch. State and account checks retain unseen-first selection, retirement of correctly answered questions, missed-question review, confirmation, and saved/cloud history. The immutable asset build and offline checks are required before publishing source, index.html, sw.js, and assets together.

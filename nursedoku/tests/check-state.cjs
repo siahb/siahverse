@@ -153,6 +153,15 @@ const priorSave=context.window.NurseDokuProgress.snapshot();
 context.window.NurseDokuProgress.apply(priorSave,'existing-owner');
 assert.equal(run('bonusIndex'),3);assert.equal(run('bonusChoice'),run('BONUS[3].correct'));assert.equal(run('bonusSubmitted'),true);
 assert.equal(run("stats.questionHistory['nclex-00001']"),'correct');assert.equal(run('chooseQuestion()'),12);
+// Regression for the entire bank published before the October 3 expansion.
+run("stats.questionHistory=Object.fromEntries(BONUS.slice(0,74).map(q=>[q.id,'correct']));stats.questionHistory[BONUS[45].id]='missed';bonusIndex=73;bonusChoice=BONUS[73].correct;bonusSubmitted=true");
+const october2Save=context.window.NurseDokuProgress.snapshot();
+context.window.NurseDokuProgress.apply(october2Save,'october2-owner');
+assert.equal(run('bonusIndex'),73);assert.equal(run('bonusChoice'),run('BONUS[73].correct'));assert(run('bonusSubmitted'));
+assert.equal(run("stats.questionHistory['nclex-00074']"),'correct');
+assert.equal(run("stats.questionHistory['nclex-00046']"),'missed');
+assert.equal(run('chooseQuestion()'),74,'New October 3 question must precede a previously missed item');
+console.log('PASS: all 74 prior question histories and last submitted answer survive expansion; new item 75 precedes missed review.');
 console.log('PASS: bank append preserves completed answers and cloud history; new items precede previously missed items.');
 console.log('PASS: unseen-first selection, missed-only review, mastery retirement, caught-up state, stable IDs, guest/account/cloud history isolation.');
 

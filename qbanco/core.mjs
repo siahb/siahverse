@@ -1,4 +1,5 @@
 export const FEED='https://raw.githubusercontent.com/siahb/nclexapro/main/generated-questions.json';
+export const EXAMS=['NCLEX','HESI','CLASS'];
 export const TOPICS=['Fundamentals','Pharmacology','Adult med-surg','Maternity','Pediatrics','Mental health','Prioritization / delegation','Safety'];
 export function topicOf(s){const t=s.toLowerCase();return /fundamental/.test(t)?TOPICS[0]:/pharmac/.test(t)?TOPICS[1]:/adult|med.?surg/.test(t)?TOPICS[2]:/matern/.test(t)?TOPICS[3]:/pediatr/.test(t)?TOPICS[4]:/mental/.test(t)?TOPICS[5]:/prioriti|delegat/.test(t)?TOPICS[6]:/safety/.test(t)?TOPICS[7]:null;}
 export function validateFeed(raw){
@@ -20,15 +21,16 @@ export function validateFeed(raw){
   if(choices.some(c=>!explanations[c.letter]))throw Error('Missing option explanation');
   if(!Array.isArray(q.source_urls)||!q.source_urls.length||q.source_urls.some(s=>{try{const u=new URL(s);return u.protocol!=='https:'||!!u.username||!!u.password;}catch{return true;}}))throw Error('Invalid source links');
   const prompt=q.question.trim().toLowerCase().replace(/\s+/g,' ');if(prompts.has(prompt))throw Error('Duplicate question text');prompts.add(prompt);
-  questions.push({...q,topicGroup:topic,choices,answers,explanations});
+  const exam=q.exam||'NCLEX';if(!EXAMS.includes(exam))throw Error('Unrecognized exam type');
+  questions.push({...q,exam,topicGroup:topic,choices,answers,explanations});
  }catch(e){errors.push(e.message);}}
  return {questions,errors};
 }
 export const dayKey=(date=new Date())=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Los_Angeles',year:'numeric',month:'2-digit',day:'2-digit'}).format(date);
 export function grade(expected,selected){return expected.length===selected.length&&new Set(selected).size===selected.length&&expected.every(a=>selected.includes(a));}
 export const fresh=()=>({version:1,seen:[],attempts:{},bookmarks:[],daily:{}});
-export const storageKey=user=>'qbanco:v1:'+encodeURIComponent(user||'guest');
-export function readProgress(storage,user){const raw=storage.getItem(storageKey(user));if(!raw)return fresh();const p=JSON.parse(raw);if(p.version!==1||!Array.isArray(p.seen)||!Array.isArray(p.bookmarks)||!p.attempts||typeof p.attempts!=='object'||!p.daily||typeof p.daily!=='object'||[...p.seen,...p.bookmarks].some(x=>typeof x!=='string')||Object.values(p.daily).some(x=>!Array.isArray(x)||x.some(id=>typeof id!=='string'))||Object.values(p.attempts).some(x=>!x||typeof x.correct!=='boolean'||!Array.isArray(x.selected)))throw Error('Saved progress is invalid.');return p;}
+export function storageKey(user,exam='NCLEX'){if(!EXAMS.includes(exam))throw Error('Unrecognized exam type');return 'qbanco:v1:'+encodeURIComponent(user||'guest')+(exam==='NCLEX'?'':':'+exam);}
+export function readProgress(storage,user,exam='NCLEX'){const raw=storage.getItem(storageKey(user,exam));if(!raw)return fresh();const p=JSON.parse(raw);if(p.version!==1||!Array.isArray(p.seen)||!Array.isArray(p.bookmarks)||!p.attempts||typeof p.attempts!=='object'||!p.daily||typeof p.daily!=='object'||[...p.seen,...p.bookmarks].some(x=>typeof x!=='string')||Object.values(p.daily).some(x=>!Array.isArray(x)||x.some(id=>typeof id!=='string'))||Object.values(p.attempts).some(x=>!x||typeof x.correct!=='boolean'||!Array.isArray(x.selected)))throw Error('Saved progress is invalid.');return p;}
 export function dailySet(bank,p,date=dayKey()){
  if(p.daily[date])return p.daily[date];
  const reserved=new Set([...p.seen,...Object.values(p.daily).flat()]);

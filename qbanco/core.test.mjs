@@ -11,3 +11,20 @@ test('daily sets are balanced, stable, <=10 and never silently repeat reserved/s
 test('retry updates latest result, seen IDs remain unique; signed-in and guest storage separate',()=>{const p=fresh(),q=validateFeed([fixture()]).questions[0];record(p,q,['A']);assert.equal(p.attempts[q.id].correct,false);record(p,q,['A','C']);assert.equal(p.attempts[q.id].correct,true);assert.equal(p.seen.length,1);assert.equal(p.attempts[q.id].count,2);const data=new Map(),storage={getItem:k=>data.get(k)||null};data.set(storageKey('alice'),JSON.stringify(p));assert.equal(readProgress(storage,'alice').seen.length,1);assert.equal(readProgress(storage,'bob').seen.length,0);assert.equal(readProgress(storage,null).seen.length,0);data.set(storageKey(null),'bad');assert.throws(()=>readProgress(storage,null));});
 test('feed network, HTTP, JSON and empty failures are handled without fallback content',async()=>{await assert.rejects(loadFeed(async()=>{throw Error('offline');}));await assert.rejects(loadFeed(async()=>({ok:false})));await assert.rejects(loadFeed(async()=>({ok:true,text:async()=>'invalid'})));assert.deepEqual((await loadFeed(async()=>({ok:true,text:async()=>'[]'}))).questions,[]);});
 if(process.env.QBANCO_FEED_FILE)test('current public feed passes strict validation',()=>{const result=validateFeed(JSON.parse(fs.readFileSync(process.env.QBANCO_FEED_FILE,'utf8')));assert.deepEqual(result.errors,[]);assert.ok(result.questions.length);console.log(`Validated ${result.questions.length} public original questions.`);});
+test('HESI and NCLEX progress stay separate while legacy NCLEX keys remain compatible',()=>{
+ const values=new Map(),storage={getItem:key=>values.get(key)||null};
+ const nclex=fresh();nclex.seen=['shared-id'];nclex.bookmarks=['shared-id'];nclex.daily['2026-10-03']=['shared-id'];
+ assert.equal(storageKey('alice','NCLEX'),storageKey('alice'));
+ values.set(storageKey('alice','NCLEX'),JSON.stringify(nclex));
+ assert.deepEqual(readProgress(storage,'alice','HESI'),fresh());
+ const hesi=fresh();hesi.seen=['hesi-only'];values.set(storageKey('alice','HESI'),JSON.stringify(hesi));
+ assert.deepEqual(readProgress(storage,'alice','NCLEX').seen,['shared-id']);
+ assert.deepEqual(readProgress(storage,'alice','HESI').seen,['hesi-only']);
+ assert.notEqual(storageKey(null,'HESI'),storageKey(null,'NCLEX'));
+ assert.throws(()=>storageKey('alice','UNKNOWN'));
+});
+test('explicit exam labels are validated and unlabelled original feed questions remain NCLEX',()=>{
+ assert.equal(validateFeed([fixture()]).questions[0].exam,'NCLEX');
+ assert.equal(validateFeed([{...fixture(),exam:'HESI'}]).questions[0].exam,'HESI');
+ assert.equal(validateFeed([{...fixture(),exam:'wrong'}]).questions.length,0);
+});

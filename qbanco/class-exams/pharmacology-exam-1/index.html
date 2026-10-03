@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+  
+<title>Pharmacology Exam 1 | QBanco</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a2d;--panel2:#18223a;--text:#eef3ff;--muted:#aebad4;--accent:#7c9cff;--accent2:#9a7cff;--ok:#4fd1a1;--bad:#ff7b86;--warn:#f4c95d;--border:#2a3858;--shadow:0 18px 50px rgba(0,0,0,.26)}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at top,#151f3a 0,#0b1020 42%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh}
+button,input,select{font:inherit} button{cursor:pointer}.wrap{max-width:940px;margin:auto;padding:28px 18px 52px}.brand{display:flex;align-items:center;gap:12px;margin-bottom:24px}.logo{width:48px;height:48px;display:grid;place-items:center;flex:0 0 48px}.logo svg{width:48px;height:48px;display:block;filter:drop-shadow(0 8px 18px rgba(0,0,0,.22))}.brand strong{font-size:20px}.brand small{display:block;color:var(--muted);margin-top:2px}.card{background:rgba(18,26,45,.94);border:1px solid var(--border);border-radius:22px;padding:22px;box-shadow:var(--shadow)}h1,h2,h3,p{margin-top:0}.hero h1{font-size:clamp(28px,5vw,46px);line-height:1.04;margin-bottom:10px}.hero p{color:var(--muted);font-size:16px;line-height:1.6}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0}.stat{background:var(--panel2);border:1px solid var(--border);border-radius:16px;padding:14px}.stat b{font-size:22px;display:block}.stat span{font-size:12px;color:var(--muted)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:7px}.field select,.field input[type=text]{width:100%;background:#0d1425;color:var(--text);border:1px solid var(--border);border-radius:12px;padding:12px 13px;min-height:46px}.switch{display:flex;align-items:center;gap:10px;padding:12px 0;color:var(--muted)}.switch input{width:18px;height:18px}.btn{border:0;border-radius:13px;padding:12px 16px;font-weight:800;min-height:44px}.btn:disabled{opacity:.55;cursor:not-allowed}.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border)}.danger{background:#3a1d27;color:#ffd5db;border:1px solid #68303f}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.hidden{display:none!important}.topbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:start;margin-bottom:14px}.topbar>div{display:flex;flex-wrap:wrap;gap:8px;min-width:0}.topbar>div:last-child{justify-content:flex-end}.pill{border:1px solid var(--border);background:var(--panel2);color:var(--muted);border-radius:999px;padding:7px 10px;font-size:12px;line-height:1.3;max-width:100%;white-space:normal;overflow-wrap:anywhere}.topbar #chapterPill{flex:1 1 190px;min-width:0}.topbar #qnum,.topbar #scorePill{flex:0 0 auto}.progress{height:9px;background:#0c1324;border-radius:999px;overflow:hidden;margin:12px 0 18px}.progress>div{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0;transition:width .25s}.meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}.qstem{font-size:20px;line-height:1.52;margin-bottom:18px;white-space:pre-wrap}.choice{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--border);border-radius:14px;padding:13px 14px;margin:10px 0;background:#0f1729;transition:.16s}.choice:hover{border-color:#455a87}.choice input{margin-top:3px;accent-color:var(--accent);width:18px;height:18px;flex:0 0 auto}.choice .letter{font-weight:900;color:#d7e0ff;min-width:22px}.choice.correct{border-color:rgba(79,209,161,.75);background:rgba(79,209,161,.10)}.choice.wrong{border-color:rgba(255,123,134,.8);background:rgba(255,123,134,.10)}.calcbox{margin-top:14px}.calcbox input{width:100%;min-height:50px;border-radius:13px;border:1px solid var(--border);background:#0d1425;color:#fff;padding:12px 14px;font-size:18px}.feedback{margin-top:18px;border-radius:15px;border:1px solid var(--border);padding:15px 16px;background:#0e1628;line-height:1.55}.feedback.ok{border-color:rgba(79,209,161,.6)}.feedback.bad{border-color:rgba(255,123,134,.6)}.feedback b{display:block;margin-bottom:6px}.muted{color:var(--muted)}.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px}.nav .right{display:flex;gap:10px}.bookmark.active{border-color:var(--warn);color:var(--warn)}.results .score{font-size:54px;font-weight:900;line-height:1}.results .sub{color:var(--muted);margin:8px 0 20px}.breakdown{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.reviewItem{border-top:1px solid var(--border);padding:16px 0}.reviewItem h3{font-size:16px;line-height:1.45;margin-bottom:8px}.tagOk{color:var(--ok)}.tagBad{color:var(--bad)}.review-answers{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.review-answer-block{border:1px solid var(--border);border-radius:12px;padding:10px 12px;background:#0b1324}.review-answer-block strong{display:block;margin-bottom:6px}.review-answer-lines{display:grid;gap:5px;font-size:13px;line-height:1.45}.review-answer-block.correct{border-color:rgba(79,209,161,.45)}.review-answer-block.yours{border-color:rgba(255,255,255,.14)}@media(max-width:560px){.review-answers{grid-template-columns:1fr}}.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:22px}.tiny{font-size:12px}.kbd{padding:2px 6px;border:1px solid var(--border);border-radius:6px;background:#0b1222;color:var(--muted)}
+@media(max-width:700px){.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.card{padding:17px}.qstem{font-size:18px}.nav{flex-direction:column}.nav .right{width:100%}.nav .right button,.nav>button{flex:1}.topbar{grid-template-columns:1fr;align-items:flex-start}.topbar>div{width:100%;justify-content:flex-start}.topbar>div:last-child{justify-content:flex-start}.topbar #chapterPill{flex:1 1 100%;width:100%}.topbar #scorePill{max-width:100%}.breakdown{grid-template-columns:1fr}.wrap{padding-top:18px}}
+
+.menu-actions{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:14px}.menu-actions .btn{padding:9px 12px;min-height:40px}.savebox{margin-top:16px;padding:14px;border:1px solid var(--border);border-radius:16px;background:var(--panel2)}.savebox strong{display:block;margin-bottom:4px}.savebox .actions{margin-top:10px}.save-status{font-size:12px;color:var(--muted);margin-top:8px}.progress-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:12px}.progress-summary{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 16px}.qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(48px,1fr));gap:9px}.qjump{min-height:46px;border-radius:12px;border:1px solid var(--border);background:#0f1729;color:var(--text);font-weight:800;position:relative}.qjump.answered{border-color:rgba(79,209,161,.65);background:rgba(79,209,161,.10)}.qjump.marked{box-shadow:inset 0 0 0 2px var(--warn)}.qjump.current{outline:2px solid var(--accent);outline-offset:2px}.qjump .star{position:absolute;right:4px;top:2px;color:var(--warn);font-size:12px}.legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin:12px 0}.legend span:before{content:'';display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;border:1px solid var(--border)}.legend .lgAnswered:before{background:rgba(79,209,161,.18);border-color:rgba(79,209,161,.65)}.legend .lgMarked:before{box-shadow:inset 0 0 0 2px var(--warn)}.marked-list{margin-top:16px;border-top:1px solid var(--border)}.marked-row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}.marked-row .txt{min-width:0}.marked-row .txt b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.marked-row .txt span{font-size:12px;color:var(--muted)}.marked-count{color:var(--warn)}
+
+/* Mobile tap + end-of-quiz review improvements */
+.btn,.qjump{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.discard-confirm{margin-top:12px;padding:12px;border:1px solid #68303f;border-radius:13px;background:#2b1820}
+.discard-confirm p{margin:0 0 10px;color:#ffd5db;font-size:13px;line-height:1.45}
+.review-tools{margin-top:18px;padding:14px;border:1px solid var(--border);border-radius:16px;background:var(--panel2)}
+.review-tools strong{display:block;margin-bottom:4px}.review-tools p{margin:0 0 10px;color:var(--muted);font-size:13px}
+.review-filters{display:flex;flex-wrap:wrap;gap:8px}
+.review-filters .btn.active{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);color:#fff}
+.review-empty{padding:18px 0;color:var(--muted)}
+.saved-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}.session-list{display:grid;gap:10px;margin-top:12px}.session-card{border:1px solid var(--border);border-radius:14px;padding:12px;background:#0f1729}.session-card.current{border-color:rgba(124,156,255,.7)}.session-title-row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.session-title{font-weight:900;line-height:1.35;overflow-wrap:anywhere}.session-meta{color:var(--muted);font-size:12px;line-height:1.5;margin-top:5px}.session-card .actions{margin-top:10px}.session-card .actions .btn{padding:9px 11px;min-height:40px}.session-rename{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;margin-top:10px}.session-rename input{min-width:0;background:#0d1425;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:9px 10px;font-size:16px}.session-delete-confirm{margin-top:10px;padding:10px;border:1px solid #68303f;border-radius:11px;background:#2b1820}.session-delete-confirm p{font-size:12px;line-height:1.45;margin:0 0 8px;color:#ffd5db}
+@media(max-width:700px){.session-rename{grid-template-columns:1fr}.session-rename .btn{width:100%}.session-card .actions{display:grid;grid-template-columns:1fr 1fr}.session-card .actions .btn{width:100%}.savebox .actions{flex-direction:column}.savebox .actions .btn{width:100%}.review-filters{display:grid;grid-template-columns:1fr}.review-filters .btn{width:100%}}
+
+
+/* v8 light / dark theme */
+.theme-toggle{margin-left:auto;border:1px solid var(--border);background:var(--panel2);color:var(--text);border-radius:999px;padding:9px 12px;font-weight:800;min-height:40px;white-space:nowrap}
+html[data-theme="light"]{--bg:#f4f7fb;--panel:#ffffff;--panel2:#eef3f9;--text:#172033;--muted:#607089;--border:#d4ddea;--shadow:0 18px 50px rgba(35,55,85,.10)}
+html[data-theme="light"] body{background:radial-gradient(circle at top,#e9efff 0,#f4f7fb 42%);color:var(--text)}
+html[data-theme="light"] .card{background:rgba(255,255,255,.96)}
+html[data-theme="light"] .field select,
+html[data-theme="light"] .field input[type=text],
+html[data-theme="light"] .calcbox input,
+html[data-theme="light"] .session-rename input{background:#fff;color:var(--text)}
+html[data-theme="light"] .choice,
+html[data-theme="light"] .feedback,
+html[data-theme="light"] .qjump,
+html[data-theme="light"] .session-card,
+html[data-theme="light"] .review-answer-block{background:#f8fafc}
+html[data-theme="light"] .progress{background:#e5ebf4}
+html[data-theme="light"] .choice .letter{color:#445272}
+html[data-theme="light"] .primary{color:#fff}
+html[data-theme="light"] .danger{background:#fff0f2;color:#8d2638;border-color:#e7aeba}
+html[data-theme="light"] .discard-confirm,
+html[data-theme="light"] .session-delete-confirm{background:#fff3f5;border-color:#e7aeba}
+html[data-theme="light"] .discard-confirm p,
+html[data-theme="light"] .session-delete-confirm p{color:#8d2638}
+@media(max-width:520px){.theme-toggle{padding:8px 10px;font-size:13px}}
+
+
+.hintbox{margin-top:14px;border:1px solid rgba(244,201,93,.45);background:rgba(244,201,93,.08);border-radius:14px;padding:13px 14px;line-height:1.5}
+.hintbox strong{color:var(--warn)}
+.hint-btn.used{opacity:.72}
+.nav .left{display:flex;gap:10px;flex-wrap:wrap}
+html[data-theme="light"] .hintbox{background:#fff9e8;border-color:#e8cf80}
+@media(max-width:700px){.nav .left{display:grid;grid-template-columns:1fr 1fr;width:100%}.nav .left .btn{width:100%}}
+
+.logo-link{display:flex;align-items:center;text-decoration:none;border-radius:14px;outline:none;color:inherit}.logo-link:focus-visible{box-shadow:0 0 0 3px rgba(124,156,255,.45)}.back-link{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 11px;border:1px solid var(--border);border-radius:11px;background:var(--panel2);color:var(--text);text-decoration:none;font-size:13px;font-weight:800;margin-left:auto}
+
+/* v8.3 navigation + optional confidence rating */
+.logo-link{display:flex;align-items:center;text-decoration:none;border-radius:14px;transition:transform .15s ease,filter .15s ease;color:inherit}
+.logo-link:hover{transform:translateY(-1px);filter:brightness(1.08)}
+.logo-link:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.study-tools{display:flex;flex-wrap:wrap;gap:18px;margin-top:10px}
+.study-tools .switch{padding:6px 0}
+.auto-next-setting{flex:1 1 280px;max-width:420px;padding:10px 12px;border:1px solid var(--border);border-radius:14px;background:var(--panel2)}
+.auto-next-setting .switch{padding:0 0 9px}
+.auto-next-range{display:grid;gap:7px;color:var(--muted);font-size:12px}
+.auto-next-range strong{color:var(--text)}
+.auto-next-range input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
+.auto-next-range input[type=range]:disabled{opacity:.45;cursor:not-allowed}
+.range-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}
+.quiz-auto-next{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:-2px 0 14px;padding:10px 12px;border:1px solid var(--border);border-radius:14px;background:var(--panel2)}
+.quiz-auto-toggle{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;white-space:nowrap}
+.quiz-auto-toggle input{width:17px;height:17px;accent-color:var(--accent)}
+.quiz-auto-range{display:grid;grid-template-columns:auto minmax(110px,220px);align-items:center;gap:10px;color:var(--muted);font-size:12px;flex:1 1 220px}
+.quiz-auto-range strong{color:var(--text)}
+.quiz-auto-range input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
+.quiz-auto-range input[type=range]:disabled{opacity:.42;cursor:not-allowed}
+.auto-next-backdrop{position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,.46);display:grid;place-items:center;padding:18px}
+.auto-next-prompt{width:min(440px,100%);border:1px solid var(--border);border-radius:18px;background:var(--panel);box-shadow:var(--shadow);padding:18px}
+.auto-next-prompt h3{margin:0 0 7px;font-size:18px}
+.auto-next-prompt p{margin:0;color:var(--muted);line-height:1.5}
+.auto-next-prompt .actions{margin-top:16px}
+@media(max-width:700px){.quiz-auto-range{grid-template-columns:1fr;gap:5px}.quiz-auto-next{align-items:flex-start}}
+.confidence-box{margin-top:14px;padding:13px 14px;border:1px solid var(--border);border-radius:14px;background:var(--panel2)}
+.confidence-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.confidence-options{display:flex;flex-wrap:wrap;gap:8px}
+.confidence-choice{border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:999px;padding:9px 12px;font-weight:800}
+.confidence-choice.active{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);background:rgba(124,156,255,.12)}
+.confidence-choice:disabled{cursor:default;opacity:.82}
+.confidence-results{margin:14px 0 0;padding:12px 14px;border:1px solid var(--border);border-radius:14px;background:var(--panel2)}
+.confidence-results .row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+html[data-theme="light"] .confidence-choice{background:#fff}
+html[data-theme="light"] .confidence-choice.active{background:#eef2ff}
+@media(max-width:700px){.study-tools{display:grid;grid-template-columns:1fr}.confidence-options{display:grid;grid-template-columns:1fr 1fr 1fr}.confidence-choice{padding:10px 8px}}
+
+
+/* v8.3 DDC-only calculator + conversion reference */
+.ddc-tools{margin-top:14px;padding:13px 14px;border:1px solid var(--border);border-radius:14px;background:var(--panel2)}
+.ddc-tools-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.ddc-tool-actions{display:flex;gap:8px;flex-wrap:wrap}
+.ddc-panel{margin-top:12px;padding:12px;border:1px solid var(--border);border-radius:12px;background:var(--panel)}
+.conversion-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}
+.conversion-item{padding:9px 10px;border:1px solid var(--border);border-radius:10px;background:var(--panel2);font-size:13px;line-height:1.4}
+.calc-display{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;margin-bottom:10px}
+.calc-display input{width:100%;min-height:46px;border-radius:11px;border:1px solid var(--border);background:var(--panel2);color:var(--text);padding:10px 12px;font-size:18px}
+.calc-result{min-width:88px;text-align:center;font-weight:900;border:1px solid var(--border);border-radius:11px;padding:11px 10px;background:var(--panel2)}
+.calc-keypad{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.calc-key{min-height:42px;border:1px solid var(--border);border-radius:10px;background:var(--panel2);color:var(--text);font-weight:800}
+.calc-key.op{color:var(--accent)}
+.calc-key.equals{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:0}
+.calc-key.wide{grid-column:span 2}
+html[data-theme="light"] .ddc-tools,
+html[data-theme="light"] .ddc-panel,
+html[data-theme="light"] .conversion-item,
+html[data-theme="light"] .calc-display input,
+html[data-theme="light"] .calc-result,
+html[data-theme="light"] .calc-key{background:#fff}
+@media(max-width:520px){.conversion-grid{grid-template-columns:1fr}.calc-display{grid-template-columns:1fr}.calc-result{text-align:left}}
+
+</style>
+<script src="../../toggle-theme.js?v=20260930-sync"></script>
+</head>
+<body><nav aria-label="QBanco class exam" style="padding:16px;display:flex;gap:16px;flex-wrap:wrap"><a href="../../" style="color:inherit;min-height:44px">← QBanco Class Exams</a><span>Class Exams · Pharmacology Exam 1</span><a href="https://siahverse.cc/pharm1/" style="color:inherit;min-height:44px">Original app</a></nav>
+<noscript><div style="max-width:940px;margin:16px auto;padding:14px 18px;border-radius:12px;background:#3a1d27;color:#ffd5db;font-family:system-ui,sans-serif">This quiz needs JavaScript. On iPhone, open the hosted page in Safari instead of a file preview.</div></noscript>
+
+<div class="wrap">
+  <div class="brand"><a href="/" class="logo-link" aria-label="Siahverse home" title="Siahverse home"><div class="logo" aria-label="Siahverse pharmacology logo"><svg viewBox="0 0 64 64" role="img" aria-hidden="true"><defs><linearGradient id="svG" x1="10" y1="8" x2="54" y2="56" gradientUnits="userSpaceOnUse"><stop stop-color="#7f8cff"/><stop offset="1" stop-color="#a47cff"/></linearGradient><linearGradient id="pillG" x1="22" y1="19" x2="44" y2="45" gradientUnits="userSpaceOnUse"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#dbe2ff"/></linearGradient></defs><circle cx="32" cy="32" r="25" fill="url(#svG)"/><ellipse cx="32" cy="32" rx="29" ry="13" fill="none" stroke="#cfd6ff" stroke-width="2.4" opacity=".82" transform="rotate(-22 32 32)"/><circle cx="55" cy="22" r="3.2" fill="#ffffff"/><g transform="rotate(-36 32 32)"><rect x="22" y="16" width="20" height="32" rx="10" fill="url(#pillG)"/><path d="M22 32h20" stroke="#7f8cff" stroke-width="2.6"/><path d="M26 22h7" stroke="#8b91ff" stroke-width="2.2" stroke-linecap="round" opacity=".7"/></g><path d="M48.5 43.5v7M45 47h7" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></div><div><strong>Siahverse</strong><small>Pharmacology Exam 1</small></div></a><a class="back-link" href="../../">← Back</a><button type="button" class="theme-toggle" id="themeToggle" aria-label="Switch color theme">☀️ Light</button></div>
+
+  <section id="setup" class="card hero">
+    <h1>Pharmacology Exam 1</h1>
+    <p>100 practice questions covering Chapters 40, 54, 26, 50, and 51.</p>
+    <div class="stats">
+      <div class="stat"><b id="nAll">100</b><span>Total questions</span></div>
+      <div class="stat"><b id="nMC">86</b><span>Multiple choice</span></div>
+      <div class="stat"><b id="nSATA">7</b><span>Select all</span></div>
+      <div class="stat"><b id="nCalc">7</b><span>DDC / Fill-ins</span></div>
+    </div>
+    <div class="grid">
+      <div class="field"><label for="sourceSet">Question bank</label><select id="sourceSet"><option value="all">All questions (100)</option><option value="original">Existing bank (81)</option><option value="extra">Extra questions (19)</option></select></div>
+      <div class="field"><label for="chapter">Chapter</label><select id="chapter">
+<option value="all">All chapters (100)</option>
+<option value="Chapter 40: Antiviral Drugs">Chapter 40: Antiviral Drugs (12)</option>
+<option value="Chapter 54: Anemia Drugs">Chapter 54: Anemia Drugs (18)</option>
+<option value="Chapter 26: Coagulation Modifier Drugs">Chapter 26: Coagulation Modifier Drugs (15)</option>
+<option value="Chapter 50: Acid-Controlling Drugs">Chapter 50: Acid-Controlling Drugs (16)</option>
+<option value="Chapter 51: Bowel Disorder Drugs">Chapter 51: Bowel Disorder Drugs (20)</option>
+</select></div>
+      <div class="field"><label for="questionType">Question type</label><select id="questionType"><option value="all">All question types (100)</option><option value="mc">Multiple choice only (86)</option><option value="sata">SATA only (7)</option><option value="dosage">DDC / Fill-ins only (7)</option></select></div>
+      <div class="field"><label for="count">Number of questions</label><select id="count"><option value="all">All available</option><option value="10">10</option><option value="20">20</option><option value="25">25</option><option value="50">50</option><option value="75">75</option><option value="100">100</option></select></div>
+      <div class="field"><label for="order">Order</label><select id="order"><option value="original">In order</option><option value="shuffle">Shuffle questions</option></select></div>
+      <div class="field"><label for="mode">Mode</label><select id="mode"><option value="practice">Practice — feedback after each answer</option><option value="exam">Exam — feedback at the end</option></select></div>
+       <div class="field"><label for="timeLimit">Time limit <span class="muted">(optional)</span></label><select id="timeLimit"><option value="0">No time limit</option><option value="15">15 minutes</option><option value="30">30 minutes</option><option value="45">45 minutes</option><option value="60">60 minutes</option><option value="90">90 minutes</option><option value="120">120 minutes</option></select><small class="muted">Exam Mode always shows elapsed time by default. Choose a time limit only if you want a countdown that submits automatically at zero.</small></div>
+      <div class="field"><label for="sessionLabel">Quiz session name <span class="muted">(optional)</span></label><input id="sessionLabel" type="text" maxlength="60" autocomplete="off" placeholder="e.g., Full Exam Run"></div>
+    </div>
+    <div class="study-tools">
+      <label class="switch"><input id="shuffleChoices" type="checkbox"> Shuffle answer choices</label>
+      <label class="switch"><input id="confidenceRating" type="checkbox"> Confidence rating <span class="tiny muted">(optional)</span></label>
+      <div class="auto-next-setting">
+        <label class="switch"><input id="autoNext" type="checkbox" checked> Auto-next</label>
+        <label class="auto-next-range" for="autoNextSeconds">
+          <span>Delay: <strong id="autoNextSecondsValue">5 seconds</strong></span>
+          <input id="autoNextSeconds" type="range" min="3" max="10" step="1" value="5" aria-label="Auto-next delay in seconds">
+          <span class="range-labels"><span>3s</span><span>10s</span></span>
+        </label>
+      </div>
+    </div>
+    <div class="actions"><button class="btn primary" id="start">Start new quiz</button></div>
+    <div id="setupWarning" class="save-status hidden" role="status" aria-live="polite"></div>
+    <div id="savedBox" class="savebox hidden"><div class="saved-head"><div><strong>Saved quiz sessions</strong><div class="muted tiny">Each quiz saves separately on this device.</div></div><span class="pill" id="sessionCount">0 saved</span></div><div id="savedSessionsList" class="session-list"></div></div>
+    <div id="saveStatus" class="save-status"></div>
+  </section>
+
+  <section id="quiz" class="card hidden">
+    <div class="menu-actions"><button type="button" class="btn secondary" id="menuBtn">← Main Menu</button><button type="button" class="btn secondary" id="progressBtn">Progress</button><span class="pill" id="sessionPill"></span><span class="pill marked-count" id="markedCount">★ 0 marked</span></div>
+    <div class="quiz-auto-next" id="quizAutoNextBox">
+      <label class="quiz-auto-toggle"><input id="quizAutoNext" type="checkbox"> Auto-next</label>
+      <label class="quiz-auto-range" for="quizAutoNextSeconds">
+        <span>Delay <strong id="quizAutoNextSecondsValue">5s</strong></span>
+        <input id="quizAutoNextSeconds" type="range" min="3" max="10" step="1" value="5" aria-label="Auto-next delay during quiz">
+      </label>
+    </div>
+    <div class="topbar"><div><span class="pill" id="qnum"></span> <span class="pill" id="chapterPill"></span></div><div><span class="pill" id="scorePill">Score: 0/0</span><span class="pill hidden" id="examTimer" role="timer" aria-label="Exam clock"></span></div></div>
+    <div class="progress"><div id="bar"></div></div>
+    <div class="meta"><span class="pill" id="typePill"></span><span class="pill hidden" id="sourcePill">Extra question</span><span class="pill hidden" id="reviewPill">Marked for review</span></div>
+    <div class="qstem" id="stem"></div>
+    <form id="answerArea"></form>
+    <div id="ddcTools" class="ddc-tools hidden">
+      <div class="ddc-tools-head">
+        <strong>DDC Tools</strong>
+        <div class="ddc-tool-actions">
+          <button type="button" class="btn secondary" id="calcToggle">Calculator</button>
+          <button type="button" class="btn secondary" id="conversionToggle">Unit conversion help</button>
+        </div>
+      </div>
+      <div id="conversionPanel" class="ddc-panel hidden">
+        <strong>Common conversions</strong>
+        <div class="conversion-grid">
+          <div class="conversion-item"><b>lb → kg</b><br>Divide pounds by 2.2</div>
+          <div class="conversion-item"><b>kg → lb</b><br>Multiply kilograms by 2.2</div>
+          <div class="conversion-item"><b>g ↔ mg</b><br>1 g = 1,000 mg</div>
+          <div class="conversion-item"><b>mg ↔ mcg</b><br>1 mg = 1,000 mcg</div>
+          <div class="conversion-item"><b>L ↔ mL</b><br>1 L = 1,000 mL</div>
+          <div class="conversion-item"><b>hr ↔ min</b><br>1 hr = 60 min</div>
+        </div>
+      </div>
+      <div id="calcPanel" class="ddc-panel hidden">
+        <div class="calc-display">
+          <input id="miniCalcInput" type="text" inputmode="decimal" autocomplete="off" placeholder="e.g. 121 ÷ 2.2" aria-label="Calculator expression">
+          <div id="miniCalcResult" class="calc-result" aria-live="polite">—</div>
+        </div>
+        <div class="calc-keypad" id="calcKeypad">
+          <button type="button" class="calc-key" data-calc="7">7</button>
+          <button type="button" class="calc-key" data-calc="8">8</button>
+          <button type="button" class="calc-key" data-calc="9">9</button>
+          <button type="button" class="calc-key op" data-calc="÷">÷</button>
+          <button type="button" class="calc-key" data-calc="4">4</button>
+          <button type="button" class="calc-key" data-calc="5">5</button>
+          <button type="button" class="calc-key" data-calc="6">6</button>
+          <button type="button" class="calc-key op" data-calc="×">×</button>
+          <button type="button" class="calc-key" data-calc="1">1</button>
+          <button type="button" class="calc-key" data-calc="2">2</button>
+          <button type="button" class="calc-key" data-calc="3">3</button>
+          <button type="button" class="calc-key op" data-calc="−">−</button>
+          <button type="button" class="calc-key" data-calc="0">0</button>
+          <button type="button" class="calc-key" data-calc=".">.</button>
+          <button type="button" class="calc-key" data-calc="(">(</button>
+          <button type="button" class="calc-key" data-calc=")">)</button>
+          <button type="button" class="calc-key wide" data-calc-action="clear">Clear</button>
+          <button type="button" class="calc-key op" data-calc="+">+</button>
+          <button type="button" class="calc-key equals" data-calc-action="equals">=</button>
+        </div>
+      </div>
+    </div>
+    <div id="confidenceBox" class="confidence-box hidden">
+      <div class="confidence-head"><strong>How confident are you?</strong><span class="tiny muted">Optional study tracking</span></div>
+      <div class="confidence-options">
+        <button type="button" class="confidence-choice" data-confidence="confident">Confident</button>
+        <button type="button" class="confidence-choice" data-confidence="unsure">Unsure</button>
+        <button type="button" class="confidence-choice" data-confidence="guessing">Guessing</button>
+      </div>
+    </div>
+    <div id="answerWarning" class="feedback bad hidden" aria-live="polite"></div>
+    <div id="hintBox" class="hintbox hidden" aria-live="polite"></div>
+    <div id="feedback" class="feedback hidden" aria-live="polite"></div>
+    <div class="nav">
+      <div class="left"><button type="button" class="btn secondary bookmark" id="mark">☆ Mark for review</button><button type="button" class="btn secondary hint-btn" id="hintBtn">💡 Give me a hint</button></div>
+      <div class="right"><button type="button" class="btn secondary" id="prev">Previous</button><button type="button" class="btn primary" id="submit">Check answer</button><button type="button" class="btn primary hidden" id="next">Next</button></div>
+    </div>
+  </section>
+
+
+  <section id="progressView" class="card hidden">
+    <div class="progress-head"><div><h2 style="margin-bottom:5px">Quiz progress</h2><p class="muted" style="margin:0">Answered questions are highlighted. A gold outline and ★ mean marked for review.</p></div><div class="actions" style="margin-top:0"><button type="button" class="btn secondary" id="progressMenu">Main Menu</button><button type="button" class="btn primary" id="backQuiz">Back to quiz</button></div></div>
+    <div class="progress-summary" id="progressSummary"></div>
+    <div class="legend"><span class="lgAnswered">Answered</span><span class="lgMarked">Marked for review</span></div>
+    <div class="qgrid" id="questionGrid"></div>
+    <h3 style="margin-top:24px;margin-bottom:4px">Marked for review</h3>
+    <div id="markedList"></div>
+  </section>
+
+  <section id="results" class="card results hidden">
+    <h2>Quiz complete</h2>
+    <div class="score" id="finalPct">0%</div>
+    <div class="sub" id="finalText"></div>
+    <div class="breakdown" id="breakdown"></div>
+    <div id="confidenceResults" class="confidence-results hidden"></div>
+    <div class="review-tools"><strong>Review your quiz</strong><p>Jump straight to mistakes or questions you marked/bookmarked instead of scrolling through everything.</p><div class="review-filters"><button type="button" class="btn primary reviewFilter" id="reviewCombined" data-review="combined">Mistakes + marked</button><button type="button" class="btn secondary reviewFilter" id="reviewWrong" data-review="wrong">Mistakes only</button><button type="button" class="btn secondary reviewFilter" id="reviewMarked" data-review="marked">Marked only</button><button type="button" class="btn secondary reviewFilter" id="reviewAll" data-review="all">All answers</button><button type="button" class="btn secondary hidden" id="hideReview">Hide review</button></div><div id="reviewSummary" class="save-status" aria-live="polite"></div></div>
+    <div class="actions"><button type="button" class="btn primary" id="retakeWrong">Retake missed</button><button type="button" class="btn secondary" id="resultsMenu">Main Menu</button><button type="button" class="btn secondary" id="restart">New quiz</button></div>
+    <div id="reviewList" class="hidden" style="margin-top:16px"></div>
+  </section>
+</div>
+<script type="module">
+const BANK = await loadProtectedClassBank();
+async function loadProtectedClassBank(){
+ const container=document.querySelector('.wrap');
+ try{
+  const response=await fetch('https://siahverse.cc/pharm1/',{credentials:'include',cache:'no-store',signal:AbortSignal.timeout(15000)});
+  if(!response.ok)throw Error('Nursing access or question-bank loading is unavailable.');
+  const text=await response.text();
+  // Read only the known JSON declaration; never execute remote HTML or scripts.
+  const marker='const BANK = ',start=text.indexOf(marker);
+  if(start<0)throw Error('Sign in through the nursing gate to open Pharmacology Exam 1.');
+  // A semicolon may occur inside question text, so locate the terminating declaration before the next const $.
+  const stop=text.indexOf('const $ =',start);
+  if(stop<0)throw Error('The protected question bank format has changed.');
+  const declaration=text.slice(start+marker.length,stop).trim();
+  const incoming=JSON.parse(declaration.replace(/;\s*$/,''));
+  if(!Array.isArray(incoming)||!incoming.length||incoming.length>2000)throw Error('The class question bank is invalid.');
+  const ids=new Set();
+  for(const q of incoming){if(!q||typeof q.id!=='string'||ids.has(q.id)||typeof q.stem!=='string'||!['MULTIPLE CHOICE','MULTIPLE RESPONSE','COMPLETION'].includes(q.section))throw Error('The class question bank is invalid.');ids.add(q.id);}
+  return incoming;
+ }catch(error){
+  container.replaceChildren();
+  const title=document.createElement('h1');title.textContent='Pharmacology Exam 1';
+  const message=document.createElement('p');message.textContent=location.hostname==="127.0.0.1"||location.hostname==="localhost"?"Protected class practice requires Siahverse hosting and nursing sign-in. The local preview cannot use that nursing session.":error.message;
+  const signIn=document.createElement('a');signIn.href='https://siahverse.cc/pharm1/';signIn.textContent='Open nursing sign-in / original app';signIn.className='btn primary';
+  const back=document.createElement('a');back.href='../../';back.textContent='Back to QBanco';back.className='btn secondary';
+  container.append(title,message,signIn,document.createTextNode(' '),back);
+  throw error;
+ }
+}
+
+const $ = s => document.querySelector(s);
+const setup=$('#setup'), quiz=$('#quiz'), results=$('#results'), progressView=$('#progressView');
+const chapters=[...new Set(BANK.map(q=>q.chapter))];
+const STORAGE_KEY='siahverse_pharm1_sessions_v4';
+const LEGACY_STORAGE_KEY='siahverse_pharm_exam1_progress_v3';
+const STATE_SCHEMA=9;
+let state=null;
+let examTimerInterval=null;
+let storageOK=false;
+let memoryStore={version:1,sessions:{}};
+
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function shortType(q){return q.section==='MULTIPLE CHOICE'?'Multiple choice':q.section==='MULTIPLE RESPONSE'?'Select all that apply':'DDC / Fill-ins'}
+function answered(q){const a=state?.answers?.[q.id];return q.section==='COMPLETION'?!!String(a||'').trim():Array.isArray(a)?a.length>0:!!a}
+function testStorage(){try{localStorage.setItem('__siahverse_test__','1');localStorage.removeItem('__siahverse_test__');storageOK=true;migrateLegacySave()}catch(e){storageOK=false}updateSaveStatus()}
+function updateSaveStatus(){const el=$('#saveStatus');if(!el)return;el.textContent=storageOK?'Autosave available on this browser/device. Each quiz session saves separately.':'This viewer blocks persistent storage. Progress will last only while this page stays open; try opening the HTML in Safari/Chrome for saving.'}
+function makeSessionId(){return 's_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8)}
+function getStore(){if(!storageOK)return memoryStore;try{const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return memoryStore;const x=JSON.parse(raw);if(x&&x.sessions&&typeof x.sessions==='object'){memoryStore=x;return x}return memoryStore}catch(e){storageOK=false;return memoryStore}}
+function putStore(store){memoryStore=store;try{if(storageOK)localStorage.setItem(STORAGE_KEY,JSON.stringify(store))}catch(e){storageOK=false}updateSaveStatus()}
+function hydrateSavedQuestion(savedQ){const base=BANK.find(q=>q.id===savedQ?.id);if(!base)return null;const byKey=new Map((base.options||[]).map(o=>[o.key,o]));const savedOrder=Array.isArray(savedQ?.displayOptions)?savedQ.displayOptions.map(o=>o?.key).filter(k=>byKey.has(k)):[];const orderedKeys=[...savedOrder,...[...byKey.keys()].filter(k=>!savedOrder.includes(k))];return {...base,displayOptions:orderedKeys.map(k=>byKey.get(k))}}
+function normalizeSavedState(x){if(!x||!Array.isArray(x.qs)||!x.qs.length)return null;const qs=x.qs.map(hydrateSavedQuestion).filter(Boolean);if(!qs.length)return null;const validIds=new Set(qs.map(q=>q.id));const answers={};for(const [id,a] of Object.entries(x.answers||{})){if(validIds.has(id))answers[id]=a}const graded={};for(const [id,g] of Object.entries(x.graded||{})){if(validIds.has(id))graded[id]=g}const marked={};for(const [id,v] of Object.entries(x.marked||{})){if(validIds.has(id)&&v)marked[id]=true}const hinted={};for(const [id,v] of Object.entries(x.hinted||{})){if(validIds.has(id)&&v)hinted[id]=true}const confidence={};for(const [id,v] of Object.entries(x.confidence||{})){if(validIds.has(id)&&['confident','unsure','guessing'].includes(v))confidence[id]=v}const settings={...(x.settings||{}),confidenceRating:!!x.settings?.confidenceRating};return {...x,schema:STATE_SCHEMA,sessionId:x.sessionId||makeSessionId(),label:String(x.label||'').trim()||'Saved quiz',qs,answers,graded,marked,hinted,confidence,settings,deadlineAt:Number(x.deadlineAt)||null,startedAt:Number(x.startedAt)||null,finishedAt:Number(x.finishedAt)||null,timeExpired:!!x.timeExpired,i:Math.max(0,Math.min(Number(x.i)||0,qs.length-1)),finished:!!x.finished}}
+function migrateLegacySave(){if(!storageOK)return;try{const store=getStore();if(Object.keys(store.sessions||{}).length)return;const raw=localStorage.getItem(LEGACY_STORAGE_KEY);if(!raw)return;const legacy=normalizeSavedState(JSON.parse(raw));if(!legacy)return;legacy.sessionId=makeSessionId();legacy.label=legacy.label||'Previous quiz';store.sessions[legacy.sessionId]=legacy;putStore(store);/* Preserve the legacy save for fallback access. */}catch(e){}}
+function getSession(id){const raw=getStore().sessions?.[id];return raw?normalizeSavedState(raw):null}
+function listSessions(){const store=getStore();return Object.values(store.sessions||{}).map(normalizeSavedState).filter(Boolean).sort((a,b)=>(b.savedAt||0)-(a.savedAt||0))}
+function saveState(){if(!state){refreshSavedCard();return}if(!state.sessionId)state.sessionId=makeSessionId();state.savedAt=Date.now();const store=getStore();store.sessions[state.sessionId]=state;putStore(store);refreshSavedCard()}
+function deleteSession(id){const store=getStore();delete store.sessions[id];putStore(store);if(state?.sessionId===id)state=null;refreshSavedCard()}
+function renameSession(id,label){label=String(label||'').trim().slice(0,60);if(!label)return false;const store=getStore(),s=store.sessions?.[id];if(!s)return false;s.label=label;s.savedAt=Date.now();store.sessions[id]=s;putStore(store);if(state?.sessionId===id)state.label=label;refreshSavedCard();return true}
+function sessionAnsweredCount(s){return (s.qs||[]).filter(q=>{const a=s.answers?.[q.id];return q.section==='COMPLETION'?!!String(a||'').trim():Array.isArray(a)?a.length>0:!!a}).length}
+function questionTypeName(v){return v==='mc'?'Multiple choice':v==='sata'?'SATA':v==='dosage'?'DDC / Fill-ins':'All types'}
+function sectionForType(v){return v==='mc'?'MULTIPLE CHOICE':v==='sata'?'MULTIPLE RESPONSE':v==='dosage'?'COMPLETION':null}
+function sourceSetName(v){return v==='original'?'Existing 81':v==='extra'?'Extra 19':'All 100'}
+function sourceFilteredBank(v){return v==='original'?BANK.filter(q=>!q.supplemental):v==='extra'?BANK.filter(q=>!!q.supplemental):BANK}
+function sessionSetLabel(s){const source=s.settings?.sourceSet||'all';const ch=s.settings?.chapter;const chapterLabel=!ch||ch==='all'?'All chapters':ch.replace(/^Chapter\s+/,'Ch. ');const type=s.settings?.questionType||'all';return `${sourceSetName(source)} • ${chapterLabel}${type==='all'?'':` • ${questionTypeName(type)}`}`}
+function defaultSessionLabel(){const source=$('#sourceSet').value||'all';const ch=$('#chapter').value==='all'?'All Chapters':$('#chapter').selectedOptions[0]?.textContent.replace(/\s*\(\d+\)\s*$/,'')||'Quiz';const type=$('#questionType').value;const mode=$('#mode').value==='exam'?'Exam':'Practice';return `${sourceSetName(source)} • ${ch}${type==='all'?'':` • ${questionTypeName(type)}`} • ${mode}`}
+function refreshSavedCard(){const box=$('#savedBox'),list=$('#savedSessionsList'),count=$('#sessionCount');if(!box||!list)return;const sessions=listSessions();if(!sessions.length){box.classList.add('hidden');list.innerHTML='';return}box.classList.remove('hidden');if(count)count.textContent=`${sessions.length} saved`;list.innerHTML=sessions.map(s=>{const ans=sessionAnsweredCount(s),marks=Object.values(s.marked||{}).filter(Boolean).length,hints=Object.values(s.hinted||{}).filter(Boolean).length,ratings=Object.keys(s.confidence||{}).length,status=s.finished?'Completed':`${ans}/${s.qs.length} answered`;const actionLabel=s.finished?'View results':'Resume';return `<div class="session-card ${state?.sessionId===s.sessionId?'current':''}" data-session="${esc(s.sessionId)}"><div class="session-title-row"><div><div class="session-title">${esc(s.label)}</div><div class="session-meta">${esc(sessionSetLabel(s))} • ${s.mode==='exam'?'Exam':'Practice'} • ${status} • ★ ${marks} marked${s.mode==='practice'?` • 💡 ${hints} hints`:''}${s.settings?.confidenceRating?` • ${ratings} rated`:''}</div></div>${s.finished?'<span class="pill">Done</span>':''}</div><div class="actions"><button type="button" class="btn primary sessionResume">${actionLabel}</button><button type="button" class="btn secondary sessionRenameBtn">Rename</button><button type="button" class="btn danger sessionDeleteBtn">Delete</button></div><div class="session-rename hidden"><input type="text" maxlength="60" value="${esc(s.label)}" aria-label="Rename quiz session"><button type="button" class="btn primary sessionRenameSave">Save</button><button type="button" class="btn secondary sessionRenameCancel">Cancel</button></div><div class="session-delete-confirm hidden"><p><strong>Delete “${esc(s.label)}”?</strong> This removes only this saved quiz session from this device.</p><div class="actions"><button type="button" class="btn secondary sessionDeleteCancel">Cancel</button><button type="button" class="btn danger sessionDeleteConfirm">Yes, delete</button></div></div></div>`}).join('');
+  list.querySelectorAll('.session-card').forEach(card=>{const id=card.dataset.session;card.querySelector('.sessionResume').addEventListener('click',()=>resumeSession(id));const rename=card.querySelector('.session-rename'),del=card.querySelector('.session-delete-confirm');card.querySelector('.sessionRenameBtn').addEventListener('click',()=>{del.classList.add('hidden');rename.classList.remove('hidden');const inp=rename.querySelector('input');inp.focus();inp.select()});card.querySelector('.sessionRenameCancel').addEventListener('click',()=>rename.classList.add('hidden'));card.querySelector('.sessionRenameSave').addEventListener('click',()=>{if(!renameSession(id,rename.querySelector('input').value)){rename.querySelector('input').focus()}});rename.querySelector('input').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();card.querySelector('.sessionRenameSave').click()}else if(e.key==='Escape')rename.classList.add('hidden')});card.querySelector('.sessionDeleteBtn').addEventListener('click',()=>{rename.classList.add('hidden');del.classList.remove('hidden')});card.querySelector('.sessionDeleteCancel').addEventListener('click',()=>del.classList.add('hidden'));card.querySelector('.sessionDeleteConfirm').addEventListener('click',()=>deleteSession(id))})}
+function populateChapters(){const sel=$('#chapter');if(!sel)return;const previous=sel.value||'all';const source=$('#sourceSet')?.value||'all';const base=sourceFilteredBank(source);const availableChapters=chapters.filter(c=>base.some(q=>q.chapter===c));const opts=['<option value="all">All chapters ('+base.length+')</option>',...availableChapters.map(c=>`<option value="${esc(c)}">${esc(c)} (${base.filter(q=>q.chapter===c).length})</option>`)];sel.innerHTML=opts.join('');sel.value=[...sel.options].some(o=>o.value===previous)?previous:'all';updateQuestionTypeOptions()}
+function updateQuestionTypeOptions(){const sel=$('#questionType');if(!sel)return;const source=$('#sourceSet')?.value||'all';const chapter=$('#chapter')?.value||'all';let base=sourceFilteredBank(source);if(chapter!=='all')base=base.filter(q=>q.chapter===chapter);const counts={all:base.length,mc:base.filter(q=>q.section==='MULTIPLE CHOICE').length,sata:base.filter(q=>q.section==='MULTIPLE RESPONSE').length,dosage:base.filter(q=>q.section==='COMPLETION').length};const labels={all:'All question types',mc:'Multiple choice only',sata:'SATA only',dosage:'DDC / Fill-ins only'};[...sel.options].forEach(o=>{const n=counts[o.value]??0;o.textContent=`${labels[o.value]} (${n})`;o.disabled=n===0});if(sel.selectedOptions[0]?.disabled)sel.value='all'}
+function stopExamTimer(){if(examTimerInterval){clearInterval(examTimerInterval);examTimerInterval=null}}
+function updateExamTimer(){const pill=$('#examTimer');if(!state||state.finished||(!state.deadlineAt&&!state.startedAt)){pill.classList.add('hidden');stopExamTimer();return}pill.classList.remove('hidden');if(state.deadlineAt){const remaining=Math.max(0,Math.ceil((state.deadlineAt-Date.now())/1000));pill.textContent=`Time left: ${Math.floor(remaining/60)}:${String(remaining%60).padStart(2,'0')}`;if(remaining===0)finish(true)}else{const elapsed=Math.max(0,Math.floor((Date.now()-state.startedAt)/1000));pill.textContent=`Elapsed: ${Math.floor(elapsed/60)}:${String(elapsed%60).padStart(2,'0')}`}}
+function startExamTimer(){stopExamTimer();updateExamTimer();if(state&&!state.finished&&(state.deadlineAt||state.startedAt))examTimerInterval=setInterval(updateExamTimer,1000)}
+function startQuiz(){
+  const warning=$('#setupWarning');warning.classList.add('hidden');warning.textContent='';
+  const sourceSet=$('#sourceSet').value||'all';let pool=sourceFilteredBank(sourceSet);if($('#chapter').value!=='all')pool=pool.filter(q=>q.chapter===$('#chapter').value);
+  const type=$('#questionType').value,section=sectionForType(type);if(section)pool=pool.filter(q=>q.section===section);
+  if(!pool.length){warning.textContent='No questions match that question bank, chapter, and question type.';warning.classList.remove('hidden');return}
+  if($('#order').value==='shuffle') pool=shuffle(pool);
+  const n=$('#count').value==='all'?pool.length:Math.min(parseInt($('#count').value),pool.length); pool=pool.slice(0,n);
+  pool=pool.map(q=>({...q,displayOptions:$('#shuffleChoices').checked?shuffle(q.options):[...q.options]}));
+  const customLabel=String($('#sessionLabel').value||'').trim().slice(0,60);
+   const timerChoice=$('#mode').value==='exam'?$('#timeLimit').value:'0';
+   const timeLimitMinutes=Number(timerChoice)||0;
+   const examStartedAt=$('#mode').value==='exam'?Date.now():null;
+  state={schema:STATE_SCHEMA,sessionId:makeSessionId(),label:customLabel||defaultSessionLabel(),qs:pool,i:0,mode:$('#mode').value,answers:{},graded:{},marked:{},hinted:{},confidence:{},finished:false,deadlineAt:timeLimitMinutes?examStartedAt+timeLimitMinutes*60000:null,startedAt:examStartedAt,finishedAt:null,timeExpired:false,settings:{timerChoice,timeLimitMinutes,sourceSet,chapter:$('#chapter').value,questionType:type,count:$('#count').value,order:$('#order').value,shuffleChoices:$('#shuffleChoices').checked,confidenceRating:$('#confidenceRating').checked,autoNext:$('#autoNext').checked,autoNextSeconds:Math.max(3,Math.min(10,parseInt($('#autoNextSeconds').value,10)||5))}};
+  $('#sessionLabel').value='';showQuiz();saveState();
+}
+function resumeSession(id){const s=getSession(id);if(!s)return;state=s;state.i=Math.max(0,Math.min(state.i||0,state.qs.length-1));if(state.finished){stopExamTimer();showResultsFromState()}else if(state.deadlineAt&&Date.now()>=state.deadlineAt){finish(true)}else showQuiz()}
+function showQuiz(){setup.classList.add('hidden');results.classList.add('hidden');progressView.classList.add('hidden');quiz.classList.remove('hidden');startExamTimer();if(state.finished)return;render();window.scrollTo({top:0,behavior:'smooth'})}
+function goMenu(){clearAdvanceTimers();quiz.classList.add('hidden');results.classList.add('hidden');progressView.classList.add('hidden');setup.classList.remove('hidden');saveState();refreshSavedCard();window.scrollTo({top:0,behavior:'smooth'})}
+function render(){
+  clearAdvanceTimers();
+  closeAutoNextPrompt();
+  syncQuizAutoNextControls();
+  const q=state.qs[state.i], a=state.answers[q.id];
+  $('#qnum').textContent=`Question ${state.i+1} of ${state.qs.length}`; $('#chapterPill').textContent=q.chapter_short; $('#typePill').textContent=shortType(q); $('#sourcePill').classList.toggle('hidden',!q.supplemental); $('#bar').style.width=((state.i+1)/state.qs.length*100)+'%'; $('#stem').textContent=q.stem;
+  $('#sessionPill').textContent=state.label||'Quiz session';const marks=Object.values(state.marked||{}).filter(Boolean).length;$('#markedCount').textContent=`★ ${marks} marked`;
+  $('#reviewPill').classList.toggle('hidden',!state.marked[q.id]); $('#mark').classList.toggle('active',!!state.marked[q.id]); $('#mark').textContent=state.marked[q.id]?'★ Marked for review':'☆ Mark for review';
+  const hintBtn=$('#hintBtn'),hintBox=$('#hintBox'),usedHint=!!state.hinted?.[q.id],isGraded=!!state.graded?.[q.id];
+  hintBox.classList.add('hidden');hintBox.innerHTML='';
+  if(state.mode==='exam'||isGraded&&!usedHint){
+    hintBtn.classList.add('hidden');
+  }else{
+    hintBtn.classList.remove('hidden');
+    hintBtn.disabled=usedHint||isGraded;
+    hintBtn.classList.toggle('used',usedHint);
+    hintBtn.textContent=usedHint?'💡 Hint used':'💡 Give me a hint';
+    if(usedHint&&q.hint){hintBox.innerHTML='<strong>Hint:</strong> '+esc(q.hint);hintBox.classList.remove('hidden')}
+  }
+  const ddcTools=$('#ddcTools'),isDDC=q.section==='COMPLETION';
+  ddcTools.classList.toggle('hidden',!isDDC);
+  if(!isDDC){$('#calcPanel').classList.add('hidden');$('#conversionPanel').classList.add('hidden')}
+  const confidenceBox=$('#confidenceBox'),confidenceEnabled=!!state.settings?.confidenceRating,currentConfidence=state.confidence?.[q.id]||'';
+  confidenceBox.classList.toggle('hidden',!confidenceEnabled);
+  if(confidenceEnabled){
+    confidenceBox.querySelectorAll('.confidence-choice').forEach(btn=>{
+      btn.classList.toggle('active',btn.dataset.confidence===currentConfidence);
+      btn.disabled=!!state.graded?.[q.id];
+    });
+  }
+  const area=$('#answerArea'); area.innerHTML='';
+  if(q.section==='COMPLETION'){
+    area.innerHTML=`<div class="calcbox"><label class="muted tiny" for="calcInput">Enter your answer (include units if you want)</label><input id="calcInput" type="text" autocomplete="off" placeholder="Type your answer" value="${esc(a||'')}"></div>`;
+    $('#calcInput').addEventListener('input',e=>{state.answers[q.id]=e.target.value;saveState()});
+  } else {
+    const multi=q.section==='MULTIPLE RESPONSE';
+    q.displayOptions.forEach((o,idx)=>{const checked=multi?(Array.isArray(a)&&a.includes(o.key)):(a===o.key);const displayKey=String.fromCharCode(65+idx);const label=document.createElement('label');label.className='choice';label.dataset.key=o.key;label.dataset.displayKey=displayKey;label.innerHTML=`<input type="${multi?'checkbox':'radio'}" name="ans" value="${o.key}" ${checked?'checked':''}><span class="letter">${displayKey}.</span><span>${esc(o.text)}</span>`;area.appendChild(label)});
+    area.querySelectorAll('input').forEach(inp=>inp.addEventListener('change',()=>{if(multi) state.answers[q.id]=[...area.querySelectorAll('input:checked')].map(x=>x.value);else state.answers[q.id]=area.querySelector('input:checked')?.value||null;saveState()}));
+  }
+  const graded=state.graded[q.id];$('#answerWarning').classList.add('hidden');$('#answerWarning').textContent='';$('#feedback').classList.add('hidden');$('#next').classList.add('hidden');$('#submit').classList.remove('hidden');
+  if(state.mode==='exam'){
+    $('#submit').textContent=state.i===state.qs.length-1?'Finish quiz':'Save & Next';
+  }else{
+    $('#submit').textContent='Check answer';
+    if(graded)showFeedback(q,graded);
+  }
+  $('#prev').disabled=state.i===0;updateScore();saveState();
+}
+function toggleDDCPanel(which){
+  if(!state||state.qs[state.i]?.section!=='COMPLETION')return;
+  const calc=$('#calcPanel'),conv=$('#conversionPanel');
+  if(which==='calc'){const opening=calc.classList.contains('hidden');calc.classList.toggle('hidden');if(opening){conv.classList.add('hidden');setTimeout(()=>$('#miniCalcInput')?.focus(),0)}}
+  if(which==='conversion'){const opening=conv.classList.contains('hidden');conv.classList.toggle('hidden');if(opening)calc.classList.add('hidden')}
+}
+function calcAppend(value){const input=$('#miniCalcInput');if(!input)return;input.value+=value;input.focus()}
+function calcClear(){const input=$('#miniCalcInput');if(input)input.value='';const out=$('#miniCalcResult');if(out)out.textContent='—'}
+function calcEvaluate(){
+  const input=$('#miniCalcInput'),out=$('#miniCalcResult');if(!input||!out)return;
+  const raw=input.value.trim();
+  if(!raw){out.textContent='—';return}
+  const expr=raw.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-');
+  if(!/^[0-9+\-*/().\s]+$/.test(expr)){out.textContent='Invalid';return}
+  try{
+    const result=Function('"use strict";return ('+expr+')')();
+    if(typeof result!=='number'||!Number.isFinite(result)){out.textContent='Error';return}
+    out.textContent=Number.isInteger(result)?String(result):String(Math.round((result+Number.EPSILON)*1000000)/1000000);
+  }catch(e){out.textContent='Error'}
+}
+function setConfidence(value){
+  if(!state||!state.settings?.confidenceRating||!['confident','unsure','guessing'].includes(value))return;
+  const q=state.qs[state.i];
+  if(state.graded?.[q.id])return;
+  if(!state.confidence)state.confidence={};
+  state.confidence[q.id]=value;
+  saveState();
+  render();
+}
+function useHint(){
+  if(!state||state.mode!=='practice')return;
+  const q=state.qs[state.i];
+  if(state.graded?.[q.id]||state.hinted?.[q.id]||!q.hint)return;
+  if(!state.hinted)state.hinted={};
+  state.hinted[q.id]=true;
+  saveState();
+  render();
+}
+function completionCorrect(input,expected){if(!input)return false;const norm=s=>String(s).toLowerCase().replace(/,/g,'').replace(/\s+/g,' ').trim();const i=norm(input),e=norm(expected);if(i===e)return true;const ni=parseFloat(i.match(/-?\d+(?:\.\d+)?/)?.[0]),ne=parseFloat(e.match(/-?\d+(?:\.\d+)?/)?.[0]);return Number.isFinite(ni)&&Number.isFinite(ne)&&Math.abs(ni-ne)<1e-6}
+function grade(q){const a=state.answers[q.id];let ok=false;if(q.section==='COMPLETION')ok=completionCorrect(a,q.answer);else if(q.section==='MULTIPLE RESPONSE'){const x=[...(a||[])].sort().join(','),y=[...q.correct].sort().join(',');ok=x===y}else ok=a===q.correct[0];state.graded[q.id]={ok,answer:a};saveState();return state.graded[q.id]}
+function displayLetter(q,key){const opts=q.displayOptions||q.options||[];const i=opts.findIndex(x=>x.key===key);return i>=0?String.fromCharCode(65+i):String(key||'')}
+function optionLabel(q,key){const o=(q.options||[]).find(x=>x.key===key);return o?`${displayLetter(q,key)} — ${o.text}`:String(key||'')}
+function answerLabels(q,answer){if(q.section==='COMPLETION')return [String(answer??'No answer')];const vals=Array.isArray(answer)?answer:(answer?[answer]:[]);return vals.length?vals.map(k=>optionLabel(q,k)):['No answer']}
+function answerLinesHtml(q,answer){return answerLabels(q,answer).map(x=>`<div>${esc(x)}</div>`).join('')}
+let autoNextTimer=null;
+let nextProtectionTimer=null;
+function clearAutoNext(){if(autoNextTimer){clearTimeout(autoNextTimer);autoNextTimer=null}}
+function clearNextProtection(){
+  if(nextProtectionTimer){clearTimeout(nextProtectionTimer);nextProtectionTimer=null}
+  const btn=$('#next');if(btn)btn.disabled=false;
+}
+function clearAdvanceTimers(){clearAutoNext();clearNextProtection()}
+function protectNext(){
+  clearNextProtection();
+  const btn=$('#next');if(!btn)return;
+  btn.disabled=true;
+  nextProtectionTimer=setTimeout(()=>{nextProtectionTimer=null;btn.disabled=false},1000);
+}
+function getAutoNextSeconds(){
+  return Math.max(3,Math.min(10,parseInt(state?.settings?.autoNextSeconds,10)||5));
+}
+function syncQuizAutoNextControls(){
+  if(!state)return;
+  if(!state.settings)state.settings={};
+  if(typeof state.settings.autoNext!=='boolean')state.settings.autoNext=true;
+  state.settings.autoNextSeconds=getAutoNextSeconds();
+  const toggle=$('#quizAutoNext'),range=$('#quizAutoNextSeconds'),value=$('#quizAutoNextSecondsValue');
+  if(!toggle||!range||!value)return;
+  toggle.checked=state.settings.autoNext!==false;
+  range.value=state.settings.autoNextSeconds;
+  range.disabled=!toggle.checked;
+  value.textContent=state.settings.autoNextSeconds+'s';
+}
+function resetNextButtonText(){
+  const btn=$('#next');
+  if(btn)btn.textContent=state&&state.i===state.qs.length-1?'Finish quiz':'Next';
+}
+function applyQuizAutoNextSettings(){
+  if(!state)return;
+  if(!state.settings)state.settings={};
+  state.settings.autoNext=$('#quizAutoNext').checked;
+  state.settings.autoNextSeconds=Math.max(3,Math.min(10,parseInt($('#quizAutoNextSeconds').value,10)||5));
+  syncQuizAutoNextControls();
+  saveState();
+  clearAutoNext();
+  resetNextButtonText();
+  const q=state.qs[state.i];
+  if(state.mode==='practice'&&state.graded?.[q.id]&&!$('#next').classList.contains('hidden')&&state.settings.autoNext!==false){
+    scheduleAutoNext();
+  }
+}
+function closeAutoNextPrompt(){
+  document.querySelector('.auto-next-backdrop')?.remove();
+}
+function showAutoNextBackPrompt(){
+  closeAutoNextPrompt();
+  if(!state||state.mode!=='practice'||state.settings?.autoNext===false)return;
+  const current=getAutoNextSeconds();
+  const nextDelay=Math.min(10,current+1);
+  const backdrop=document.createElement('div');
+  backdrop.className='auto-next-backdrop';
+  backdrop.innerHTML=`<div class="auto-next-prompt" role="dialog" aria-modal="true" aria-labelledby="autoNextPromptTitle">
+    <h3 id="autoNextPromptTitle">Was auto-next too fast?</h3>
+    <p>${current<10?`You went back a question. Increase the delay from ${current}s to ${nextDelay}s?`:`You went back a question and auto-next is already set to the maximum 10s delay.`}</p>
+    <div class="actions">
+      ${current<10?'<button type="button" class="btn primary" data-auto-action="increase">Increase delay</button>':''}
+      <button type="button" class="btn secondary" data-auto-action="keep">Keep ${current}s</button>
+      <button type="button" class="btn secondary" data-auto-action="off">Turn auto-next off</button>
+    </div>
+  </div>`;
+  backdrop.addEventListener('click',e=>{
+    if(e.target===backdrop){closeAutoNextPrompt();return}
+    const btn=e.target.closest('[data-auto-action]');
+    if(!btn)return;
+    const action=btn.dataset.autoAction;
+    if(action==='increase'){
+      state.settings.autoNextSeconds=nextDelay;
+      saveState();
+      syncQuizAutoNextControls();
+    }else if(action==='off'){
+      state.settings.autoNext=false;
+      saveState();
+      syncQuizAutoNextControls();
+    }
+    closeAutoNextPrompt();
+  });
+  document.body.appendChild(backdrop);
+}
+function scheduleAutoNext(){
+  clearAutoNext();
+  if(!state||state.mode!=='practice'||state.settings?.autoNext===false)return;
+  const btn=$('#next');
+  const base=state.i===state.qs.length-1?'Finish quiz':'Next';
+  let remaining=getAutoNextSeconds();
+  btn.textContent=`${base} (${remaining}s)`;
+  const tick=()=>{
+    remaining--;
+    if(remaining<=0){autoNextTimer=null;next();return}
+    btn.textContent=`${base} (${remaining}s)`;
+    autoNextTimer=setTimeout(tick,1000);
+  };
+  autoNextTimer=setTimeout(tick,1000);
+}
+function showFeedback(q,g){const f=$('#feedback');f.className='feedback '+(g.ok?'ok':'bad');f.classList.remove('hidden');const correctAnswer=q.section==='COMPLETION'?q.answer:q.correct;f.innerHTML=`<b>${g.ok?'Nice — that’s correct.':'Not quite.'}</b><div style="margin-top:6px"><strong>Correct answer:</strong><div class="review-answer-lines" style="margin-top:4px">${answerLinesHtml(q,correctAnswer)}</div></div>${q.rationale?`<div style="margin-top:8px"><strong>Rationale:</strong> ${esc(q.rationale)}</div>`:''}`;colorChoices(q,g);$('#submit').classList.add('hidden');$('#next').classList.remove('hidden');$('#next').textContent=state.i===state.qs.length-1?'Finish quiz':'Next';protectNext();scheduleAutoNext()}
+function colorChoices(q,g){if(q.section==='COMPLETION')return;document.querySelectorAll('.choice').forEach(el=>{const k=el.dataset.key;if(q.correct.includes(k))el.classList.add('correct');const selected=q.section==='MULTIPLE RESPONSE'?(g.answer||[]).includes(k):g.answer===k;if(selected&&!q.correct.includes(k))el.classList.add('wrong');el.querySelector('input').disabled=true})}
+function submitCurrent(){if(state.deadlineAt&&Date.now()>=state.deadlineAt){finish(true);return}const q=state.qs[state.i],a=state.answers[q.id],warning=$('#answerWarning');if(q.section==='COMPLETION'&&!String(a||'').trim()){warning.textContent='Enter an answer before continuing.';warning.classList.remove('hidden');$('#calcInput')?.focus();return}if(q.section!=='COMPLETION'&&(!a||(Array.isArray(a)&&!a.length))){warning.textContent=q.section==='MULTIPLE RESPONSE'?'Select at least one answer before continuing.':'Choose an answer before continuing.';warning.classList.remove('hidden');return}warning.classList.add('hidden');warning.textContent='';if(state.mode==='practice'){const g=grade(q);showFeedback(q,g)}else{saveState();if(state.i===state.qs.length-1)finish();else{state.i++;render()}}}
+function updateScore(){if(state.mode==='exam'){const n=state.qs.filter(answered).length;$('#scorePill').textContent=`Saved: ${n}/${state.qs.length}`;return}const gs=Object.values(state.graded||{});$('#scorePill').textContent=`Score: ${gs.filter(x=>x.ok).length}/${gs.length}`}
+function next(){if(nextProtectionTimer)return;clearAdvanceTimers();if(state.i===state.qs.length-1){finish();return}state.i++;render()}
+function prev(){clearAdvanceTimers();if(state.i>0){state.i--;render();showAutoNextBackPrompt()}}
+function showProgress(){clearAdvanceTimers();if(!state)return;quiz.classList.add('hidden');setup.classList.add('hidden');results.classList.add('hidden');progressView.classList.remove('hidden');renderProgress();window.scrollTo({top:0,behavior:'smooth'})}
+function renderProgress(){const answeredN=state.qs.filter(answered).length,marks=state.qs.filter(q=>state.marked?.[q.id]).length,graded=Object.keys(state.graded||{}).length,hints=Object.values(state.hinted||{}).filter(Boolean).length,ratings=Object.keys(state.confidence||{}).length;$('#progressSummary').innerHTML=`<span class="pill">${esc(state.label||'Quiz session')}</span><span class="pill">${answeredN}/${state.qs.length} answered</span><span class="pill marked-count">★ ${marks} marked</span><span class="pill">💡 ${hints} hints</span>${state.settings?.confidenceRating?`<span class="pill">${ratings} rated</span>`:''}<span class="pill">${graded} checked</span>`;$('#questionGrid').innerHTML=state.qs.map((q,i)=>`<button type="button" class="qjump ${answered(q)?'answered':''} ${state.marked?.[q.id]?'marked':''} ${i===state.i?'current':''}" data-i="${i}" aria-label="Question ${i+1}${state.marked?.[q.id]?', marked for review':''}">${i+1}${state.marked?.[q.id]?'<span class="star">★</span>':''}</button>`).join('');$('#questionGrid').querySelectorAll('.qjump').forEach(b=>b.addEventListener('click',()=>{state.i=+b.dataset.i;showQuiz()}));renderMarkedList()}
+function renderMarkedList(){const box=$('#markedList');const rows=state.qs.map((q,i)=>({q,i})).filter(x=>state.marked?.[x.q.id]);if(!rows.length){box.innerHTML='<p class="muted" style="margin:16px 0 0">No questions are marked for review.</p>';return}box.innerHTML='<div class="marked-list">'+rows.map(({q,i})=>`<div class="marked-row"><div class="txt"><b>Question ${i+1}: ${esc(q.stem)}</b><span>${esc(q.chapter_short)} • ${answered(q)?'Answered':'Not answered'}</span></div><button type="button" class="btn secondary goMarked" data-i="${i}">Open</button></div>`).join('')+'</div>';box.querySelectorAll('.goMarked').forEach(b=>b.addEventListener('click',()=>{state.i=+b.dataset.i;showQuiz()}))}
+function finish(timeExpired=false){if(!state||state.finished)return;timeExpired=timeExpired||!!(state.deadlineAt&&Date.now()>=state.deadlineAt);stopExamTimer();clearAdvanceTimers();state.timeExpired=!!timeExpired;state.finishedAt=Date.now();state.qs.forEach(q=>{if(!state.graded[q.id])grade(q)});state.finished=true;saveState();showResultsFromState()}
+function showResultsFromState(){quiz.classList.add('hidden');setup.classList.add('hidden');progressView.classList.add('hidden');results.classList.remove('hidden');const total=state.qs.length,correct=state.qs.filter(q=>state.graded?.[q.id]?.ok).length,pct=Math.round(correct/total*100);$('#finalPct').textContent=pct+'%';const hintsUsed=Object.values(state.hinted||{}).filter(Boolean).length;const stopwatchElapsed=state.startedAt&&state.finishedAt?Math.max(0,Math.floor((state.finishedAt-state.startedAt)/1000)):null;const stopwatchText=stopwatchElapsed===null?'':` • Elapsed: ${Math.floor(stopwatchElapsed/60)}:${String(stopwatchElapsed%60).padStart(2,'0')}`;$('#finalText').textContent=`${state.label||'Quiz session'} • ${correct} correct out of ${total} questions${state.mode==='practice'?` • ${hintsUsed} hint${hintsUsed===1?'':'s'} used`:''}${state.timeExpired?' • Time expired':''}${stopwatchText}.`;const types=[['Multiple choice','MULTIPLE CHOICE'],['Select all','MULTIPLE RESPONSE'],['DDC / Fill-ins','COMPLETION']];$('#breakdown').innerHTML=types.map(([label,key])=>{const set=state.qs.filter(q=>q.section===key),c=set.filter(q=>state.graded?.[q.id]?.ok).length;return `<div class="stat"><b>${c}/${set.length}</b><span>${label}</span></div>`}).join('');const confidenceResults=$('#confidenceResults');if(state.settings?.confidenceRating){const c=state.confidence||{},counts={confident:0,unsure:0,guessing:0};Object.values(c).forEach(v=>{if(v in counts)counts[v]++});confidenceResults.innerHTML=`<strong>Confidence ratings</strong><div class="row"><span class="pill">Confident: ${counts.confident}</span><span class="pill">Unsure: ${counts.unsure}</span><span class="pill">Guessing: ${counts.guessing}</span><span class="pill">Not rated: ${Math.max(0,total-Object.keys(c).length)}</span></div>`;confidenceResults.classList.remove('hidden')}else{confidenceResults.classList.add('hidden');confidenceResults.innerHTML=''};const wrong=state.qs.filter(q=>!state.graded?.[q.id]?.ok).length,marked=state.qs.filter(q=>state.marked?.[q.id]).length,combined=state.qs.filter(q=>!state.graded?.[q.id]?.ok||state.marked?.[q.id]).length;$('#reviewCombined').textContent=`Mistakes + marked (${combined})`;$('#reviewWrong').textContent=`Mistakes only (${wrong})`;$('#reviewMarked').textContent=`Marked only (${marked})`;$('#reviewAll').textContent=`All answers (${total})`;const retakeBtn=$('#retakeWrong');retakeBtn.textContent=`Retake missed (${wrong})`;retakeBtn.classList.toggle('hidden',wrong===0);$('#reviewList').classList.add('hidden');$('#reviewList').innerHTML='';$('#hideReview').classList.add('hidden');$('#reviewSummary').textContent='';document.querySelectorAll('.reviewFilter').forEach(b=>b.classList.remove('active'));window.scrollTo({top:0,behavior:'smooth'})}
+function review(mode='combined'){const box=$('#reviewList');const rows=state.qs.map((q,i)=>({q,i,g:state.graded?.[q.id]||{ok:false,answer:state.answers?.[q.id]}})).filter(({q,g})=>mode==='all'||(mode==='wrong'&&!g.ok)||(mode==='marked'&&!!state.marked?.[q.id])||(mode==='combined'&&(!g.ok||!!state.marked?.[q.id])));document.querySelectorAll('.reviewFilter').forEach(b=>b.classList.toggle('active',b.dataset.review===mode));$('#hideReview').classList.remove('hidden');box.classList.remove('hidden');const labels={combined:'mistakes + marked questions',wrong:'mistakes',marked:'marked/bookmarked questions',all:'all answers'};$('#reviewSummary').textContent=`Showing ${rows.length} of ${state.qs.length}: ${labels[mode]}.`;if(!rows.length){box.innerHTML=`<div class="review-empty">Nothing to review in this filter.</div>`;return}box.innerHTML=rows.map(({q,i,g})=>{const yours=g.answer;const correct=q.section==='COMPLETION'?q.answer:q.correct;return `<div class="reviewItem"><div class="tiny muted">${esc(q.chapter_short)} • ${esc(shortType(q))} • Question ${i+1}${q.supplemental?' • Extra':''}${state.marked?.[q.id]?' • ★ Marked':''}${state.hinted?.[q.id]?' • 💡 Hint used':''}${state.confidence?.[q.id]?` • ${state.confidence[q.id][0].toUpperCase()+state.confidence[q.id].slice(1)}`:''}</div><h3>${esc(q.stem)}</h3><div class="${g.ok?'tagOk':'tagBad'}"><strong>${g.ok?'Correct':'Incorrect'}</strong></div><div class="review-answers"><div class="review-answer-block yours"><strong>Your answer</strong><div class="review-answer-lines">${answerLinesHtml(q,yours)}</div></div><div class="review-answer-block correct"><strong>Correct answer</strong><div class="review-answer-lines">${answerLinesHtml(q,correct)}</div></div></div>${q.rationale?`<p class="muted" style="margin-top:10px"><strong style="color:var(--text)">Rationale:</strong> ${esc(q.rationale)}</p>`:''}</div>`}).join('');box.scrollIntoView({behavior:'smooth',block:'start'})}
+function hideReview(){const box=$('#reviewList');box.classList.add('hidden');box.innerHTML='';$('#hideReview').classList.add('hidden');$('#reviewSummary').textContent='';document.querySelectorAll('.reviewFilter').forEach(b=>b.classList.remove('active'))}
+function retakeWrong(){
+  if(!state||!state.finished)return;
+  const missed=state.qs.filter(q=>!state.graded?.[q.id]?.ok);
+  if(!missed.length)return;
+  const settings={...(state.settings||{})};
+  const mode=state.mode||'practice';
+  const pool=missed.map(q=>{const base=BANK.find(x=>x.id===q.id)||q;const opts=base.options||[];return {...base,displayOptions:settings.shuffleChoices?shuffle(opts):[...opts]}});
+  const parentLabel=state.label||'Quiz session';
+  const retakeStartedAt=mode==='exam'?Date.now():null;
+  state={schema:STATE_SCHEMA,sessionId:makeSessionId(),label:(parentLabel+' — Missed retake').slice(0,60),qs:pool,i:0,mode,answers:{},graded:{},marked:{},hinted:{},confidence:{},finished:false,deadlineAt:mode==='exam'&&Number(settings.timeLimitMinutes)?retakeStartedAt+Number(settings.timeLimitMinutes)*60000:null,startedAt:retakeStartedAt,finishedAt:null,timeExpired:false,settings:{...settings,timerChoice:String(Number(settings.timeLimitMinutes)||0),count:String(pool.length),retakeWrong:true}};
+  showQuiz();saveState();
+}
+function newQuiz(){stopExamTimer();state=null;results.classList.add('hidden');quiz.classList.add('hidden');progressView.classList.add('hidden');setup.classList.remove('hidden');refreshSavedCard();window.scrollTo({top:0,behavior:'smooth'})}
+populateChapters();$('#nAll').textContent=BANK.length;$('#nMC').textContent=BANK.filter(q=>q.section==='MULTIPLE CHOICE').length;$('#nSATA').textContent=BANK.filter(q=>q.section==='MULTIPLE RESPONSE').length;$('#nCalc').textContent=BANK.filter(q=>q.section==='COMPLETION').length;
+$('#sourceSet').addEventListener('change',populateChapters);$('#chapter').addEventListener('change',updateQuestionTypeOptions);
+$('#start').addEventListener('click',startQuiz);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)updateExamTimer()});
+$('#calcToggle').addEventListener('click',()=>toggleDDCPanel('calc'));
+$('#conversionToggle').addEventListener('click',()=>toggleDDCPanel('conversion'));
+$('#miniCalcInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();calcEvaluate()}});
+$('#calcKeypad').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.calcAction==='clear')calcClear();else if(b.dataset.calcAction==='equals')calcEvaluate();else if(b.dataset.calc)calcAppend(b.dataset.calc)});
+document.querySelectorAll('.confidence-choice').forEach(b=>b.addEventListener('click',()=>setConfidence(b.dataset.confidence)));$('#hintBtn').addEventListener('click',useHint);$('#answerArea').addEventListener('submit',e=>{e.preventDefault();submitCurrent()});$('#submit').addEventListener('click',submitCurrent);$('#next').addEventListener('click',next);$('#prev').addEventListener('click',prev);$('#mark').addEventListener('click',()=>{const q=state.qs[state.i];state.marked[q.id]=!state.marked[q.id];render()});$('#menuBtn').addEventListener('click',goMenu);$('#progressBtn').addEventListener('click',showProgress);$('#backQuiz').addEventListener('click',showQuiz);$('#progressMenu').addEventListener('click',goMenu);$('#retakeWrong').addEventListener('click',retakeWrong);$('#restart').addEventListener('click',newQuiz);document.querySelectorAll('.reviewFilter').forEach(b=>b.addEventListener('click',()=>review(b.dataset.review)));$('#hideReview').addEventListener('click',hideReview);$('#resultsMenu').addEventListener('click',goMenu);
+const autoNextToggle=$('#autoNext');
+const autoNextSeconds=$('#autoNextSeconds');
+const autoNextSecondsValue=$('#autoNextSecondsValue');
+function syncAutoNextControls(){
+  const seconds=Math.max(3,Math.min(10,parseInt(autoNextSeconds.value,10)||5));
+  autoNextSeconds.value=seconds;
+  autoNextSecondsValue.textContent=seconds+' second'+(seconds===1?'':'s');
+  autoNextSeconds.disabled=!autoNextToggle.checked;
+}
+autoNextToggle.addEventListener('change',syncAutoNextControls);
+autoNextSeconds.addEventListener('input',syncAutoNextControls);
+syncAutoNextControls();
+$('#quizAutoNext').addEventListener('change',applyQuizAutoNextSettings);
+$('#quizAutoNextSeconds').addEventListener('input',()=>{
+  if(!state)return;
+  if(!state.settings)state.settings={};
+  state.settings.autoNextSeconds=Math.max(3,Math.min(10,parseInt($('#quizAutoNextSeconds').value,10)||5));
+  $('#quizAutoNextSecondsValue').textContent=state.settings.autoNextSeconds+'s';
+  saveState();
+});
+$('#quizAutoNextSeconds').addEventListener('change',applyQuizAutoNextSettings);
+// Shared theme controller owns the toggle.
+testStorage();refreshSavedCard();
+
+</script>
+<footer><a class="release-history-link" href="https://siahverse.cc/changelog/#pharm1" style="display:inline-block;margin:12px;padding:8px;color:var(--accent,#7c9cff)">Release history</a></footer></body>
+</html>

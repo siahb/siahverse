@@ -12,3 +12,6 @@ Run `node --test server/class-access.test.mjs core.test.mjs` for server access, 
 
 ## Subscription policy
 Class Exams is subscription-only. Only active, unexpired subscriptions grant access; missing, canceled or past-due status denies access. The paid-through date must come from verified payment-provider events. The existing nursing gate revokes previous sessions on each new login, allowing one active login per account. This discourages concurrent sharing but cannot guarantee that credentials are never shared. Proposed pricing is $3/month, pending owner confirmation; no checkout or recurring billing exists yet.
+
+## Full QBanco scope
+All /qbanco routes and assets now require the verified nursing session and active subscription. This covers NCLEX, HESI and Class Exams. Discord #NCLEX-Prep remains the free daily-question channel. The original public NCLEX feed remains public and unchanged. QBANCO_CLASS_ENTITLEMENTS is retained as the server configuration name for compatibility, but grants apply to all QBanco modes.
